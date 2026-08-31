@@ -3,7 +3,7 @@
 **Team:** Sbu + Lethabo
 **Languages:** isiZulu + Setswana
 **Track:** Entertainment & Lifestyle
-**Status:** planning and mockups only; no competition application is built.
+**Status:** planning, mockups and content are done (`P0.md`'s L1–L6 and `LETHABO_NEXT_WORK.md` items 1–6). **Building has started** (31 Aug decision — see `BUILD_LOG.md`'s decisions table): Gate A's Lethabo-half is underway in `../starter/frontend` (routing, tokens, honest Mini-App/browser-mode label, tested). Read `P0.md` then `BUILD_LOG.md` (newest entries first) for exactly where things stand.
 
 ---
 
@@ -31,7 +31,11 @@ The earlier plan was reconciled after Sbu's review. Read the canonical documents
 | isiZulu authoring | [content/CARDS_ISIZULU_AUTHORING.md](content/CARDS_ISIZULU_AUTHORING.md) | Historical worksheet; the reviewed source is `cards_isizulu.json` |
 | isiZulu draft | [content/cards_isizulu.json](content/cards_isizulu.json) | Structured hero-eight draft; blocked from import until spoken native review passes |
 | Card review | [content/CARD_REVIEW_2026-08-31.md](content/CARD_REVIEW_2026-08-31.md) | Structural critique and validation command for both hero decks |
-| Lethabo handoff | [LETHABO_NEXT_WORK.md](LETHABO_NEXT_WORK.md) | Prioritised experience-lane tasks with testable exits |
+| Lethabo handoff | [LETHABO_NEXT_WORK.md](LETHABO_NEXT_WORK.md) | Prioritised experience-lane tasks with testable exits — **CLOSED 31 Aug, items 1–6, item 7 half; see `P0.md`** |
+| Deck skeleton | [plan/14_DECK_SKELETON.md](plan/14_DECK_SKELETON.md) | All 10 pitch slides scaffolded, every asset labelled real or named-to-its-gate |
+| Demo script | [plan/15_DEMO_SCRIPT.md](plan/15_DEMO_SCRIPT.md) | Judge-only click-through runbook + substitution lines; L6 rehearsal checklist |
+| Design reference | [../04_assets/reference/REFERENCE.md](../04_assets/reference/REFERENCE.md) | Lethabo's Dribbble/concept-board picks, reasoned take/reject per image |
+| Accessibility evidence | [../04_assets/mockups_v2/ACCESSIBILITY_EVIDENCE.md](../04_assets/mockups_v2/ACCESSIBILITY_EVIDENCE.md) | Real findings from testing the hero screens — what was checked, how, and what got fixed |
 
 Evidence lives in [`research/`](research/). All seven research files are present, including source-graded gamification work in [`F_GAMIFICATION.md`](research/F_GAMIFICATION.md).
 

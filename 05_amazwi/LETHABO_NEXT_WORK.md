@@ -1,5 +1,7 @@
 # Lethabo — next experience-lane work
 
+> ✅ **CLOSED 31 Aug 2026 — items 1–6 done, item 7 half.** Full detail of what was done, how, and what's still open per item: `P0.md`'s LETHABO_NEXT_WORK section and `BUILD_LOG.md`'s entries from ~20:35 onward. Headlines: real bugs found and fixed along the way (not just the listed warnings) — a mislabelled-language word bug, a keyboard-reachability gap now fixed with real `<button>` elements, an under-sized touch target. Item 7's fallback recording is explicitly not produced yet (needs a real running golden path — Gate D/E — to record honestly). One open item is Lethabo's own, not Sbu's: the sw-004/005/007 distractor swaps in `cards_setswana.json` still need a native read-aloud confirmation, same bar as the original 8 — flagged here so it doesn't get missed, not asking Sbu to do it. Sbu: everything else is ready for your review.
+
 This is the current handoff from Sbu. It does not reopen scope. Work top to bottom; every task has an observable exit condition.
 
 ## 1. Close the Setswana content warnings

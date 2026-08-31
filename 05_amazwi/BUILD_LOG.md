@@ -115,6 +115,7 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 | 31 Aug | **We are an acquisition service priced cost-plus, not a data vendor** | We do not produce transcripts, so we cannot price against transcribed-speech comparables | Lethabo |
 | 31 Aug | **Theme decision deferred — switcher shipped instead** | All 5 themes are `[data-theme]` blocks in `tokens.css`. Build against tokens and the choice stays open at zero cost until Wednesday | Lethabo |
 | 31 Aug | **Pre-event application code starts now — `05_BUILD.md` §1's "wait for approval" rule superseded, not deleted** | Building at the event is still real (mentor input, presentation refinement), but Gate A work does not wait for it. Accepted risk, stated plainly: no organiser email was sent (S6), so there is no written approval that pre-event application code is allowed, against public terms requiring work "created during the hackathon unless organisers approve otherwise." If organisers object later, disclose the real timeline rather than concealing commits | Lethabo |
+| 31 Aug | **Stay in Lethabo's lane by default; cross into Sbu's only on a real stopper, documented and flagged for his review** | Both lanes progressing in parallel without coordination risks silent scope/decision drift into Sbu's owned territory (money, data integrity, deployment — his final say per `05_BUILD.md` §2). A real blocker (e.g. no backend running to test against) still needs to be worked around to keep moving, but must never be treated as final without his sign-off | Lethabo |
 
 ---
 
