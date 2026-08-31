@@ -97,6 +97,9 @@ PING: <only if the other person must act>
 | 31 Aug | Voice synthesis: allowed on our own consented data, barred on Swivuriso-derived lineage | Consent fixes ethics, not licence. Provenance firewall, not a ban | Lethabo (corrected) |
 | 31 Aug | **No spin-to-win. Fixed-rate credit redemption instead** | Wagering earned credits supplies the consideration element a free spin lacks — more exposed, not less. Redemption is cheaper for MTN and shrinks the disbursement-fee problem | Lethabo |
 | 31 Aug | Reward gains a MODALITY_VALUE multiplier | Richer data is worth more, so it should pay more. Coverage pricing extended one axis | Lethabo |
+| 31 Aug | **Economics reworked: quote from R1,175/validated hour, not R685** | R685 exists only because verifiers are unpaid; that does not survive scale | Lethabo |
+| 31 Aug | **We are an acquisition service priced cost-plus, not a data vendor** | We do not produce transcripts, so we cannot price against transcribed-speech comparables | Lethabo |
+| 31 Aug | **Theme decision deferred — switcher shipped instead** | All 5 themes are `[data-theme]` blocks in `tokens.css`. Build against tokens and the choice stays open at zero cost until Wednesday | Lethabo |
 
 ---
 
@@ -114,6 +117,34 @@ PING: <only if the other person must act>
 ---
 
 # LOG
+
+### [31 Aug 14:40] — Lethabo · TOP/high · P0 allocated
+
+**DID**
+- **Economics reworked** — `plan/03_BUSINESS.md`, appended as a superseding section
+- **Theme switcher built** — `04_assets/themes/tokens.css`, five themes as `[data-theme]` blocks
+- **P0 allocated** — `P0.md`, split by lane, hour-estimated, tier-tagged
+
+**HOW**
+- Ran the cost model in Python rather than eyeballing it. Two bases: competition (verifiers unpaid, R685/hr) and production (verifiers paid, R1,175/hr).
+
+**WHY**
+- Sbu was right that the output is a semantic label, not a transcript — so the old price list, benchmarked against transcribed-speech comparables, was invalid. Cost-plus service pricing survives that correction and is auditable, which commodity pricing never was.
+- The theme switcher converts a blocking decision into a deferred one at zero cost.
+
+**CHANGED**
+- `03_BUSINESS.md` §1, §2.1–2.4, §4 superseded by the REWORK section
+- Reward payout now has a redemption path: airtime/data costs MTN marginal cost, not face value
+
+**PING Sbu**
+- **Your two corrections are absorbed and the numbers are fixed.** Quote R1,175/hr, never R685.
+- **Your lane is in `P0.md` — S1 through S6.** S1 is a hard 90-minute timebox on MoMo: if SA disbursement is unreachable, the demo provider becomes the plan of record **today**.
+- **Review the four theme grounds and pick three you would ship.** Link in `P0.md`.
+
+**NEXT**
+- Switching to BUILD tier. Card content is the bottleneck and it starts now.
+
+---
 
 ### [31 Aug 14:28] — Lethabo · TOP/high · Roadmap corrections
 
