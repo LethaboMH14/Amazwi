@@ -82,6 +82,7 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 - no offline recording/upload outbox or service-worker work in P0; raw audio must not be retained locally beyond the active capture flow;
 - no league, daily-quest or fixed R11-cash mechanic in P0; the configured campaign rule is an illustrative speaker honorarium and cap, not a public unit-economics claim;
 - no fixed-rate redemption, modality-value multiplier, face/video capture or synthesis in P0; these are unadopted roadmap hypotheses pending separate consent, legal/contract, cost and community-governance evidence;
+- no hour-based cost, margin, “share reaching people” or airtime marginal-cost number is pitch-safe; use the sponsored-mission pilot statement until measured evidence exists;
 - two **proficient verifiers**, not generic listeners, independently submit their answer and referee evidence;
 - create eight hero cards per language first; expand to a 30-card pack only after the golden path is working;
 - FastAPI background work is not treated as durable. The demo uses bounded synchronous decisions, polling and an explicit recovery action;

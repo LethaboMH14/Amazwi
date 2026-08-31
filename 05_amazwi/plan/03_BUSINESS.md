@@ -171,88 +171,16 @@ Zero-rating and wider rollout can follow evidence; they are not prerequisites fo
 
 ---
 
-# REWORK — 31 Aug 14:35 · supersedes §1, §2.1–2.4 and §4 above
+## HISTORICAL SCENARIO — NOT ADOPTED FOR PITCH OR PRICING
 
-**Why this exists.** Two corrections from Sbu broke the original model, and both were right:
+An attempted cost-plus model was added on 31 August after the semantic-label correction. It is **not** an accepted commercial model and does not supersede the pilot economics above.
 
-1. **Verifiers receive no cash in the competition build** — changes the cost base.
-2. **The output is a peer-verified *semantic label*, not a transcript** — so **we cannot price against transcribed-speech comparables.** The old §4 benchmarked against Defined.ai's ~$175/hr for *transcribed* speech. That is not what we produce, and a judge who knows the market would catch it.
+Why it remains excluded:
 
----
+- the output is elicited spontaneous speech with a semantic label, not a transcribed “validated hour”;
+- speaker reward, verifier compensation, provider fees, overhead, acceptance/expiry and buyer demand are not measured;
+- the production R1,175/hour figure and percentage reaching people depend on assumptions rather than a live pilot;
+- a 200-hour campaign, margin table and airtime/data redemption rates are not validated offers;
+- MTN's airtime/data marginal cost and the bulk B2C fee are unknown.
 
-## 1. THE REFRAME — we are not a data vendor, we are an acquisition service
-
-The old model priced a commodity we do not actually produce. The honest model prices **what we uniquely do**:
-
-> **You need 200 hours of conversational Setswana in the banking domain, consented, quality-filtered, with peer-verified semantic labels. We go and get it. Here is what it costs us and here is our margin.**
-
-**This is a stronger position, not a weaker one:**
-
-| | Data vendor | Acquisition service |
-|---|---|---|
-| Price basis | A commodity rate we cannot source for our actual output | **Our own cost, which we can show line by line** |
-| Defensible? | No — we would be guessing | **Yes — cost-plus is auditable** |
-| Competitive | Crowded: Defined.ai, Appen, Shaip | **Nobody else can do targeted acquisition on a mobile-money rail** |
-| Survives the semantic-label correction? | No | **Yes — we never claim to sell transcribed hours** |
-
----
-
-## 2. THE REWORKED COST BASE
-
-**Competition build** — verifiers unpaid:
-```
-speaker rewards      R8.00   (4 accepted clips × R2.00)
-verifier rewards     R0.00
-MoMo fee @ 2%        R0.16
-overhead @ 40%       R3.26
-                    ──────
-PER VALIDATED MINUTE R11.42
-PER VALIDATED HOUR   R685     ≈ US$42
-```
-
-**Production** — verifiers paid R0.50, two per clip. **This is the honest base for any quote:**
-```
-speaker rewards      R8.00
-verifier rewards     R5.71
-MoMo fee @ 2%        R0.27
-overhead @ 40%       R5.60
-                    ──────
-PER VALIDATED MINUTE R19.58
-PER VALIDATED HOUR   R1,175   ≈ US$73
-share reaching people  70%
-```
-
-> ⚠️ **Say this out loud: the competition number is not the business number.** R685/hr exists only because verifiers work unpaid, and unpaid verification does not survive contact with scale. **Quote from R1,175.** A judge who spots us quoting the free-labour number has found a real problem.
-
-## 3. THE PRICE LIST — cost-plus, and every line traceable
-
-| Margin | Price / validated hour | 200-hour campaign |
-|---|---|---|
-| 30% | **R1,679** (US$104) | R336k, margin R101k |
-| 50% | **R2,350** (US$146) | R470k, margin R235k |
-| 70% | R3,917 (US$243) | — |
-
-**Recommend quoting at 30–50%.** It lands inside the range buyers already pay for specialist low-resource speech work, and — unlike the old number — **we can show exactly where it comes from.**
-
-⚠️ **Still unpriced, still say so:** the learner subscription and the proficiency credential. No defensible comparable exists for either in this market, and the credential additionally cannot be called a certification until it is externally validated. *"We couldn't find a defensible comparable so we're not going to invent one"* scores higher than a made-up number.
-
-## 4. REDEMPTION CHANGES THE PAYOUT ECONOMICS
-
-Credits redeemed for airtime or data cost MTN **marginal cost**, not face value:
-
-| Paying out R100 of earned value | Cost to MTN |
-|---|---|
-| Cash to MoMo | **R102** (face + 2% fee) |
-| Airtime/data redeemed | **~R25** *(assumption: 25% marginal cost)* |
-
-⚠️ **The 25% is an assumption, not a sourced figure** — MTN's actual marginal cost on airtime is not public. But the *direction* is certain and the mechanism is real.
-
-**Two consequences:**
-1. Every rand redeemed instead of cashed out is a rand MTN largely keeps.
-2. **It shrinks our worst open question.** *"Is a R2 disbursement economical?"* only applies to the minority who cash out. Most value never touches the disbursement rail.
-
-## 5. WHAT TO SAY ON THE BUSINESS SLIDE NOW
-
-> *"One validated hour costs us about R1,175, and seventy percent of that reaches the person who spoke and the people who understood them. We're not selling data hours — we don't produce transcripts, we produce consented, quality-filtered speech with a peer-verified semantic label. What we sell is targeted acquisition: tell us the language, the domain and the speaking style, and we go and get it. Cost-plus, and we'll show you the build-up."*
-
-That paragraph survives the semantic-label correction, survives a cost audit, and does not rest on a single number we cannot source.
+The valid business statement is deliberately smaller: **AMAZWI can run a funded language mission with an auditable reward rule.** A contained pilot measures cost per corpus-eligible contribution before anyone quotes a price, margin, redeemed-value saving or production payout policy.

@@ -64,6 +64,25 @@ The addendum remains a useful roadmap discussion. It does not override the priva
 
 ---
 
+## REVIEW OF P0 AND ECONOMICS PUSH (`9c3727c`)
+
+### Keep
+
+- A concise P0 allocation and a token-based theme switcher are useful implementation aids.
+- Protecting a sandbox-call budget and freezing an honest demo-provider fallback when a provider leg is unavailable are both sound operational practices.
+
+### Corrections applied
+
+1. `P0.md` is now priority-gated, with no clock, hour estimates or dated theme deadline. This preserves the user-requested one-run plan without a timeline.
+2. The accepted-answer rule now uses normalisation plus native-curated answers/reviewed aliases. Blanket prefix stripping and broad Levenshtein are explicitly excluded.
+3. Pre-event work is conditional on organiser permission; a generic starter does not authorise product-specific AMAZWI code.
+4. The hour-based rework was converted to a historical, unadopted scenario. It cannot supersede the sponsored-mission pilot model because its output unit, costs, fees, margin and redemption assumptions are not measured.
+5. P0 does not make airtime/data redemption, provider marginal cost, production verifier payment or `MODALITY_VALUE` a build or pitch claim.
+
+The P0 document is now safe to execute: recording, two proficient verifiers, one eligibility decision, one ledger credit, an honest provider state, receipt and reset. That is the only proof that matters before roadmap economics.
+
+---
+
 ## REVIEW OF YOUR LATEST PUSH (`d8a1e82`)
 
 ### Keep
