@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&family=Instrument+Serif:ital@0;1&display=swap">
+  <style>
+    body { margin:0; -webkit-font-smoothing:antialiased; }
+    a { color:#FF5A36; } a:hover { color:#E8267F; }
+
+    .stage{
+      --ground:#0A0E1C; --ground-2:#131A33; --surface:#171E38;
+      --text:#EDF1FA; --dim:#7E8BA8; --line:rgba(160,186,228,.14);
+      --hi:rgba(190,216,255,.11); --glow:rgba(255,90,54,.34);
+      font-family:'Archivo',system-ui,sans-serif; color:var(--text);
+      background:
+        radial-gradient(ellipse 130% 55% at 12% -8%, #1E2547 0%, rgba(30,37,71,0) 60%),
+        radial-gradient(ellipse 100% 45% at 96% 34%, rgba(232,38,127,.16) 0%, rgba(232,38,127,0) 62%),
+        linear-gradient(174deg,#0E1428 0%, #0A0E1C 62%, #070A14 100%);
+    }
+    .stage[data-theme="dusk"]{ --ground:#1E0F2E; --ground-2:#3A1A2E; --surface:#33162B;
+      --text:#FFF1E8; --dim:#C7A08E; --line:rgba(255,224,205,.15); --hi:rgba(255,232,214,.15); --glow:rgba(255,150,80,.36);
+      background:radial-gradient(ellipse 130% 55% at 12% -8%, #4A2064 0%, rgba(74,32,100,0) 60%),
+        radial-gradient(ellipse 100% 45% at 96% 34%, rgba(214,86,60,.28) 0%, rgba(214,86,60,0) 62%),
+        linear-gradient(174deg,#2E1440 0%, #24101F 62%, #140A0C 100%); }
+    .stage[data-theme="earth"]{ --ground:#FBF4E9; --ground-2:#F0E3D0; --surface:#FFFFFF;
+      --text:#1E1108; --dim:#7A6248; --line:#E2D2B8; --hi:rgba(255,255,255,.8); --glow:rgba(226,150,90,.34);
+      background:radial-gradient(ellipse 120% 48% at 16% -6%, #F6E3C9 0%, rgba(246,227,201,0) 62%),
+        linear-gradient(174deg,#FDF7EE 0%, #F3E7D5 100%); }
+    .stage[data-theme="ink"]{ --ground:#100D0B; --ground-2:#241D19; --surface:#221B17;
+      --text:#FAF6F1; --dim:#94897E; --line:rgba(250,246,241,.10); --hi:rgba(250,246,241,.08); --glow:rgba(255,90,54,.30);
+      background:radial-gradient(ellipse 130% 55% at 12% -8%, #2A211B 0%, rgba(42,33,27,0) 60%),
+        linear-gradient(174deg,#151110 0%, #0B0908 100%); }
+
+    .grain{position:absolute;inset:0;pointer-events:none;opacity:.42;mix-blend-mode:overlay;z-index:3;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");}
+
+    .serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;}
+    .kicker{font-size:10px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--dim);}
+    .banned{font-size:19px;font-weight:500;color:var(--dim);text-decoration:line-through;
+      text-decoration-color:rgba(255,90,54,.75);text-decoration-thickness:1.5px;text-underline-offset:2px;}
+  </style>
+</helmet>
+
+<div class="stage" data-theme="{{theme}}" style="width:390px;height:844px;position:relative;overflow:hidden;">
+
+  <!-- L1 · signature geometry: the agreement lens, bleeding off canvas -->
+  <svg width="390" height="844" viewBox="0 0 390 844" style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.55;">
+    <defs>
+      <linearGradient id="lensA" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FF5A36" stop-opacity=".10"/><stop offset="100%" stop-color="#E8267F" stop-opacity=".03"/>
+      </linearGradient>
+      <clipPath id="lensClip"><circle cx="163" cy="612" r="74"/></clipPath>
+    </defs>
+    <circle cx="352" cy="64" r="132" fill="none" stroke="var(--line)" stroke-width=".8"/>
+    <circle cx="352" cy="64" r="92"  fill="none" stroke="var(--line)" stroke-width=".8"/>
+    <circle cx="-56" cy="806" r="128" fill="none" stroke="var(--line)" stroke-width=".8"/>
+  </svg>
+
+  <!-- L2 · ambient -->
+  <div style="position:absolute;z-index:2;width:340px;height:340px;left:-120px;top:126px;border-radius:999px;
+    background:radial-gradient(circle,var(--glow) 0%,transparent 70%);filter:blur(26px);opacity:.72;"></div>
+  <div class="grain"></div>
+
+  <!-- L3 · content -->
+  <div style="position:relative;z-index:4;height:100%;display:flex;flex-direction:column;padding:26px 26px 30px;box-sizing:border-box;">
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div style="display:flex;align-items:center;gap:9px;padding:8px 15px 8px 11px;border-radius:999px;
+        background:rgba(255,255,255,.055);border:1px solid var(--line);box-shadow:inset 0 1px 0 var(--hi);">
+        <span style="width:7px;height:7px;border-radius:999px;background:#FF5A36;box-shadow:0 0 9px 1.5px rgba(255,90,54,.95);"></span>
+        <span style="font-size:12.5px;font-weight:600;letter-spacing:.02em;">Setswana</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;padding-top:12px;">
+        <span style="width:16px;height:2.5px;border-radius:9px;background:#FF5A36;"></span>
+        <span style="width:16px;height:2.5px;border-radius:9px;background:#FF5A36;"></span>
+        <span style="width:16px;height:2.5px;border-radius:9px;background:var(--line);"></span>
+      </div>
+    </div>
+
+    <div style="margin-top:46px;" class="kicker">Round three</div>
+
+    <!-- scale contrast: 66px against 10px -->
+    <div style="margin-top:16px;font-size:66px;line-height:.86;font-weight:800;font-stretch:125%;letter-spacing:-.045em;
+      background:linear-gradient(160deg,#FFFFFF 4%,#FFD2BE 46%,#FF9BB4 96%);-webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 0 60px rgba(255,90,54,.26);">SEFO<br>FANE</div>
+
+    <div style="margin-top:26px;display:flex;align-items:baseline;gap:11px;">
+      <span class="serif" style="font-size:21px;color:#FF7A55;">without saying</span>
+      <span style="flex-grow:1;height:1px;background:linear-gradient(90deg,var(--line),transparent);"></span>
+    </div>
+
+    <!-- banned words as a struck-through editorial list, not chips -->
+    <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:7px 18px;">
+      <span class="banned">fofa</span><span class="banned">loapi</span>
+      <span class="banned">maeto</span><span class="banned">boemafofane</span>
+    </div>
+
+    <div style="flex-grow:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
+      <!-- the agreement lens, made literal: the two people who will hear this -->
+      <div style="position:relative;height:96px;width:150px;">
+        <div style="position:absolute;left:0;top:8px;width:80px;height:80px;border-radius:999px;
+          background:linear-gradient(148deg,#E8A06A,#B8623C);border:2px solid var(--ground);
+          display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;color:#2A1206;
+          box-shadow:0 12px 30px -10px rgba(0,0,0,.8);">N</div>
+        <div style="position:absolute;left:60px;top:8px;width:80px;height:80px;border-radius:999px;
+          background:linear-gradient(148deg,#8FA8D8,#4A6396);border:2px solid var(--ground);
+          display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;color:#0B1224;
+          box-shadow:0 12px 30px -10px rgba(0,0,0,.8);">T</div>
+        <div style="position:absolute;left:60px;top:8px;width:80px;height:80px;border-radius:999px;
+          background:radial-gradient(circle at 20% 50%, rgba(255,90,54,.34), transparent 62%);"></div>
+      </div>
+      <div class="serif" style="font-size:19px;color:var(--dim);text-align:center;">two people are waiting to hear you</div>
+    </div>
+
+    <!-- meta strip: hairline, not a heavy card -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 4px;
+      border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.3 1.7"/><path d="M9.5 2h5"/></svg>
+        <span style="font-size:13.5px;color:var(--dim);">30 seconds &middot; 2 listeners</span>
+      </div>
+      <span style="font-size:15px;font-weight:800;color:#FFCB05;font-variant-numeric:tabular-nums;letter-spacing:-.01em;">R2.00</span>
+    </div>
+
+    <!-- asymmetric CTA: circle + type, not a slab -->
+    <div style="margin-top:26px;display:flex;align-items:center;gap:18px;">
+      <div style="width:74px;height:74px;flex-shrink:0;border-radius:999px;background:linear-gradient(142deg,#FF6A3D,#E8267F);
+        display:flex;align-items:center;justify-content:center;
+        box-shadow:0 18px 40px -14px rgba(232,38,127,.75),inset 0 2px 0 rgba(255,255,255,.34);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#14060C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-5a3.5 3.5 0 0 0-7 0v5A3.5 3.5 0 0 0 12 15z"/>
+          <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/><path d="M12 18.5V22"/></svg>
+      </div>
+      <div>
+        <div style="font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.1;">Start speaking</div>
+        <div class="serif" style="margin-top:3px;font-size:16px;color:var(--dim);">make a stranger see it</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"theme":{"editor":"enum","default":"night","options":["night","dusk","earth","ink"],"section":"Theme"}}'>
+class Component extends DCLogic {
+  renderVals(){ return { theme: this.props.theme ?? 'night' }; }
+}
+</script>
+</body>
+</html>

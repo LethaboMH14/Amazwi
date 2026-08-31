@@ -1,0 +1,32 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",       "x": 0,   "y": 0, "w": 390, "h": 844, "title": "1 · Card reveal" },
+    { "file": "Recording.dc.html",  "x": 470, "y": 0, "w": 390, "h": 844, "title": "2 · Recording" },
+    { "file": "Understood.dc.html", "x": 940, "y": 0, "w": 390, "h": 844, "title": "3 · The money moment" }
+  ],
+  "annotations": [
+    {
+      "id": "note-bar",
+      "x": 0,
+      "y": -300,
+      "w": 860,
+      "kind": "title1",
+      "text": "V2 — THE REBUILD. THIS IS THE BAR.\n\nThe v1 set was generic and the diagnosis was specific: everything sat on one elevation plane, every layout was a symmetric vertical stack with uniform padding, there was no scale contrast, nothing overlapped or bled off canvas, and there was no signature device.\n\nThese three fix that. The other seven screens still need the same treatment — do NOT mix v1 and v2 in front of a judge."
+    },
+    {
+      "id": "note-grammar",
+      "x": 940,
+      "y": -300,
+      "w": 860,
+      "text": "THE VISUAL GRAMMAR — apply this to the remaining seven\n\n1. TYPE PAIRING. Archivo (expanded, 800) for display + Instrument Serif ITALIC for accents. The serif is what makes it read as editorial rather than app-generic.\n\n2. SCALE CONTRAST. 66-88px display against 10px kickers at 0.34em tracking. No mid-sizes.\n\n3. THE SIGNATURE DEVICE: overlapping circles. Two listeners agreeing IS the product mechanic, so two overlapping avatars are both the content and the logo. Never decorative geometry for its own sake.\n\n4. EDITORIAL TREATMENTS over form controls. Banned words are struck through, not chips. Meta is a hairline rule, not a card.\n\n5. ASYMMETRIC CTA. Circle + two lines of type, never a full-width slab.\n\n6. FILL SPACE WITH MEANING. The v1 screens had dead space; the fix was content (who is listening), not decoration."
+    },
+    {
+      "id": "note-todo",
+      "x": 0,
+      "y": 900,
+      "w": 1330,
+      "text": "STILL TO DO\n\n· Seven screens remain on v1: Consent, Listen, Referee, Wallet, Receipt, League, Impact Map.\n· Card content is still placeholder — SEFOFANE and its banned words are unverified guesses. Lethabo must replace them.\n· Only Main.dc.html carries the theme tweak. Recording and Understood are night-theme only so far."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

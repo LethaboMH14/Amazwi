@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&family=Instrument+Serif:ital@0;1&display=swap">
+  <style>
+    body { margin:0; -webkit-font-smoothing:antialiased; }
+    a { color:#FF5A36; } a:hover { color:#E8267F; }
+    .stage{
+      --text:#EDF1FA; --dim:#7E8BA8; --line:rgba(160,186,228,.14); --hi:rgba(190,216,255,.11);
+      font-family:'Archivo',system-ui,sans-serif; color:var(--text);
+      background:
+        radial-gradient(ellipse 110% 46% at 50% 66%, rgba(255,203,5,.18) 0%, rgba(255,203,5,0) 62%),
+        radial-gradient(ellipse 120% 44% at 50% 16%, rgba(31,138,84,.20) 0%, rgba(31,138,84,0) 60%),
+        linear-gradient(174deg,#0E1428 0%, #0A0E1C 62%, #070A14 100%);
+    }
+    .grain{position:absolute;inset:0;pointer-events:none;opacity:.42;mix-blend-mode:overlay;z-index:3;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");}
+    .serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;}
+    .kicker{font-size:10px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--dim);}
+    .av{width:86px;height:86px;border-radius:999px;position:absolute;top:0;border:2.5px solid #0A0E1C;
+      display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:800;
+      box-shadow:0 14px 34px -10px rgba(0,0,0,.85);}
+    .tick{position:absolute;right:-2px;bottom:-2px;width:28px;height:28px;border-radius:999px;background:#1F8A54;
+      border:2.5px solid #0A0E1C;display:flex;align-items:center;justify-content:center;}
+    .spark{position:absolute;border-radius:999px;z-index:2;}
+  </style>
+</helmet>
+
+<div class="stage" style="width:390px;height:844px;position:relative;overflow:hidden;">
+
+  <svg width="390" height="844" viewBox="0 0 390 844" style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.45;">
+    <circle cx="195" cy="238" r="150" fill="none" stroke="var(--line)" stroke-width=".8"/>
+    <circle cx="195" cy="596" r="176" fill="none" stroke="var(--line)" stroke-width=".8"/>
+    <circle cx="420" cy="760" r="140" fill="none" stroke="var(--line)" stroke-width=".8"/>
+  </svg>
+
+  <div class="spark" style="width:7px;height:7px;background:#FFCB05;top:150px;left:48px;box-shadow:0 0 12px 2px rgba(255,203,5,.6);"></div>
+  <div class="spark" style="width:5px;height:5px;background:#FF5A36;top:206px;left:330px;opacity:.75;"></div>
+  <div class="spark" style="width:9px;height:9px;background:#E8267F;top:284px;left:30px;opacity:.45;"></div>
+  <div class="spark" style="width:6px;height:6px;background:#FFCB05;top:118px;left:302px;opacity:.7;"></div>
+  <div class="spark" style="width:4px;height:4px;background:#EDF1FA;top:336px;left:352px;opacity:.4;"></div>
+  <div class="grain"></div>
+
+  <div style="position:relative;z-index:4;height:100%;display:flex;flex-direction:column;align-items:center;padding:26px 26px 30px;box-sizing:border-box;">
+
+    <div style="margin-top:52px;position:relative;height:92px;width:156px;">
+      <div class="av" style="left:0;background:linear-gradient(148deg,#E8A06A,#B8623C);color:#2A1206;">N
+        <div class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      </div>
+      <div class="av" style="left:70px;background:linear-gradient(148deg,#8FA8D8,#4A6396);color:#0B1224;">T
+        <div class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      </div>
+    </div>
+
+    <div style="margin-top:30px;font-size:46px;line-height:1;font-weight:800;font-stretch:122%;letter-spacing:-.04em;text-align:center;">
+      Both of them<br>understood you
+    </div>
+
+    <div class="serif" style="margin-top:14px;font-size:20px;color:var(--dim);text-align:center;max-width:300px;line-height:1.35;">
+      they heard <span style="color:#FFB08A;">sefofane</span> and got it first try
+    </div>
+
+    <div style="flex-grow:1;"></div>
+
+    <!-- the money moment: waveform becoming value -->
+    <div style="display:flex;align-items:flex-end;justify-content:center;gap:4px;height:56px;">
+      <div style="width:5px;height:14px;border-radius:9px;background:#FF5A36;opacity:.3;"></div>
+      <div style="width:5px;height:28px;border-radius:9px;background:#FF7A2E;opacity:.48;"></div>
+      <div style="width:5px;height:44px;border-radius:9px;background:#FFA020;opacity:.7;"></div>
+      <div style="width:5px;height:56px;border-radius:9px;background:#FFCB05;box-shadow:0 0 24px 4px rgba(255,203,5,.6);"></div>
+      <div style="width:5px;height:40px;border-radius:9px;background:#FFA020;opacity:.76;"></div>
+      <div style="width:5px;height:24px;border-radius:9px;background:#FF7A2E;opacity:.5;"></div>
+      <div style="width:5px;height:12px;border-radius:9px;background:#FF5A36;opacity:.28;"></div>
+    </div>
+
+    <div style="margin-top:22px;font-size:72px;font-weight:800;font-stretch:125%;line-height:1;letter-spacing:-.05em;
+      font-variant-numeric:tabular-nums;
+      background:linear-gradient(178deg,#FFEDA8 0%,#FFCB05 54%,#DFA400 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 0 56px rgba(255,203,5,.34);">R2.00</div>
+    <div class="kicker" style="margin-top:8px;color:rgba(255,203,5,.6);">Landed in your wallet</div>
+
+    <div style="margin-top:26px;display:flex;align-items:center;gap:20px;">
+      <span class="serif" style="font-size:17px;color:var(--dim);">+40 points</span>
+      <span style="width:3px;height:3px;border-radius:999px;background:var(--dim);"></span>
+      <span class="serif" style="font-size:17px;color:var(--dim);">7&#8209;day streak</span>
+    </div>
+
+    <div style="flex-grow:1;"></div>
+
+    <div style="width:100%;display:flex;align-items:center;gap:18px;">
+      <div style="width:70px;height:70px;flex-shrink:0;border-radius:999px;background:linear-gradient(142deg,#FF6A3D,#E8267F);
+        display:flex;align-items:center;justify-content:center;
+        box-shadow:0 18px 40px -14px rgba(232,38,127,.75),inset 0 2px 0 rgba(255,255,255,.34);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14060C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+      </div>
+      <div>
+        <div style="font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.1;">Play again</div>
+        <div class="serif" style="margin-top:3px;font-size:16px;color:var(--dim);">or see your receipt</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
