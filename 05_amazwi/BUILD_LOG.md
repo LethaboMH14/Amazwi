@@ -133,6 +133,23 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug] — Sbu · medium · plan critique + fixes
+
+**DID**
+- Ran a full fresh critique of the plan/research corpus (skipping anything already in 08_REDTEAM/10_SBU_REVIEW/DECISIONS). Fixed all 6 findings that landed:
+  1. `Receipt` gains `settlement_currency`/`currency_disclosure_text` (`02_TECH.md`, `06_PITCH.md`) — closes R3's sandbox-EUR-vs-Rand gap for real
+  2. `05_BUILD.md` Gate B: seed data is now explicitly pre-resolved fixture data, not live resolver output — removes the Gate B/E ambiguity
+  3. `content/SCHEMA.md`: hard build-gate reject for DRAFT cards, blank fields, or `accepted_answers` with fewer than 2 entries
+  4. OPEN #7: CPA s36 formal opinion status tracked (correctly scoped — gates commercial launch, not the sandbox demo)
+  5. OPEN #8: `accepted_answers` exhaustiveness flagged separately from "cards exist at all" — the current Setswana hero-8 file only has the bare target word per card, which the matcher will silently reject on any real synonym
+  6. `SCHEMA.md`: `campaign_or_deck` → `campaign_id` mapping made explicit (Gate A seed script's job, not a raw FK in content files)
+
+**PING Lethabo**
+- **OPEN #8 is yours and mine both** — when you do your native-language pass on `content/cards_setswana.json`, `accepted_answers` needs every real variant a verifier might type, not just the target word. Same applies to my isiZulu cards before either reaches the pitch.
+- Nothing here touches your `hostBridge.ts`/Gate A work — nothing conflicted on merge.
+
+---
+
 ### [31 Aug ~16:00] — Lethabo (Sonnet, BUILD) · G0 · host bridge
 
 **DID**
