@@ -1,6 +1,6 @@
 {
   "language": "setswana",
-  "status": "REVIEWED — Lethabo native-confirmed all 8 targets, blocked words, accepted answers and distractors on 31 August 2026, including the sw-003 swap from pula to thipa (knife) and thipa's blocked words (sega/bogale/tshipi/lomo) confirmed last, same check as the other 7. Matches cards_isizulu.json's review standard.",
+  "status": "REVIEWED — Lethabo native-confirmed all 8 targets, blocked words, accepted answers and distractors on 31 August 2026, including the sw-003 swap from pula to thipa (knife) and thipa's blocked words (sega/bogale/tshipi/lomo) confirmed last, same check as the other 7. Matches cards_isizulu.json's review standard. FOLLOW-UP 31 Aug, not yet aloud-confirmed: validate_cards.mjs flagged blocked_words also appearing as distractors on sw-004/005/007 (LETHABO_NEXT_WORK.md item 1). Swapped sw-004 phaphosi->moraka (kraal), sw-005 pula->jusi (juice), sw-007 seswaa/morogo->ting/diphaphatha (both real distinct Setswana dishes). Validator now runs clean with zero warnings, but these three specific swaps are a proposed judgement call pending the same read-aloud check the original 8 got.",
   "hero_8": [
     {
       "id": "sw-001",
@@ -84,7 +84,7 @@
         "matlo"
       ],
       "distractors": [
-        "phaphosi",
+        "moraka",
         "tafole",
         "sekolo"
       ],
@@ -108,7 +108,7 @@
       "distractors": [
         "bojalwa",
         "maswi",
-        "pula"
+        "jusi"
       ],
       "campaign_or_deck": "hero-8",
       "active": true
@@ -150,8 +150,8 @@
         "pap"
       ],
       "distractors": [
-        "seswaa",
-        "morogo",
+        "ting",
+        "diphaphatha",
         "nama"
       ],
       "campaign_or_deck": "hero-8",

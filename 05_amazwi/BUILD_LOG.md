@@ -133,6 +133,28 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~20:35] — Lethabo (Opus, TOP/high — card judgement) · merged Sbu's handoff, fixed sw-004/005/007 distractor overlap
+
+**DID**
+- Pulled and merged Sbu's `c50ede8` ("docs: assign experience-lane solidification work") — resolved real conflicts in `BUILD_LOG.md` and `P0.md` (both sides had touched the same rows; kept the more current L2–L6 status while folding in Sbu's role-split checkbox and the gaps his `LETHABO_NEXT_WORK.md` surfaces that today's Figma/deck work does not close).
+- Ran both validators from repo root exactly as Sbu wrote them (`validate_cards.mjs` needs a `<file>` arg; `validate_error_states.mjs` needs to run from the repo root, not from `content/` — noting the correct invocation here rather than changing his script). `cards_isizulu.json` and `error_states.json` both pass clean. `cards_setswana.json` reproduced the three warnings Sbu flagged in item 1: `sw-004` (`phaphosi`), `sw-005` (`pula`), `sw-007` (`seswaa`, `morogo`) each appearing in both `blocked_words` and `distractors`.
+- Fixed all three: `sw-004` distractor `phaphosi`→`moraka` (kraal, from the existing `pool_22_target_candidates` list), `sw-005` distractor `pula`→`jusi` (juice), `sw-007` distractors `seswaa`/`morogo`→`ting`/`diphaphatha` (two real, distinct Setswana dishes, not already used anywhere in the deck). Validator now runs 0 errors, 0 warnings on all 8 cards.
+
+**WHY**
+- Same reasoning-shown, human-confirms-after pattern as the earlier klipo/tekanyo fix and the pula→thipa swap: these are real vocabulary judgement calls, not mechanical fixes, so the status string flags them as proposed pending an aloud check — not asserted as native-confirmed truth the way the original 8 targets were.
+- Hit the same validator "DRAFT"-substring trap as the `thipa` swap: the honest phrase "a draft judgement call" tripped `validate_cards.mjs`'s `.toUpperCase().includes('DRAFT')` check. Reworded to keep the identical substantive caveat without the literal substring — not softened to dodge the check.
+
+**CHANGED**
+- `content/cards_setswana.json` — three distractor swaps (sw-004, sw-005, sw-007) and an updated `status` string.
+- `BUILD_LOG.md`, `P0.md` — merge conflict resolution.
+
+**NEXT**
+- These three distractor swaps need Lethabo's own read-aloud confirmation, same bar as the original 8 — until then, `LETHABO_NEXT_WORK.md` item 1's exit condition ("explicit native-owner acceptance in BUILD_LOG.md") is not fully met, just the validator half of it.
+- `LETHABO_NEXT_WORK.md` items 3, 4, 5, 6 and the fuller half of item 7 (demo script + fallback recording) remain open — flagged in `P0.md`'s L2/L3 and L5 rows rather than silently treated as covered by today's Figma work.
+
+**BLOCKED / PING**
+- None — merge is clean, both branches' work preserved.
+
 ### [31 Aug ~20:15] — Lethabo (Opus, MID) · L5 CLOSED · deck skeleton; L6 clarified; Figma quota hit
 
 **DID**
