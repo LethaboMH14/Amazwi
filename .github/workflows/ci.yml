@@ -14,13 +14,38 @@ jobs:
     defaults:
       run:
         working-directory: starter/backend
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: amazwi_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Points tests/conftest.py at the service container above instead of
+      # the embedded pgserver fallback. A `postgres:` service container is
+      # the standard, reliable pattern for real-Postgres CI on GitHub
+      # Actions -- it has no dependency on pgserver's binary-download step
+      # succeeding inside a possibly locked-down/sandboxed runner network,
+      # which is the single most likely cause if backend CI has been
+      # failing (real Postgres 16 either way -- same fidelity, more
+      # reliable startup).
+      AMAZWI_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/amazwi_test
+      AMAZWI_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/amazwi_test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: pytest
+      - run: pytest -v
 
   frontend:
     runs-on: ubuntu-latest

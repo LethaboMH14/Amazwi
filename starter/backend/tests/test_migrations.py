@@ -37,15 +37,19 @@ def _run_alembic(*args: str, db_uri: str) -> None:
 
 
 @pytest.fixture()
-def clean_db_uri(pg_server, db_engine):
+def clean_db_uri(db_engine):
     """A DB with no tables/types at all -- alembic manages the schema
-    itself here, unlike db_session which uses Base.metadata directly."""
+    itself here, unlike db_session which uses Base.metadata directly.
+    Derives the URI from db_engine.url rather than pg_server.get_uri()
+    directly, so this works whether db_engine is backed by the embedded
+    pgserver or an external AMAZWI_TEST_DATABASE_URL (pg_server is None
+    in the external-DB case -- see conftest.py)."""
     from sqlalchemy import text
 
     with db_engine.begin() as conn:
         conn.execute(text("DROP SCHEMA public CASCADE"))
         conn.execute(text("CREATE SCHEMA public"))
-    return pg_server.get_uri()
+    return db_engine.url.render_as_string(hide_password=False)
 
 
 def test_upgrade_creates_all_expected_tables(clean_db_uri, db_engine):
