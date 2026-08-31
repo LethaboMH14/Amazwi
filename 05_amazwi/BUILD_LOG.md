@@ -133,6 +133,26 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~19:05] — Lethabo (Sonnet, BUILD) · error copy · both flagged terms confirmed wrong, fixed
+
+**DID**
+- Lethabo checked `klipo` and `tekanyo` against a dictionary source (glosbe.com) — both were wrong, not just uncertain. `klipo` is an artificial phonetic borrowing nobody uses. `tekanyo` actually means measurement/proportion (from `lekana`, to be equal) — not round/turn at all.
+- Replaced `klipo` → `karolo` (segment/part) in `upload_network_failure` and `no_verifiers_available`. **Clean swap** — karolo is the same noun class (9/10) as klipo was implicitly built as (`ya`/`e` concords), so no other grammar changed.
+- Replaced `tekanyo` → `mogato` (step/stage) in `mic_denied` and `campaign_empty`. **Not a clean swap** — mogato is class 3/4, not class 9/10 like tekanyo was. `mic_denied` was a bare object position so the swap was safe as-is. `campaign_empty` needed real grammar changes: plural `megato` not `dimogato`, relative concord `o o` not `e e`. Rewrote the full sentence rather than patching the noun in place.
+
+**CONFIDENCE IS NOT UNIFORM ACROSS THIS FIX**
+- Word choice is now backed by a source (Lethabo's check), high confidence.
+- The `karolo` swaps are high confidence — same noun class, no structural change needed.
+- **The class 3/4 concord specifics in `campaign_empty` (the `a`/`ya` possessive marker particularly) are my best grammatical reasoning, not source-verified, and lower confidence than the word choice itself.** Flagged explicitly in the file's `_meta.status` rather than presented as equally solid.
+
+**VERIFIED**
+- Grepped all 10 states for both old terms after the fix: **zero remaining occurrences of either**, not just the four I remembered changing.
+
+**NEXT**
+- Lethabo: read `campaign_empty` aloud specifically — that's the one with real grammar surgery, not just a word swap.
+
+---
+
 ### [31 Aug ~18:58] — Lethabo (Sonnet, BUILD) · error copy · Setswana drafted, decisions acknowledged
 
 **DID**
