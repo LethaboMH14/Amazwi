@@ -7,7 +7,7 @@
       "Never say data, corpus, annotation, task, or submission in player-facing copy. Say voice, clip, round, your turn.",
       "Never lie about money. 'Sent for payment' is not 'Paid.'"
     ],
-    "status": "English is the reviewed base language. isiZulu (Sbu) and Setswana (Lethabo) translations are NOT filled in below — each is a native-authorship task, not a translation-from-English task, per the same discipline as content/cards_*.json. Filling these with a literal translation would repeat the exact mistake the card-content worksheets were built to avoid.",
+    "status": "English is the reviewed base language. isiZulu is a Sbu/Codex draft awaiting Sbu's final first-language approval. Setswana (Lethabo) remains null pending first-language authorship. Do not treat either language as a literal translation task.",
     "shape": "Each state has: title (one line, fits a small screen), body (one or two sentences, explains what happened and what happens next), action (the single button label — never more than one primary action on an error screen), and retryable (bool — whether the action label is a retry or a dismissal)."
   },
 
@@ -18,7 +18,12 @@
       "action": "Try again",
       "retryable": true
     },
-    "zu": null,
+    "zu": {
+      "title": "Asikuzwa",
+      "body": "Isiphequluli sakho sidinga imvume yokusebenzisa imakrofoni ukuze uqophe umzuliswano. Vula izilungiselelo zesayithi, uvumele imakrofoni, bese ubuya lapha.",
+      "action": "Zama futhi",
+      "retryable": true
+    },
     "tn": null
   },
 
@@ -29,7 +34,12 @@
       "action": "Got it",
       "retryable": false
     },
-    "zu": null,
+    "zu": {
+      "title": "Lesi siphequluli asikwazi ukuqopha",
+      "body": "Ukuqopha kudinga into lesi siphequluli esingenayo. I-Chrome ne-Safari ocingweni ziyasebenza.",
+      "action": "Kulungile",
+      "retryable": false
+    },
     "tn": null
   },
 
@@ -40,7 +50,12 @@
       "action": "Retry now",
       "retryable": true
     },
-    "zu": null,
+    "zu": {
+      "title": "Akuthunyelwanga",
+      "body": "Isiqeshana sakho asithunyelwanga. Hlola uxhumano lwakho, bese uzama futhi uma uxhumekile ku-inthanethi.",
+      "action": "Zama futhi manje",
+      "retryable": true
+    },
     "tn": null
   },
 
@@ -51,7 +66,12 @@
       "action": "Back to today",
       "retryable": false
     },
-    "zu": null,
+    "zu": {
+      "title": "Akekho oselungele ukulalela",
+      "body": "Sidinga abantu ababili abakhuluma lolu limi ukuthi balalele isiqeshana sakho ngaphambi kokuba sibalwe. Buya kamuva uzobona umphumela.",
+      "action": "Buyela namuhla",
+      "retryable": false
+    },
     "tn": null
   },
 
@@ -62,7 +82,12 @@
       "action": "Check back later",
       "retryable": false
     },
-    "zu": null,
+    "zu": {
+      "title": "Kusalindwe ukuthi kuzwakale",
+      "body": "Akekho osekuqinisekisile lokhu okwamanje. Uma abantu ababili bengakuzwa ngesikhathi, sizokutshela iqiniso kunokuba sikushiye ulindile.",
+      "action": "Buya kamuva",
+      "retryable": false
+    },
     "tn": null
   },
 
@@ -73,7 +98,12 @@
       "action": "Review consent",
       "retryable": false
     },
-    "zu": null,
+    "zu": {
+      "title": "Imvume yakho ivaliwe",
+      "body": "Uyivalile imvume, ngakho awukwazi ukudlala manje. Umvuzo osuwuzuzile usengowakho. Ungayivula noma nini ukuze uqhubeke.",
+      "action": "Bheka imvume",
+      "retryable": false
+    },
     "tn": null
   },
 
@@ -84,7 +114,12 @@
       "action": "Back to today",
       "retryable": false
     },
-    "zu": null,
+    "zu": {
+      "title": "Akukho mizuliswano okwamanje",
+      "body": "Imizuliswano yalolu limi imisiwe okwamanje. Buya kamuva ngomzuliswano olandelayo.",
+      "action": "Buyela namuhla",
+      "retryable": false
+    },
     "tn": null
   },
 
@@ -95,7 +130,12 @@
       "action": "Continue",
       "retryable": false
     },
-    "zu": null,
+    "zu": {
+      "title": "Izinkokhelo zisebenza ohlelweni lokuhlola okwamanje",
+      "body": "Konke okunye kusasebenza ngendlela efanayo. Lokhu kuboniswe ngokucacile ukuze kungabikho odidekayo ngokuthi yini engokoqobo.",
+      "action": "Qhubeka",
+      "retryable": false
+    },
     "tn": null
   },
 
@@ -106,7 +146,12 @@
       "action": "Try again",
       "retryable": true
     },
-    "zu": null,
+    "zu": {
+      "title": "Lokho kukhokhwa akuhambanga",
+      "body": "Akukho okulahlekile — ibhalansi yakho ayikashintshi. Zama futhi kamuva lapho izinkokhelo sezitholakala.",
+      "action": "Zama futhi",
+      "retryable": true
+    },
     "tn": null
   },
 
@@ -117,7 +162,12 @@
       "action": "OK",
       "retryable": false
     },
-    "zu": null,
+    "zu": {
+      "title": "Sevele kwenziwe",
+      "body": "Lokho sekuvele kwenzekile, ngakho akukho okushintshile okwesibili. Akukho mvuzo owengeziwe, akukho mali eyengeziwe ekhokhiswayo.",
+      "action": "Kulungile",
+      "retryable": false
+    },
     "tn": null
   }
 }

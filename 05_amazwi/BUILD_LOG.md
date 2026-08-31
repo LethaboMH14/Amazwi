@@ -482,3 +482,7 @@ Sbu approved all eight isiZulu cards in `content/cards_isizulu.json`, including 
 ### [31 Aug ~18:30] — Sbu · MoMo subscription check
 
 The authenticated MoMo Developer Portal profile shows **“You don't have subscriptions.”** The account can view the Collection and Disbursements catalog entries but cannot call either product. `DEMO_PROVIDER` is frozen as the default demo mode; a real sandbox leg is only reconsidered if the hackathon provisions a separate subscribed account. No subscription, API user, credential or payment action was created.
+
+### [31 Aug ~18:45] — Sbu/Codex · isiZulu error-copy draft
+
+Added complete isiZulu copy for all ten canonical error states in `content/error_states.json`; JSON validation confirms every state has a title, body and action. This is a Sbu/Codex draft, not final native sign-off. Lethabo owns the still-null Setswana copy.
