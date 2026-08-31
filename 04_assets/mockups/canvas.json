@@ -1,0 +1,45 @@
+{
+  "artboards": [
+    { "file": "Consent.dc.html",    "x": 0,    "y": 0,   "w": 390, "h": 844, "title": "1 · Consent" },
+    { "file": "Main.dc.html",       "x": 470,  "y": 0,   "w": 390, "h": 844, "title": "2 · Card reveal" },
+    { "file": "Recording.dc.html",  "x": 940,  "y": 0,   "w": 390, "h": 844, "title": "3 · Recording" },
+    { "file": "Listen.dc.html",     "x": 1410, "y": 0,   "w": 390, "h": 844, "title": "4 · Listen & guess" },
+    { "file": "Referee.dc.html",    "x": 1880, "y": 0,   "w": 390, "h": 844, "title": "5 · Reveal & referee" },
+    { "file": "Understood.dc.html", "x": 0,    "y": 964, "w": 390, "h": 844, "title": "6 · The money moment" },
+    { "file": "Wallet.dc.html",     "x": 470,  "y": 964, "w": 390, "h": 844, "title": "7 · Wallet" },
+    { "file": "Receipt.dc.html",    "x": 940,  "y": 964, "w": 390, "h": 844, "title": "8 · Voice Value Receipt" },
+    { "file": "League.dc.html",     "x": 1410, "y": 964, "w": 390, "h": 844, "title": "9 · League" },
+    { "file": "Archive.dc.html",    "x": 1880, "y": 964, "w": 390, "h": 844, "title": "10 · The Archive" }
+  ],
+  "annotations": [
+    {
+      "id": "note-cards",
+      "x": 470,
+      "y": -190,
+      "w": 390,
+      "text": "PLACEHOLDER CARD CONTENT.\nSEFOFANE / ISITHUTHUTHU and their banned words are my best guess, not native-checked. Replace every one — Lethabo on Setswana, Sbu on isiZulu. A wrong word here is the most damaging detail in the whole product."
+    },
+    {
+      "id": "note-referee",
+      "x": 1880,
+      "y": -190,
+      "w": 390,
+      "text": "THE FIX THAT MATTERS.\nThe listener referees the banned-word rule — not the speaker rating their own round. Two listeners agreeing voids it. Without this the dominant strategy is to just say the word."
+    },
+    {
+      "id": "note-money",
+      "x": 470,
+      "y": 1854,
+      "w": 860,
+      "text": "MONEY SCREENS ARE DELIBERATELY BORING.\nNo gradient, tabular numerals, three distinct states, the EUR sandbox label visible, and the wallet never says \"paid\" before MoMo confirms. Yellow appears only where value moves — that is the whole colour rule."
+    },
+    {
+      "id": "note-league",
+      "x": 1410,
+      "y": 1854,
+      "w": 860,
+      "text": "TIERED, WITH NO LOSING STATE.\nPromotion zone shaded, your position pinned, progress shown against your own last week. There is no national last place — the research says losing teams are harmed while winners gain nothing."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

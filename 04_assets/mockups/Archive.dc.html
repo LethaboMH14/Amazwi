@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; }
+    a { color: #FF5A36; } a:hover { color: #E8267F; }
+  </style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #14100E; color: #FAF6F1; display: flex; flex-direction: column; padding: 28px 0 32px; box-sizing: border-box;">
+
+  <div style="padding: 0 24px;">
+    <div style="font-size: 26px; font-weight: 800; font-stretch: 118%; letter-spacing: -0.02em;">The Archive</div>
+    <div style="margin-top: 4px; font-size: 14px; color: rgba(250,246,241,0.50);">Every voice, kept and credited</div>
+  </div>
+
+  <div style="margin-top: 18px; padding: 0 24px;">
+    <div style="position: relative; border-radius: 18px; background: #1C1714; border: 1px solid rgba(250,246,241,0.07); padding: 16px 12px 12px; overflow: hidden;">
+      <svg width="318" height="212" viewBox="0 0 318 212" style="display: block;">
+        <sc-for list="{{dots}}" as="d" hint-placeholder-count="40">
+          <circle cx="{{d.x}}" cy="{{d.y}}" r="{{d.r}}" fill="{{d.f}}" opacity="{{d.o}}"></circle>
+        </sc-for>
+      </svg>
+      <div style="position: absolute; left: 16px; bottom: 14px; display: flex; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 6px;"><span style="width:7px;height:7px;border-radius:999px;background:#FF5A36;display:block;"></span><span style="font-size:11px;color:rgba(250,246,241,0.55);">Setswana</span></div>
+        <div style="display: flex; align-items: center; gap: 6px;"><span style="width:7px;height:7px;border-radius:999px;background:#E8267F;display:block;"></span><span style="font-size:11px;color:rgba(250,246,241,0.55);">isiZulu</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; padding: 0 24px; display: flex; gap: 10px;">
+    <div style="flex-grow: 1; padding: 14px 16px; border-radius: 13px; background: #2A231F; border: 1px solid rgba(250,246,241,0.07);">
+      <div style="font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em;">4 182</div>
+      <div style="margin-top: 2px; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: rgba(250,246,241,0.42);">Voices</div>
+    </div>
+    <div style="flex-grow: 1; padding: 14px 16px; border-radius: 13px; background: #2A231F; border: 1px solid rgba(250,246,241,0.07);">
+      <div style="font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em;">31.4 h</div>
+      <div style="margin-top: 2px; font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: rgba(250,246,241,0.42);">Validated</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 22px; padding: 0 24px; font-size: 12px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(250,246,241,0.42);">Story chains</div>
+
+  <div style="margin-top: 12px; padding: 0 24px; display: flex; flex-direction: column; gap: 10px;">
+    <div style="display: flex; gap: 14px; align-items: center; padding: 14px; border-radius: 14px; background: #2A231F; border: 1px solid rgba(250,246,241,0.07);">
+      <div style="width: 52px; height: 52px; border-radius: 11px; background: linear-gradient(140deg, #7A2E1A, #3A1A2E); flex-shrink: 0;"></div>
+      <div style="flex-grow: 1;">
+        <div style="font-size: 15px; font-weight: 700;">Pula e na</div>
+        <div style="margin-top: 3px; font-size: 12px; color: rgba(250,246,241,0.48);">Setswana &middot; 6 voices &middot; 2:45</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,246,241,0.4)" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+    </div>
+    <div style="display: flex; gap: 14px; align-items: center; padding: 14px; border-radius: 14px; background: #2A231F; border: 1px solid rgba(250,246,241,0.07);">
+      <div style="width: 52px; height: 52px; border-radius: 11px; background: linear-gradient(140deg, #2E3A1A, #1A2E2A); flex-shrink: 0;"></div>
+      <div style="flex-grow: 1;">
+        <div style="font-size: 15px; font-weight: 700;">Umlando kaGogo</div>
+        <div style="margin-top: 3px; font-size: 12px; color: rgba(250,246,241,0.48);">isiZulu &middot; 9 voices &middot; 4:12</div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(250,246,241,0.4)" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1;"></div>
+
+  <div style="padding: 0 24px;">
+    <div style="padding: 16px 18px; border-radius: 14px; background: rgba(255,90,54,0.09); border: 1px solid rgba(255,90,54,0.26);">
+      <div style="font-size: 14px; font-weight: 700; color: #FF8A6E;">You are voice #4,182</div>
+      <div style="margin-top: 4px; font-size: 12px; color: rgba(250,246,241,0.52); line-height: 1.45;">Your name stays on every clip you gave.</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    // Rough South Africa silhouette as a dot field. Row = [y, xStart, xEnd].
+    const rows = [
+      [22, 92, 214], [40, 68, 240], [58, 52, 258], [76, 42, 268],
+      [94, 36, 274], [112, 34, 276], [130, 40, 268], [148, 52, 252],
+      [166, 70, 232], [184, 96, 202], [200, 120, 176]
+    ];
+    const dots = [];
+    let i = 0;
+    for (const [y, x0, x1] of rows) {
+      for (let x = x0; x <= x1; x += 18) {
+        // Lesotho gap
+        if (x > 196 && x < 232 && y > 120 && y < 158) continue;
+        i++;
+        const live = i % 5 === 0;
+        const zulu = x > 180;
+        dots.push({
+          x: x, y: y,
+          r: live ? 3.4 : 2.2,
+          f: live ? (zulu ? '#E8267F' : '#FF5A36') : 'rgba(250,246,241,0.16)',
+          o: live ? 1 : 0.9
+        });
+      }
+    }
+    return { dots: dots };
+  }
+}
+</script>
+</body>
+</html>

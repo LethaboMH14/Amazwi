@@ -27,8 +27,6 @@ Language learners play the guessing side for free, because guessing what a nativ
 
 ## Repository
 
-> ⚠️ **This repository contains research, planning and design only.** No application code has been written. Per the hackathon terms, *"all submissions must be original and created during the hackathon."*
-
 | Path | Contents |
 |---|---|
 | **[`05_amazwi/`](05_amazwi/)** | **The current plan.** Start at [`README.md`](05_amazwi/README.md), then [`plan/00_MASTER_PLAN.md`](05_amazwi/plan/00_MASTER_PLAN.md) |
