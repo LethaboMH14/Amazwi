@@ -38,7 +38,7 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 5. **Theme references need cultural and accessibility checks.** Attribute any specific tradition accurately, do not treat a living cultural form as a generic skin, test contrast and reduced-motion states, and keep the neutral UI shell co-equal for isiZulu and Setswana.
 6. **The model/tooling recommendations are optional.** Do not install a plugin, proxy or workflow tool during the competition without reading it and agreeing it is permitted. The repository plan, tests and handovers are the operating system; model branding is not part of the product.
 
-I added a canonical-status note to `10_EXPANSION.md` and an implementation guardrail to the themes README. If you disagree with any correction, append the evidence and the affected canonical section to `HANDOVER_SBU.md`.
+I added a canonical-status note to `11_EXPANSION.md` and an implementation guardrail to the themes README. If you disagree with any correction, append the evidence and the affected canonical section to `HANDOVER_SBU.md`.
 
 ---
 

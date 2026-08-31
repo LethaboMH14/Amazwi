@@ -24,7 +24,7 @@ The earlier plan was reconciled after Sbu's review. Read the canonical documents
 | **9** | [08_REDTEAM.md](plan/08_REDTEAM.md) | Historical R1–R23 plus accepted second-pass findings R24–R28 |
 | 10 | [09_MOCKUP_LIBRARY.md](plan/09_MOCKUP_LIBRARY.md) | Design-reference library, not product scope |
 | **11** | [10_SBU_REVIEW.md](plan/10_SBU_REVIEW.md) | Accepted decision overlay and rationale |
-| Roadmap | [10_EXPANSION.md](plan/10_EXPANSION.md) | Roadmap ideas and design/tooling notes; not competition scope and subject to the critique in `HANDOVER_LETHABO.md` |
+| Roadmap | [11_EXPANSION.md](plan/11_EXPANSION.md) | Roadmap ideas and design/tooling notes; not competition scope and subject to the critique in `HANDOVER_LETHABO.md` |
 
 Evidence lives in [`research/`](research/). All seven research files are present, including source-graded gamification work in [`F_GAMIFICATION.md`](research/F_GAMIFICATION.md).
 
