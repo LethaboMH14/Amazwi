@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #FF5A36; } a:hover { color: #E8267F; }
+    .shweshwe { position: absolute; inset: 0; pointer-events: none; opacity: 0.30;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%23A8C4E8' stroke-width='0.7'%3E%3Ccircle cx='24' cy='24' r='9'/%3E%3Ccircle cx='24' cy='24' r='4.5'/%3E%3Cpath d='M24 6 L30 12 L24 18 L18 12 Z'/%3E%3Cpath d='M24 30 L30 36 L24 42 L18 36 Z'/%3E%3Cpath d='M6 24 L12 30 L18 24 L12 18 Z'/%3E%3Cpath d='M30 24 L36 30 L42 24 L36 18 Z'/%3E%3C/g%3E%3Ccircle cx='24' cy='24' r='1.4' fill='%23A8C4E8'/%3E%3C/svg%3E"); }
+    .grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.42; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); }
+    .chip { padding: 10px 16px; border-radius: 10px; font-size: 15px; font-weight: 600; color: rgba(232,240,255,0.86);
+      background: linear-gradient(180deg, rgba(168,196,232,0.14), rgba(168,196,232,0.06));
+      border: 1px solid rgba(168,196,232,0.30); box-shadow: inset 0 1px 0 rgba(200,224,255,0.16); }
+  </style>
+</helmet>
+<div style="width: 390px; height: 780px; background: linear-gradient(172deg, #131A31 0%, #0C1123 55%, #080C1A 100%); color: #EAF0FA; position: relative; overflow: hidden;">
+
+  <div class="shweshwe"></div>
+  <div style="position: absolute; width: 430px; height: 430px; left: -95px; top: 120px; border-radius: 999px; background: radial-gradient(circle, rgba(255,90,54,0.24) 0%, rgba(232,38,127,0.11) 44%, rgba(8,12,26,0) 68%); filter: blur(10px);"></div>
+  <div class="grain"></div>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; padding: 24px 22px 26px; box-sizing: border-box;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(168,196,232,0.09); border: 1px solid rgba(168,196,232,0.20); box-shadow: inset 0 1px 0 rgba(200,224,255,0.12);">
+        <span style="width: 6px; height: 6px; border-radius: 999px; background: #FF5A36; display: block; box-shadow: 0 0 8px 1px rgba(255,90,54,0.9);"></span>
+        <span style="font-size: 13px; font-weight: 600;">Setswana</span>
+      </div>
+      <div style="padding: 7px 13px; border-radius: 999px; background: linear-gradient(180deg, rgba(255,203,5,0.20), rgba(255,203,5,0.08)); border: 1px solid rgba(255,203,5,0.42); color: #FFD84D; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;">R2.00</div>
+    </div>
+
+    <div style="margin-top: 42px; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(234,240,250,0.36);">Your word</div>
+    <div style="margin-top: 13px; font-size: 52px; line-height: 0.92; font-weight: 800; font-stretch: 125%; letter-spacing: -0.035em; background: linear-gradient(168deg, #FFFFFF 6%, #FFCDB8 56%, #F58FA6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 46px rgba(255,90,54,0.24);">SEFOFANE</div>
+
+    <div style="margin-top: 26px; font-size: 11px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase; color: #C9A24A;">Don't say</div>
+    <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
+      <div class="chip">fofa</div><div class="chip">loapi</div><div class="chip">maeto</div><div class="chip">boemafofane</div>
+    </div>
+
+    <div style="flex-grow: 1;"></div>
+
+    <div style="padding: 19px; border-radius: 18px; background: linear-gradient(96deg, #FF5A36, #E8267F); color: #0B0F1E; font-size: 18px; font-weight: 800; text-align: center; box-shadow: 0 16px 38px -12px rgba(232,38,127,0.60), inset 0 1px 0 rgba(255,255,255,0.30);">I'm ready</div>
+
+    <div style="margin-top: 20px; padding: 14px 16px; border-radius: 13px; background: rgba(168,196,232,0.07); border: 1px solid rgba(168,196,232,0.16);">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(234,240,250,0.42);">Ground</div>
+      <div style="margin-top: 6px; font-size: 14px; font-weight: 700;">Midnight Shweshwe</div>
+      <div style="margin-top: 5px; font-size: 12px; color: rgba(234,240,250,0.55); line-height: 1.45;">Indigo, not black. The texture is a shweshwe discharge print — worn across Xhosa, Sotho and Tswana communities, and the ember gradient sings against indigo far better than against warm black.</div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

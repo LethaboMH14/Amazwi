@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #FF5A36; } a:hover { color: #E8267F; }
+    .grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.40; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); }
+    .chip { padding: 10px 16px; border-radius: 4px; font-size: 15px; font-weight: 700; color: #F4EFE6;
+      background: #14100E; border: 2px solid #E8B22A; }
+  </style>
+</helmet>
+<div style="width: 390px; height: 780px; background: #0B0908; color: #F4EFE6; position: relative; overflow: hidden;">
+
+  <div style="position: absolute; left: 0; right: 0; top: 0; height: 12px; display: flex;">
+    <div style="flex: 1; background: #E8452A;"></div><div style="flex: 1; background: #E8B22A;"></div>
+    <div style="flex: 1; background: #1F8A54;"></div><div style="flex: 1; background: #2B5FBF;"></div>
+    <div style="flex: 1; background: #E8452A;"></div><div style="flex: 1; background: #F4EFE6;"></div>
+  </div>
+
+  <svg width="390" height="780" viewBox="0 0 390 780" style="position: absolute; inset: 0; opacity: 0.14;">
+    <g stroke="#F4EFE6" stroke-width="2" fill="none">
+      <path d="M0 210 H390 M0 258 H390 M0 470 H390 M0 518 H390"></path>
+      <path d="M40 210 V258 M110 210 V258 M180 210 V258 M250 210 V258 M320 210 V258"></path>
+      <path d="M75 470 V518 M145 470 V518 M215 470 V518 M285 470 V518"></path>
+      <path d="M0 210 L40 258 M110 210 L150 258 M250 210 L290 258"></path>
+    </g>
+    <g fill="#E8B22A" opacity="0.55">
+      <rect x="40" y="210" width="70" height="48"></rect><rect x="180" y="210" width="70" height="48"></rect>
+    </g>
+    <g fill="#2B5FBF" opacity="0.45">
+      <rect x="75" y="470" width="70" height="48"></rect><rect x="215" y="470" width="70" height="48"></rect>
+    </g>
+  </svg>
+
+  <div class="grain"></div>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; padding: 32px 22px 26px; box-sizing: border-box;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 4px; background: #14100E; border: 2px solid #F4EFE6;">
+        <span style="width: 6px; height: 6px; background: #E8452A; display: block;"></span>
+        <span style="font-size: 13px; font-weight: 700;">Setswana</span>
+      </div>
+      <div style="padding: 7px 13px; border-radius: 4px; background: #FFCB05; border: 2px solid #14100E; color: #14100E; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;">R2.00</div>
+    </div>
+
+    <div style="margin-top: 40px; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #E8B22A;">Your word</div>
+    <div style="margin-top: 13px; font-size: 52px; line-height: 0.92; font-weight: 800; font-stretch: 125%; letter-spacing: -0.035em; color: #F4EFE6;">SEFOFANE</div>
+
+    <div style="margin-top: 26px; font-size: 11px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase; color: #E8452A;">Don't say</div>
+    <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
+      <div class="chip">fofa</div><div class="chip">loapi</div><div class="chip">maeto</div><div class="chip">boemafofane</div>
+    </div>
+
+    <div style="flex-grow: 1;"></div>
+
+    <div style="padding: 19px; border-radius: 4px; background: #E8452A; color: #14100E; font-size: 18px; font-weight: 800; text-align: center; border: 2px solid #14100E; box-shadow: 5px 5px 0 #E8B22A;">I'm ready</div>
+
+    <div style="margin-top: 22px; padding: 14px 16px; border-radius: 4px; background: #14100E; border: 2px solid #2B5FBF;">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #7FA0DC;">Ground</div>
+      <div style="margin-top: 6px; font-size: 14px; font-weight: 800;">Ndebele &middot; Heritage season</div>
+      <div style="margin-top: 5px; font-size: 12px; color: rgba(244,239,230,0.66); line-height: 1.45;">Geometry as <em>structure</em>, not trim — the source is Ndebele wall painting, and it must be named as such. Seasonal skin for September, not the year-round ground.</div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

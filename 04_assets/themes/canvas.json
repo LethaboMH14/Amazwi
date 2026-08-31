@@ -1,0 +1,34 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",   "x": 0,    "y": 0, "w": 390, "h": 780, "title": "A · Midnight Shweshwe  ← leading" },
+    { "file": "ThemeB.dc.html", "x": 470,  "y": 0, "w": 390, "h": 780, "title": "B · Highveld Dusk" },
+    { "file": "ThemeC.dc.html", "x": 940,  "y": 0, "w": 390, "h": 780, "title": "C · Red Earth (Day)" },
+    { "file": "ThemeD.dc.html", "x": 1410, "y": 0, "w": 390, "h": 780, "title": "D · Ndebele (seasonal)" },
+    { "file": "ThemeA.dc.html", "x": 1880, "y": 0, "w": 390, "h": 780, "title": "A · source file" }
+  ],
+  "annotations": [
+    {
+      "id": "note-brief",
+      "x": 0,
+      "y": -320,
+      "w": 860,
+      "kind": "title1",
+      "text": "FOUR GROUNDS. PICK ONE — AND KEEP C REGARDLESS.\n\nThe critique was right: flat #14100E is the default of every AI-generated dark UI. Each of these has a source I can name, which is the difference between a colour and a decision.\n\nWhat makes them ALIGNED rather than four apps: the voice gradient (#FF5A36 → #E8267F) and the money yellow (#FFCB05) NEVER change. Only the ground, the surface treatment and the texture move. That single rule is what holds it together."
+    },
+    {
+      "id": "note-pick",
+      "x": 940,
+      "y": -320,
+      "w": 860,
+      "text": "MY RECOMMENDATION\n\nA (Midnight Shweshwe) as the default + C (Red Earth) as the mandatory Day theme + D (Ndebele) as the September skin.\n\nWhy A: indigo instead of black is instantly non-generic, the shweshwe print is a real South African material worn across Xhosa, Sotho and Tswana communities, and the ember gradient reads far better against indigo than against warm black.\n\nWhy not B as default: it is the most beautiful and the least legible. Small text over a mesh gradient is a contrast-ratio fight you lose. Keep it for the splash and the pitch deck, not the working screens.\n\nD is a seasonal skin, never the year-round ground — and if you use Ndebele geometry you must say it is Ndebele. Attribution is the whole difference between homage and appropriation, and it costs one caption."
+    },
+    {
+      "id": "note-c",
+      "x": 940,
+      "y": 860,
+      "w": 860,
+      "text": "C IS NOT OPTIONAL.\n\nThis app is used outdoors, in queues and at taxi ranks, in hard South African sun where dark UI is unreadable. A dark-only product is an accessibility failure dressed as a style choice — and it fails exactly the users the product exists for."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

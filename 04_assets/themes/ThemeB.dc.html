@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #FF5A36; } a:hover { color: #E8267F; }
+    .grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.55; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E"); }
+    .chip { padding: 10px 16px; border-radius: 10px; font-size: 15px; font-weight: 600; color: rgba(255,241,232,0.88);
+      background: linear-gradient(180deg, rgba(255,180,120,0.16), rgba(255,180,120,0.05));
+      border: 1px solid rgba(255,170,110,0.32); box-shadow: inset 0 1px 0 rgba(255,210,170,0.20); }
+  </style>
+</helmet>
+<div style="width: 390px; height: 780px; color: #FFF1E8; position: relative; overflow: hidden;
+  background:
+    radial-gradient(ellipse 120% 60% at 18% 4%,  rgba(88,42,120,0.85) 0%, rgba(88,42,120,0) 58%),
+    radial-gradient(ellipse 130% 50% at 88% 26%, rgba(196,68,64,0.55) 0%, rgba(196,68,64,0) 60%),
+    radial-gradient(ellipse 140% 46% at 42% 52%, rgba(226,116,44,0.42) 0%, rgba(226,116,44,0) 62%),
+    linear-gradient(178deg, #2A1740 0%, #40182C 32%, #2A1018 62%, #140A0C 100%);">
+
+  <div class="grain"></div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 300px; height: 1px; background: linear-gradient(90deg, rgba(255,190,130,0) 0%, rgba(255,190,130,0.42) 45%, rgba(255,190,130,0) 100%);"></div>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; padding: 24px 22px 26px; box-sizing: border-box;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(255,241,232,0.10); border: 1px solid rgba(255,241,232,0.20); box-shadow: inset 0 1px 0 rgba(255,241,232,0.16);">
+        <span style="width: 6px; height: 6px; border-radius: 999px; background: #FFD84D; display: block; box-shadow: 0 0 8px 1px rgba(255,216,77,0.9);"></span>
+        <span style="font-size: 13px; font-weight: 600;">Setswana</span>
+      </div>
+      <div style="padding: 7px 13px; border-radius: 999px; background: linear-gradient(180deg, rgba(255,203,5,0.28), rgba(255,203,5,0.10)); border: 1px solid rgba(255,203,5,0.52); color: #FFE07A; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;">R2.00</div>
+    </div>
+
+    <div style="margin-top: 42px; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,241,232,0.44);">Your word</div>
+    <div style="margin-top: 13px; font-size: 52px; line-height: 0.92; font-weight: 800; font-stretch: 125%; letter-spacing: -0.035em; color: #FFF6EE; text-shadow: 0 2px 40px rgba(255,150,80,0.42), 0 1px 0 rgba(0,0,0,0.25);">SEFOFANE</div>
+
+    <div style="margin-top: 26px; font-size: 11px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase; color: #FFC98A;">Don't say</div>
+    <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
+      <div class="chip">fofa</div><div class="chip">loapi</div><div class="chip">maeto</div><div class="chip">boemafofane</div>
+    </div>
+
+    <div style="flex-grow: 1;"></div>
+
+    <div style="padding: 19px; border-radius: 18px; background: linear-gradient(96deg, #FF7A3D, #E8267F); color: #1A0810; font-size: 18px; font-weight: 800; text-align: center; box-shadow: 0 16px 38px -12px rgba(232,38,127,0.55), inset 0 1px 0 rgba(255,255,255,0.34);">I'm ready</div>
+
+    <div style="margin-top: 20px; padding: 14px 16px; border-radius: 13px; background: rgba(255,241,232,0.07); border: 1px solid rgba(255,241,232,0.15);">
+      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,241,232,0.46);">Ground</div>
+      <div style="margin-top: 6px; font-size: 14px; font-weight: 700;">Highveld Dusk</div>
+      <div style="margin-top: 5px; font-size: 12px; color: rgba(255,241,232,0.60); line-height: 1.45;">A mesh gradient of an actual Joburg winter sunset — violet through smoke-orange to dark. The horizon line sits where the fold is. Warmest and most cinematic; the riskiest to keep legible.</div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -21,6 +21,7 @@ Read in this order. `00_MASTER_PLAN.md` is the spine; everything else is subordi
 | 7 | [06_PITCH.md](plan/06_PITCH.md) | Stage choreography, script, slides, judge Q&A, failure plan |
 | 8 | [07_TRUTH.md](plan/07_TRUTH.md) | **Read before pitching.** Claims register, competitor handling, legal, ethics |
 | 9 | [08_REDTEAM.md](plan/08_REDTEAM.md) | Adversarial review — what breaks and how |
+| 11 | [10_EXPANSION.md](plan/10_EXPANSION.md) | **Sign language, avatars, computer vision — assessed straight.** Two ideas cut with reasons, three added. Plus tooling findings and the Opus/Sonnet switching rule |
 | 10 | [09_MOCKUP_LIBRARY.md](plan/09_MOCKUP_LIBRARY.md) | **Thirteen references critiqued** on texture, shape, colour, feel, completeness and uniqueness — what to take from each, **plus six corrections the AMAZWI concept board needs**. Nothing in it is settled |
 
 **Evidence** lives in [`research/`](research/) — A_MTN_CORPORATE · **B_MOMO_API** · C_COMPETITIVE · D_SPEECH_AI · E_SA_CULTURE · **F_GAMIFICATION** · G_BUSINESS. **All seven complete.**
