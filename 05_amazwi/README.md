@@ -28,6 +28,7 @@ The earlier plan was reconciled after Sbu's review. Read the canonical documents
 | Execution | [P0.md](P0.md) | Current ownership allocation and gate summary; not a timeline |
 | Sbu runbook | [SBU_PLATFORM_RUNBOOK.md](SBU_PLATFORM_RUNBOOK.md) | MoMo, trust and platform checklist with no secrets |
 | Organiser draft | [ORGANISER_EMAIL_DRAFT.md](ORGANISER_EMAIL_DRAFT.md) | Questions required before product-specific pre-event work |
+| isiZulu authoring | [content/CARDS_ISIZULU_AUTHORING.md](content/CARDS_ISIZULU_AUTHORING.md) | Native-review worksheet; not an importable deck |
 
 Evidence lives in [`research/`](research/). All seven research files are present, including source-graded gamification work in [`F_GAMIFICATION.md`](research/F_GAMIFICATION.md).
 

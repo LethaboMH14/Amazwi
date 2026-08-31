@@ -40,6 +40,12 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 2. Keep `zu`/`tn` error-copy fields null until each first-language owner writes them; do not literal-translate the English base.
 3. Do not wire AMAZWI-specific screens/content into `starter/` until the organiser’s pre-build answer permits it.
 
+### Portal outcome shared with Lethabo
+
+- The authenticated MoMo Developer Portal catalog visibly lists **Collection**, **Disbursements**, **Remittance** and **Sandbox User Provisioning**.
+- This is catalog visibility only; subscription, provisioning and event-sandbox callability remain unconfirmed.
+- Until an explicit entitlement or safe test result exists, implement the provider boundary so `DEMO_PROVIDER` is the honest fallback and keep currency disclosure unresolved.
+
 ---
 
 ## REVIEW OF YOUR LATEST PUSH (`d33094a`)
