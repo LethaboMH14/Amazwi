@@ -4,6 +4,20 @@
 
 ---
 
+## ⚠️ NEW — 01 Sep ~01:30 · third cross-lane block: §5 assignment/resolver service
+
+Same session, extends past S5's original scope into §5 itself (named as the next open item in the previous entry below).
+
+**What was built in your lane, pending your review:**
+- `starter/backend/app/resolver.py` — `create_assignment()` (no-self-verification, expired/voided-audio rejection; no-double-assignment left to the existing DB constraint) and `resolve_contribution()` (§5's pseudocode implemented verbatim, same branch order and state names).
+- 15 new tests in `starter/backend/tests/test_resolver.py`, every branch of the resolver plus the "safe to call repeatedly" requirement, all against real Postgres. Full suite now **61/61 passing**.
+
+**What was not done, on purpose:** the actual random-cohort assignment-selection logic (needs §7/§10, not built), and consent/audio-quality derivation — `resolve_contribution()` takes `consent_active`/`audio_quality_passed` as explicit parameters rather than computing them, since `ConsentGrant` and audio quality aren't fully modelled yet.
+
+**Ask:** same as the two entries below — review against `02_TECH.md` §5 when you're back. Full detail in `BUILD_LOG.md`'s `01 Sep ~01:30` entry.
+
+---
+
 ## ⚠️ NEW — 01 Sep ~00:45 · second cross-lane block: schema, migrations, reward ledger
 
 Same session, same loosened-lane basis as the S3 entry directly below this one. Built S5 (`P0.md`): the SQLAlchemy schema, a real Alembic migration and the reward-ledger functions needed for §8's six invariants.

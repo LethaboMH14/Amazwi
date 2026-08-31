@@ -19,13 +19,19 @@ sign-off — that stays Sbu's per `05_BUILD.md` §2. See `HANDOVER_SBU.md`.
 - `app/ledger.py` — the reward-ledger service functions needed to make
   §8's six required invariants real: `credit_reward`, `request_cash_out`,
   `apply_payment_callback`, `available_balance_cents`.
-- `tests/conftest.py` — a real embedded PostgreSQL 16 fixture (via
-  `pgserver`), not SQLite. Matches the stack table's stated `PostgreSQL 16`
-  exactly; a SQLite substitute would silently pass tests that fail against
-  real Postgres (no native ARRAY type, weaker CHECK enforcement).
+- `app/resolver.py` — §5's assignment invariants (no-self-verification,
+  expired/voided-audio rejection) and the resolver pseudocode implemented
+  verbatim: `create_assignment()`, `resolve_contribution()`.
+- `tests/conftest.py` — a real Postgres fixture with two backends: an
+  external `AMAZWI_TEST_DATABASE_URL` (used by CI's `postgres:16` service
+  container, or your own local Postgres install) takes priority when set;
+  otherwise falls back to an embedded PostgreSQL 16 via `pgserver` for
+  zero-setup local dev. Not SQLite either way — matches the stack table's
+  stated `PostgreSQL 16` exactly.
 - `tests/test_migrations.py`, `test_schema_constraints.py`,
-  `test_ledger_invariants.py`, `test_assignment_invariants.py` — 24 new
-  tests, all run against the real embedded Postgres, 0 mocks.
+  `test_ledger_invariants.py`, `test_assignment_invariants.py`,
+  `test_resolver.py` — 39 new tests, all run against real Postgres, 0
+  mocks.
 
 ## Not here (deliberately, not an oversight)
 

@@ -140,6 +140,35 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [01 Sep ~01:30] — Lethabo (Sonnet, MID) · CROSS-LANE, pending Sbu's review · §5 assignment/resolver service implemented + tested against real PostgreSQL 16
+
+**⚠️ Cross-lane, extends beyond S5's original scope** — same loosened-lane basis as the two entries above. S5 asked for "schema/migrations... including accepted answers, violation evidence, VOIDED, EXPIRED and idempotent reward events"; this block goes further into the assignment/resolution service itself, which was explicitly left open in S5's own NEXT note. Flagged pending Sbu's review, same as the rest of tonight's backend work.
+
+**DID**
+- Implemented `starter/backend/app/resolver.py`: `create_assignment()` and `resolve_contribution()`, both directly against `plan/02_TECH.md` §5.
+- `create_assignment()` enforces the §5 assignment invariants that a DB constraint can't reach on its own — no-self-verification (§5 explicitly says a CHECK can't enforce this across tables) and revoked/expired-audio rejection. The no-double-assignment invariant is deliberately NOT reimplemented here — it's already a DB UniqueConstraint from S5's schema work, and this function is proven not to swallow that IntegrityError.
+- `resolve_contribution()` implements §5's resolver pseudocode verbatim, same branch order, same six states (remain OPEN / VOIDED / REVIEW_REQUIRED / UNDERSTOOD+CORPUS_ELIGIBLE / UNDERSTOOD+UNVALIDATED / UNVALIDATED). Learner MCQ assignments are excluded from the 2-verifier threshold by construction (the query filters on `AssignmentMode.PROFICIENT_VERIFIER`), matching §5's explicit rule. "Resolution... is safe to call repeatedly" (§5's own requirement) is implemented by checking for an existing `EligibilityDecision` first and returning it unchanged — that table's primary key IS `contribution_id` (S5's schema), so a second decision is structurally impossible, and the reward credit on the CORPUS_ELIGIBLE path reuses `credit_reward()`'s own idempotency from `app/ledger.py` rather than adding a second mechanism.
+- Deliberately did NOT build: the actual cohort-selection logic for "assignment is random within the eligible closed cohort" (needs the consent/audio-storage layer, §7/§10, not built this session — `create_assignment()` takes an explicit `verifier_id` rather than picking one), and consent/audio-quality derivation (resolver takes explicit `consent_active`/`audio_quality_passed` booleans rather than inventing how those get computed from `ConsentGrant`/`quality_json`, which aren't fully modelled yet). Stated as scope boundaries in the module's own docstring, not silently skipped.
+- Wrote `starter/backend/tests/test_resolver.py` — 15 new tests against real PostgreSQL 16: every `create_assignment()` invariant (self-verification rejected, double-assignment rejected via the real DB constraint, expired/voided contributions rejected, two different verifiers both succeed), and every resolver branch (fewer-than-2 stays OPEN, learner MCQ doesn't count, both-violation → VOIDED, disagreeing votes → REVIEW_REQUIRED, both-matched+quality+consent → CORPUS_ELIGIBLE with a real reward row credited and checked by amount and recipient, both-matched-but-quality-failed → UNVALIDATED with zero reward rows, both-matched-but-consent-inactive → UNVALIDATED with zero reward rows, not-both-matched → UNVALIDATED), plus the explicit "safe to call repeatedly" requirement — calling `resolve_contribution()` twice returns the same decision and leaves exactly one reward row, not two.
+- Ran the full backend suite after adding the new file: **61 passed, 0 failed** (46 from the S3/S5 blocks earlier tonight + 15 new resolver tests, no regressions).
+
+**WHY**
+- §5 is the natural next piece after S5's schema/ledger work — it was named explicitly as the next open item in both the S5 BUILD_LOG entry and `HANDOVER_SBU.md`'s review request, so continuing here rather than picking something unrelated keeps the work coherent and directly checkable against what was already flagged as coming next.
+- Implementing the pseudocode verbatim (same branch structure, same state names) rather than a "cleaner" restructuring was deliberate — §5 is the canonical spec Sbu will review against, and a resolver that's structurally identical to the spec is far easier to audit line-by-line than one that's merely behaviourally equivalent.
+
+**CHANGED**
+- New: `starter/backend/app/resolver.py`, `starter/backend/tests/test_resolver.py`.
+- `P0.md`'s S5 row — extended to record this follow-on block and the new 61/61 test count.
+- `HANDOVER_SBU.md` — review-request entry (see below).
+
+**NEXT**
+- Sbu: review `app/resolver.py` against `02_TECH.md` §5 — same ask as the earlier two blocks tonight.
+- Consent/audio-quality derivation (turning `ConsentGrant`/`quality_json` into the booleans `resolve_contribution()` currently takes as explicit parameters) is the natural next piece if this thread continues, but touches §7 (audio) and §10 (consent enforcement) more directly — real scope, not mechanical, likely worth a fresh look rather than folding into an already-long session.
+- MoMo adapter (§9) and any endpoint wiring remain untouched.
+
+**BLOCKED / PING**
+- PING Sbu: another new file in your lane (`resolver.py`), tested to the same bar as the rest of tonight (15 new tests, real Postgres, 61/61 overall) — see `HANDOVER_SBU.md`.
+
 ### [01 Sep ~01:10] — Lethabo (Sonnet, BUILD) · CI hardening + local-Postgres test support (cross-lane, pending Sbu's review)
 
 **Trigger:** user reported GitHub commits showing CI errors and had just installed a real local PostgreSQL (port 5432).
