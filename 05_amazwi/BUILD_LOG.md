@@ -134,6 +134,26 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~22:45] — Lethabo (Opus, high) · fixed the keyboard-reachability gap found in item 6
+
+**DID**
+- User said "carry on" after L6 was deferred — picked up the most concrete open item from the accessibility evidence pass: every hero-screen CTA was a styled `div`, not a real button, so a keyboard-only user could reach nothing.
+- Converted every CTA across Main (Setswana chip + Start speaking), Recording (stop control), Referee (No / Yes, they did / Next one), Understood (Play again) and ThemeDemo (3 theme buttons + I'm ready) to real `<button>` elements using `all:unset` plus the original visual styles re-declared explicitly — invisible visually, real structurally.
+- Made a mistake mid-fix and caught it before it shipped: adding `.btn-primary`'s reset as a second, later CSS rule of the same class name would have silently stripped the button's actual visual styling (gradient, padding, font-weight) since `all:unset`'s expanded longhands win the cascade at equal specificity. Merged the reset into the *original* rule instead and deleted the duplicate.
+- Re-verified with real Tab keypresses (not just the pattern applied blind) on all five files: `document.activeElement` lands on the button, `:focus-visible` matches, visual screenshots show zero regression. One thing NOT fully verified: a synthesized Return keypress didn't trigger ThemeDemo's click handler in this browser tool, while `element.click()` did — logged as an open, low-risk uncertainty (native button Enter/Space activation is spec-guaranteed) rather than either claimed as proven or swept under the rug.
+- Fixed the Setswana chip's touch target in the same pass (32px → 44px min-height) rather than leaving it as a flagged-not-fixed item.
+- Re-seeded and republished the v2 canvas; updated `ACCESSIBILITY_EVIDENCE.md`, `README.md` and `P0.md` to show the gap as found-and-fixed, not just found.
+
+**WHY**
+- This was the single most concrete, already-scoped open item from the prior pass — no new investigation needed, just the actual markup surgery that pass explicitly deferred.
+
+**NEXT**
+- Confirm real keyboard activation (not just focus) on an actual device or less constrained tool, since this session's browser tool couldn't fully verify it.
+- Move into real Gate A work now that the accessibility/theme/content backlog is clear.
+
+**BLOCKED / PING**
+- None.
+
 ### [31 Aug ~22:10] — Lethabo (Opus, high) · LETHABO_NEXT_WORK CLOSED (items 1–6, item 7 half); demo script written
 
 **DID**

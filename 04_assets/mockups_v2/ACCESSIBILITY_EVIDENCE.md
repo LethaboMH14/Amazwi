@@ -1,6 +1,8 @@
 # Accessibility & resilience evidence — LETHABO_NEXT_WORK item 6
 
-**Date:** 31 Aug 2026 · **Scope:** the five hero screens from item 4 (card reveal, recording, referee, receipt, aggregate Impact Map) plus the two highest-risk error states (mic denied, provider unavailable).
+**Date:** 31 Aug 2026, updated same day · **Scope:** the five hero screens from item 4 (card reveal, recording, referee, receipt, aggregate Impact Map) plus the two highest-risk error states (mic denied, provider unavailable).
+
+**Update:** the keyboard-reachability gap found below (section 2) has since been fixed across all six affected screens (Main, Recording, Referee, Understood, ThemeDemo — Receipt and Archive had no CTA needing conversion). Section 2 is kept in its original form, with the fix and its own verification appended, so the record shows what was found and what was actually done about it — not silently rewritten as if it were never a problem.
 
 **What this is not:** a WCAG compliance claim. This is what was actually checked, against the actual `.dc.html` mockups, on this date, with the specific method used for each check — per the item's own instruction not to claim compliance from screenshots alone. Where a check could not be run for a stated reason, that's recorded as not verified, not silently skipped.
 
@@ -26,7 +28,9 @@ Primary CTAs across Main, Referee, Understood, Receipt and the two error screens
 
 **Fixed on the two new error screens, as a demonstrated pattern, not yet propagated:** `ErrorMicDenied.dc.html` and `ErrorProviderUnavailable.dc.html` use real `<button type="button">` elements with an explicit `:focus-visible` outline. Verified with an actual Tab keypress (not a scripted `.focus()`, which Chromium correctly refuses to treat as keyboard-visible) that: the button receives real focus, `button.matches(':focus-visible')` returns `true`, and a visible 2.4px solid outline renders.
 
-**Not done in this pass:** converting the existing five hero screens' CTA divs to real buttons. That's real markup surgery across six files, not an evidence-gathering task — flagged here as the concrete next action, not left implicit.
+**Fixed, same day:** converted every hero-screen CTA div to a real `<button>` — Main (the "Setswana" chip and "Start speaking"), Recording (the stop control, with `aria-label="Stop recording"` since its visible caption sits outside the button), Referee ("No", "Yes, they did", "Next one"), Understood ("Play again"), and ThemeDemo (the three theme switches, now also carrying `aria-pressed`, plus "I'm ready"). Each conversion used `all:unset` plus the original visual styles re-declared explicitly, so the change is invisible visually and real structurally — verified with screenshots showing zero visual regression on all five files.
+
+**Re-verified with real Tab presses, not assumed from the pattern:** confirmed on Main (both buttons), Recording (stop button, `aria-label` intact), Referee ("No" button), Understood ("Play again"), and ThemeDemo (first theme button) that `document.activeElement` lands on the real `<button>` and `matches(':focus-visible')` returns `true`. One thing this pass could **not** verify was keyboard *activation* (Enter/Space) on ThemeDemo through this specific browser tool — a synthesized Return keypress didn't trigger the click handler, while a direct `element.click()` did, confirming the handler itself is correct. This reads as a limitation of the testing tool's key-event dispatch in that page state, not a defect: native `<button>` elements activate on Enter/Space as guaranteed HTML behavior, unaffected by `all:unset` (which resets appearance, not semantics or default actions). Stated as an open uncertainty rather than either claimed as fully verified or hidden.
 
 ### 3. Text reflow at 200% zoom — STRUCTURAL LIMITATION FOUND, applies to the mockups by construction
 
@@ -50,7 +54,7 @@ Neither error state had a corresponding visual mockup before this pass — a rea
 |---|---|---|
 | Touch targets ≥44×44 (primary CTAs) | Pass | `getBoundingClientRect()` on 6+ elements across 4 screens |
 | Touch target (Setswana chip) | Fail, flagged not fixed | Same |
-| Keyboard reachability (hero screens) | **Fail — 0 focusable elements found** | `querySelectorAll` for real interactive tags/roles |
+| Keyboard reachability (hero screens) | **Fail, then fixed same day** — see update note above | `querySelectorAll` found 0; fix re-verified with real Tab presses on 5 of 5 |
 | Keyboard reachability (2 new error screens) | Pass | Real Tab keypress + `:focus-visible` match |
 | Visible focus indicator (error screens) | Pass | Computed `outlineWidth`/`outlineStyle` after real Tab press |
 | 200% zoom reflow | **Fail by construction — fixed-px canvases** | `body.style.zoom='2'` + bounding-box comparison |
@@ -58,6 +62,7 @@ Neither error state had a corresponding visual mockup before this pass — a rea
 
 ## What must happen next, not just what was found
 
-1. Convert the five hero screens' CTA divs to real `<button>`/`<a>` elements with the same `:focus-visible` treatment now proven on the two error screens — this is markup work, scoped and ready to do, not blocked on anything.
-2. Decide the Setswana-chip touch-target question (fix to 44px minimum, or record why 32px is accepted) rather than leaving it silently unresolved.
-3. When the real frontend is built from Gate A onward, do not hardcode 390px anywhere — use relative units so reflow at zoom actually works, since these mockups structurally cannot demonstrate that it does.
+1. ~~Convert the five hero screens' CTA divs to real buttons~~ — **done, same day**, see update note above.
+2. ~~Decide the Setswana-chip touch-target question~~ — **done**: converted to a real button at 44px min-height, same pass.
+3. When the real frontend is built from Gate A onward, do not hardcode 390px anywhere — use relative units so reflow at zoom actually works, since these mockups structurally cannot demonstrate that it does. **Still open — this is a Gate A/D concern, not a mockup fix.**
+4. **New, open**: confirm real Enter/Space keyboard activation on a real device or a less constrained testing setup — this session's browser tool could not dispatch a synthetic keypress that triggered a button's click handler, only `element.click()`. Low risk (native `<button>` behavior is spec-guaranteed) but not independently confirmed end-to-end.
