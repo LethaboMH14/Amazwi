@@ -133,6 +133,21 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~17:00] — Lethabo (Sonnet, BUILD) · coordination · P0.md
+
+**DID**
+- Flagged S1 as explicit priority in `P0.md` — "do this first, before S2–S6." It was already first in table order but not called out, and it's the one item that gates a real fallback decision (labelled demo provider vs real Collections/Disbursement) before anyone builds against an assumption.
+- Added a "WHAT COMES AFTER L1–L6 / S1–S6" section to `P0.md` with the full Gates A→H table (proves / Lethabo / Sbu) inlined, so the whole picture is visible in the one file both of us actually open, not split across `P0.md` + `05_BUILD.md` §4.
+
+**WHY**
+- Lethabo asked directly to push S1's priority and the Gates A–H table to Sbu so both of us can work from the same page without cross-referencing.
+
+**PING Sbu**
+- **S1 is now flagged priority in P0.md — do it before S2–S6 if you haven't already.**
+- The Gates A–H table is now in `P0.md` directly. If anything in it drifts from your canonical `05_BUILD.md` §4, that file stays authoritative — flag the drift in your next handover rather than two versions silently diverging.
+
+---
+
 ### [31 Aug ~16:15] — Lethabo (Sonnet, BUILD) · L4 · error-state copy
 
 **DID**
