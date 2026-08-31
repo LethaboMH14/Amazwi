@@ -23,8 +23,7 @@ Read in this order. `00_MASTER_PLAN.md` is the spine; everything else is subordi
 | 9 | [08_REDTEAM.md](plan/08_REDTEAM.md) | Adversarial review — what breaks and how |
 | 10 | [09_MOCKUP_LIBRARY.md](plan/09_MOCKUP_LIBRARY.md) | **Thirteen references critiqued** on texture, shape, colour, feel, completeness and uniqueness — what to take from each, **plus six corrections the AMAZWI concept board needs**. Nothing in it is settled |
 
-**Evidence** lives in [`research/`](research/) — A_MTN_CORPORATE · **B_MOMO_API** · C_COMPETITIVE · D_SPEECH_AI · E_SA_CULTURE · G_BUSINESS.
-*(F_GAMIFICATION was not completed — see "Gaps" below.)*
+**Evidence** lives in [`research/`](research/) — A_MTN_CORPORATE · **B_MOMO_API** · C_COMPETITIVE · D_SPEECH_AI · E_SA_CULTURE · **F_GAMIFICATION** · G_BUSINESS. **All seven complete.**
 [`B_MOMO_API.md`](research/B_MOMO_API.md) contains **the hackathon T&Cs quoted verbatim** — judging criteria, the pre-existing-code rule, the IP clause and team size. Read §7 of it before Wednesday.
 
 ---
@@ -52,7 +51,7 @@ Read in this order. `00_MASTER_PLAN.md` is the spine; everything else is subordi
 
 ### What is NOT done
 - **Nothing is built.** No application code, no cards written. *(The repo exists and holds planning only.)*
-- **`F_GAMIFICATION` research never completed** — mechanics are designed against known literature but citations aren't assembled. **No retention statistic goes on a slide.**
+- ⚠️ **Some gamification numbers can't be independently verified.** [`F_GAMIFICATION.md`](research/F_GAMIFICATION.md) is complete and source-graded, but Duolingo's 25%/4.5× figures are company-sourced and the widely-repeated "63% quit after a broken streak" couldn't be traced to its CHI paper. **Those numbers don't go on a slide.**
 - **Two questions only the organisers can answer**, both in the Monday email: the pre-built-code rule, and what time pitches start Thursday.
 - **One question only MTN can answer:** the actual bulk disbursement fee. It decides whether R2 rewards are economical at all.
 
@@ -130,7 +129,7 @@ Full detail in [08_REDTEAM.md](plan/08_REDTEAM.md), including its own fix-orderi
 
 ## GAPS — what is not covered and what to do about it
 
-- **`F_GAMIFICATION.md` was not completed** (session limits). The mechanic set in [01_PRODUCT.md §7](plan/01_PRODUCT.md) is designed against the known literature (motivation crowding-out, streak failure modes, output-agreement games) but **the citations are not assembled. Do not put a specific retention statistic on a slide** — describe the mechanics, not measured lifts.
+- ✅ **`F_GAMIFICATION.md` is now complete**, and it found **three things that contradicted the plan** — all fixed: Elo doesn't converge if you select on difficulty while updating it ([02_TECH.md §4.2](plan/02_TECH.md)); team leaderboards harm the losing side while winners gain nothing ([01_PRODUCT.md §7.1](plan/01_PRODUCT.md)); and promotional competitions are governed by **CPA s36, not the Lotteries Act**, with a definition that catches you *regardless of skill* ([07_TRUTH.md §4.3](plan/07_TRUTH.md)).
 - **The T&Cs say "48 hours"; the invitation says 26.5.** Ask at check-in which governs — it changes the gate schedule. [05_BUILD.md §1.1](plan/05_BUILD.md)
 - **The IP clause grants MTN an "exclusive" licence over "demos and products" for marketing purposes.** Probably harmless, genuinely unusual. Ask what it covers.
 - **One legal question is unresolved:** whether a skill-based reward game touches the SA Lotteries Act or National Gambling Act. The design avoids all chance-based mechanics, which should keep it clear, but get a view before any real-money launch. [07_TRUTH.md §4.3](plan/07_TRUTH.md)

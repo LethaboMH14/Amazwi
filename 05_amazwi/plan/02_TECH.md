@@ -269,8 +269,27 @@ Learning rates decay with observation count — exactly Elo's K-factor — so ea
 - It is standard psychometrics (Rasch / 2-PL item response theory), not invented mathematics, and you can name it.
 - **You can explain it in one sentence:** *"It's Elo, but for how clearly you speak."*
 
-### 4.2 Cold start and honesty
-With no data every parameter sits at its prior. Seed with gold-standard cards of known difficulty. θ and γ are not separately identifiable without anchors — anchor on gold cards and high-volume listeners.
+### 4.2 🔴 THE CONVERGENCE CONSTRAINT — write this down before someone "improves" it
+
+The Elo approach is well established in adaptive learning, **but it has a documented failure mode that we sit one design decision away from:**
+
+> **"In scenarios where items are selected adaptively based on the current ratings and the item difficulties are updated alongside the student abilities, the variance of the ratings across items and students artificially increases over time and as a result the ratings do not converge."**
+> — *Keeping Elo alive: Evaluating and improving measurement properties of learning systems based on Elo ratings* · `research/F_GAMIFICATION.md` §6
+
+**In plain terms: if you both (a) choose which card to serve based on its estimated difficulty and (b) keep updating that difficulty, the estimates diverge instead of settling.**
+
+**We are safe only by accident.** Our card selection is driven by **coverage need** — which language and speaking style is under-represented — which is independent of the player's ability. That is not the failure condition. But it is one plausible "improvement" away from being one.
+
+**The four rules:**
+1. 🔴 **Never select cards by estimated difficulty while difficulty is still being updated.** If adaptive difficulty is ever added, **freeze β first.**
+2. **Anchor β on gold cards and freeze it there.** Gold cards have known difficulty and must not float.
+3. **Decay K with observation count.** Fixed K forces a trade-off — large K tracks change but is volatile, small K is stable but slow. Dynamic-K approaches are published.
+4. **Cold start is a studied problem** with published mitigations; seed with gold items of known difficulty.
+
+> **The line for a technical judge:** *"It's Elo, with difficulty anchored on gold items and a decaying K — because the literature shows that if you adaptively select on difficulty while also updating it, the ratings don't converge."* That demonstrates we read past the first result.
+
+### 4.3 Cold start and honesty
+With no data every parameter sits at its prior. θ and γ are not separately identifiable without anchors — anchor on gold cards and high-volume listeners.
 
 **Never call the proficiency number a certified level in the demo.** It is *an estimate*, until it has been correlated against an external instrument.
 

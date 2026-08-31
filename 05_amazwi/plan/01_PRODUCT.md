@@ -36,6 +36,7 @@ Everything in AMAZWI is one loop with two seats. Learn this and the rest of the 
 | **It elicits the right speech** | Spontaneous, unscripted, explanatory, fast. This is the category that does not exist in any corpus, because read-aloud is easy to collect and conversation is not. |
 | **Validation is free** | A correct guess *proves* the utterance was intelligible, on-topic and in the right language. No moderator decided that. |
 | **Fraud is expensive, not impossible** | There is no "approve" button to game, and farming requires colluding with strangers you cannot choose. It is **not** unbreakable — see §1.1, which closes the one hole that matters. |
+| **The anti-collusion is borrowed, not invented** | The ESP Game — the original game-with-a-purpose — defends against collusion with exactly two devices: **taboo words** and **random pairing per item**. We have both. Our banned words were chosen for difficulty and speech quality; they are *also* the canonical anti-collusion mechanism in this class of game. `research/F_GAMIFICATION.md` §4 |
 | **Labels fall out as exhaust** | You get the semantic target (the card word), a distribution of what listeners heard, and a difficulty signal — for free. |
 | **It has two seats** | Speakers earn money. Learners gain comprehension. Same loop, opposite motives. |
 
@@ -99,7 +100,7 @@ Six designed. **Two built for the competition.** The rest are the roadmap slide.
 
 - A story opens with a seed line. Each player adds **15–20 seconds** and passes it on.
 - The finished chain is published to the Archive with every contributor credited.
-- Listeners vote for the best turn; the winning turn earns a bonus.
+- Listeners vote for the best turn; the winning turn earns **Voice Points and Archive billing — never cash.** ⚠️ A cash bonus awarded by popular vote is a *prize distributed in a competition*, which is exactly what pulls a mechanic under CPA s36. Points and status are free of that. `07_TRUTH.md` §4.3
 
 **Data output:** connected narrative speech — the hardest and most valuable kind — plus a shareable cultural artefact.
 **Why it is second:** it shares ~90% of Umlozi's code (record → upload → play → score), it delivers the emotional payload, and it is the on-stage "As One" moment. Cheap to build, disproportionate return.
@@ -260,7 +261,13 @@ Full derivation and sensitivity in `03_BUSINESS.md` §2–3.
 
 ## 6. HOW TO PAY WITHOUT DESTROYING THE THING YOU ARE PAYING FOR
 
-There is a well-established result in economics and psychology — **motivation crowding-out** — that paying people for an activity can *reduce* effort and quality relative to paying nothing, particularly when the payment is small enough to reframe a social act as a cheap transaction. Gneezy and Rustichini's framing is the canonical one: *pay enough, or don't pay at all.*
+There is a well-established result in economics and psychology — **motivation crowding-out** — that paying people for an activity can *reduce* effort and quality relative to paying nothing.
+
+**Gneezy & Rustichini (2000), *Quarterly Journal of Economics* 115(3): 791–810** — the canonical result, stated precisely:
+
+> The effect of monetary compensation on performance is **not monotonic.** When money was offered, a larger amount yielded higher performance — **but subjects offered small monetary incentives performed more poorly than those offered no compensation at all.**
+
+**R2.00 per clip is squarely in the "small payment" regime where performance can fall below the unpaid baseline.** This is not a hypothetical risk; it is the exact experimental condition. The effect is also strongest for people with low pre-existing motivation — i.e. someone who opened the app because a friend said it pays.
 
 This is the single largest design risk in AMAZWI, and the current plan walks straight into it: cents per task is precisely the "small payment" regime where quality collapses.
 
@@ -292,14 +299,32 @@ Ranked by evidence strength. Detail and citations in `research/F_GAMIFICATION.md
 | # | Mechanic | Design decision |
 |---|---|---|
 | 1 | **Daily streak** | With **one automatic streak-freeze per week.** The dominant failure of streaks is that a single missed day causes permanent churn — the freeze converts a quit into a return. |
-| 2 | **Place leagues** | Weekly, promotion/relegation, by **ward or township**, not just individual. Team competition sustains engagement better than individual leaderboards and it is far more South African. *Khayelitsha vs Soweto. Thohoyandou vs Giyani.* |
-| 3 | **Language leagues** | Parallel table by language, so a small language community can be #1 nationally. Fixes the "big languages always win" problem structurally. |
+| 2 | **Place leagues** | Weekly, **tiered promotion/relegation** by ward or township. *Khayelitsha vs Soweto. Thohoyandou vs Giyani.* ⚠️ **See §7.1 — the evidence for team competition is weaker than it looks, and the risk points at our most important users.** |
+| 3 | **Language leagues** | Parallel table by language, so a small language community can be #1 nationally. Fixes the "big languages always win" problem structurally — and this one the research supports. |
 | 4 | **Daily quest — three plays** | Small, closable, completable in under three minutes on a bad connection. |
 | 5 | **Coverage call-outs** | *"Sesotho conversational needs 40 more voices this week."* Turns a data need into a rallying cry. This is the "Maximum Velocity" mechanic. |
 | 6 | **The Archive** | Permanent, named, credited. The long-term retention engine and the ethical answer in one feature. |
 | 7 | **Seasons** | Tied to the South African cultural calendar — **September is Heritage Month, Heritage Day is 24 September.** The hackathon is 2–3 September. Season One should be *Heritage Season*, launching the month it is actually pitched in. |
 
-**Deliberately excluded:** hearts/lives (punishes the poor connection, not the player), loot boxes and any randomised-prize mechanic (gambling-adjacent and a regulatory question in South Africa — see `07_TRUTH.md`), infinite scroll, and streak-loss push notifications that induce anxiety.
+### 7.1 🔴 The team-league correction
+
+An earlier draft asserted that team competition "sustains engagement better than individual leaderboards." **That is not what the evidence says**, and the risk runs directly at the users we most need.
+
+Peer-reviewed (*Learning and Instruction*, 2024, on team-based gamification):
+> **The losing team demonstrated lower performance, confidence and engagement, while the winning team was merely comparable to the non-gamified control.**
+
+Read that carefully: **the winners gained nothing measurable and the losers were harmed.** And **Khayelitsha vs Soweto has a losing side every single week** — in a product whose entire thesis is that small, under-represented communities matter.
+
+**Four cheap fixes, all of which we should just do:**
+1. **Tiered promotion/relegation, never one national table.** Most players sit mid-tier and can plausibly win *their* tier. This is Duolingo's actual design and it is why it works.
+2. **Never render a "you lost" state.** Show movement against your own previous week.
+3. **Keep the language league** — a small community can be #1 nationally in its own table. The plan already had this right and it is the strongest structural answer.
+4. **Celebrate the top of your tier; never show a national last place.**
+
+Evidence and citations: `research/F_GAMIFICATION.md` §7.
+
+### 7.2 Deliberately excluded
+Hearts/lives (punishes the poor connection, not the player) · loot boxes and **any randomised-prize mechanic** (this is the specific thing that would pull us under the Consumer Protection Act s36 — see `07_TRUTH.md` §4.3) · **prizes attached to leaderboards**, for the same reason · infinite scroll · streak-loss push notifications that manufacture the anxiety the freeze exists to prevent.
 
 ---
 

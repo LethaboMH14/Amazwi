@@ -159,8 +159,40 @@ Controls: adults only · versioned granular consent · purpose limitation enforc
 
 **The honest limit, stated plainly:** you cannot un-train a model that has already seen the data. Handle it with a declared retirement and retraining policy. Do not promise instant unlearning.
 
-### 4.3 Gambling and lotteries — a real South African flag
-A prize competition with an element of **chance** can fall under the National Gambling Act or the Lotteries Act. AMAZWI's rewards are **deterministic and skill-based** — you earn if listeners understand you — which should sit outside that. **Protect this position:** no randomised prizes, no loot boxes, no spin-to-win, no paid entry into a chance draw. This is why those mechanics are excluded in `01_PRODUCT.md` §7. Get a lawyer's view before any real-money launch.
+### 4.3 🔴 Promotional competitions — the statute, corrected
+
+An earlier version of this document named the **Lotteries Act** and the **National Gambling Act**. **That is the wrong statute.**
+
+> **Promotional competitions in South Africa have been governed by the Consumer Protection Act 68 of 2008, section 36 — not the Lotteries Act — since April 2011**, read with regulation 11 of the CPA Regulations (GNR.293, 1 April 2011). The National Lotteries Commission still monitors compliance.
+
+**The definition, and the two limbs:**
+> *"any competition, game, scheme, arrangement, system, plan or device for **distributing prizes by lot or chance**"* — **if** it is conducted in the ordinary course of business **for the purpose of promoting** a producer, supplier, or the sale of goods or services, **and** any prize exceeds the prescribed threshold.
+
+- **The threshold is R1.00.** Effectively every competition is caught.
+- **"Prize" is broad:** a reward, gift, free good or service, price reduction or concession.
+- **No consideration** may be required from a participant beyond reasonable transmission cost, capped at **R1.50** electronically.
+- ⚠️ **And the trap:** SA legal commentary warns the definition catches competitions **regardless of whether skill is required.** You cannot escape s36 by bolting a skill element onto a prize draw. My earlier "it's skill-based, so we're fine" reasoning was too quick.
+
+### Where AMAZWI actually sits
+*Not legal advice — this is the analysis to take to a lawyer, not a substitute for one.*
+
+| Element | Assessment |
+|---|---|
+| **Per-contribution payments (R2.00)** | **Very likely outside s36.** This is *consideration for a service rendered* — you recorded something, it was validated — not a prize distributed by lot or chance to promote goods. A different legal character entirely, closer to payment for work |
+| **Leaderboards and leagues** | 🔴 **The actual exposure.** If any prize attaches — and "prize" includes a free good, service or concession above R1 — and it promotes the business, s36 is arguably engaged |
+| **Any randomised mechanic** | **Squarely inside.** Already excluded from the design |
+
+**The five rules that follow** — all of which we were already doing, now for a better reason:
+1. **Leagues award non-cash points and status only. No prizes, ever.** The wall between points and money in `01_PRODUCT.md` §5 now has a *legal* justification, not just a product one.
+2. **No chance-based mechanics anywhere.**
+3. **Never require payment to participate.**
+4. **Publish the rules; never cut a published rate retroactively.**
+5. **Get a formal opinion before any real-money launch.** The regulator is actively tightening — see reporting on increased scrutiny of till-slip and "buy-and-win" competitions, May 2026.
+
+**The answer if a judge asks:**
+> *"Our payments are consideration for validated work, not prizes distributed by chance, so we read them as outside CPA section 36 — which is the statute that actually governs promotional competitions here, not the Lotteries Act. That's also why our leagues award points and status only, never prizes, and why there's no randomised mechanic anywhere in the product. We'd take a formal opinion before a commercial launch."*
+
+Full analysis and sources: `research/F_GAMIFICATION.md` §9.
 
 ### 4.4 The hackathon's own terms
 - Submissions must be **original and created during the hackathon** except where organisers approve otherwise → `05_BUILD.md` §1.
