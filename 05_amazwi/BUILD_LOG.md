@@ -20,7 +20,7 @@ We never sit in the same head, so **the repo is the shared brain.** Four rules:
 
 PING: <only if the other person must act>
 ```
-`lane` is `platform` or `experience`. Example: `G4 platform: verifier resolution + EXPIRED path`
+`lane` is `platform` or `experience`. Example: `Gate E platform: verifier resolution + EXPIRED path`
 
 ---
 
@@ -61,19 +61,30 @@ PING: <only if the other person must act>
 | Layer | Choice | Status | Changed when / why |
 |---|---|---|---|
 | Frontend | React 18 + TypeScript + Vite | Planned | — |
-| PWA | Hand-written service worker | Planned | Workbox is more than we need |
+| PWA | None in P0 | Cut | Raw-audio offline persistence is outside the competition scope |
 | Audio | Web Audio API + MediaRecorder → Opus | Planned | — |
-| Offline | IndexedDB outbox | Planned | — |
+| Offline | None in P0 | Cut | Retry message, not a persisted audio outbox |
 | Backend | Python 3.12 + FastAPI + Pydantic | Planned | — |
 | DB | PostgreSQL 16 | Planned | Constraints are the product |
 | Storage | S3-compatible, private, presigned | Planned | — |
-| Async | FastAPI background tasks + `pending_jobs` | Planned | No broker to fail |
+| Async | Bounded synchronous decisions + polling/recovery action | Decided | Background tasks are not durable jobs |
 | Deploy | Cloudflare Pages / Vercel + container | Planned | — |
 | Callbacks | Cloudflare Tunnel | Planned | — |
 | Fonts | Archivo (Google Fonts, wdth + wght) | Decided | Not Inter — default-slop face |
 | Design tokens | 5 Figma collections, 38 vars | **Done** | 31 Aug — starter plan caps at 1 mode/collection |
 
 **Not in the build, on the roadmap slide only:** Celery · Redis · Kafka · TimescaleDB · MLflow · DVC · W&B · Terraform · Kubernetes.
+
+### Current P0 scope overrides
+
+The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These overrides prevent historical planning notes from becoming accidental requirements:
+
+- no offline recording/upload outbox or service-worker work in P0; raw audio must not be retained locally beyond the active capture flow;
+- no league, daily-quest or fixed R11-cash mechanic in P0; the configured campaign rule is an illustrative speaker honorarium and cap, not a public unit-economics claim;
+- two **proficient verifiers**, not generic listeners, independently submit their answer and referee evidence;
+- create eight hero cards per language first; expand to a 30-card pack only after the golden path is working;
+- FastAPI background work is not treated as durable. The demo uses bounded synchronous decisions, polling and an explicit recovery action;
+- select deployment/storage tooling only when it is running. Do not list a provider on the submission form merely because it was planned.
 
 ---
 
@@ -112,11 +123,33 @@ PING: <only if the other person must act>
 | 3 | Organiser: pre-built code + **what time do pitches start Thursday** | — | Three gates assume the morning is free |
 | 4 | MTN: **bulk B2C disbursement fee** | Sbu | Whether R2 rewards are economical at all |
 | 5 | Is SA sandbox disbursement a self-serve API at all? | Sbu | The payout demo |
-| 6 | 30 cards each, with `accepted_answers` | Both | **G4 — the real bottleneck** |
+| 6 | Eight hero cards per language with `accepted_answers`; expand to 30 only after P0 | Both | Gate D/E demo content |
 
 ---
 
 # LOG
+
+### [31 Aug 15:00] — Sbu · TOP/high · Canonical-scope review
+
+**DID**
+- Reviewed the Figma decision, model-routing plan and live build log against `00_MASTER_PLAN.md`–`05_BUILD.md`
+- Added current-scope overrides so stale pre-reconciliation decisions cannot become implementation work
+
+**CHANGED**
+- `plan/12_MODEL_ROUTING.md` — replaced the old timed G0–G8 schedule with canonical priority gates A–H
+- `04_assets/FIGMA.md` — removed league UI from the immediate component list
+
+**PIVOT**
+- timed build schedule, offline outbox, league/daily-cash mechanics → priority-gated golden path, private active capture and one receipt loop
+
+**NEXT**
+- Sbu: verify MoMo provider configuration and seed the API contract
+- Lethabo: select the accessible default theme and implement the Gate A shell
+
+**BLOCKED / PING**
+- The business document is already correctly reworked; do not reopen transcribed-speech pricing.
+
+---
 
 ### [31 Aug] — Sbu · medium · S3/S4
 

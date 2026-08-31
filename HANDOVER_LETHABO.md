@@ -20,6 +20,31 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 
 ---
 
+## REVIEW OF YOUR LATEST PUSH (`d33094a`)
+
+### Keep
+
+- The Figma token system is a useful design asset. Keeping brand tokens invariant across grounds makes the visual identity less likely to drift.
+- Deferring a Figma-plan upgrade is the right call. The build needs working screens, not a more elaborate design-tool configuration.
+- The task-based model-routing principle is strong: escalate when a decision or claim is hard to verify; stay fast for work against a settled spec.
+- The build log is a good collaboration mechanism. Its rule that a `PING` requires action is especially valuable in a two-person overnight build.
+
+### Integrated corrections
+
+1. `12_MODEL_ROUTING.md` now maps to canonical priority gates A–H, not the retired timed G0–G8 schedule.
+2. The immediate Figma component set is card, banned-word chip, wallet/receipt state and button. League UI is not P0.
+3. The build log now states that offline audio persistence, service-worker work, daily-quest/R11 mechanics and leagues are cut from P0.
+4. The current content target is eight excellent hero cards per language. A 30-card pack is a follow-on expansion once the recording and verification path works.
+5. The build log's active tech table no longer presents FastAPI background tasks as durable processing or unselected providers as shipped technology.
+
+### Remaining risks
+
+- The economic document is already correctly rebuilt around sponsored semantic-label missions. Do not reopen the old transcribed-hour comparison or add a margin claim before actual provider fees and acceptance rates are known.
+- The product is still marked “planning and mockups only.” The next meaningful proof is a running Gate A shell, then the deterministic golden path—not more design-system work.
+- I reviewed the Figma system from its documented token/component contract, not from a rendered interactive file or captured device flow. Contrast, focus, hit-area, reduced-motion and sunlight legibility still need visual testing on the actual screens.
+
+---
+
 ## REVIEW OF YOUR LATEST PUSH (`d8a1e82`)
 
 ### Keep

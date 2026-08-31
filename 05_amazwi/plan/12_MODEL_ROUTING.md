@@ -48,29 +48,27 @@ Effort is the **bigger lever than model choice** and the one usually left at def
 
 ---
 
-## 3. AMAZWI, GATE BY GATE
+## 3. AMAZWI, PRIORITY GATE BY PRIORITY GATE
 
-The build schedule in `05_BUILD.md` mapped to tiers. **Both of us switch at the same boundaries** — that is the point.
+`05_BUILD.md` deliberately uses priority gates rather than a timed schedule. **Both of us switch at the same boundaries** — that is the point.
 
 | Gate | Work | Tier | Effort |
 |---|---|---|---|
-| **Pre-build** | Theme choice · economics rework · card content design | **TOP** | high |
-| **G0** 10:30 | Clone starter, deploy, health check, heartbeat | **BUILD** | light |
-| **G1** 12:30 | Seeded endpoints, screens wired, seed/reset | **BUILD** | medium |
-| **G2** 14:30 | Consent — **enforcement logic** | **MID** | high |
-| **G2** | Consent — screens against the spec | **BUILD** | medium |
-| **G3** 17:00 | Recorder, quality gates, upload | **BUILD** | medium |
-| **G4** 19:30 🔴 | `is_correct` · verifier resolution · referee · EXPIRED | **TOP** | high |
-| **G4** | The listener/verifier UI once resolution is settled | **BUILD** | medium |
-| **19:30–23:00** | Cross-lane integration | **MID** | high |
-| **G5** 02:00 | **Ledger, idempotency, payout** | **TOP** | high |
-| **G6** 06:30 | Wallet, receipt, league UI against existing endpoints | **BUILD** | medium |
-| **G7** 07:00 | Rate limits, duplicate hash, consent-on-export | **MID** | high |
-| **G7** | Wiring **pre-written** error strings | **BUILD** | light |
-| **G8** 08:30 | Rehearsal, screenshots, deck | **TOP** *(for claims)* | high |
+| **Pre-build** | Theme choice, content design and any business-claim review | **TOP** | high |
+| **A** | Running shell, deploy, health check and host/browser-mode label | **BUILD** | light |
+| **B** | Seeded endpoints, screens wired and deterministic reset | **BUILD** | medium |
+| **C** | Consent enforcement logic | **MID** | high |
+| **C** | Consent screens against the settled spec | **BUILD** | medium |
+| **D** | Recorder, quality gates and upload | **BUILD** | medium |
+| **E** | `is_correct`, two-verifier resolution, referee, `EXPIRED` | **TOP** | high |
+| **E** | Verifier UI once resolution is settled | **BUILD** | medium |
+| **F** | Ledger, idempotency, reward credit and provider state | **TOP** | high |
+| **F** | Wallet and receipt UI against existing endpoints | **BUILD** | medium |
+| **G** | Collections proof or labelled funded seed | **MID** | high |
+| **H** | Rate limits, consent-export check, rehearsal, screenshots and deck claims | **TOP** *(for claims)* | high |
 
-### The three gates that are TOP no matter how late it is
-**G4** (the resolution logic is the product), **G5** (money, and wrong is invisible until someone is paid twice), and **anything that becomes a claim on a slide.** If you are tempted to drop these to BUILD because it is 02:00 and you are tired — **that is exactly when the tier exists.**
+### The two gates that are TOP no matter how late it is
+**E** (the resolution logic is the product), **F** (money, and wrong is invisible until someone is paid twice), and **anything that becomes a claim on a slide.** If you are tempted to drop these to BUILD because you are tired, that is exactly when the tier exists.
 
 ---
 

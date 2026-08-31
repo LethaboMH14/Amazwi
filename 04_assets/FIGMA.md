@@ -29,13 +29,13 @@ The Figma seat is **View on a starter plan**, which allows **one variable mode p
 
 Twelve Figma skills are connected. The three that matter for us:
 
-- **`figma-generate-library`** — components with variant sets and token bindings. The next step: build the card, chip, wallet row, league row and button as real components.
+- **`figma-generate-library`** — components with variant sets and token bindings. The next step: build the card, chip, wallet/receipt status row and button as real components.
 - **`figma-generate-design`** — push whole screens into Figma from the `.dc.html` sources.
 - **`figma-generate-diagram`** — Mermaid → FigJam. **This is where the architecture diagram for the deck comes from**, not from hand-drawing it at 3am.
 
 ## Next steps in Figma
 
-1. Components: card, banned-word chip, wallet state row, league row, primary button — with variants
+1. Components: card, banned-word chip, wallet/receipt state row, primary button — with variants
 2. A type ramp as text styles (Archivo, width + weight axes)
 3. Elevation as effect styles — the elevation + inner-highlight pair from the craft pass
 4. Architecture diagram into FigJam for the deck
