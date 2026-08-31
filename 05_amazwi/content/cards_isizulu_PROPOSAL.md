@@ -9,7 +9,7 @@ Reasoned from real isiZulu grammar and vocabulary (Nguni noun classes: `in-/izin
 - Singular and plural forms may both count as accepted answers.
 - ZU-06 target: `ingubo yokulala`.
 - ZU-07 target: `uphuthu`; `iphalishi` is also an accepted answer.
-- These decisions have been formatted into `cards_isizulu.json`. The deck remains DRAFT until Sbu completes the spoken blocked-word and distractor review.
+- Sbu subsequently approved all target words, blocked words, accepted answers and distractors. `cards_isizulu.json` is now the reviewed source; this proposal remains historical context only.
 
 ---
 

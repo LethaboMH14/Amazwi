@@ -53,6 +53,11 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 - Four blocked-word/distractor overlaps are now surfaced as warnings by `content/validate_cards.mjs`; please resolve or explicitly accept each during the native pass.
 - See `content/CARD_REVIEW_2026-08-31.md` for the exact findings. Do not remove authoring metadata or mark the deck reviewed until the validator errors are zero and the spoken play test passes.
 
+### isiZulu content approval
+
+- Sbu approved the full isiZulu hero-eight deck on 31 August 2026: targets, blocked words, accepted answers and distractors.
+- `content/cards_isizulu.json` is now the reviewed source and must pass `node content/validate_cards.mjs content/cards_isizulu.json` before import.
+
 ---
 
 ## REVIEW OF YOUR LATEST PUSH (`d33094a`)

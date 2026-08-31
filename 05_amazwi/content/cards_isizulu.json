@@ -1,6 +1,6 @@
 {
   "language": "isizulu",
-  "status": "DRAFT — targets and singular/plural policy confirmed by Sbu on 31 August 2026; blocked words and distractors still require his spoken native-review pass.",
+  "status": "REVIEWED — Sbu approved all targets, blocked words, accepted answers and distractors on 31 August 2026.",
   "hero_8": [
     {
       "id": "zu-001",
@@ -10,8 +10,7 @@
       "accepted_answers": ["indiza", "izindiza"],
       "distractors": ["imoto", "itekisi", "isitimela"],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "confidence": "DRAFT — target accepted; review blocked words and distractors aloud"
+      "active": true
     },
     {
       "id": "zu-002",
@@ -21,8 +20,7 @@
       "accepted_answers": ["inkomo", "izinkomo"],
       "distractors": ["imbuzi", "imvu", "ihhashi"],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "confidence": "DRAFT — target accepted; confirm ilobolo is a fair blocked word"
+      "active": true
     },
     {
       "id": "zu-003",
@@ -32,8 +30,7 @@
       "accepted_answers": ["imvula", "izimvula"],
       "distractors": ["iqhwa", "ilanga", "umoya"],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "confidence": "DRAFT — target accepted; review blocked words and distractors aloud"
+      "active": true
     },
     {
       "id": "zu-004",
@@ -43,8 +40,7 @@
       "accepted_answers": ["indlu", "izindlu"],
       "distractors": ["ikamelo", "isitolo", "isikole"],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "confidence": "DRAFT — target accepted; review blocked words and distractors aloud"
+      "active": true
     },
     {
       "id": "zu-005",
@@ -54,8 +50,7 @@
       "accepted_answers": ["amanzi", "amanzi okuphuza"],
       "distractors": ["ubisi", "utshwala", "ijusi"],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "confidence": "DRAFT — amanzi has no ordinary singular pair; confirm the descriptive second answer is acceptable"
+      "active": true
     },
     {
       "id": "zu-006",
@@ -65,8 +60,7 @@
       "accepted_answers": ["ingubo yokulala", "izingubo zokulala"],
       "distractors": ["ijezi", "ilokwe", "indwangu"],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "confidence": "DRAFT — target selected by Sbu; review blocked words and distractors aloud"
+      "active": true
     },
     {
       "id": "zu-007",
@@ -76,8 +70,7 @@
       "accepted_answers": ["uphuthu", "iphalishi"],
       "distractors": ["isijingi", "irayisi", "imifino"],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "confidence": "DRAFT — uphuthu and iphalishi accepted by Sbu; confirm they are equivalent enough for this card"
+      "active": true
     },
     {
       "id": "zu-008",
@@ -87,8 +80,7 @@
       "accepted_answers": ["isikole", "izikole"],
       "distractors": ["indlu", "ibhange", "isonto"],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "confidence": "DRAFT — target accepted; review blocked words and distractors aloud"
+      "active": true
     }
   ]
 }
