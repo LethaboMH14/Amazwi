@@ -140,6 +140,20 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [01 Sep ~02:00] — Lethabo (Sonnet, BUILD) · CI confirmed green via `gh run watch`, directly observed
+
+**DID**
+- Closed the loop on the `pytest.ini` fix from the entry below with a directly observed result, not another local-only claim: pushed the fix (`60bd105`), then used `gh run watch 33450955952 --exit-status` to watch the real GitHub Actions run to completion.
+- **Both jobs passed**: `backend` ✔ in 44s, `frontend` ✔ in 21s. `gh run view 33450955952` confirms overall run status ✔. First fully green CI run of the night — every prior push tonight (7 runs) failed on the `ModuleNotFoundError` bug the previous entry diagnosed and fixed.
+- One unrelated, non-blocking annotation surfaced: a GitHub-wide Node.js 20 deprecation notice on `actions/checkout@v4`/`actions/setup-node@v4`/`actions/setup-python@v5` (GitHub is auto-forcing Node 24 for now). Not a failure, not caused by anything in this repo, nothing to act on until GitHub actually removes Node 20 support — noted here so it isn't mistaken for a new problem later.
+
+**NEXT**
+- Backend work for tonight (S3, S5, §5 resolver, CI) is in a genuinely verified-green state: local tests (61/61), migration roundtrip, and now real CI, all confirmed rather than assumed.
+- Sbu's review of tonight's four cross-lane PING items (`matching.py`, `models.py`+`ledger.py`, `resolver.py`, and this CI/test-infra work) remains the next real gate before any of it is final.
+
+**BLOCKED / PING**
+- None.
+
 ### [01 Sep ~01:50] — Lethabo (Sonnet, BUILD) · CORRECTION · the real CI bug, found via gh CLI access
 
 **⚠️ Corrects the "01 Sep ~01:10" entry below.** That entry diagnosed the backend CI failures as "no Postgres available in the job" and fixed it by adding a `postgres:16` service container. That fix was reasonable and is being kept (real Postgres in CI is still correct), but **it was not what was actually failing.** The user connected `gh auth login` this session, which made the real CI logs readable for the first time — the previous diagnosis was made blind (private repo, no `gh`/API access) and was wrong. Recording the correction openly rather than quietly patching over it.
