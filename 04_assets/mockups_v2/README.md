@@ -29,14 +29,17 @@ Not "needed more polish". Five specific structural failures:
 
 The first pass put a large decorative "agreement lens" in the middle of the card screen. It rendered as a smudge. The fix wasn't to make it prettier — it was to realise the lens should be **literal**: the two people who will actually hear the clip. Device and content collapse into the same element, and the dead space disappears.
 
-## Status
+## Status — updated 31 Aug 2026
 
 | | |
 |---|---|
-| ✅ V2 | Card reveal · Recording · The money moment |
-| ⚠️ Still v1 | Consent · Listen · Referee · Wallet · Receipt · League · Impact Map |
+| ✅ V2 | Card reveal · Recording · Proficient verifier/referee · The money moment · Voice Value Receipt · Impact Map (aggregate) |
+| ⚠️ Still v1 or unbuilt | Consent · Listen (learner MCQ) · Wallet |
+| ✂️ Cut, not built here | League — per `plan/05_BUILD.md` §6 kill rules, deliberately absent from this canvas |
 
-**Do not mix v1 and v2 in front of a judge.** Either bring the remaining seven up, or present these three only.
+This now covers all five of `LETHABO_NEXT_WORK.md` item 4's named hero screens (card reveal, recording, proficient-verifier/referee, receipt, aggregate Impact Map) plus the money-moment transition between them. Referee, Receipt and Archive were built directly to the v2 grammar below, not upgraded from v1 — there is no v1 version of them still lying around to confuse with.
+
+**Do not mix v1 and v2 in front of a judge.** Consent, Listen and Wallet remain v1 wireframes if they're needed — bring them up before a demo, or route around them.
 
 ✅ **`SEFOFANE` is real, not placeholder** — it's `sw-001` in `05_amazwi/content/cards_setswana.json`, native-confirmed 31 Aug with the identical target and all four blocked words. No change needed here.
 ⚠️ Only `Main.dc.html` carries the theme tweak so far.

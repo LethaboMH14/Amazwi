@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mockups-static",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "http-server", "04_assets/mockups_v2", "-p", "4173", "-c-1"],
+      "port": 4173
+    }
+  ]
+}
