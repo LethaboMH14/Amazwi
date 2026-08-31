@@ -4,6 +4,8 @@
 **Parent:** `04_DESIGN.md` · **Written:** 2026-08-31
 
 > **Nothing in this document is the brand.** Every item below — including the AMAZWI concept board — is a **reference**, judged on its merits and stripped for parts. The final design is assembled from the best of all of them, not chosen from among them.
+
+> **Accepted product correction:** references to a public/named Archive now mean the aggregate **Impact Map**. Raw audio and attribution are private by default. MCQ is learner gameplay only; the governed decision uses two proficient free-text verifiers. See `00_MASTER_PLAN.md` and `01_PRODUCT.md`.
 >
 > Each entry is graded on: **texture · shape · smoothness · colour · professionalism · style · feel · completeness · uniqueness**, then: what is impressive, what is not, what we take, and what we would add.
 
@@ -45,7 +47,7 @@
 
 **What we take**
 Duel invitation → *"Nomsa challenged you to guess"* · the rank badge system for league tiers · the quest row with inline claim · the podium · **player counts** → *"41 people are listening right now"*.
-**And the radar, repurposed:** not a personality chart — a **language coverage radar on the Impact Console** (isiZulu / isiXhosa / Sesotho / Tshivenda / Afrikaans by validated hours). That turns a decorative idea into the buyer's most important screen.
+**And the radar, repurposed:** not a personality chart — a **language coverage radar on the mission view** using only the two quality-assured launch languages and eligible seconds. That turns a decorative idea into a useful screen without inventing five-language coverage.
 
 **What we would add**
 Weight. One dominant action. And a reason for every colour.
@@ -157,7 +159,7 @@ Character. And **fake the frost with a flat translucent fill** — visually iden
 - Pastel clouds are Northern-hemisphere-generic.
 
 **What we take**
-The **Archive as a place, not a list** — a map of South Africa filling with voices, dots at province level. The floating pill filter. XP-on-map → **coverage need shown geographically**, which makes "where the data gap is" instantly legible.
+The **Impact Map as a place, not a list** — a map of South Africa filling with aggregate contribution dots at broad-geography level. No public voice playback, names or precise locations. Coverage need shown geographically makes the gap legible.
 ⚠️ **Build it as animated SVG, not Three.js.** `04_DESIGN.md` §3.3 caps the one WebGL moment at 60 KB with an SVG fallback — and honestly the SVG will read better and load instantly.
 
 **What we would add**
@@ -301,7 +303,7 @@ Monospaced numerals, coverage heat map by language × quest type, cost-per-valid
 | **Understanding moment** | **⑤ celebration energy + ⑩ waveform-to-wallet** |
 | **Wallet · receipt** | **⑨ financial minimal** |
 | Leaderboard · friends · quests | ① kuest patterns, single-column |
-| **Archive** | **④ map-as-place (SVG) + ⑥ photographic covers** |
+| **Impact Map** | **④ map-as-place (SVG), aggregate and non-identifying** |
 | Heritage · badges · empty states | ⑦ beadwork + ⑫ clay objects |
 | Notifications | ③ message-list craft |
 | **Impact Console** | **⑬ console + ① radar as coverage chart** |
@@ -324,7 +326,7 @@ Design these five, in this order. Everything else needs only to be clean, correc
 2. **Recording** (⑩) — the product's portrait
 3. **The understanding moment** (⑤ + ⑩) — the emotional peak
 4. **The Voice Value Receipt** (⑨) — the credibility screen
-5. **The Archive** (④ + ⑥) — the closing image
+5. **The Impact Map** (④, aggregate only) — the closing image
 
 ## Sourcing real references
 **Mobbin** *(45 minutes, highest value)* — search `daily streak` · `leaderboard` · `wallet transaction states` · `voice recording` · `reward claim` · `empty state`. Open **Duolingo**, **Cash App**, **Revolut**, **Strava**, and **Gojek/Grab** (mini apps inside a super app — directly relevant, and almost nobody looks at them).

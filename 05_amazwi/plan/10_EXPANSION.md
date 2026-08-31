@@ -3,6 +3,8 @@
 
 **Parent:** `00_MASTER_PLAN.md` · **Written:** 2026-08-31
 
+> **Integration status — Sbu review, 2026-08-31:** this is a roadmap and creative-exploration document, not competition scope. The canonical P0 is defined by `00_MASTER_PLAN.md` and `05_BUILD.md`. New factual, competitive, legal or model claims in this document must be verified and entered into `07_TRUTH.md` before they are used in a pitch. See `../../HANDOVER_LETHABO.md` for the integration critique.
+
 > Every idea below gets a straight verdict: **top tier**, **top tier with a rewrite**, or **cut**. One of yours I think actively damages the pitch, and I say which and why.
 
 ---

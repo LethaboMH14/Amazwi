@@ -105,18 +105,18 @@ Real amplitude from `AnalyserNode`, drawn to a single canvas at 30fps (not 60 �
 CSS 3D `rotateY` on the card, 320ms. Used at card reveal and at answer reveal. Pure CSS, zero payload, and it reads as tactile in a way nothing else this cheap does.
 
 **④ THE UNDERSTANDING MOMENT** — the emotional peak
-When results land: the three listener avatars resolve one at a time, 120ms apart. Each correct one lights `--understood`. Then the player's own waveform — *the actual shape of what they said* — collapses inward and travels to the wallet chip, where it becomes `--rand` yellow and the balance counts up.
+When results land: the two proficient-verifier avatars resolve one at a time, 120ms apart. Each matched answer lights `--understood`. Then the player's own waveform — *the actual shape of what they said* — collapses inward and travels to the wallet chip, where it becomes `--rand` yellow and the credited balance counts up.
 
 That is the entire product in one 900ms sequence: **your voice became money because people understood you.** Build this one properly; it is what the judges will remember and it is what gets screenshotted.
 
-**⑤ THE ARCHIVE BLOOM**
-On deposit, a point appears on the map of South Africa at the contributor's coarse location and ripples outward once. Slow, quiet, permanent. The counter increments. This is the only animation allowed to feel ceremonial.
+**⑤ THE IMPACT BLOOM**
+When a contribution becomes eligible, an aggregate point appears on the South Africa map and ripples outward once. It represents a non-identifying count, never a public raw recording or named person. The counter increments. This is the only animation allowed to feel ceremonial.
 
 ### 3.3 3D — spend it once
 Heavy 3D contradicts the 200 KB principle and is a trap at this scale. Two decisions:
 
 - **CSS 3D everywhere** — card flips, tilts, depth. Free, GPU-composited, no dependency.
-- **One optional WebGL moment: the Archive.** A slowly rotating point-cloud of South Africa built from contribution coordinates, hand-written WebGL or a Three.js subset, **lazy-loaded only when the Archive is opened**, hard-capped at 60 KB gzipped, with a static SVG map fallback.
+- **One optional WebGL moment: the Impact Map.** A slowly rotating point-cloud of South Africa built from coarse aggregate counts, hand-written WebGL or a Three.js subset, **lazy-loaded only when the Impact Map is opened**, hard-capped at 60 KB gzipped, with a static SVG map fallback.
 
 If time is short, **cut the WebGL and keep the SVG.** A beautiful flat map that loads instantly beats a 3D globe that stutters, and it is more consistent with what the product says about itself.
 
@@ -142,7 +142,7 @@ This is a voice product. Sound is the medium, not the garnish — and it is the 
 | **Understood** | Rising pentatonic three-note figure | Pentatonic = culturally broad and universally consonant |
 | **Not understood** | One low, warm, *neutral* note | Must not sound like failure. This is the single most important sound in the app. |
 | **Money lands** | Soft mbira pluck + a physical coin-settle | The only sound tied to `--rand` |
-| **Archive deposit** | Distant single voice hum, reverberant | Ceremonial. Used sparingly. |
+| **Impact-map increment** | Distant single voice hum, reverberant | Ceremonial. Used sparingly. |
 
 **Record these yourselves.** Two people, a phone, a quiet room, forty minutes. A product about South African voices whose interface sounds like a stock library has a hole in the middle of it — and "we recorded our own sound design" is a line worth having.
 
@@ -183,7 +183,7 @@ Generate the static component skeletons: card, timer ring, waveform canvas, wall
 **STEP 5 · Image models (Nano Banana / GPT Image) — assets, not UI**
 Use them for what they are actually good at:
 - Card illustrations for concrete nouns — a taxi, a kettle, a soccer ball, a spaza shop — in one consistent flat style, generated as a batch with a locked style prompt
-- Archive and story-chain artwork
+- Impact Map and future-mode artwork
 - Empty-state illustration
 - Textures and pattern fills for the Heritage theme
 - Deck backgrounds
@@ -223,15 +223,15 @@ Judges will remember five screens. Everything else needs only to be clean and co
 
 1. **The card reveal** — the word huge, banned words beneath, reward chip in yellow, timer poised. This is the screenshot that goes on the slide.
 2. **Recording in progress** — the ring depleting, the waveform alive in ember-to-magenta. This is the product's portrait.
-3. **The understanding moment** — three avatars resolving, the waveform flying to the wallet. This is the emotional peak.
+3. **The understanding moment** — two avatars resolving, the waveform flying to the credited wallet balance. This is the emotional peak.
 4. **The Voice Value Receipt** — dense, honest, legible. This is the credibility screen: entertainment, payment traceability, data value and consent, all provable on one surface.
-5. **The Archive** — the map of the country filling with voices. This is the closing image, and the one that should be on screen while you deliver the final line.
+5. **The Impact Map** — the country filling with aggregate, non-identifying contribution signals. This is the closing image.
 
 ---
 
 ## 7. COPY AND TONE
 
-- **Short, warm, direct, second person.** *"Three people are listening now."* Not *"Your submission has been queued for validation."*
+- **Short, warm, direct, second person.** *"Waiting for two proficient listeners."* Not *"Your submission has been queued for validation."*
 - **Never say "data", "corpus", "annotation", "task", or "submission" in the player-facing interface.** Say *voice*, *clip*, *round*, *your turn*. The Impact Console may use technical language; the game may not.
-- **Localise the UI, not just the content.** A game about South African languages whose buttons are all in English has said something it did not intend. Ship at minimum isiZulu, isiXhosa, Afrikaans and English at launch — and get every string checked by a first-language speaker. Machine-translated interface copy in a language-preservation product is a self-inflicted wound.
+- **Localise the UI, not just the content.** The competition build ships isiZulu and Setswana content/copy owned by Sbu and Lethabo respectively, with neutral functional shell labels where needed. Do not claim four launch languages without first-language review.
 - **Never lie about money.** *"Sent for payment"* is not *"Paid."* The wallet's honesty is the product's credibility, and a judge who catches one optimistic label will discount everything else.

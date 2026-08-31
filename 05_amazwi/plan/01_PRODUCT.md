@@ -1,492 +1,254 @@
-# AMAZWI — PRODUCT SPECIFICATION
-### Game design · every screen · every flow · the gamification model
+# AMAZWI — PRODUCT CONTRACT
+### The game, user roles, validation rule, rewards and screens
 
-**Parent:** `00_MASTER_PLAN.md` · **Written:** 2026-08-30
-
----
-
-## 1. THE CORE LOOP
-
-Everything in AMAZWI is one loop with two seats. Learn this and the rest of the document is detail.
-
-```
-        ┌─────────────────────────────────────────────────────────┐
-        │                                                         │
-        │   ①  SPEAK          ②  LISTEN           ③  AGREE        │
-        │                                                         │
-        │   You get a word.   Two strangers        Did they get   │
-        │   30 seconds to     hear your clip       it? Then it    │
-        │   make people       and guess what       was good       │
-        │   understand it     you meant — and      speech.        │
-        │   in your language. referee the rule.                   │
-        │   Without saying                          ↓             │
-        │   the banned words.                                     │
-        │                                    ④  EVERYONE SCORES   │
-        │                                                         │
-        │                          speaker earns · guessers earn  │
-        │                          league moves · archive grows   │
-        └─────────────────────────────────────────────────────────┘
-```
-
-### Why this exact mechanic and not another
-
-| Property | How the mechanic delivers it |
-|---|---|
-| **It is genuinely fun** | It is *30 Seconds* — invented in South Africa in 1998, in a very large number of South African homes. The fun is not a claim; it is a forty-year-old, market-tested result. |
-| **It elicits the right speech** | Spontaneous, unscripted, explanatory, fast. This is the category that does not exist in any corpus, because read-aloud is easy to collect and conversation is not. |
-| **Validation is free** | A correct guess *proves* the utterance was intelligible, on-topic and in the right language. No moderator decided that. |
-| **Fraud is expensive, not impossible** | There is no "approve" button to game, and farming requires colluding with strangers you cannot choose. It is **not** unbreakable — see §1.1, which closes the one hole that matters. |
-| **The anti-collusion is borrowed, not invented** | The ESP Game — the original game-with-a-purpose — defends against collusion with exactly two devices: **taboo words** and **random pairing per item**. We have both. Our banned words were chosen for difficulty and speech quality; they are *also* the canonical anti-collusion mechanism in this class of game. `research/F_GAMIFICATION.md` §4 |
-| **Labels fall out as exhaust** | You get the semantic target (the card word), a distribution of what listeners heard, and a difficulty signal — for free. |
-| **It has two seats** | Speakers earn money. Learners gain comprehension. Same loop, opposite motives. |
-
-### 1.1 🔴 THE HOLE, AND THE FIX — read this before building anything
-
-**The game's only rule is unenforceable, and enforcing it would require the exact capability AMAZWI exists to create.**
-
-Nothing checks whether the speaker said the banned word. It *cannot* — there is no working ASR for these languages (`02_TECH.md` §5.1), so there is no keyword spotter. So the dominant speaker strategy is: **say the word, immediately and repeatedly.** All listeners guess correctly. The speaker is paid. The clip enters the corpus marked "validated."
-
-And the second-order damage is worse than the fraud. That strategy produces **degenerate speech — the target word repeated** — the exact opposite of the spontaneous, explanatory speech the entire data thesis rests on. The corpus fills with the worst possible content while every quality metric reads green. Listeners will not report it unprompted: a speaker who says the word hands them a free correct answer.
-
-**The judge question this creates, and it takes eight seconds to ask:**
-> *"You've just told us no system on earth transcribes isiZulu. So how does your app know the speaker didn't just say the word?"*
-
-#### The fix — the listener is the referee
-One extra tap on the reveal screen, after the answer is shown:
-
-> **"Did they say the word, or any banned word?"**  `[ No ]`  `[ Yes ]`
-
-- **Both listeners say yes → round `VOIDED`.** No speaker reward. `γ_speaker` penalised.
-- **Listeners are paid either way**, because they are paid for judging, not for outcomes (§5.1 rule 6) — so reporting costs them nothing.
-- **Gold cards make it enforceable.** One assignment in eight is a seeded clip that *does* say the banned word. A listener who fails to flag it is failing an attention check, and their reward stops until they pass one. Without this the report button is decorative.
-
-One boolean on `guess`, one branch in the resolver, one line of UI, plus the honeypot. **~40 minutes at G4.**
-
-#### And it is a better answer than a defence
-> *"We can't transcribe it — so we don't. The room referees. Two listeners agreeing that you cheated voids the round. That's the same agreement primitive that validates the clip, pointed at the rule instead."*
-
-Put the limit on the honest-scope slide too: *"banned-word enforcement is peer-reported, not machine-verified — until we have the data to build the verifier, which is the entire point of the product."*
+**Parent:** `00_MASTER_PLAN.md`
+**Product owner:** Lethabo
+**Platform counterpart:** Sbu
 
 ---
 
-> ⚖️ **Legal note, non-negotiable.** *30 Seconds* is a registered trade mark of a South African company (Calco Games). **Game mechanics are not protectable; names, card content and trade dress are.** Never brand any part of AMAZWI "30 Seconds", never copy card content, never imitate the box. Reference it only in the pitch as a cultural touchstone — *"every South African has played a game like this"* — and write all card content yourself. See `07_TRUTH.md`.
+## 1. ONE LOOP, THREE SEATS
+
+### Speaker
+
+Receives a target and four blocked words, records a short clue and earns a published honorarium only when the contribution becomes `CORPUS_ELIGIBLE`.
+
+### Proficient verifier
+
+Listens privately, types the intended concept before reveal, then reports whether the speaker used the target or a blocked word. Two independent verifiers are required. Verifiers earn Voice Points in the competition build, not cash.
+
+### Learner/player
+
+Plays the accessible four-option guessing version for XP, feedback, streak and league status. MCQ answers are game telemetry only and cannot make a recording corpus-eligible.
+
+The UI must never call these three evidence levels the same thing.
 
 ---
 
-## 2. GAME MODES
+## 2. CORE MODE — DESCRIBE & GUESS
 
-Six designed. **Two built for the competition.** The rest are the roadmap slide.
+The competition builds one mode.
 
-### 🟢 MODE 1 — UMLOZI · *"the whistle"* — **BUILD THIS**
-**Say it, don't say it.**
+1. The speaker sees a native-authored target and four blocked words.
+2. They receive a 30-second recording window.
+3. The client checks duration, silence and clipping before upload.
+4. Two proficient verifiers receive the clip independently.
+5. Each types the intended concept.
+6. Only after submitting does each see the target and blocked list.
+7. Each answers: **“Did the speaker say the answer or one of these blocked words?”**
+8. Two accepted free-text answers and fewer than two violation flags produce `UNDERSTOOD`.
+9. Audio quality plus active purpose consent produces `CORPUS_ELIGIBLE`.
+10. Exactly one reward event is credited and a Voice Value Receipt is created.
 
-- Speaker receives a card: one target word + four banned words.
-- 30-second timer. Describe it in your language so someone else gets it.
-- **Two** listeners, randomly assigned, hear it, answer, and referee the banned-word rule (§1.1).
-- **Speaker earns** when listeners understand them, capped by the daily quest (§5.3).
-- **Listeners earn a fixed amount for a valid judgement, whether or not they got it right** (§5.1 rule 6).
-
-> **Why two, not three.** Two independent agreements is the ESP Game's own standard, it makes the unit economics literally true (`03_BUSINESS.md` §2), it balances guess supply exactly, it halves time-to-resolution, and it shrinks the cold-start problem by a third. Three costs 21% more per validated hour and buys very little.
-
-> **Why listeners are paid for judging, not for being right.** If you pay listeners for matching each other, the optimal strategy for someone who understood nothing is to type the *most likely* answer — and since the reveal screen shows the answer every round, a pool of ~60 cards is fully learnable in an evening. Output agreement only defends when the guess space is large and unshared. Paying for the judgement removes the thing to converge on. **Attention is enforced by gold cards instead** — unannounced items with known answers; fail two in a row and your reward stops until you pass one.
-
-**Data output:** spontaneous descriptive speech, semantically anchored, with a per-clip comprehension score.
-**Why it is first:** it is the entire thesis in one screen.
+Two violation votes produce `VOIDED`. A split referee vote produces `REVIEW_REQUIRED`; the contribution does not silently pay or enter the eligible set.
 
 ---
 
-### 🟢 MODE 2 — INGANEKWANE · *"the folktale"* — **BUILD THIS**
-**The story chain.**
+## 3. WHAT A GUESS PROVES
 
-- A story opens with a seed line. Each player adds **15–20 seconds** and passes it on.
-- The finished chain is published to the Archive with every contributor credited.
-- Listeners vote for the best turn; the winning turn earns **Voice Points and Archive billing — never cash.** ⚠️ A cash bonus awarded by popular vote is a *prize distributed in a competition*, which is exactly what pulls a mechanic under CPA s36. Points and status are free of that. `07_TRUTH.md` §4.3
+A matched free-text guess proves that two assigned proficient listeners independently recovered the card's intended semantic concept.
 
-**Data output:** connected narrative speech — the hardest and most valuable kind — plus a shareable cultural artefact.
-**Why it is second:** it shares ~90% of Umlozi's code (record → upload → play → score), it delivers the emotional payload, and it is the on-stage "As One" moment. Cheap to build, disproportionate return.
+It does not prove:
 
----
+- the words spoken verbatim;
+- the declared language;
+- speaker identity or uniqueness;
+- dialect or place authenticity;
+- ASR training readiness;
+- proficiency of the speaker or listener.
 
-### ⚪ MODE 3 — NDIYEVA · *"I hear you"* — roadmap
-**The transcription race.** Hear a clip, type what you heard. Two independent players agreeing produces a verified transcript — the single most expensive artefact in speech ML, generated as a competitive typing game.
-
-### ⚪ MODE 4 — IZAGA · *"proverbs"* — roadmap
-**Proverb duel.** Say the proverb, explain the meaning; others complete it or pick the meaning. Idiomatic speech plus a living proverb archive. The culture-preservation engine.
-
-### ⚪ MODE 5 — XOXA · *"chat"* — roadmap
-**Code-switch mode.** *"Tell a friend about your day."* *"Explain data bundles to your gogo."* Deliberately elicits mixed-language speech — the category that costs monolingual ASR the most and that essentially no corpus contains.
-
-### ⚪ MODE 6 — IMBEWU · *"the seed"* — roadmap, and the moral peak
-**The elder archive.** A quest to sit with an elder and record them telling a story, with their own consent, at a higher reward.
-
-The scarcest speech in existence is old, rural, unmixed and idiomatic. It is also the speech that disappears. South Africa has exactly one fluent N|uu speaker left — Ouma Katrina Esau, 92, honoured by the state as a living human treasure, and by press accounts still struggling financially. **That single fact is the entire argument for paying people for their language, and it is true.**
-
-> ⚠️ **Handle with care.** Do not name her, use her image, or imply endorsement without written permission. Cite the situation, not the person. It is context, not a prop. A South African judge will notice the difference instantly.
+Player-facing copy may say **“two people understood you.”** Buyer-facing copy says **“peer-verified semantic label.”** Neither says “transcript.”
 
 ---
 
-## 3. THE SCORING MODEL — where the real technical depth is
+## 4. ANSWER MATCHING
 
-This is the part that separates AMAZWI from a quiz app, and it is worth building because it is both correct and demonstrable.
+Every card stores:
 
-### 3.1 The problem
-When a listener fails to guess, **who failed?** The speaker (unclear), the listener (low proficiency), or the word (too hard)? A naive system blames the speaker and pays them nothing. That is unjust and it corrupts the data.
-
-### 3.2 The model
-Treat every guess as an item response. A standard latent-trait formulation:
-
-```
-P(correct) = σ( θ_listener  −  β_word  +  γ_speaker )
-
-    θ_listener  listener's proficiency in that language
-    β_word      intrinsic difficulty of the card
-    γ_speaker   speaker's clarity / expressiveness
-    σ(x)        logistic function, 1 / (1 + e^−x)
+```text
+target
+blocked_words[]
+accepted_answers[]
+distractors[]
+language
+difficulty_tag
+campaign_or_deck
 ```
 
-Fit by alternating updates (or online gradient steps) as responses arrive. Three parameters, one equation, and every one of them is a product feature:
+Competition matching is intentionally conservative:
 
-| Parameter | What it becomes |
-|---|---|
-| **γ_speaker** — clarity | The data-quality score. Drives reward multipliers and corpus curation. |
-| **θ_listener** — proficiency | **A language proficiency score.** Crowd-calibrated, continuously updated, and — see `03_BUSINESS.md` — a sellable credential. |
-| **β_word** — difficulty | Card calibration and adaptive difficulty. New cards start uncalibrated and get seeded against known-ability listeners. |
+1. Unicode-normalise, lowercase, trim and collapse spaces/hyphens.
+2. Compare with the first-language-authored `accepted_answers` list.
+3. Add explicit typo aliases only for the eight hero cards when native reviewers agree.
+4. Do not strip noun-class prefixes generically.
+5. Do not use blanket Levenshtein distance on short words.
+6. An unmatched answer is false for automatic resolution and is logged for later curation.
 
-### 3.3 Why this is a genuinely strong move
-- It is the **fair** answer to "who failed", so payment is defensible.
-- It converts the learner side from a cost into an **asset**: every learner guess calibrates the corpus.
-- **It produces a language proficiency certificate as a by-product.** South Africa's contact-centre sector hires on exactly this and has no objective instrument for African languages.
-- It is real, citable psychometrics (Rasch / 2-PL item response theory), not invented mathematics.
-
-### 3.4 Honest limits — say these before a judge does
-- Cold start: with no data, all parameters are at their priors. Seed with gold-standard items of known difficulty.
-- Identifiability: θ and γ trade off unless anchored. Anchor on gold items and on high-volume listeners.
-- **Do not claim the proficiency score is validated** until it has been correlated against an external instrument. In the demo it is *"a proficiency estimate,"* never *"a certified level."*
+This is not a general isiZulu or Setswana morphology engine. It is a safe matcher for a small native-curated deck.
 
 ---
 
-## 4. THE TWO SEATS — one codebase, two roles
+## 5. PAYMENT AND POINTS
 
-The learner side is **not a second product.** It is the same screens with three switches flipped.
+### Cash
 
-| | **SPEAKER** | **LEARNER** |
+- Speakers receive the published contribution honorarium.
+- Cash is credited after `CORPUS_ELIGIBLE`, once per contribution.
+- The amount is displayed before recording and never reduced retroactively.
+- The app credits its internal ledger immediately.
+- Cash-out to MoMo happens at the provider's viable threshold; it is not promised per R2 clip.
+- No leaderboard, streak, random event or popularity vote awards cash.
+
+### Voice Points
+
+- Learners and verifiers receive Voice Points for completed eligible play.
+- Points unlock tier movement and streak feedback only.
+- Points are not convertible to cash.
+- Gold checks may suspend point earning when a verifier repeatedly fails attention checks.
+
+The competition does not pay R0.50 per listener judgement. That policy and its economics are removed from the build.
+
+---
+
+## 6. GAMEPLAY VERSUS GOVERNED VALIDATION
+
+| Input | Player result | Data result |
 |---|---|---|
-| Primary action | Record a clue | Guess the clue |
-| Answer input | — | 4-way multiple choice (default, and the demo path) or free text (advanced) |
-| Reward | **Rand**, into MoMo | **XP + proficiency progress** (and optionally a small Rand credit) |
-| Motivation | Income, pride, competition | Comprehension, progress, curiosity |
-| Money direction | Earns | Pays / subscribes / is sponsored |
-| Onboarding question | *"Which languages do you speak?"* | *"Which language do you want to understand?"* |
+| Four-option MCQ | XP, reveal and popularity signal | `PLAYED` only |
+| One proficient free-text match | XP and partial evidence | still `OPEN` |
+| Two proficient free-text matches | understanding result | `UNDERSTOOD` |
+| Two matches + quality + consent + no joint violation | reward and receipt | `CORPUS_ELIGIBLE` |
 
-> 🔴 **Multiple choice must never validate the corpus.** Two beginners guessing at random on a 4-way question agree by chance **6.25%** of the time — on a clip containing no intelligible speech whatsoever. Resolve on a single MCQ listener and it is **25%**. So: **free-text agreement validates a recording; MCQ agreement earns XP only.** One flag on the guess row, and without it the claim that "gibberish earns nothing" is quantitatively false.
-
-**Everyone can be both.** An isiXhosa speaker learning Sesotho earns on one side and learns on the other. That is the norm in South Africa, not the exception — most South Africans are multilingual — and it means the two populations are not two markets to acquire. They are one.
-
-> **This is the answer to "isn't this a digital sweatshop?"** It is not a work app that some people also enjoy. It is a language game that some people also earn from. The learner who pays a subscription and the speaker who earns R4 are in the same match.
+If fewer than two proficient verifiers respond, the clip expires as `UNVALIDATED` and is excluded from export. Any goodwill payment policy belongs to a later pilot and must be modelled before it is promised.
 
 ---
 
-## 5. THE ECONOMY — points, money, and the wall between them
+## 7. LANGUAGE AND CONTENT
 
-**Rule zero: Voice Points and Rands are different substances and never convert.**
+The launch languages are:
 
-Points are playful, inflatable, and reset each season. Money is an append-only ledger in integer cents, governed, audited, and never adjusted downward. Mixing them is how reward apps become fraud cases.
+- **isiZulu — Sbu owns the content and in-language copy**;
+- **Setswana — Lethabo owns the content and in-language copy**.
 
-### 5.1 The reward formula
+Each language has eight hero cards for the demo. Additional cards are useful only after those sixteen are tested aloud.
 
-```
-reward_cents =
-      base_task_value
-    × coverage_need_multiplier      (capped, e.g. 1.0 – 2.5)
-    × difficulty_multiplier         (capped, e.g. 1.0 – 1.5)
-    + quality_bonus                 (from γ_speaker, capped)
-```
+Card rules:
 
-**Rules that must hold in code, not in policy:**
-1. The reward is **published before** the task begins.
-2. Integer **minor units** only. No floats touch money.
-3. All multipliers **capped**; the product of caps is the maximum possible payout and it is asserted in a test.
-3b. 🔴 **The coverage multiplier is capped by listener pool size, not by coverage alone — multiplier ≤ 1.0 until a language has ≥ 50 active listeners.** Without this you pay the biggest bonus exactly where collusion is cheapest: a confederate lands among the assigned listeners ~0.3% of the time in a pool of 1,000, and **~43% of the time in a pool of 8.** `02_TECH.md` §3.5.
-4. An accepted published reward is **never reduced**.
-5. **Exactly one** reward per contribution and per review — enforced by a unique constraint, not by application logic.
-6. Listeners are paid a smaller fixed amount for a *valid* judgement, whether or not the speaker was understood.
-7. If provider minimums or fees make cent-scale transfers uneconomic, earnings **accumulate in the ledger** and disburse at a transparent threshold.
+- culturally authored, not mechanically translated from English;
+- concrete enough to explain in 30 seconds;
+- blocked words are the obvious routes to the answer;
+- accepted answers are curated by the first-language owner;
+- illustrations appear only for the speaker if they do not reveal the answer;
+- no listener illustration may leak the target;
+- neutral functional shell labels—Speak, Listen, Wallet, Impact—keep isiZulu and Setswana co-equal.
 
-### 5.2 Coverage-based rewards, not scarcity-based
-
-The earlier draft of this project priced by **language rarity** — Tshivenda and isiNdebele speakers earn most because their languages are small.
-
-**Change this.** Paying someone more because of the ethnicity they were born into is a headline waiting to happen, and it is also economically wrong: what is scarce is not the *language*, it is the *data you do not yet have*.
-
-Price the **gap**, not the group:
-
-> *"This conversational Tshivenda quest carries a coverage bonus because this speaking style is underrepresented in the current campaign."*
-
-Same money reaches roughly the same people. Completely different sentence on the front page of a newspaper. It also self-corrects: once coverage fills, the bonus moves on.
-
-### 5.3 The daily cap — a product rule that came out of the arithmetic
-
-**Modelling the economics surfaced a flaw the original design did not have an answer for.**
-
-A 15-second clip plus reading the card and thinking takes roughly 45 seconds. So an uncapped reward implies:
-
-| Reward | Effective hourly rate | vs minimum wage (R30.23/hr) |
-|---|---|---|
-| R2.00/clip | R160/hr | **5.3×** |
-| R3.00/clip | R240/hr | **7.9×** |
-
-> **Uncapped, this is not a game. It is a farm — and an unaffordable one.** At eight times minimum wage, every sophisticated actor in the country optimises against you inside a week.
-
-**The rule:**
-> ### Cash is capped by the daily quest. Past the quest, you play for points, league and the Archive.
-
-**Three plays a day at R2 = R6/day, R216/month including listening rewards — 58% of the SRD grant.** Meaningful money in South Africa. Not a wage. Not farmable.
-
-> ⚠️ **The listening side needs its own cap, and the original design did not have one.** A listen-and-guess takes 20–30 seconds; at R0.50 that is **R60–R90/hour, 2–3× minimum wage** — the same farm, through the other door. **Cap paid judgements at 10 per day.** The loop needs 6/day to balance (3 clips × 2 listeners), so 10 leaves headroom and bounds listening at R5/day.
->
-> **Total cash ceiling per user: R11/day.** One counter, one line, and it is the number that makes the whole business modelable.
-
-**Three days of playing buys a loaf of bread** (R6/day; bread ≈ R19.61). ⚠️ *Do not say "three clips buys a loaf" — that is wrong by a factor of 3.3 and the correction is in your own research file.*
-
-This one rule does five jobs:
-1. **Bounds cost per user** at ~R216/month — the reason the business is modelable at all.
-2. **Bounds fraud upside.** A stolen account is worth R6/day. Not worth industrialising.
-3. **Keeps it a game** — the Track 2 argument and the retention argument.
-4. **Enforces §6's anti-crowding-out principle structurally.** Past the cap the only reason to keep playing is that you want to — which runs the "is this fun without money?" test continuously, on every user, forever.
-5. **Creates honest scarcity**, which is what makes a daily quest worth showing up for.
-
-Full derivation and sensitivity in `03_BUSINESS.md` §2–3.
+Future **MoMo Moments** cards elicit domain-specific intent labels such as buy airtime, send money or check a balance. They are roadmap, not required for the core demo.
 
 ---
 
-## 6. HOW TO PAY WITHOUT DESTROYING THE THING YOU ARE PAYING FOR
+## 8. SCREENS
 
-There is a well-established result in economics and psychology — **motivation crowding-out** — that paying people for an activity can *reduce* effort and quality relative to paying nothing.
+### 1. Entry
 
-**Gneezy & Rustichini (2000), *Quarterly Journal of Economics* 115(3): 791–810** — the canonical result, stated precisely:
+Mini App identity when available; otherwise a clearly labelled browser-demo identity. Adult confirmation and language selection.
 
-> The effect of monetary compensation on performance is **not monotonic.** When money was offered, a larger amount yielded higher performance — **but subjects offered small monetary incentives performed more poorly than those offered no compensation at all.**
+### 2. Consent
 
-**R2.00 per clip is squarely in the "small payment" regime where performance can fall below the unpaid baseline.** This is not a hypothetical risk; it is the exact experimental condition. The effect is also strongest for people with low pre-existing motivation — i.e. someone who opened the app because a friend said it pays.
+Required scopes for recording, assigned-verifier playback and stated retention purpose. Public audio/attribution is not requested in the competition build.
 
-This is the single largest design risk in AMAZWI, and the current plan walks straight into it: cents per task is precisely the "small payment" regime where quality collapses.
+### 3. Home
 
-**The structural defences, built into the product:**
+One dominant **PLAY** action, today's contribution allowance, Voice Points, wallet credit and current mission. No feature catalogue.
 
-1. **The game must be playable, and fun, with the money switch off.** Test this. If nobody plays without payment, the payment is doing all the work and quality will follow the money down.
-2. **Pay for outcomes, not activity.** Money attaches to *validated* contributions, never to submissions. Effort without comprehension earns nothing.
-3. **Keep the two currencies separated and make points the loud one.** The league, the streak, and the archive are what the interface celebrates. The wallet is honest, correct and quiet.
-4. **Never adjust a published rate downward.** Retroactive rate cuts are the fastest way to destroy a contributor community, and it happens in this industry constantly.
-5. **Make the learner side genuinely free.** A population that plays for zero money is the proof that the game has intrinsic pull — and it is your control group.
-6. **Credit, not just cash.** Named attribution in the Archive is a non-monetary reward that does not crowd out — it is the Wikipedia engine.
+### 4. Card
 
-> Evidence and citations: `research/F_GAMIFICATION.md`.
+Target dominates. Four blocked words. Reward rule and mission are visible before recording.
 
-### 6.1 The Ayoba lesson — put this on a slide
+### 5. Recording
 
-MTN's previous engagement product, **Ayoba**, reached roughly 35 million monthly active users and was removed from app stores on **20 March 2026**. Press analysis of the failure is consistent: a large share of users were drawn by **free-data incentives rather than utility**, so retention collapsed against WhatsApp.
+Real waveform, timer, quiet/clipping guidance and retry. No model claims.
 
-**That is the exact failure mode of a "get paid to record" app.** Naming it yourself, on stage, is a power move:
+### 6. Submitted
 
-> *"MTN has already learned this lesson expensively. Ayoba proved that incentive-driven signups don't retain. So AMAZWI's retention is not the payment. It's the game — and we designed it so you can switch the money off and people keep playing."*
+“Waiting for two proficient listeners.” The UI never says three.
 
----
+### 7. Verifier
 
-## 7. THE GAMIFICATION SET
+Playback, free-text answer, then reveal and referee tap. The answer cannot be changed after reveal.
 
-Ranked by evidence strength. Detail and citations in `research/F_GAMIFICATION.md`.
+### 8. Learner guest round
 
-| # | Mechanic | Design decision |
-|---|---|---|
-| 1 | **Daily streak** | With **one automatic streak-freeze per week.** The dominant failure of streaks is that a single missed day causes permanent churn — the freeze converts a quit into a return. |
-| 2 | **Place leagues** | Weekly, **tiered promotion/relegation** by ward or township. *Khayelitsha vs Soweto. Thohoyandou vs Giyani.* ⚠️ **See §7.1 — the evidence for team competition is weaker than it looks, and the risk points at our most important users.** |
-| 3 | **Language leagues** | Parallel table by language, so a small language community can be #1 nationally. Fixes the "big languages always win" problem structurally — and this one the research supports. |
-| 4 | **Daily quest — three plays** | Small, closable, completable in under three minutes on a bad connection. |
-| 5 | **Coverage call-outs** | *"Sesotho conversational needs 40 more voices this week."* Turns a data need into a rallying cry. This is the "Maximum Velocity" mechanic. |
-| 6 | **The Archive** | Permanent, named, credited. The long-term retention engine and the ethical answer in one feature. |
-| 7 | **Seasons** | Tied to the South African cultural calendar — **September is Heritage Month, Heritage Day is 24 September.** The hackathon is 2–3 September. Season One should be *Heritage Season*, launching the month it is actually pitched in. |
+Four options, XP and reveal. A plain note says the round does not decide corpus eligibility.
 
-### 7.1 🔴 The team-league correction
+### 9. Result
 
-An earlier draft asserted that team competition "sustains engagement better than individual leaderboards." **That is not what the evidence says**, and the risk runs directly at the users we most need.
+“Two people understood you” or an honest voided/unvalidated state. Reward is **credited**, not “paid,” until provider confirmation.
 
-Peer-reviewed (*Learning and Instruction*, 2024, on team-based gamification):
-> **The losing team demonstrated lower performance, confidence and engagement, while the winning team was merely comparable to the non-gamified control.**
+### 10. Wallet and Voice Value Receipt
 
-Read that carefully: **the winners gained nothing measurable and the losers were harmed.** And **Khayelitsha vs Soweto has a losing side every single week** — in a product whose entire thesis is that small, under-represented communities matter.
+Pending credit, available balance, cash-out submitted, paid and failed states remain distinct. Receipt includes contribution ID, semantic label, validation evidence, reward rule, consent version and provider reference/state.
 
-**Four cheap fixes, all of which we should just do:**
-1. **Tiered promotion/relegation, never one national table.** Most players sit mid-tier and can plausibly win *their* tier. This is Duolingo's actual design and it is why it works.
-2. **Never render a "you lost" state.** Show movement against your own previous week.
-3. **Keep the language league** — a small community can be #1 nationally in its own table. The plan already had this right and it is the strongest structural answer.
-4. **Celebrate the top of your tier; never show a national last place.**
+### 11. Impact Map
 
-Evidence and citations: `research/F_GAMIFICATION.md` §7.
+Aggregate counts and dots by broad geography/language only. No public raw audio, name or precise location.
 
-### 7.2 Deliberately excluded
-Hearts/lives (punishes the poor connection, not the player) · loot boxes and **any randomised-prize mechanic** (this is the specific thing that would pull us under the Consumer Protection Act s36 — see `07_TRUTH.md` §4.3) · **prizes attached to leaderboards**, for the same reason · infinite scroll · streak-loss push notifications that manufacture the anxiety the freeze exists to prevent.
+### 12. Compact mission view
+
+Funds remaining, eligible contributions, eligible seconds and acceptance rate. No WER chart.
 
 ---
 
-## 8. SCREEN-BY-SCREEN SPECIFICATION
+## 9. CONSENT AND REVOCATION
 
-Mobile-first, single column, inside the MoMo Mini App shell.
+Consent scopes:
 
-✅ **Confirmed from MTN's own Mini App documentation:** the user **arrives already authenticated.** A `START_JOURNEY` event hands your page the logged-in `msisdn` and a session token on load. **Do not build a login screen** — that is the entire point of a mini app, and building one signals you did not read the spec.
+1. record/process this round;
+2. private playback to assigned verifiers;
+3. retain for the stated governed purpose;
+4. public audio or named attribution.
 
-⚠️ **Also confirmed, and it constrains this design directly:** the session dies after **60 seconds without a heartbeat**. Every screen below where a user is thinking, reading or recording — which is most of them — depends on that heartbeat running. See `02_TECH.md` §1A.
+Scope 4 is off by default and not implemented.
 
-Assume a constrained viewport, an undocumented CSP, and expensive data.
+Revocation:
 
-### 8.1 Onboarding — five screens, under sixty seconds
-
-**① WELCOME**
-- Logo, tagline *"Every voice counts. Yours pays."*
-- One line: *"Describe the word in your language. If people get it, you get paid."*
-- A 6-second silent looping demo of the game
-- `[ Start ]`
-
-**② AGE GATE**
-- *"You must be 18 or older to play."* → date of birth or explicit confirmation
-- Adults-only is a **hard requirement**: voice is personal information, and children's data carries additional restrictions under POPIA. Do not accept minors in the MVP.
-
-**③ IDENTITY**
-- *"Continue with MoMo"* — one tap, no forms
-- Show what is and is not shared. Never store an identity document.
-
-**④ LANGUAGES** — the screen that sets the seat
-- *"Which languages do you speak?"* (multi-select, ordered by home-language share)
-- *"Which would you like to understand better?"* (multi-select — **this is the learner switch**)
-- Province / community — **coarse only**. Never request precise location.
-
-**⑤ CONSENT** — separate, plain-language toggles, each independently declinable
-- Recording and storage
-- Other players hearing your recording
-- Use for speech-technology research and model training
-- Reward terms
-- Retention and withdrawal, explained in one sentence
-- Store **consent version, purpose, status, timestamp**. Written in the player's own language.
+- blocks new contributions until fresh consent;
+- removes the audio from future playback and export;
+- leaves an audit tombstone and financial record;
+- does not claw back earned money;
+- does not promise instant unlearning from a model.
 
 ---
 
-### 8.2 The main surfaces
+## 10. GAMIFICATION
 
-**HOME / TODAY**
-Streak · today's quest (3 plays) · published reward · Voice Points · league position (place + language) · wallet strip · `[ PLAY ]` as the single dominant action. Below the fold: the coverage call-out, and the Archive teaser.
+Competition gamification stays light:
 
-**GAME SELECT**
-Two live modes with a one-line explanation each. Locked modes visible but greyed with *"coming soon"* — this is where the roadmap becomes visible to a judge inside the product itself.
+- one daily quest;
+- Voice Points;
+- a forgiving streak with one freeze;
+- a tiered language/place league only if P0 is complete;
+- no national last place;
+- no “you lost” state;
+- no cash or prizes attached to ranking;
+- no chance mechanics, loot boxes, spin or paid entry.
 
-**UMLOZI · SPEAKER**
-1. **Card reveal** — target word large; four banned words listed beneath in red; language chip; published reward; `[ I'm ready ]`
-2. **Countdown** — 3 · 2 · 1
-3. **Recording** — 30-second ring timer, live waveform, live *too quiet* / *clipping* indicators, `[ Stop ]`
-4. **Review** — replay, re-record (limited), `[ Send it ]`. **Upload is blocked until the client-side quality checks pass** — never spend a player's data on a clip that will be rejected.
-5. **Sent** — *"Three people are listening now."* Return to home; result arrives later.
-
-**UMLOZI · LISTENER**
-1. Clip plays (replay limited to 2)
-2. Answer: 4-way multiple choice (default) or free text (advanced)
-3. Reveal: the word, whether you got it, what others guessed, XP/reward
-4. **The referee tap:** *"Did they say the word, or any banned word?"* `[ No ] [ Yes ]` — §1.1
-5. `[ Next ]` — chained, so the listener side is a fast, satisfying run
-
-> 🔴 **Card illustrations appear on the speaker's card ONLY — never in the listener flow, never on the reveal.** If an illustration ever renders on a listener's screen the game is over. And even on the speaker's side it shifts the task from *describe the word* to *describe the picture*, which weakens exactly the linguistic output you are collecting. Consider shipping the demo with text-only cards.
-
-**RESULT (speaker, asynchronous)**
-*"2 of 3 people understood you."* Clarity score movement · reward moved to available · points · league movement · `[ See receipt ]`
-
-**WALLET**
-Pending → Available → Paid, as three visually distinct states. Transaction history with provider references. Threshold explanation when applicable. **This screen must never lie.** "Request accepted" is not "paid" and must not be displayed as paid.
-
-**VOICE VALUE RECEIPT** — the signature screen
-```
-Contribution ID · language · mode
-Clarity score · how many understood you
-Coverage contribution — what gap this filled
-Reward, in cents, and its published basis
-Voice Points
-Consent version and status
-MoMo payout status and reference
-Archive entry number
-```
-This one screen simultaneously proves entertainment, payment traceability, data value and consent. It is the last thing shown in the demo.
-
-**THE ARCHIVE**
-The emotional core. Browse by language, place, mode. Listen to finished story chains with every contributor credited. Your own contributions, numbered and permanent. *"You are voice #4,182 in the South African Voice Archive."*
-
-**LEAGUES**
-Two tabs — Place and Language. Promotion/relegation zones shaded. Your position pinned. Season countdown.
-
-**PROFILE & PRIVACY**
-Languages · proficiency estimates · clarity score · active consent version · **revoke future use** with a plain-language explanation of exactly what that does and does not undo · download my contributions.
-
-**IMPACT CONSOLE** *(MTN-facing, second device)*
-Campaign budget committed and spent · validated minutes by language and mode · coverage heat map · acceptance rate · active-consent corpus count · payout success rate · cost per validated minute · **next recommended language for budget**. No invented model-improvement numbers.
+IRT, Elo, adaptive difficulty and proficiency credentials are roadmap research, not competition features. The complete evidence remains in `../research/F_GAMIFICATION.md`.
 
 ---
 
-### 8.3 The states everyone forgets — and judges notice
-Microphone permission denied · no network mid-record · upload interrupted and resumed · empty league · no clips left to judge · consent revoked · payout failed and returned to available · sandbox unavailable · account rate-limited. Each needs a written, human sentence — not a toast saying "Error".
+## 11. COMPETITION ACCEPTANCE CRITERIA
 
----
+The product is demo-ready when:
 
-## 9. USE CASES — who actually opens this
+- one device records a real clip;
+- a second and third device independently verify it;
+- one rule violation path can be demonstrated;
+- retries cannot create a second reward;
+- the wallet shows the correct provider state;
+- the receipt renders from real stored events;
+- reset returns the demo to a known state;
+- MCQ guest play cannot change corpus eligibility;
+- revoked audio cannot be assigned or exported;
+- all user-facing isiZulu and Setswana hero-card copy is first-language checked.
 
-| Persona | Seat | Why they open it | What they get |
-|---|---|---|---|
-| **Thabo, 23, Soweto, unemployed** | Speaker | Three minutes, R6, and he is holding up his ward's ranking | Income, standing |
-| **Aisha, 29, Sandton, marketing** | Learner | She has isiZulu-speaking colleagues and cannot follow a meeting | Comprehension that actually transfers |
-| **Nomsa, 45, Thohoyandou** | Speaker | Tshivenda has a coverage bonus and her town is climbing | Income, pride, visibility |
-| **Pieter, 19, Kaapse Vlakte** | Both | Speaks Kaaps; earns for it; learning isiXhosa | Both sides of the loop |
-| **A call-centre trainee, Durban** | Learner | Employer requires conversational isiZulu | A proficiency estimate that means something |
-| **Sipho, 31, Alexandra** | Speaker | Records his grandmother's stories in the Archive | Legacy, and the highest reward tier |
-| **MTN campaign manager** | Console | Needs 200 hours of banking-domain Sesotho | Targeted acquisition with cost-per-minute visibility |
-
----
-
-## 10. THE COMPETITION BUILD — the non-negotiable list
-
-Nothing enters this list unless it improves a judging score, keeps the demo alive, or reduces a serious risk.
-
-1. Mini App shell, mobile viewport, MoMo design conventions
-2. Adult age gate
-3. MoMo/sandbox identity link
-4. Versioned, granular consent — **enforced server-side, not merely displayed**
-5. Language selection, both seats
-6. **Umlozi speaker flow** — card, timer, record, client quality gate, upload
-7. **Umlozi listener flow** — playback, answer, reveal
-8. Agreement scoring and the clarity/proficiency update
-9. Append-only reward ledger in integer cents, idempotent
-10. MoMo sandbox disbursement, or a clearly-labelled provider state
-11. League update (place + language)
-12. **Voice Value Receipt**
-13. Impact Console
-14. Consent revocation with future-use exclusion
-15. Deterministic seed/reset
-16. Written, human error states
-
-> **Inganekwane (the story chain) is deliberately NOT on this list.** `05_BUILD.md` §6 cuts it at G6 if the clock demands, and a non-negotiable list with negotiable items on it is not a list. It is the first thing to build once the loop is stable, and the first thing to cut.
-
-**Add only once that loop is stable:** on-device Whisper transcription assist · duplicate-audio fingerprint · coverage-driven card ordering · streak celebration · SMS notification · offline upload queue.
-
----
-
-## 11. THE FOUR THINGS THAT MAKE THIS UNMISTAKABLY SOUTH AFRICAN
-
-1. **The mechanic is South African.** A describe-it-against-the-clock game invented here in 1998. Not a Silicon Valley loop with local content poured in.
-2. **Code-switching is a first-class citizen, not an error.** Every other system treats *"ngicela i-data"* as a failure to be corrected. AMAZWI treats it as the target. Tsotsitaal, Sepitori, Kaaps — these are the speech that global datasets have no category for, and they are how the country actually talks.
-3. **Place is the team.** Not countries, not abstract tiers — your ward. South African identity is intensely local and there is no consumer product that reflects it.
-4. **The Archive is a public good, not a private dataset.** What gets built is visible, credited and belongs to the people in it. That is the difference between preservation and extraction.
-
----
-
-## 12. INCLUSION — the design decisions, not the sentiment
-
-- **All twelve official languages** are architecturally supported from day one, including **South African Sign Language**. Ship only the ones you can quality-assure; show the rest as coming, never as done.
-- **Afrikaans is in, and it is not a footnote.** Most Afrikaans home-language speakers are Coloured South Africans, and **Kaaps** is a distinct, historically marginalised variety with an active recognition movement. Including Afrikaans *and* naming Kaaps specifically is both linguistically correct and a statement about who this is for. See `research/E_SA_CULTURE.md`.
-- **Sign language is not a "later" checkbox.** SASL became an official language in 2023. Video-based quests are the natural extension. Say it is on the roadmap, and mean it.
-- **Migrant and heritage languages** — Shona, Chichewa, Portuguese, French, Somali — belong in a community tier. South Africa's linguistic reality is larger than its official list, and being the product that notices is worth more than being the product that is careful.
-- **Endangered languages get a protected tier**, not a market rate. N|uu, Nama, ǂKhomani. Their value is not commercial and the pricing must not pretend it is.
-- **Low-literacy paths.** Icons, audio instructions in-language, and multiple-choice answering everywhere free text appears. Roughly one in ten South African adults has limited literacy; a text-only game excludes exactly the speakers whose voices are most valuable.
-- **Data cost is an inclusion issue.** Aggressive payload minimisation, Opus encoding, client-side gating before upload, and a zero-rating ask to MTN. A product that costs R5 of data to earn R4 is not an income product.
+Everything else is optional.

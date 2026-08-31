@@ -1,5 +1,7 @@
 # HANDOVER → SBU
 
+> **Sbu response incorporated 2026-08-31.** The role split was reversed and the product decisions were accepted/reconciled. Read [`HANDOVER_LETHABO.md`](HANDOVER_LETHABO.md) and [`05_amazwi/plan/00_MASTER_PLAN.md`](05_amazwi/plan/00_MASTER_PLAN.md) before acting on older instructions below. This file remains Lethabo's incoming context and historical reasoning; where it conflicts with the canonical plan, the canonical plan wins.
+
 **From:** Lethabo · **Date:** Monday 31 August 2026
 **Event:** Wednesday 2 Sept 09:30 → Thursday 3 Sept 12:00 · The Forum, Bryanston
 **Repo:** https://github.com/LethaboMH14/Amazwi
@@ -22,8 +24,8 @@ What we submitted was *"a game where speaking your language pays."* Read honestl
 
 **The reframe, in three moves:**
 
-1. **The validation IS the game.** Nobody reviews anything. A speaker describes a word against a 30-second timer without saying four banned words; two randomly-assigned strangers guess. **Agreement between independent strangers is the validation.**
-2. **Learners are the second population.** They play the guessing side, earn nothing, and are there because guessing what a native speaker just described *is* how you learn a language. Money flows in a circle instead of down a hole.
+1. **The understanding signal comes from the game.** A speaker describes a word against a 30-second timer; two proficient listeners independently type the concept and then referee the blocked-word rule. This produces a peer-verified semantic label, not a transcript or automatic language proof.
+2. **Learners are a separate gameplay population.** They use MCQ for XP. Their answers do not validate the governed output. Speakers receive the competition honorarium; listeners/verifiers receive points.
 3. **Anchor on the describe-it-without-saying-it game every South African has played** — invented here in 1998, and by accident the most efficient speech-elicitation mechanic ever designed.
 
 > **"AMAZWI is the describe-it game — in your language, and it pays."**
@@ -89,7 +91,7 @@ Where I stopped, keep going. Obvious next moves:
 2. Recording — the product's portrait
 3. The understanding moment — the emotional peak
 4. The Voice Value Receipt — the credibility screen
-5. The Archive — the closing image
+5. The aggregate Impact Map — the closing image; no public raw audio or names
 
 **Three critiques of our existing board you should know:**
 - 🔴 **The tone is wrong.** It reads as a documentary about language loss. **This is a party game.** Nothing on that board is *fun* — no laughter, no rivalry, no speed, no near-misses. Reverence belongs in the Archive; the game needs to feel like a Friday night.
@@ -117,8 +119,8 @@ Where I stopped, keep going. Obvious next moves:
 
 Full detail in the README. In short:
 
-1. **Role split** — the plan assigns me PLATFORM (backend, MoMo, trust), you EXPERIENCE (frontend, product, demo). Confirm and never revisit.
-2. ~~Which two languages~~ — **settled: isiZulu + Setswana.** One from each major family, which forces the two-model story (w2v-bert for Nguni, Whisper for Sotho-Tswana) and gives us Setswana's 223%→13% result.
+1. **Role split — reversed and confirmed.** Sbu owns PLATFORM (backend, MoMo, ledger, trust, deployment, isiZulu). Lethabo owns EXPERIENCE (frontend, product, demo, Setswana).
+2. ~~Which two languages~~ — **settled: isiZulu + Setswana.** The competition does not build or pitch two ASR models; the advantage is first-language content ownership.
 3. **Keep the name AMAZWI?** It collides with the Amazwi South African Museum of Literature — a real national institution. My call: keep it and own it. Decide today or not at all.
 4. **Build the sponsor payment screen?** It is the only thing that makes the central fintech claim true.
 5. **Pre-build?** Depends on the organiser's answer. The rule is quoted verbatim in `05_BUILD.md` §1.1.
@@ -130,20 +132,20 @@ Full detail in the README. In short:
 
 - [ ] **Card content — 30 isiZulu cards.** I do 30 Setswana in parallel. Target word, four banned words, `accepted_answers`, three distractors, plus a few gold honeypots. **Build the eight demo cards first and to a higher standard.** This is game design in your own language, not translation — budget 2–3 min per card. `05_BUILD.md` §2.0.1
 - [ ] **Organiser email** — the pre-built-code rule, what the "exclusive" IP licence covers, and **what time pitches start Thursday** (three gates assume the morning is free). Draft in `05_BUILD.md` §1.2 and §1.6.
-- [ ] **MoMo: 90-minute hard timebox.** Two sandbox API users, one held in reserve. If SA disbursement is unreachable at 09:00, the labelled demo provider becomes the plan of record **today**, not at 00:30 Thursday.
+- [ ] **MoMo — Sbu owns this now.** Confirm Collections/Disbursement availability, preserve a sandbox-call budget and keep a labelled demo provider ready. The canonical build plan uses priority gates rather than a clock schedule.
 - [ ] **Sandbox call budget on the wall — 30 calls.** The quota is undocumented and its cooldown is ~2 days, which outlasts the event. **No automated test ever touches it.**
 - [ ] **Write the `is_correct` function on paper** before the card job starts. `02_TECH.md` §3.4.
 - [ ] Card content. Design tokens. Sound assets.
 
 ---
 
-## THE FIVE FACTS THAT CARRY THE PITCH
+## THE FIVE FACTS THAT CARRY THE REVISED PITCH
 
-1. **There is no working speech recognition for ten of our eleven spoken official languages.** Whisper scores 146% WER on Southern Bantu, 223% on Setswana. Above 100% means it invents more than it gets right.
-2. **Google's WAXAL dataset contains zero South African languages.** They funded East and West Africa and skipped us.
-3. **One hour of in-domain data takes isiZulu from ~146% to ~25% WER.** When the baseline is broken, the first hour is worth more than the next thousand.
-4. **MoMo SA has ~13m registered users and does not report active ones.** In the 2020 relaunch, ~8% of registered were active. Activation is MTN SA's live problem; we are a daily-open product.
-5. **Ayoba had 35m MAU and died in March 2026** because free-data signups don't retain. That is the exact failure mode of a "get paid to record" app — which is why the game has to work with the money switched off.
+1. **Named published benchmarks show serious performance gaps for named off-the-shelf models on South African languages.** Always state the model, task and benchmark; never use “no system on earth.”
+2. **Existing South African corpora such as Swivuriso are valuable.** AMAZWI's proposed delta is a continuous consumer game, transparent rewards and per-contribution consent evidence.
+3. **The game output is a semantic or intent label, not a transcript.** Transcription and ASR training are downstream.
+4. **MoMo is structural when it funds a mission, records an idempotent reward credit and settles cash-out honestly.** Every unavailable leg is labelled.
+5. **The first feasibility claim is a closed two-language cohort, not nationwide liquidity.** Scale follows native content, consent and proficient-verifier supply.
 
 ---
 
