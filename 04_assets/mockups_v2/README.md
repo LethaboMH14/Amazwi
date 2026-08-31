@@ -41,11 +41,11 @@ This now covers all five of `LETHABO_NEXT_WORK.md` item 4's named hero screens (
 
 **Do not mix v1 and v2 in front of a judge.** Consent, Listen and Wallet remain v1 wireframes if they're needed — bring them up before a demo, or route around them.
 
-## Theme wiring — LETHABO_NEXT_WORK item 5, done 31 Aug 2026
+## Theme proof — LETHABO_NEXT_WORK item 5, partial 31 Aug 2026
 
-`ThemeDemo.dc.html` (artboard 7, marked `is_interactive`) is a real hero screen built entirely from `04_assets/themes/tokens.css` variables — every colour, radius and type value in its component CSS is a `var(--token)`, none hardcoded, matching the source file's own rule ("every component consumes tokens, never hex"). It has three working buttons that call `element.setAttribute('data-theme', ...)` live in the browser.
+`ThemeDemo.dc.html` is an isolated source proof that mirrors the three shortlisted token sets and switches them with `data-theme`. Its controls are real semantic buttons and update `aria-pressed` when the source is opened directly.
 
-**Verified, not assumed** — the design canvas's own pan/zoom made in-canvas click testing unreliable, so the exact same markup/CSS/JS was tested standalone (stripped of the `<x-dc>` wrapper only, zero other changes) in a real browser: clicked through all three themes (Midnight Shweshwe default → Red Earth → Ink), confirmed via `getComputedStyle` that `data-theme` and the resolved background colour actually changed (not just visually inspected), and confirmed by eye that text stayed legible and no element moved position in any of the three states. That satisfies the item's exit condition in full: *"one hero screen switches themes with `data-theme`, retains readable contrast and does not move layout."*
+**Important limit:** the compiled design-canvas wrapper does not execute this interaction reliably, and the proof mirrors values instead of importing the canonical `04_assets/themes/tokens.css`. Item 5 therefore remains partial until the running app imports `tokens.css`, switches themes on a target phone and passes contrast/layout checks. Do not call artboard 7 “LIVE” in front of judges.
 
 Earth and Ink were chosen for the demo because they're the two most divergent grounds (light vs. dark-neutral) — the hardest contrast case, not the easiest. Dusk and Ndebele are not wired into this demo file; per `P0.md`, the final three-theme shortlist is still Sbu's and Lethabo's call after a target-device contrast check, not something to preempt here.
 
@@ -54,5 +54,14 @@ Earth and Ink were chosen for the demo because they're the two most divergent gr
 Full findings in **[`ACCESSIBILITY_EVIDENCE.md`](ACCESSIBILITY_EVIDENCE.md)**. Headline: a real keyboard-reachability gap was found (every hero-screen CTA was a styled `div`, not a button) **and fixed the same day** — all CTAs across Main, Recording, Referee, Understood and ThemeDemo are now real `<button>` elements with verified `:focus-visible` outlines, re-tested with actual Tab presses after the fix. The Setswana chip's under-sized touch target was fixed too (32px → 44px min-height). Still open: these mockups are fixed 390px-wide canvases and cannot pass a real 200%-zoom reflow check by construction — the real frontend must use relative units from Gate A onward or it inherits the same defect for real.
 
 ✅ **`SEFOFANE` is real, not placeholder** — it's `sw-001` in `05_amazwi/content/cards_setswana.json`, native-confirmed 31 Aug with the identical target and all four blocked words. No change needed here.
-⚠️ Only `Main.dc.html` carries the theme tweak so far.
-⚠️ League and Impact Map are v1 wireframes; League is additionally cut per `plan/05_BUILD.md` §6 kill rules and must not appear in any judge-facing compiled canvas regardless of fidelity.
+⚠️ The six v2 surfaces still carry local visual values; they are not yet wired to the runtime theme source.
+⚠️ The Impact Map is deliberately labelled as seeded demo data, not traction. League is cut and absent.
+
+The compiled canvas is a working board with annotations, not a presentation surface. Use individual verified exports in the deck; never show the overview to judges.
+
+After editing a `.dc.html` source or `canvas.json`, regenerate the checked-in bundle from the local sources:
+
+```bash
+node reseed_compiled.mjs
+node reseed_compiled.mjs --check
+```

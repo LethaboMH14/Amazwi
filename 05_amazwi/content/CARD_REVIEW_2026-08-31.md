@@ -1,31 +1,30 @@
 # Hero-card review — 31 August 2026
 
-## Outcome
+> **Superseded review snapshot.** The findings originally recorded here were resolved or replaced later on 31 August. The canonical current state is the structured `review` metadata in `cards_isizulu.json` and `cards_setswana.json`.
 
-The Setswana draft is materially better than the empty worksheet, but it is not import-ready. The isiZulu proposal is useful as a discussion prompt only and remains outside the canonical deck.
+## Current outcome
 
-## Setswana findings
+- **isiZulu (`zu`): `REVIEWED`.** Sbu approved all eight targets, blocked words, accepted answers and distractors. There are no pending native-review items.
+- **Setswana (`tn`): `NEEDS_NATIVE_CONFIRMATION`.** Lethabo approved the original hero-card content, including the `pula`→`thipa` replacement. Four later distractor replacements still need Lethabo's read-aloud confirmation: `moraka` (`sw-004`), `jusi` (`sw-005`), and `ting` plus `diphaphatha` (`sw-007`).
+- Both decks now contain eight cards, two or more accepted answers per card, unique IDs, and no accepted-answer overlap with blocked words or distractors.
+- Every card carries the same ISO 639-1 language code as its deck: `zu` for isiZulu and `tn` for Setswana.
 
-- All eight cards have a target, four blocked words and three distractors.
-- Five cards (`sw-003`, `sw-004`, `sw-006`, `sw-007`, `sw-008`) still have only one accepted answer and therefore fail the canonical minimum of two.
-- Four cards reuse a blocked word as a distractor (`sw-003`, `sw-004`, `sw-005`, `sw-007`). Treat this as a review warning: it is not necessarily impossible, but separate options will produce a clearer learner experience.
-- Plural accepted answers on `sw-001` and `sw-002` need native confirmation that number-changing answers should count as the same intended semantic label.
-- `sw-003` remains ambiguous because *pula* carries weather, currency and motto meanings. Prefer replacing it unless the spoken prompt explicitly establishes the weather sense without leaking the answer.
-- `reasoning`, `confidence` and the deck-level `status` are authoring metadata and must be removed or resolved before import.
+The Setswana future-target list is intentionally named `future_target_candidates`, not `pool_22_target_candidates`: it currently contains 21 entries, of which 20 are unique beyond the hero deck because `thipa` is already the `sw-003` hero target. No unreviewed Setswana word was invented to make the count look complete.
 
-## isiZulu proposal findings
+## Review contract
 
-- Do not convert the proposal into `cards_isizulu.json` without Sbu's native-language pass.
-- Most proposed rows have only one accepted answer and therefore do not meet the import gate.
-- `ZU-06` and `ZU-07` are explicitly unresolved and must be replaced or disambiguated before play testing.
-- Every accepted variant must preserve the intended meaning; grammatical number or a broader/narrower term should not be accepted automatically.
+- `review.status` is either `REVIEWED` or `NEEDS_NATIVE_CONFIRMATION`.
+- `review.pending_items` is empty only when the deck is fully reviewed.
+- A validator warning for `NEEDS_NATIVE_CONFIRMATION` is an explicit human-review gate; it is not a structural failure and must not be described as native approval.
+- Native-language owners retain final authority over words and accepted variants.
 
 ## Validation
 
-Run:
+Run both decks:
 
 ```text
+node 05_amazwi/content/validate_cards.mjs 05_amazwi/content/cards_isizulu.json
 node 05_amazwi/content/validate_cards.mjs 05_amazwi/content/cards_setswana.json
 ```
 
-The validator checks structure, native-answer minimums, normalised duplicates, answer overlaps and draft status. Warnings require human judgement; errors block import.
+The validator checks the structured review state, top-level and per-card language codes, unique card IDs, native-answer minimums, normalised duplicates, and answer overlaps. Errors block import. Warnings name outstanding native confirmation explicitly.

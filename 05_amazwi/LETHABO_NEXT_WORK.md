@@ -6,13 +6,13 @@ This is the current handoff from Sbu. It does not reopen scope. Work top to bott
 
 ## 1. Close the Setswana content warnings
 
-The deck is validator-clean but still emits three review warnings because blocked words are reused as learner distractors:
+The deck has zero structural errors after the overlap fixes and now emits one explicit review warning. Four replacement distractors still need Lethabo's native aloud confirmation before the deck can be called fully reviewed:
 
-- `sw-004`: `phaphosi`
-- `sw-005`: `pula`
-- `sw-007`: `seswaa`, `morogo`
+- `sw-004`: `moraka`
+- `sw-005`: `jusi`
+- `sw-007`: `ting`, `diphaphatha`
 
-For each card, either replace the distractor or record why reuse is intentional. **Exit:** `validate_cards.mjs` has zero errors and every remaining warning has an explicit native-owner acceptance in `BUILD_LOG.md`.
+Read those four in their complete card context. If they sound natural and remain clearly wrong learner answers, confirm them in `BUILD_LOG.md` and set the deck review status to `REVIEWED`. **Exit:** `validate_cards.mjs` has zero errors and zero review warnings.
 
 ## 2. Finish the Setswana error-copy pass
 
@@ -20,7 +20,7 @@ Read all ten states aloud on a phone-sized screen. Pay special attention to `cam
 
 **Exit:** Lethabo marks the `tn` pack reviewed in `_meta.status`; `validate_error_states.mjs` passes; no uncertain wording remains hidden in metadata.
 
-## 3. Reconcile stale mockup content
+## 3. Reconcile stale mockup content — source cleanup complete, export recheck open
 
 The mockup READMEs still say `SEFOFANE` and its blocked words are unverified, although the Setswana deck is now native-reviewed. Replace stale warning text and ensure every visible card value comes from `content/cards_setswana.json` or `content/cards_isizulu.json`.
 
@@ -28,7 +28,7 @@ Remove or clearly label non-P0 surfaces such as League from the judge-facing com
 
 **Exit:** no judge-facing mockup contains placeholder/unverified card copy or implies leagues are P0.
 
-## 4. Produce the five hero screens
+## 4. Produce the five hero screens — visual pass complete, evidence pass open
 
 Complete the craft pass for:
 
@@ -38,15 +38,15 @@ Complete the craft pass for:
 4. Voice Value Receipt;
 5. aggregate Impact Map.
 
-Receipt must say `DEMO_PROVIDER` / “demo provider, not a real transfer.” Learner MCQ stays XP-only. Own-clip replay appears only under active consent.
+Receipt now says `DEMO_PROVIDER` / “demo provider, not a real transfer,” the money moment says demo credit, and the Impact Map says seeded demo/not traction. Learner MCQ stays XP-only. Own-clip replay appears only under active consent.
 
 **Exit:** all five screens form one judge-only story and use the frozen product/state copy.
 
-## 5. Wire and choose the visual ground
+## 5. Wire and choose the visual ground — source proof only
 
 Use `04_assets/themes/tokens.css`; component CSS must not add theme-specific hex values. Keep `earth` available as the day/accessibility theme. Shortlist three themes only after a target-device check.
 
-**Exit:** one hero screen switches themes with `data-theme`, retains readable contrast and does not move layout.
+`ThemeDemo.dc.html` switches in direct-source preview, but the compiled canvas does not execute the control reliably and the proof mirrors rather than imports `tokens.css`. **Exit:** the running app imports `tokens.css`; one hero screen switches themes with `data-theme`, retains readable contrast and does not move layout on a target phone.
 
 ## 6. Accessibility and resilience evidence
 

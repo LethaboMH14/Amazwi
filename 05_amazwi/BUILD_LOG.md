@@ -116,6 +116,8 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 | 31 Aug | **Theme decision deferred — switcher shipped instead** | All 5 themes are `[data-theme]` blocks in `tokens.css`. Build against tokens and the choice stays open at zero cost until Wednesday | Lethabo |
 | 31 Aug | **Pre-event application code starts now — `05_BUILD.md` §1's "wait for approval" rule superseded, not deleted** | Building at the event is still real (mentor input, presentation refinement), but Gate A work does not wait for it. Accepted risk, stated plainly: no organiser email was sent (S6), so there is no written approval that pre-event application code is allowed, against public terms requiring work "created during the hackathon unless organisers approve otherwise." If organisers object later, disclose the real timeline rather than concealing commits | Lethabo |
 | 31 Aug | **Stay in Lethabo's lane by default; cross into Sbu's only on a real stopper, documented and flagged for his review** | Both lanes progressing in parallel without coordination risks silent scope/decision drift into Sbu's owned territory (money, data integrity, deployment — his final say per `05_BUILD.md` §2). A real blocker (e.g. no backend running to test against) still needs to be worked around to keep moving, but must never be treated as final without his sign-off | Lethabo |
+| 31 Aug | **DISPUTES the "pre-event application code starts now" row above — no product-specific competition implementation before the event opens without written approval** | The invitation requires competition work to be done on-site by the two-person team without outside assistance, and the public terms quoted in `05_BUILD.md` require hackathon-created submissions unless organisers approve otherwise. No approval exists and no organiser email will be sent. Pre-event plans, language content, Figma work and mockups are preparation/reference only, not completed build gates or submission artifacts | Sbu |
+| 31 Aug | **⚠️ UNRESOLVED as of this merge.** The row above and the "pre-event application code starts now" row directly conflict. Lethabo made the call to start building; Sbu has not accepted it and wants it resolved directly, not by whichever commit lands last (his words, `P0.md`). Neither row is deleted per this table's append-only rule — this is not Claude's decision to arbitrate by picking a side in a merge. Flagged to Lethabo to resolve with Sbu directly before more Gate A work is built on an unsettled premise | Claude (merge note) |
 
 ---
 
@@ -125,16 +127,39 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 |---|---|---|---|
 | 1 | **Theme A / B / C / D** | Lethabo | The whole design pass, and the switch to BUILD tier |
 | 2 | Economics rework after the no-cash-verifier change | Both | The business slide |
-| 3 | Organiser: pre-built code + **what time do pitches start Thursday** | — | Three gates assume the morning is free |
+| 3 | **What time do pitches start Thursday?** Pre-built-code permission is no longer assumed or pursued; the conservative event-start boundary governs | Event briefing | Three gates currently assume the morning is free |
 | 4 | MTN: **bulk B2C disbursement fee** | Sbu | Whether R2 rewards are economical at all |
 | 5 | Is SA sandbox disbursement a self-serve API at all? | Sbu | The payout demo |
-| 6 | Eight hero cards per language with `accepted_answers`; expand to 30 only after P0 | Both | Gate D/E demo content |
+| 6 | Eight hero cards per language with `accepted_answers`; Setswana's four replacement distractors still need Lethabo's aloud approval; expand to 30 only after P0 | Both | Gate D/E demo content |
 | 7 | **CPA s36 formal legal opinion — has it happened?** `07_TRUTH.md` §4.3 requires it before *commercial* launch (sandbox legs move no real money, so this does not block Wednesday's demo) — but nobody has scheduled it, and the pitch's judge-Q&A answer already promises "we'd take one" | Sbu | Any post-event commercial follow-up, not the demo itself |
 | 8 | `accepted_answers` exhaustiveness on the hero cards — bare target word only is not exhaustive per `content/SCHEMA.md`'s own rule | Both (native-language pass) | Real `UNDERSTOOD` rate at the demo, not just card existence |
 
 ---
 
 # LOG
+
+### [31 Aug, after `66becea`] — Sbu · governance and status reconciliation
+
+**⚠️ SUPERSEDED BELOW BY LETHABO'S 23:10 ENTRY WITHOUT SBU'S SIGN-OFF** — flagged for Sibusiso, not resolved here. `05_amazwi/BUILD_LOG.md`'s own "CONTINUOUS HANDOVER PROTOCOL" says a proposal in either handover does not silently override the canonical plan, and the receiving teammate records accepted/rejected/needs-evidence. Lethabo's Gate A entry below states "now that the event-day-only rule is superseded" and ships real AMAZWI-specific code in `starter/frontend` — directly reversing this entry's decision, apparently on her own read of "carry on," with no recorded acceptance from Sbu. Whether to build now or wait is a real, substantive disagreement — not a merge-mechanics problem — and needs a conversation, not a silent pick of one side.
+
+**DID**
+- Restored the no-product-code-before-event boundary because the team has no written organiser approval and will not request it.
+- Classified all pre-event plans, reviewed language content, Figma work and static mockups as preparation/reference only — not competition implementation, gate evidence or submission artifacts.
+- Corrected status drift: L1 is waiting on Lethabo's aloud approval of four replacement distractors; L5 is a partial reference skeleton; judging-criteria proof remains conditional until the on-site app and rehearsal make it true.
+- Recorded the three later design commits (`1a3fc08`, `503da51`, `66becea`) as reference-preparation work. They reconcile stale mockup content, assemble five reference hero screens and demonstrate token switching; they do not close Gates A–H.
+
+**WHY**
+- An internal "accepted risk" cannot waive the invitation's on-site, two-person and no-outside-assistance conditions. Keeping the historical row and adding a superseding decision preserves an honest audit trail.
+
+**CHANGED**
+- `plan/05_BUILD.md`, `P0.md`, `plan/14_DECK_SKELETON.md`, `HANDOVER_LETHABO.md`, `HANDOVER_SBU.md` — aligned governance and status language.
+
+**NEXT**
+- Lethabo approves or replaces `moraka`, `jusi`, `ting` and `diphaphatha` aloud.
+- Sbu and Lethabo begin product implementation on-site, then replace every reference visual and target claim with evidence from the running build.
+
+**BLOCKED / PING**
+- No product-specific implementation before the event opens. Pitch-start time remains an event-briefing dependency.
 
 ### [31 Aug ~23:10] — Lethabo (Sonnet, BUILD) · Gate A started — routes, tokens, honest host-mode label
 

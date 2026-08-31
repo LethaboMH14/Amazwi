@@ -10,7 +10,7 @@
 
 The public terms say submissions must be original and created during the hackathon unless organisers approve otherwise. Open-source libraries are permitted.
 
-Before the event, obtain written answers on:
+The team has chosen not to seek written answers before the event. The following therefore remain unknown and must not be assumed; confirm them from official on-site briefing or authorised mentors before depending on them:
 
 - whether non-code planning, cards, design and pitch preparation are allowed;
 - whether a generic public starter is allowed;
@@ -20,7 +20,9 @@ Before the event, obtain written answers on:
 - submission close and pitch start;
 - the scope of the IP clause's “exclusive” marketing licence.
 
-~~If approval is absent, do not put product-specific application code in the repo before the event.~~ **Superseded 31 Aug 2026 — Lethabo:** we start building now, not at event start. Known, accepted risk: no organiser email was sent (S6, `P0.md`), so there is no written approval that pre-event application code is allowed, and the public terms state submissions "must be original and created during the hackathon unless organisers approve otherwise." We are accepting that risk deliberately rather than by default — if organisers later say otherwise, the honest move is to disclose the actual build timeline, not to retroactively hide commits. Research, content and documentation remain distinct from the competition implementation regardless.
+No written approval will be sought before the event. Therefore **no product-specific application code and no Gate A–H implementation begins before the event opens**. The invitation also says all competition work must be completed on-site by the two-person team without outside assistance; a teammate cannot waive that condition by recording an internal "accepted risk."
+
+Pre-event research, plans, reviewed language content, design explorations and mockups are **preparation/reference only**. They are not competition implementation, running-product evidence or submission artifacts. At the event, Sbu and Lethabo must create the competition implementation themselves, on-site, and may use only material the organisers' rules permit. Keep the existing history intact and disclose the preparation boundary honestly; never relabel pre-event work as event-built.
 
 ---
 

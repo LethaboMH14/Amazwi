@@ -2,7 +2,16 @@
 
 **From:** Sbu
 **Date:** Monday 31 August 2026
-**Based on:** Lethabo's handover and build-log updates through repository commit `fea5a8a`
+**Based on:** repository work through `66becea`, plus the 31 August governance/status reconciliation
+
+---
+
+## CURRENT OVERRIDE — READ THIS BEFORE OLDER SECTIONS
+
+- **Eligibility boundary:** no written organiser approval exists and the team will not request it. No product-specific competition implementation or Gate A–H work begins before the event opens. Pre-event plans, language content, Figma work and static mockups are preparation/reference only — not running-product evidence or submission artifacts.
+- **Setswana cards:** both card validators are structurally green. isiZulu has zero warnings; Setswana has one explicit review warning naming `moraka`, `jusi`, `ting` and `diphaphatha`. L1 is **WAITING** for Lethabo's aloud/native approval.
+- **Deck:** L5 is **PARTIAL**. The ten-slide file is a reference skeleton; the actual competition deck, on-site screenshots, judge-only script and no-network fallback recording remain open.
+- Older review snapshots below preserve decision history. Where their status wording conflicts with this override, this override and `05_amazwi/P0.md` govern.
 
 ---
 
@@ -36,9 +45,9 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 
 ### Your next dependencies
 
-1. Finish the Setswana hero-eight native review: four blocked words, at least two accepted answer variants, three distractors and a play-aloud check per card.
-2. Keep `zu`/`tn` error-copy fields null until each first-language owner writes them; do not literal-translate the English base.
-3. Do not wire AMAZWI-specific screens/content into `starter/` until the organiser’s pre-build answer permits it.
+1. Read aloud and approve or replace the four new Setswana distractors: `moraka`, `jusi`, `ting` and `diphaphatha`; record the decision in `BUILD_LOG.md`.
+2. Setswana error copy is reviewed. isiZulu error copy remains Sbu's first-language approval task; do not literal-translate either pack.
+3. Do not wire AMAZWI-specific screens/content into `starter/` before the event opens. No written pre-build approval exists.
 
 ### Portal outcome shared with Lethabo
 
@@ -46,12 +55,11 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 - This is catalog visibility only; subscription, provisioning and event-sandbox callability remain unconfirmed.
 - Until an explicit entitlement or safe test result exists, implement the provider boundary so `DEMO_PROVIDER` is the honest fallback and keep currency disclosure unresolved.
 
-### Review of card draft `5959df1`
+### Current card status (supersedes review of draft `5959df1`)
 
-- Keep the reasoning-first authoring approach and the `bogobe` replacement; both improve reviewability.
-- The deck is not import-ready: five cards still have fewer than two accepted answers, and the deck status is still DRAFT.
-- Four blocked-word/distractor overlaps are now surfaced as warnings by `content/validate_cards.mjs`; please resolve or explicitly accept each during the native pass.
-- See `content/CARD_REVIEW_2026-08-31.md` for the exact findings. Do not remove authoring metadata or mark the deck reviewed until the validator errors are zero and the spoken play test passes.
+- Both hero-eight decks now pass `content/validate_cards.mjs` with zero errors. Setswana deliberately emits one native-confirmation warning until the four replacements are approved.
+- The original Setswana targets, blocked words and accepted-answer forms were reviewed. Four later distractor replacements remain a substantive language check even though the validator is green.
+- Do not mark L1 complete until Lethabo approves `moraka`, `jusi`, `ting` and `diphaphatha` aloud and records that decision.
 
 ### isiZulu content approval
 
@@ -60,10 +68,9 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 
 ### Current cross-lane handoff
 
-- Sbu will not send organiser questions. Treat pre-event product-code permission and event-specific MoMo/Mini App details as unknown; the generic starter boundary remains in force until event start.
-- Lethabo's next blocking deliverable is the reviewed Setswana hero-eight deck. Resolve the validator errors (five cards with only one accepted answer and deck-level DRAFT status) and each blocked-word/distractor warning before it is marked ready.
-- Both owners still need first-language error copy in `content/error_states.json`; leave a language field null until its owner has authored it.
-- Sbu/Codex has added a complete isiZulu draft for all ten error states. It is explicitly pending Sbu's first-language approval; Setswana remains Lethabo's open authoring task.
+- Sbu will not send organiser questions. The conservative boundary is final: no product-specific competition implementation before the event opens. Pre-event product artifacts remain reference/preparation only.
+- Lethabo's immediate language deliverable is the aloud decision on the four replacement distractors. Structural validation is already green.
+- Setswana error copy is reviewed; isiZulu remains pending Sbu's first-language approval. Structural error-state validation is green across all three language fields.
 - The authenticated MoMo profile has no subscriptions. Build the receipt and wallet against `DEMO_PROVIDER`; do not imply a live Collections or Disbursements leg unless organisers provide a different provisioned account.
 
 ### Sbu decisions on the current handover questions
@@ -74,7 +81,7 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 
 ### Assigned next work
 
-Use `05_amazwi/LETHABO_NEXT_WORK.md` as the current experience-lane queue. It prioritises: closing explicit content warnings, native error-copy sign-off, removing stale placeholder claims from mockups, producing the five hero screens, wiring tokens, collecting accessibility/resilience evidence, and preparing the screenshot-based pitch/rehearsal pack.
+Use `05_amazwi/P0.md` as the current status summary. `LETHABO_NEXT_WORK.md` remains useful as acceptance criteria, but items 3–5 produced pre-event reference assets only. Remaining experience work is native approval of four distractor replacements, on-site accessibility/resilience evidence, the finished deck/script/fallback pack and rehearsal.
 
 ---
 
@@ -98,7 +105,7 @@ Use `05_amazwi/LETHABO_NEXT_WORK.md` as the current experience-lane queue. It pr
 ### Remaining risks
 
 - The economic document is already correctly rebuilt around sponsored semantic-label missions. Do not reopen the old transcribed-hour comparison or add a margin claim before actual provider fees and acceptance rates are known.
-- The product is still marked “planning and mockups only.” The next meaningful proof is a running Gate A shell, then the deterministic golden path—not more design-system work.
+- The product is still preparation/reference only. The next valid competition proof is a Gate A shell built on-site, then the deterministic golden path—not more pre-event design-system work.
 - I reviewed the Figma system from its documented token/component contract, not from a rendered interactive file or captured device flow. Contrast, focus, hit-area, reduced-motion and sunlight legibility still need visual testing on the actual screens.
 
 ---
@@ -133,7 +140,7 @@ The addendum remains a useful roadmap discussion. It does not override the priva
 
 1. `P0.md` is now priority-gated, with no clock, hour estimates or dated theme deadline. This preserves the user-requested one-run plan without a timeline.
 2. The accepted-answer rule now uses normalisation plus native-curated answers/reviewed aliases. Blanket prefix stripping and broad Levenshtein are explicitly excluded.
-3. Pre-event work is conditional on organiser permission; a generic starter does not authorise product-specific AMAZWI code.
+3. No organiser permission exists and none will be requested. Pre-event work is preparation/reference only; a generic starter does not authorise product-specific AMAZWI code or count as submission implementation.
 4. The hour-based rework was converted to a historical, unadopted scenario. It cannot supersede the sponsored-mission pilot model because its output unit, costs, fees, margin and redemption assumptions are not measured.
 5. P0 does not make airtime/data redemption, provider marginal cost, production verifier payment or `MODALITY_VALUE` a build or pitch claim.
 
@@ -289,7 +296,7 @@ Every fallback must be said aloud: browser demo mode, seeded campaign, sandbox C
 2. Collections event-sandbox availability.
 3. South African Disbursement availability.
 4. Currency, minimum amount and bulk B2C fee.
-5. Pre-event code/content rule.
+5. Mini App/build rules to confirm at the event; until then, the no-product-code-before-event boundary holds.
 6. Submission close and pitch start.
 7. Meaning of the “exclusive” marketing licence.
 

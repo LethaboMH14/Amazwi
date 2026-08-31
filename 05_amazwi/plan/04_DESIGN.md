@@ -26,7 +26,7 @@ Everything below follows from that. No web fonts over 40 KB. No Lottie library. 
 ## 2. VISUAL IDENTITY
 
 ### 2.1 The idea
-**Make the voice visible.** AMAZWI's single visual signature is the waveform — not as a decorative flourish but as the recurring subject. The waveform is drawn from *real amplitude data* via the Web Audio API `AnalyserNode`, so what the user sees is literally their own voice. When a clip is understood, that waveform transforms into the reward. Meaning is carried by motion, not by copy.
+**Make the voice and trust visible.** The live waveform remains AMAZWI's brand signature: it is drawn from *real amplitude data* via the Web Audio API `AnalyserNode`, so what the user sees is literally their own voice. The second, product-specific device is the overlap of two listener circles. It appears only where two independent listeners are waiting or agreeing, so it explains the trust mechanic rather than decorating the interface. When a clip is understood, the waveform resolves into the reward while the two circles lock. Meaning is carried by motion and state, not by extra copy.
 
 ### 2.2 Palette
 
@@ -43,7 +43,8 @@ Warm neutrals, not blue-greys — South African light is warm and blue-grey read
 --voice-1        #FF5A36   ember orange          waveform low
 --voice-2        #E8267F   magenta               waveform high
    gradient: linear-gradient(96deg, #FF5A36, #E8267F)
-   Used ONLY for live voice. Never for buttons, never for chrome.
+   Used for live voice and the single primary action that advances that voice flow.
+   Never use it as passive chrome or decoration.
 
 ━━ MONEY (borrowed, never repurposed) ━━━━━━━━━━━━━━━━━━━━━━━
 --rand           #FFCB05   MTN Sunshine Yellow
@@ -80,7 +81,7 @@ Implement as CSS custom properties on `:root`, with `prefers-color-scheme` honou
 **Orthographic correctness is a hard requirement.** Test every language's characters before shipping: Tshivenda (ḓ ṱ ṋ ḽ), Sepedi/Northern Sotho (š ê ô), Afrikaans (ê ë ï ô û á é í ó ú), and the Khoisan click letters (ǀ ǁ ǂ ǃ) which are **not** apostrophes or exclamation marks and will render as tofu in most fonts. Getting a click character wrong in a language-preservation app is the kind of detail a South African judge will spot and never forget.
 
 ### 2.5 Layout
-4px base grid, 8px rhythm. Single column, max 480px, centred. Thumb-zone rule: the primary action lives in the bottom third — the recording button, the answer field, and `[ PLAY ]` are all reachable one-handed on a 6.5" phone. Corner radius 16px on cards, 999px on pills. One elevation level only; depth comes from colour, not from a shadow ladder.
+4px base grid, 8px rhythm. Single column, max 480px, centred. Thumb-zone rule: the primary action lives in the bottom third — the recording button, the answer field, and `[ PLAY ]` are all reachable one-handed on a 6.5" phone. Corner radius 16px on cards, 999px on pills. Use a restrained three-step elevation system (ground, raised decision surface, focal/reward surface); shadows communicate hierarchy and must never become decoration.
 
 ---
 
