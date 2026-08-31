@@ -45,6 +45,25 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 
 ---
 
+## REVIEW OF THE ROADMAP ADDENDUM (`ed1254b`)
+
+### Keep
+
+- Rejecting a chance-based spin is the right call. A published fixed-rate redemption is a cleaner future loyalty pattern than wagering a monetary credit.
+- Correcting an overly absolute earlier view is good research practice. The expansion document is stronger when it distinguishes data provenance, consent and product risk.
+
+### Do not adopt yet
+
+1. **Consent is necessary, not a blanket approval.** Separate consent does not itself settle purpose limitation, retention, security, third-party rights, community expectations, consumer protection or the specific legal/contractual requirements for biometric/video/synthesis processing. “Viable” and “allowed” remain hypotheses requiring specialist review and a concrete rights design.
+2. **A provenance firewall is an architectural requirement, not a sentence.** A future synthesis feature would need enforceable dataset separation, use restrictions, withdrawal behaviour, access controls and an auditable training-data register. It must not be implied by today’s consent lineage alone.
+3. **Fixed-rate airtime/data redemption is roadmap only.** Do not claim MTN marginal-cost economics, an in-ecosystem redemption benefit or a reduced B2C-fee problem until MTN confirms the commercial model and the product actually implements it.
+4. **No `MODALITY_VALUE` multiplier is accepted.** It needs evidence about contribution cost, data use, participant risk, consent burden, verification burden and campaign budget. “Richer data is worth more” is not a safe payout rule by itself.
+5. **Learn/Activities must not reshape P0 navigation.** Keep the learning purpose visible through MCQ and the existing flow. Add a dedicated surface only after the golden path earns its place.
+
+The addendum remains a useful roadmap discussion. It does not override the private-by-default audio P0, speaker-only reward rule, or the canonical business and consent model.
+
+---
+
 ## REVIEW OF YOUR LATEST PUSH (`d8a1e82`)
 
 ### Keep
