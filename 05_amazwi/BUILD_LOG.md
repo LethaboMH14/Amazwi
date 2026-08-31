@@ -133,6 +133,62 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~20:15] — Lethabo (Opus, MID) · L5 CLOSED · deck skeleton; L6 clarified; Figma quota hit
+
+**DID**
+- Checked Figma Community for genre reference (Elingo, Coursezy, Learnora AI, Duolingo-recreation kits) before calling the component work finished. Live embedded canvas previews wouldn't render in the browser tool (needs WebGL the sandbox doesn't expose) — only static cover thumbnails were inspectable, so this was directional, not pixel-level. It confirmed the craft choices already made (label/headline/caption stack, ~24px radius, one saturated accent, oversized numerals for the one stat that matters) and surfaced one gap: pairing a confirmation line with a badge glyph.
+- Started adding a ✓ badge (bound to `understood`) to Wallet-receipt's "Confirmed by 2 verifiers" line — **hit the Figma MCP Starter-plan daily call quota mid-edit.** The edit did not land; component `10:24` is unchanged from its last verified-good, screenshotted state. Queued in `04_assets/FIGMA.md` for when the quota resets.
+- Built L5: `plan/14_DECK_SKELETON.md`, all 10 slides from `06_PITCH.md` §10 scaffolded. Every visual asset labelled real (the four Figma component screenshots, the V2 mockup Artifact) or placeholder named to the gate that produces it. Verbatim script quotes pulled from `06_PITCH.md`, not paraphrased. Added a backup-appendix note for the "total live failure" contingency in §12.
+- Clarified L6: the earlier sefofane exercise tested the game *mechanic's* playability in Setswana. It is not a substitute for rehearsing the actual demo *narration script* (open, live narration, close/ask). Recorded this distinction in `P0.md` rather than silently marking L6 done.
+
+**WHY**
+- User explicitly asked for Figma Community reference before treating L2/L3 as finished — did that first, honestly reported the browser-rendering limitation rather than fabricating pixel-level findings from thumbnails alone.
+- Deck skeleton deliberately leaves four assets as named placeholders (clip/transcript comparison, funded-mission diagram, Impact Map, every Gate A–H screenshot) rather than inventing sample content — matches the project's own doctrine against uncalibrated claims.
+
+**CHANGED**
+- `04_assets/FIGMA.md` — added the Community-reference findings and the queued badge polish.
+- `P0.md` — L5 marked DONE; L6 reworded to state the sefofane-vs-rehearsal distinction explicitly.
+- `plan/14_DECK_SKELETON.md` — new file.
+
+**NEXT**
+- L6 itself: actually rehearse the open/close aloud, ideally with Sbu, once both are free.
+- Figma: land the queued ✓ badge and the funded-mission-loop FigJam diagram once the daily MCP quota resets.
+- Sbu's open item, unrelated to L1–L6: run the named ASR model on the opening clip for Slide 1 to become real (flagged in the deck skeleton's "open items").
+
+**BLOCKED / PING**
+- Figma MCP is rate-limited for the rest of today's session — do not attempt further `use_figma` write calls until it resets. Sbu: if you're picking up Figma work today, check whether your own account's quota is separate before assuming it's also blocked.
+
+### [31 Aug ~19:40] — Lethabo (Opus, MID) · L2/L3 CLOSED · four components built in Figma
+
+**DID**
+- Built all four P0-scoped design-system components directly in the Figma file (`JPZuFmbhRh9fhkgBLxRymq`, Components page `3:2`), replacing the earlier plan to keep iterating `.dc.html` mockups. Screenshotted and visually checked after each one; every fill/text/border colour bound to a variable, none hardcoded.
+- **Button** (`5:13`, variant set) — `Style=Primary` (`5:11`) and `Style=Secondary` (`5:12`).
+- **Banned-word chip** (`6:5`) — one `blocked_words[]` entry, missed-ochre border/text on surface.
+- **Card** (`7:24`) — target word + gloss + four Banned-word-chip instances, sample-populated from `content/cards_setswana.json` sw-002 (kgomo).
+- **Wallet-receipt state** (`10:24`) — status dot bound to `understood`, amount bound to `rand-money-only`, composes a Button/Primary instance, copy reads "Sent for payment" never "Paid."
+
+**HOW**
+- Fetched every variable's ID first via `get_variable_defs`-equivalent read (name→VariableID map) before writing any bind, per the anti-hallucination rule in the `figma-generate-library` skill.
+- Real API snag: `setBoundVariableForPaint`/`setBoundVariable` need an actual `Variable` object, not the raw ID string returned by the lookup — fixed by resolving each ID through `figma.variables.getVariableByIdAsync()` first.
+- Second snag: `combineAsVariants` refuses plain frames — had to `figma.createComponentFromNode()` each auto-layout frame into a real `COMPONENT` node before combining.
+- Third snag (caught by screenshot, not by inspection): inner auto-layout frames inside Card defaulted to opaque white fills, hiding the outer card's surface colour underneath — cleared with `fills = []` on each inner frame. Screenshotting after every build is what caught this; it would have looked fine in the node tree.
+- Spacing/radius/type kept as fixed values matching `tokens.css` exactly, not a new variable collection — our Figma variable system is colour-only by design (`FIGMA.md`), so this is a documented scope boundary, not a shortcut.
+
+**WHY**
+- Corrected an earlier call to "deprioritize" L2/L3 now that Figma "owns" final design — the right move was to stop spending effort on throwaway mockups and spend the unused daily Figma credits on the real, reusable artifact instead.
+- Primary button fill is a solid `voice-1-ember`, not the product's real ember→magenta gradient — Figma variable binding doesn't reliably bind per-stop gradient colours. Documented on the component itself rather than silently simplified.
+
+**CHANGED**
+- `04_assets/FIGMA.md` — added the finished components table with node IDs, replaced the stale "next steps" list.
+- `P0.md` — L2 and L3 merged into one row, marked DONE.
+
+**NEXT**
+- L5: pitch-deck skeleton, using these components (and the earlier V2 mockup screenshots) as interim visuals until Gate A produces the real running app.
+- L6: sefofane covered the game *mechanic's* playability — it did not rehearse the actual demo narration script (open line, live narration, close line per `06_PITCH.md`). Flagging this distinction to Lethabo/Sbu before treating L6 as done.
+
+**BLOCKED / PING**
+- None. Sbu: components are visible in the shared Figma file now — check `04_assets/FIGMA.md` before touching the Components page so we don't overwrite each other mid-edit, same rule as Foundations.
+
 ### [31 Aug ~19:05] — Lethabo (Sonnet, BUILD) · error copy · both flagged terms confirmed wrong, fixed
 
 **DID**
