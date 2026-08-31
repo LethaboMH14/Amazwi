@@ -133,6 +133,21 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~18:47] — Lethabo (Sonnet, BUILD) · L1 CLOSED
+
+**DID**
+- Lethabo confirmed thipa's blocked_words (sega/bogale/tshipi/lomo, including the flagged lowest-confidence `lomo`) with no changes.
+- Stripped worksheet-only fields (`draft_note`, `reasoning`, `confidence`) from all 8 cards — matching the clean production shape in `cards_isizulu.json`.
+- Finalised deck status to plain `REVIEWED`, no longer carrying an open caveat.
+- Re-ran `validate_cards.mjs` on **both** decks: **0 errors, 0 open questions, on either.**
+- Marked L1 `DONE` in `P0.md`, same format as S2.
+
+**L1 is genuinely closed now — not just validator-green like the intermediate state was.** Every one of the 8 targets, all 32 blocked words, all accepted-answer forms and all 24 distractors have had Lethabo's own aloud-check, including the one card (thipa) that was swapped in mid-review and reviewed last, separately, rather than assumed safe because its sibling cards passed.
+
+**Both hero decks (Setswana + isiZulu) are now equally complete.** This was genuinely two-person work end to end: Sbu made the plural-convention call that the Setswana deck initially failed against, Lethabo made every content decision including the pula→thipa swap, and the shared `validate_cards.mjs` caught a real defect (missing second forms) that a visual read-through would likely have missed since the content itself was correct — only the *count* was wrong.
+
+---
+
 ### [31 Aug ~18:45] — Lethabo (Sonnet, BUILD) · L1 · sw-003 swapped, validator passes with a caveat
 
 **DID**

@@ -1,6 +1,6 @@
 {
   "language": "setswana",
-  "status": "7 of 8 cards fully reviewed and confirmed by Lethabo on 31 August 2026. sw-003 was swapped from pula to thipa (knife) — pula could not get a clean second accepted-answer form. thipa/dithipa follows the confirmed N-/diN- plural pattern (safe), but its four blocked_words have NOT yet had the same native check the other 7 cards received. See the note on sw-003. Deck is not yet import-ready until that check happens.",
+  "status": "REVIEWED — Lethabo native-confirmed all 8 targets, blocked words, accepted answers and distractors on 31 August 2026, including the sw-003 swap from pula to thipa (knife) and thipa's blocked words (sega/bogale/tshipi/lomo) confirmed last, same check as the other 7. Matches cards_isizulu.json's review standard.",
   "hero_8": [
     {
       "id": "sw-001",
@@ -66,8 +66,7 @@
         "pitsa"
       ],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "draft_note": "REPLACES pula (currency/motto ambiguity, and pula never got a clean second accepted form). thipa/dithipa follows the same N-/diN- singular-plural pattern already confirmed 4x this session (kgomo/dikgomo, ntlo/dintlo, kobo/dikobo, sekolo/dikolo) so the plural should be safe. blocked_words reasoning: sega = 'cut', the verb root inside describing it -- same pattern as fofa/sefofane. bogale = sharp/sharpness. tshipi = metal/iron, the obvious material association. lomo = blade/edge -- LOWEST CONFIDENCE of the four, check this one specifically. Two alternative target candidates from the pool if you'd rather swap the word itself: kgetsi (bag, plural dikgetsi) or pitsa (pot, plural dipitsa) -- both follow the same confirmed plural pattern."
+      "active": true
     },
     {
       "id": "sw-004",
