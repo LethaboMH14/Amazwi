@@ -103,7 +103,8 @@ PaymentAttempt
 
 Receipt
   contribution_id, semantic_label, decision_evidence_json,
-  reward_rule_version, consent_version, payment_state
+  reward_rule_version, consent_version, payment_state,
+  settlement_currency, currency_disclosure_text
 
 AuditEvent
   id, actor_id, action, entity_type, entity_id, metadata, created_at
@@ -271,6 +272,8 @@ Provider modes are visible in both API data and UI:
 Persist the idempotency/reference ID before the external call. Store the request and response metadata without secrets. Poll unresolved attempts and accept callbacks; either path calls the same idempotent state transition.
 
 Actual South African API availability, currency, minimum amount and fee are external dependencies. The adapter prevents those unknowns from breaking the rest of the product.
+
+**Sandbox currency disclosure (R3, closed):** `B_MOMO_API.md` confirms the MoMo sandbox rejects any currency but EUR. Whenever `provider_mode` is `SANDBOX_COLLECTIONS`/`SANDBOX_DISBURSEMENT`, the Receipt's `settlement_currency` is `EUR` and `currency_disclosure_text` renders on-screen as *"sandbox test transfer · EUR-denominated"* next to the Rand reward figure. `DEMO_PROVIDER` mode sets `settlement_currency` to `ZAR` and disclosure text to *"demo provider, not a real transfer."* Never show a Rand amount beside a EUR provider reference without this string.
 
 ---
 

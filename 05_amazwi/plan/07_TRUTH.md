@@ -201,7 +201,7 @@ An earlier version of this document named the **Lotteries Act** and the **Nation
 2. **No chance-based mechanics anywhere.**
 3. **Never require payment to participate.**
 4. **Publish the rules; never cut a published rate retroactively.**
-5. **Get a formal opinion before any real-money launch.** The regulator is actively tightening — see reporting on increased scrutiny of till-slip and "buy-and-win" competitions, May 2026.
+5. **Get a formal opinion before any real-money launch.** The regulator is actively tightening — see reporting on increased scrutiny of till-slip and "buy-and-win" competitions, May 2026. *This gates a commercial launch, not the event demo — MoMo sandbox legs move no real money regardless. Tracked as `BUILD_LOG.md` OPEN #7 so it isn't silently assumed done.*
 
 **The answer if a judge asks:**
 > *"Our payments are consideration for validated work, not prizes distributed by chance, so we read them as outside CPA section 36 — which is the statute that actually governs promotional competitions here, not the Lotteries Act. That's also why our leagues award points and status only, never prizes, and why there's no randomised mechanic anywhere in the product. We'd take a formal opinion before a commercial launch."*

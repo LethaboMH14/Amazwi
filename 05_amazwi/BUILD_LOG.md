@@ -126,6 +126,8 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 | 4 | MTN: **bulk B2C disbursement fee** | Sbu | Whether R2 rewards are economical at all |
 | 5 | Is SA sandbox disbursement a self-serve API at all? | Sbu | The payout demo |
 | 6 | Eight hero cards per language with `accepted_answers`; expand to 30 only after P0 | Both | Gate D/E demo content |
+| 7 | **CPA s36 formal legal opinion — has it happened?** `07_TRUTH.md` §4.3 requires it before *commercial* launch (sandbox legs move no real money, so this does not block Wednesday's demo) — but nobody has scheduled it, and the pitch's judge-Q&A answer already promises "we'd take one" | Sbu | Any post-event commercial follow-up, not the demo itself |
+| 8 | `accepted_answers` exhaustiveness on the hero cards — bare target word only is not exhaustive per `content/SCHEMA.md`'s own rule | Both (native-language pass) | Real `UNDERSTOOD` rate at the demo, not just card existence |
 
 ---
 

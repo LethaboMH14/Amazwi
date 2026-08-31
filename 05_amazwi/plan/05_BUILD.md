@@ -107,6 +107,8 @@ Every gate leaves one integrated, demoable product. Do not begin the next gate w
 
 **Exit:** one tap sequence reaches a receipt from deterministic seed data, and reset restores it.
 
+**Seed data is pre-resolved, not resolver-produced.** Gate B's contribution/assignments/receipt rows are inserted already in their final state (`CORPUS_ELIGIBLE`, `RewardEvent` credited) by a seed script — the real resolver from Gate E does not exist yet and Gate B does not call it. This is a fixture, not a shortcut through the state machine; Gate E later replaces the seed path with the live one end to end.
+
 ### Gate C — identity and consent
 
 **Sbu:** session adapter, versioned consent grants, server-side enforcement and revocation.

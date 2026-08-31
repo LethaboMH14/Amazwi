@@ -108,7 +108,8 @@ Show:
 - published reward rule and credited amount;
 - consent version;
 - campaign and provider mode/reference;
-- current settlement state.
+- current settlement state;
+- currency disclosure (sandbox is EUR-denominated — say it out loud if that leg runs).
 
 Pitch line:
 
