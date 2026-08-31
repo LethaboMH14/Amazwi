@@ -134,6 +134,33 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~22:10] — Lethabo (Opus, high) · LETHABO_NEXT_WORK CLOSED (items 1–6, item 7 half); demo script written
+
+**DID**
+- Closed out `LETHABO_NEXT_WORK.md` items 3–6 (1 and 2 were already done earlier this session):
+  - **Item 3**: confirmed SEFOFANE (Main.dc.html) matches sw-001 exactly, no change needed. Found and fixed a real bug, not just staleness — ISITHUTHUTHU appeared in Listen/Receipt/Referee.dc.html, and Receipt.dc.html labelled it "Language: Setswana," which was simply wrong (Nguni class-7 prefix, never in either reviewed deck). Replaced with kgomo (sw-002) across all three. Cut League.dc.html from the compiled canvas per `05_BUILD.md` §6 kill rules and rewrote the in-canvas sticky notes that repeated the stale warning. Re-seeded and republished the judge-facing compiled canvas.
+  - **Item 4**: built Referee, Receipt and Archive/Impact-Map to the v2 craft grammar (gradient stage, grain, Archivo+Instrument Serif italic, elevation, circle+two-line CTA) rather than leaving them on the v1 wireframe bar. All real content preserved, craft changed. Verified structurally (6 artboards present, correctly titled — sandboxed iframes block direct content inspection by design) and visually via a local static server, since the design canvas's viewer blocked cross-origin script access as intended.
+  - **Item 5**: built `ThemeDemo.dc.html`, a real hero screen using only `tokens.css` variables, zero hardcoded hex. Verified the theme switch for real: the design canvas's pan/zoom made in-canvas click testing unreliable, so tested the identical markup standalone — clicked through all three themes, confirmed via `getComputedStyle` (not just a screenshot) that `data-theme` and resolved colours actually changed. One false alarm caught and corrected: a screenshot briefly looked like the Ink switch hadn't applied; `getComputedStyle` showed it had, a retaken screenshot agreed — logged so the same false read doesn't cause a bad report later.
+  - **Item 6**: built the two error screens that didn't exist as mockups before (mic denied, provider unavailable) with real `<button>` elements and a verified `:focus-visible` outline (tested with an actual Tab keypress, not a scripted `.focus()`, which doesn't trigger `:focus-visible` the same way). Full findings in `04_assets/mockups_v2/ACCESSIBILITY_EVIDENCE.md`. Two real, non-trivial gaps found and reported rather than smoothed over: every hero screen's CTA is a styled div with zero keyboard focusability today (confirmed via `querySelectorAll` returning nothing), and the mockups are fixed 390px-wide canvases that cannot pass a real 200%-zoom reflow check by construction — flagged as a hard requirement for the real frontend, not something patched into a throwaway mockup.
+- Wrote `plan/15_DEMO_SCRIPT.md` for item 7's first half — a concrete judge-only click-through runbook with substitution lines from `05_BUILD.md`/`06_PITCH.md`. **Did not** produce the no-network fallback recording item 7 also asks for — recording the current static mockups and presenting that as "the fallback" would misrepresent what's real, per the pitch contract's own honesty rules. That waits for Gate D/E.
+
+**WHY**
+- Followed the same "screenshot/measure before claiming done" discipline established earlier this session (the sefofane "smudge" lesson) — caught the ISITHUTHUTHU/Setswana mislabel and the keyboard-focusability gap specifically because I measured rather than assumed.
+
+**CHANGED**
+- `P0.md` — full LETHABO_NEXT_WORK closure status, item by item.
+- `04_assets/mockups/*`, `04_assets/mockups_v2/*` — see above.
+- `plan/15_DEMO_SCRIPT.md` — new file.
+
+**NEXT**
+- Convert the five hero screens' CTA divs to real buttons (pattern already proven on the two error screens).
+- Decide the Setswana chip's 32px touch-target question rather than leaving it unresolved.
+- L6: the actual rehearsal, deferred per Lethabo's call — script is ready when it happens.
+- The fallback recording itself, once Gate D/E exist.
+
+**BLOCKED / PING**
+- None.
+
 ### [31 Aug ~20:35] — Lethabo (Opus, TOP/high — card judgement) · merged Sbu's handoff, fixed sw-004/005/007 distractor overlap
 
 **DID**
