@@ -111,6 +111,32 @@ PING: <only if the other person must act>
 
 # LOG
 
+### [31 Aug 14:20] — Lethabo · TOP/high · Status check
+
+**DID**
+- Verified Figma tier gating before recommending a purchase
+- Status assessment against the five judging criteria
+
+**WHY**
+- 22 realistic working hours remain before the event starts. The risk has flipped: it is no longer "is the plan good" — it is **planning-to-building ratio**. ~100k words of planning, zero lines of code.
+
+**DECIDED — do not buy Figma Professional yet**
+- What it gates: variable modes (10/collection), Dev Mode, team libraries, unlimited files. Starter caps at **3 design files** — one is used, two left.
+- For the next 22 hours it buys almost nothing: we decided in `04_DESIGN.md` §5.1 to **design in code, not in Figma**, the mockups live in the design canvas, and the variables already exist. Dev Mode matters for design→code handoff, which is not our workflow.
+- At $12–16/editor/month the cost is trivial. **The reason to wait is that setting it up is time, and time is the binding constraint.** Revisit after the hackathon if AMAZWI becomes real.
+
+**PING both**
+- **Nothing is built.** More planning now has negative marginal value.
+- **The economics are known-wrong and unfixed** — §2 and §4 of `03_BUSINESS.md` rest on transcribed-speech comparables, which is not what we produce.
+- **Card content does not exist** and it is the G4 bottleneck.
+
+**NEXT — the only three things that matter before Wednesday**
+1. Pick a theme (30 min, unblocks all design)
+2. Rework the economics (2 h, TOP tier — it is a claim)
+3. 30 cards each with `accepted_answers` (4–6 h, the bottleneck)
+
+---
+
 ### [31 Aug 14:15] — Lethabo · TOP/high · Pre-build
 
 **DID**
