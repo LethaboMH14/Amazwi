@@ -93,6 +93,10 @@ PING: <only if the other person must act>
 | 31 Aug | Output is a **peer-verified semantic label**, not a transcript | Two verifiers prove concept recovery — not language, dialect or proficiency | Sbu |
 | 31 Aug | Archive → private-by-default **Impact Map**, aggregate only | Public raw audio needs rights, moderation and retention we do not have | Sbu |
 | 31 Aug | Verifiers receive no cash in the competition build | ⚠️ **Changes the unit economics — §2 of `03_BUSINESS.md` needs rework** | Sbu |
+| 31 Aug | Face/video capture: viable with a SEPARATE explicit consent surface | POPIA permits special personal information with consent — I had treated it as a prohibition. Roadmap only | Lethabo (corrected) |
+| 31 Aug | Voice synthesis: allowed on our own consented data, barred on Swivuriso-derived lineage | Consent fixes ethics, not licence. Provenance firewall, not a ban | Lethabo (corrected) |
+| 31 Aug | **No spin-to-win. Fixed-rate credit redemption instead** | Wagering earned credits supplies the consideration element a free spin lacks — more exposed, not less. Redemption is cheaper for MTN and shrinks the disbursement-fee problem | Lethabo |
+| 31 Aug | Reward gains a MODALITY_VALUE multiplier | Richer data is worth more, so it should pay more. Coverage pricing extended one axis | Lethabo |
 
 ---
 
@@ -110,6 +114,28 @@ PING: <only if the other person must act>
 ---
 
 # LOG
+
+### [31 Aug 14:28] — Lethabo · TOP/high · Roadmap corrections
+
+**DID**
+- Revisited two verdicts I had made too absolutely. Addendum in `plan/11_EXPANSION.md`.
+
+**CHANGED**
+- **Face capture** — I treated POPIA as a prohibition. It is not: special personal information may be processed with consent. Viable with a separate explicit opt-in. Pitch line changes to *"we never use biometrics for authentication"*, which is still true.
+- **Voice synthesis** — I ran ethics and licence together. Consent fixes the first, not the second. Allowed on our own consented data; barred on Swivuriso-derived lineage. Provenance firewall.
+- **Spin-to-win** — held. Wagering earned credits supplies the consideration element a free spin lacks, so it is *more* exposed. Replaced with fixed-rate redemption, which is commercially better anyway.
+- **New:** Learn/Activities surface, and a MODALITY_VALUE multiplier on the reward formula.
+
+**WHY**
+- Credit redemption for airtime/data costs MTN marginal cost rather than face value, keeps value in-ecosystem, and shrinks the unanswered bulk-disbursement-fee question to only the users who cash out.
+
+**PING both**
+- **None of this is competition scope.** P0 unchanged. Still 22 working hours, still nothing built.
+
+**NEXT**
+- Unchanged: theme, economics rework, card content.
+
+---
 
 ### [31 Aug 14:20] — Lethabo · TOP/high · Status check
 

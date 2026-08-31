@@ -170,3 +170,100 @@ Twelve skills are live. The three that matter:
 
 **Right now:** we are planning and designing. **Stay on Opus.**
 **The switch point:** the moment the theme is picked and the card content is written. Everything after that — scaffolding, screens, endpoints, the ledger, wiring — is Sonnet work against a spec that already exists.
+
+---
+
+# ADDENDUM — 31 Aug 14:25 · Lethabo's counter, and where I was wrong
+
+> **All of this is roadmap, not competition scope.** P0 is unchanged: one audio loop, isiZulu and Setswana. Nothing below enters the 26-hour build.
+
+Lethabo pushed back on two of my three verdicts. **On two of them he is right and I was too absolute.** On the third I am holding — and there is a better version of what he wants anyway.
+
+---
+
+## 1. FACE CAPTURE — I overstated it. Viable with separate consent. 🟡
+
+**Where I was wrong:** I treated POPIA as a prohibition. It is not. **Special personal information may be processed with the data subject's consent** — that is the mechanism the Act provides. Consent genuinely does unlock it.
+
+**And the data-value argument is correct.** Face and video data *is* worth more than audio, so under coverage pricing it should *pay* more. That is not a special case; it is the pricing rule extended to modality.
+
+**What survives from my objection — narrower than I made it:**
+- Not the legality. **The consent architecture.** A **separate, explicit, independently declinable opt-in** on its own surface — never bundled into the voice consent, never a toggle someone flips past. Bundling biometric consent with ordinary consent is what turns a lawful basis into a scandal.
+- **The pitch line changes.** *"We avoid biometrics"* becomes **"we never use biometrics for authentication"** — still true, still strong, still the reason the architecture is sound. Voice is the interface, never the lock; that sentence survives intact.
+- Payload is real but solvable: this lives in a separate opt-in surface, not the 200 KB core.
+
+**Verdict: roadmap, viable, hard consent boundary.** Not a cut.
+
+---
+
+## 2. VOICE CLONING — the objection was real but aimed at the wrong thing. 🟡
+
+**Consent fixes the ethics. It does not fix the licence** — two different problems that I ran together.
+
+| Data | Cloning / synthesis |
+|---|---|
+| **Our own contributors, under explicit synthesis consent** | 🟡 **Defensible.** Their data, their consent, their choice |
+| **Anything derived from Swivuriso / African Next Voices** | 🔴 **Potentially barred.** The SA subset explicitly prohibits TTS, cloning and synthesis. **Our users cannot consent away a third party's licence** |
+
+**So the rule is a data-provenance boundary, not a ban:** any synthesis capability trains only on data collected under a synthesis consent, with Swivuriso-seeded lineage kept separate and excluded. The pipeline already supports this — consent lineage per row, `02_TECH.md` §6 Stage 6.
+
+**Still true:** the reputational asymmetry is real. *"Pays low-income people for their voices, then clones them"* is a headline whatever the consent says. Ship **"hear yourself against a speaker"** first — same learning benefit, none of the exposure — and treat cloning as a later, separately-consented capability.
+
+**Verdict: roadmap, with a provenance firewall.** Not a refusal.
+
+---
+
+## 3. SPIN-TO-WIN — holding here, because this version is *worse*, not better
+
+The proposal: wager earned credits on a spin for a bonus or discount before cashing out.
+
+**That is more exposed than a free promotional spin, not less.** The three elements regulators look for are **consideration, chance and prize.** A free spin has two. **Wagering credits that carry monetary value supplies the third.** The credits are precisely the thing that completes the set.
+
+And it lands in a product that pays low-income people — the worst possible place for a mechanic that looks like gambling.
+
+### But the idea underneath is good, and there is a version I would build first 🟢
+
+**Fixed-rate redemption. No chance anywhere.**
+
+> Earn credits → spend them at a **published, fixed rate** on airtime, data or a discount → or cash out to MoMo at a threshold.
+
+No chance, no wager, no s36 exposure — an ordinary loyalty programme. **And it beats the spin commercially on every axis:**
+
+| | Why it wins |
+|---|---|
+| **Cheaper for MTN than cash** | Airtime and data cost MTN marginal cost, not face value. Cash costs the full amount **plus the bulk B2C fee we still cannot get a number for** |
+| **It shrinks our worst open question** | If most value is redeemed in-ecosystem, *"are R2 disbursements economical"* applies only to the minority who cash out |
+| **Airtime is near-cash in South Africa** | Not a lesser reward here — a parallel currency |
+| **Keeps value inside MoMo** | Which is the entire strategic argument we make to MTN |
+| **Redemption beats a gamble on retention** | A guaranteed visible rate is a reason to return. A spin is a reason to feel cheated four times in five |
+
+**A better exchange rate for redeeming rather than cashing out is a discount, not a lottery** — and it drives exactly the behaviour MTN wants.
+
+**Verdict: no spin. Fixed-rate redemption instead — and it is the better product.**
+
+---
+
+## 4. THE LEARN / ACTIVITIES SECTION — yes, and it fixes a real gap 🟢
+
+Right now the two-sided product is *implied* by the plan and *invisible* in the app.
+
+A distinct **Learn** surface — click trainer, hear-yourself, guided modes, vocabulary — does three things at once:
+1. Makes the learner population **visible** rather than theoretical, which is the Track 2 argument
+2. Gives redeemed credits somewhere to go that is not cash
+3. Separates *play to earn* from *play to learn* in the navigation, so neither has to pretend to be the other
+
+**Verdict: roadmap, high value, and it should shape the IA even before it is built.**
+
+---
+
+## 5. THE PRINCIPLE UNDERNEATH ALL OF IT
+
+The core argument — **richer data is worth more, so it should pay more** — is right, and it generalises:
+
+```
+reward = base × coverage_need × difficulty × MODALITY_VALUE
+```
+
+Audio → video → signed → multimodal, each tier priced by what it is actually worth, each behind its own consent gate. Same coverage-pricing logic already in `01_PRODUCT.md` §5, extended one axis.
+
+**Better than a flat rate long-term.** And it relocates the ethical boundary: not *"don't collect richer data"* but **"price it honestly and consent for it separately."**
