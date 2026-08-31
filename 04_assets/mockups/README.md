@@ -39,9 +39,13 @@ Ten artboards, built from the tokens in [`../../05_amazwi/plan/04_DESIGN.md`](..
 - **The public map is aggregate.** Raw audio and attribution remain private by default.
 - **No fake status bar.** The real one renders on top; a painted one looks doubled up.
 
-## ⚠️ Before this goes near a judge
+## Card content status — updated 31 Aug 2026
 
-**The card content is placeholder.** `SEFOFANE` / `ISITHUTHUTHU` and their banned words are a best guess and are **not native-checked**. Replace every one — Lethabo on Setswana, Sbu on isiZulu. A wrong word in a language-preservation app is the single most damaging detail available.
+**`SEFOFANE` is real, not placeholder.** It was a best guess when this README was first written; it is now `sw-001` in `05_amazwi/content/cards_setswana.json`, native-confirmed by Lethabo with the identical target and all four blocked words (`fofa`/`loapi`/`maeto`/`boemafofane`). No change needed on `Main.dc.html`.
+
+**`ISITHUTHUTHU` was a real bug, now fixed.** It appeared in `Listen.dc.html`, `Receipt.dc.html` and `Referee.dc.html` — and `Receipt.dc.html` labelled it `Language: Setswana`, which was simply wrong: `isithuthuthu` carries a Nguni class-7 `isi-` prefix, not a Setswana one, and it was never in either reviewed 8-card deck. Replaced in all three files with `kgomo` (`sw-002`, native-reviewed). If a screen ever needs an isiZulu example instead, pull one of Sbu's eight from `cards_isizulu.json` — never re-guess a word.
+
+**⚠️ `League.dc.html` is not P0.** Per `plan/05_BUILD.md` §6 kill rules, league is the second thing cut if anything must give. It stays in this folder for later, but must not appear in any judge-facing compiled canvas — see the seed command below, which now omits it.
 
 ## Editing
 
@@ -53,6 +57,8 @@ node "<design skill base>/seed-canvas.mjs" \
   --out amazwi-app-mockups.html --title "AMAZWI App Mockups" \
   --artboard Main.dc.html --artboard Consent.dc.html --artboard Recording.dc.html \
   --artboard Listen.dc.html --artboard Referee.dc.html --artboard Understood.dc.html \
-  --artboard Wallet.dc.html --artboard Receipt.dc.html --artboard League.dc.html \
+  --artboard Wallet.dc.html --artboard Receipt.dc.html \
   --artboard Archive.dc.html --canvas canvas.json
 ```
+
+**`League.dc.html` is deliberately omitted from this command** — see the kill-rule note above. Add it back only if the kill rules are ever revisited, and say so out loud when you do.

@@ -65,20 +65,12 @@
       "title": "8 · Receipt — WIREFRAME"
     },
     {
-      "file": "League.dc.html",
+      "file": "Archive.dc.html",
       "x": 1410,
       "y": 964,
       "w": 390,
       "h": 844,
-      "title": "9 · League — WIREFRAME"
-    },
-    {
-      "file": "Archive.dc.html",
-      "x": 1880,
-      "y": 964,
-      "w": 390,
-      "h": 844,
-      "title": "10 · Archive — WIREFRAME"
+      "title": "9 · Archive / Impact Map — WIREFRAME"
     }
   ],
   "annotations": [
@@ -102,14 +94,14 @@
       "x": 470,
       "y": 1854,
       "w": 860,
-      "text": "CARD CONTENT IS PLACEHOLDER AND NOT NATIVE-CHECKED.\n\nSEFOFANE / ISITHUTHUTHU and their banned words are a best guess. Replace every one — Lethabo on Setswana, Sbu on isiZulu. A wrong word here is the single most damaging detail in the product."
+      "text": "CARD CONTENT UPDATED 31 AUG 2026.\n\nSEFOFANE (Main.dc.html) is real: sw-001 in cards_setswana.json, native-confirmed by Lethabo, identical target and blocked words. KGOMO (Listen/Receipt/Referee) replaces an old placeholder — isithuthuthu — that was never reviewed and, worse, carried a Nguni isi- prefix on a screen labelled Setswana. kgomo is sw-002, also native-confirmed. If isiZulu content is ever needed on a screen, pull one of Sbu's eight from cards_isizulu.json — never re-guess a word."
     },
     {
       "id": "note-rules",
       "x": 1410,
       "y": 1854,
       "w": 860,
-      "text": "RULES THAT SURVIVE ANY REDESIGN\n\n• MTN yellow appears ONLY where value moves. Nothing decorative is yellow.\n• A missed guess is ochre, never red. Not being understood is information, not an error.\n• Money screens stay boring — no gradient, tabular numerals, never says 'paid' before MoMo confirms.\n• Two listeners, not three. Everywhere.\n• The LISTENER referees the banned-word rule, never the speaker.\n• No fake status bar — the real one renders on top.\n• The league has no losing state."
+      "text": "RULES THAT SURVIVE ANY REDESIGN\n\n• MTN yellow appears ONLY where value moves. Nothing decorative is yellow.\n• A missed guess is ochre, never red. Not being understood is information, not an error.\n• Money screens stay boring — no gradient, tabular numerals, never says 'paid' before MoMo confirms.\n• Two listeners, not three. Everywhere.\n• The LISTENER referees the banned-word rule, never the speaker.\n• No fake status bar — the real one renders on top.\n• League is cut per the kill rules (05_BUILD.md §6) — deliberately not on this canvas."
     }
   ],
   "launch": {

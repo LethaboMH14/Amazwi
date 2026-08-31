@@ -38,5 +38,6 @@ The first pass put a large decorative "agreement lens" in the middle of the card
 
 **Do not mix v1 and v2 in front of a judge.** Either bring the remaining seven up, or present these three only.
 
-⚠️ **Card content is still placeholder.** `SEFOFANE` and its banned words are unverified guesses — Lethabo replaces them.
+✅ **`SEFOFANE` is real, not placeholder** — it's `sw-001` in `05_amazwi/content/cards_setswana.json`, native-confirmed 31 Aug with the identical target and all four blocked words. No change needed here.
 ⚠️ Only `Main.dc.html` carries the theme tweak so far.
+⚠️ League and Impact Map are v1 wireframes; League is additionally cut per `plan/05_BUILD.md` §6 kill rules and must not appear in any judge-facing compiled canvas regardless of fidelity.
