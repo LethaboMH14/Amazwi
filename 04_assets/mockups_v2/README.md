@@ -49,6 +49,10 @@ This now covers all five of `LETHABO_NEXT_WORK.md` item 4's named hero screens (
 
 Earth and Ink were chosen for the demo because they're the two most divergent grounds (light vs. dark-neutral) — the hardest contrast case, not the easiest. Dusk and Ndebele are not wired into this demo file; per `P0.md`, the final three-theme shortlist is still Sbu's and Lethabo's call after a target-device contrast check, not something to preempt here.
 
+## Accessibility & resilience evidence — LETHABO_NEXT_WORK item 6, done 31 Aug 2026
+
+Full findings in **[`ACCESSIBILITY_EVIDENCE.md`](ACCESSIBILITY_EVIDENCE.md)**. Headline: a real keyboard-reachability gap was found (every hero-screen CTA was a styled `div`, not a button) **and fixed the same day** — all CTAs across Main, Recording, Referee, Understood and ThemeDemo are now real `<button>` elements with verified `:focus-visible` outlines, re-tested with actual Tab presses after the fix. The Setswana chip's under-sized touch target was fixed too (32px → 44px min-height). Still open: these mockups are fixed 390px-wide canvases and cannot pass a real 200%-zoom reflow check by construction — the real frontend must use relative units from Gate A onward or it inherits the same defect for real.
+
 ✅ **`SEFOFANE` is real, not placeholder** — it's `sw-001` in `05_amazwi/content/cards_setswana.json`, native-confirmed 31 Aug with the identical target and all four blocked words. No change needed here.
 ⚠️ The six v2 surfaces still carry local visual values; they are not yet wired to the runtime theme source.
 ⚠️ The Impact Map is deliberately labelled as seeded demo data, not traction. League is cut and absent.

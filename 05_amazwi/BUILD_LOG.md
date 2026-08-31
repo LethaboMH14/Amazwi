@@ -156,6 +156,53 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 **BLOCKED / PING**
 - No product-specific implementation before the event opens. Pitch-start time remains an event-briefing dependency.
 
+### [31 Aug ~22:45] — Lethabo (Opus, high) · fixed the keyboard-reachability gap found in item 6
+
+**DID**
+- User said "carry on" after L6 was deferred — picked up the most concrete open item from the accessibility evidence pass: every hero-screen CTA was a styled `div`, not a real button, so a keyboard-only user could reach nothing.
+- Converted every CTA across Main (Setswana chip + Start speaking), Recording (stop control), Referee (No / Yes, they did / Next one), Understood (Play again) and ThemeDemo (3 theme buttons + I'm ready) to real `<button>` elements using `all:unset` plus the original visual styles re-declared explicitly — invisible visually, real structurally.
+- Made a mistake mid-fix and caught it before it shipped: adding `.btn-primary`'s reset as a second, later CSS rule of the same class name would have silently stripped the button's actual visual styling (gradient, padding, font-weight) since `all:unset`'s expanded longhands win the cascade at equal specificity. Merged the reset into the *original* rule instead and deleted the duplicate.
+- Re-verified with real Tab keypresses (not just the pattern applied blind) on all five files: `document.activeElement` lands on the button, `:focus-visible` matches, visual screenshots show zero regression. One thing NOT fully verified: a synthesized Return keypress didn't trigger ThemeDemo's click handler in this browser tool, while `element.click()` did — logged as an open, low-risk uncertainty (native button Enter/Space activation is spec-guaranteed) rather than either claimed as proven or swept under the rug.
+- Fixed the Setswana chip's touch target in the same pass (32px → 44px min-height) rather than leaving it as a flagged-not-fixed item.
+- Re-seeded and republished the v2 canvas; updated `ACCESSIBILITY_EVIDENCE.md`, `README.md` and `P0.md` to show the gap as found-and-fixed, not just found.
+
+**WHY**
+- This was the single most concrete, already-scoped open item from the prior pass — no new investigation needed, just the actual markup surgery that pass explicitly deferred.
+
+**NEXT**
+- Confirm real keyboard activation (not just focus) on an actual device or less constrained tool, since this session's browser tool couldn't fully verify it.
+- Move into real Gate A work now that the accessibility/theme/content backlog is clear.
+
+**BLOCKED / PING**
+- None.
+
+### [31 Aug ~22:10] — Lethabo (Opus, high) · LETHABO_NEXT_WORK CLOSED (items 1–6, item 7 half); demo script written
+
+**DID**
+- Closed out `LETHABO_NEXT_WORK.md` items 3–6 (1 and 2 were already done earlier this session):
+  - **Item 3**: confirmed SEFOFANE (Main.dc.html) matches sw-001 exactly, no change needed. Found and fixed a real bug, not just staleness — ISITHUTHUTHU appeared in Listen/Receipt/Referee.dc.html, and Receipt.dc.html labelled it "Language: Setswana," which was simply wrong (Nguni class-7 prefix, never in either reviewed deck). Replaced with kgomo (sw-002) across all three. Cut League.dc.html from the compiled canvas per `05_BUILD.md` §6 kill rules and rewrote the in-canvas sticky notes that repeated the stale warning. Re-seeded and republished the judge-facing compiled canvas.
+  - **Item 4**: built Referee, Receipt and Archive/Impact-Map to the v2 craft grammar (gradient stage, grain, Archivo+Instrument Serif italic, elevation, circle+two-line CTA) rather than leaving them on the v1 wireframe bar. All real content preserved, craft changed. Verified structurally (6 artboards present, correctly titled — sandboxed iframes block direct content inspection by design) and visually via a local static server, since the design canvas's viewer blocked cross-origin script access as intended.
+  - **Item 5**: built `ThemeDemo.dc.html`, a real hero screen using only `tokens.css` variables, zero hardcoded hex. Verified the theme switch for real: the design canvas's pan/zoom made in-canvas click testing unreliable, so tested the identical markup standalone — clicked through all three themes, confirmed via `getComputedStyle` (not just a screenshot) that `data-theme` and resolved colours actually changed. One false alarm caught and corrected: a screenshot briefly looked like the Ink switch hadn't applied; `getComputedStyle` showed it had, a retaken screenshot agreed — logged so the same false read doesn't cause a bad report later.
+  - **Item 6**: built the two error screens that didn't exist as mockups before (mic denied, provider unavailable) with real `<button>` elements and a verified `:focus-visible` outline (tested with an actual Tab keypress, not a scripted `.focus()`, which doesn't trigger `:focus-visible` the same way). Full findings in `04_assets/mockups_v2/ACCESSIBILITY_EVIDENCE.md`. Two real, non-trivial gaps found and reported rather than smoothed over: every hero screen's CTA is a styled div with zero keyboard focusability today (confirmed via `querySelectorAll` returning nothing), and the mockups are fixed 390px-wide canvases that cannot pass a real 200%-zoom reflow check by construction — flagged as a hard requirement for the real frontend, not something patched into a throwaway mockup.
+- Wrote `plan/15_DEMO_SCRIPT.md` for item 7's first half — a concrete judge-only click-through runbook with substitution lines from `05_BUILD.md`/`06_PITCH.md`. **Did not** produce the no-network fallback recording item 7 also asks for — recording the current static mockups and presenting that as "the fallback" would misrepresent what's real, per the pitch contract's own honesty rules. That waits for Gate D/E.
+
+**WHY**
+- Followed the same "screenshot/measure before claiming done" discipline established earlier this session (the sefofane "smudge" lesson) — caught the ISITHUTHUTHU/Setswana mislabel and the keyboard-focusability gap specifically because I measured rather than assumed.
+
+**CHANGED**
+- `P0.md` — full LETHABO_NEXT_WORK closure status, item by item.
+- `04_assets/mockups/*`, `04_assets/mockups_v2/*` — see above.
+- `plan/15_DEMO_SCRIPT.md` — new file.
+
+**NEXT**
+- Convert the five hero screens' CTA divs to real buttons (pattern already proven on the two error screens).
+- Decide the Setswana chip's 32px touch-target question rather than leaving it unresolved.
+- L6: the actual rehearsal, deferred per Lethabo's call — script is ready when it happens.
+- The fallback recording itself, once Gate D/E exist.
+
+**BLOCKED / PING**
+- None.
+
 ### [31 Aug ~20:35] — Lethabo (Opus, TOP/high — card judgement) · merged Sbu's handoff, fixed sw-004/005/007 distractor overlap
 
 **DID**

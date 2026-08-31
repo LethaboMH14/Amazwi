@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&family=Instrument+Serif:ital@0;1&display=swap">
+  <style>
+    body { margin:0; -webkit-font-smoothing:antialiased; }
+    .stage{
+      --text:#EDF1FA; --dim:#7E8BA8; --line:rgba(160,186,228,.14); --hi:rgba(190,216,255,.11);
+      font-family:'Archivo',system-ui,sans-serif; color:var(--text);
+      background: linear-gradient(174deg,#0E1428 0%, #0A0E1C 62%, #070A14 100%);
+    }
+    .grain{position:absolute;inset:0;pointer-events:none;opacity:.42;mix-blend-mode:overlay;z-index:3;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");}
+    .serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;}
+    button.cta{
+      font-family:inherit; appearance:none; border:none; cursor:pointer;
+      width:100%; min-height:56px; padding:18px; border-radius:18px;
+      background:linear-gradient(96deg,#FF5A36,#E8267F); color:#0A0E1C;
+      font-weight:800; font-size:18px;
+    }
+    button.cta:focus-visible{ outline:3px solid #EDF1FA; outline-offset:3px; }
+  </style>
+</helmet>
+
+<div class="stage" style="width:390px;height:844px;position:relative;overflow:hidden;">
+  <div class="grain"></div>
+  <div style="position:relative;z-index:4;height:100%;display:flex;flex-direction:column;padding:28px 26px 30px;box-sizing:border-box;">
+
+    <div style="flex-grow:1;"></div>
+
+    <div style="display:flex;justify-content:center;">
+      <div style="width:84px;height:84px;border-radius:999px;background:rgba(255,203,5,.12);border:1.5px solid rgba(255,203,5,.4);display:flex;align-items:center;justify-content:center;">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFCB05" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+      </div>
+    </div>
+
+    <div style="margin-top:26px;font-size:26px;font-weight:800;letter-spacing:-.02em;text-align:center;line-height:1.2;">Payments are running on our test system right now</div>
+    <div class="serif" style="margin-top:12px;font-size:19px;color:var(--dim);text-align:center;line-height:1.4;">everything else still works exactly the same — this is clearly marked so nobody is confused about what's real</div>
+
+    <div style="flex-grow:1;"></div>
+
+    <button class="cta" type="button">Continue</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
