@@ -21,7 +21,7 @@ Read in this order. `00_MASTER_PLAN.md` is the spine; everything else is subordi
 | 7 | [06_PITCH.md](plan/06_PITCH.md) | Stage choreography, script, slides, judge Q&A, failure plan |
 | 8 | [07_TRUTH.md](plan/07_TRUTH.md) | **Read before pitching.** Claims register, competitor handling, legal, ethics |
 | 9 | [08_REDTEAM.md](plan/08_REDTEAM.md) | Adversarial review — what breaks and how |
-| 10 | [09_MOCKUP_LIBRARY.md](plan/09_MOCKUP_LIBRARY.md) | Twelve visual directions mapped screen-by-screen, **plus six corrections the existing AMAZWI concept board needs** |
+| 10 | [09_MOCKUP_LIBRARY.md](plan/09_MOCKUP_LIBRARY.md) | **Thirteen references critiqued** on texture, shape, colour, feel, completeness and uniqueness — what to take from each, **plus six corrections the AMAZWI concept board needs**. Nothing in it is settled |
 
 **Evidence** lives in [`research/`](research/) — A_MTN_CORPORATE · **B_MOMO_API** · C_COMPETITIVE · D_SPEECH_AI · E_SA_CULTURE · G_BUSINESS.
 *(F_GAMIFICATION was not completed — see "Gaps" below.)*
@@ -38,7 +38,7 @@ Read in this order. `00_MASTER_PLAN.md` is the spine; everything else is subordi
 | # | Decision | Default if we don't decide | Where |
 |---|---|---|---|
 | **1** | **Who is PLATFORM and who is EXPERIENCE?** The source plan assigns Lethabo → backend/MoMo/trust, Sbu → frontend/product/demo. **Confirm it and never revisit it.** | As written | [05_BUILD.md §3](plan/05_BUILD.md) |
-| **2** | **Which two languages?** Two, not five. Only ones we can genuinely quality-assure. | — | [05_BUILD.md §2](plan/05_BUILD.md) |
+| **2** | ~~Which two languages?~~ **SETTLED: isiZulu + Setswana** — we each speak one natively | — | [05_BUILD.md §2.0](plan/05_BUILD.md) |
 | **3** | **Do we keep the name AMAZWI?** It collides with a national museum. My call: keep it and own it — but decide today or not at all | Keep + own it | [07_TRUTH.md §1](plan/07_TRUTH.md) |
 | **4** | **Do we build the sponsor payment screen?** It's the only thing that makes "money crosses MoMo twice" true — four of our defences rest on it | Build it; cut the story chain | [06_PITCH.md §7a](plan/06_PITCH.md) |
 | **5** | **Do we pre-build?** Depends on the organiser's answer to the email | Generic public starter only | [05_BUILD.md §1](plan/05_BUILD.md) |
@@ -51,7 +51,7 @@ Read in this order. `00_MASTER_PLAN.md` is the spine; everything else is subordi
 - **The mockup corrections.** Your concept board is good; six things on it now contradict the plan. [09_MOCKUP_LIBRARY.md §1](plan/09_MOCKUP_LIBRARY.md)
 
 ### What is NOT done
-- **Nothing is built.** No code, no repo, no cards written.
+- **Nothing is built.** No application code, no cards written. *(The repo exists and holds planning only.)*
 - **`F_GAMIFICATION` research never completed** — mechanics are designed against known literature but citations aren't assembled. **No retention statistic goes on a slide.**
 - **Two questions only the organisers can answer**, both in the Monday email: the pre-built-code rule, and what time pitches start Thursday.
 - **One question only MTN can answer:** the actual bulk disbursement fee. It decides whether R2 rewards are economical at all.
@@ -60,7 +60,7 @@ Read in this order. `00_MASTER_PLAN.md` is the spine; everything else is subordi
 
 ## THE PRODUCT IN ONE SENTENCE
 
-> **AMAZWI is 30 Seconds played in your own language, against the whole country — where speaking pays you, and listening teaches you.**
+> **AMAZWI is the describe-it-without-saying-the-word game, played in your own language against the whole country — where speaking pays you, and listening teaches you.**
 
 Describe the word without saying the four banned words. Strangers across South Africa guess. If they understand you, everyone scores and MoMo pays. Learners play the guessing side to learn. What comes out is the South African conversational speech data that does not exist.
 
@@ -68,12 +68,11 @@ Describe the word without saying the four banned words. Strangers across South A
 
 ## DO THESE TODAY (Monday 31 August)
 
-- [ ] 🔴 **06:45 — PHONE THE TWO NATIVE SPEAKERS. BEFORE ANYTHING ELSE.** Get a committed two-hour window from each, in writing. This is the longest-lead dependency in the whole plan and it had no name attached to it. If you can only get one, ship one language. [05_BUILD.md §2.0](plan/05_BUILD.md)
+- [x] ✅ **Native speakers — resolved, they are us.** Lethabo is first-language Setswana, Sbu is first-language isiZulu. **Languages settled: isiZulu + Setswana** — one from each major family, which forces the two-model story and gives us the best published result in African ASR (Setswana 223%→13%). [05_BUILD.md §2.0](plan/05_BUILD.md)
 - [ ] **Send the organiser email** about pre-built code — draft in [05_BUILD.md §1.2](plan/05_BUILD.md). Before 09:00. **Add the two questions in §1.6** — especially *what time do pitches start on Thursday*, because three gates assume the morning is free.
 - [ ] **MoMo developer account** → subscription keys for Collections **and Disbursements** → provision sandbox API user → **complete one successful `transfer` end to end.**
 - [ ] **Ask the MoMo community the one financial question that decides the model:** what is the actual **bulk B2C disbursement fee** in South Africa? (Not the 2% consumer rate.) This determines whether R2 micro-rewards are economical at all.
-- [ ] **Decide the two demo languages.** Two. Not five.
-- [ ] **Start the card content** — ~60 cards per language, every one checked by a first-language speaker. This is the bottleneck. [05_BUILD.md §2.1](plan/05_BUILD.md)
+- [ ] **Start the card content** — **30 cards per language**: Lethabo does Setswana, Sbu does isiZulu, in parallel. Target word, four banned words, `accepted_answers`, three distractors, plus gold honeypots. **Build the eight demo cards first and to a higher standard.** This is game design in your own language, not translation. [05_BUILD.md §2.0.1](plan/05_BUILD.md)
 - [ ] **Decide the name question** — AMAZWI collides with a national museum. Keep it and own it, or switch. [07_TRUTH.md §1](plan/07_TRUTH.md). Decide today or not at all.
 - [ ] **Read [02_TECH.md §1A](plan/02_TECH.md) — the MoMo WebView host contract.** The mini app session dies after **60 seconds without a heartbeat**, and our core interaction is a user who is busy but not tapping for over a minute. Without it the demo dies mid-recording, on stage. Fifteen lines of code. Build it at G0.
 - [ ] Confirm the PLATFORM / EXPERIENCE role split and do not revisit it.

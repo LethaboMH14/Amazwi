@@ -62,7 +62,7 @@ Send it to the address the invitation came from, and to the MoMo developer commu
 These are **not code** and no reasonable reading of the rules prohibits them. This is where most of your advantage actually lives:
 
 - ✅ All research, strategy and product design *(done — `05_amazwi/`)*
-- ✅ **The card content** — every target word and its banned words, in each demo language, native-speaker checked. This is the single biggest content job and the most likely bottleneck. See §2.
+- ✅ **The card content** — every target word and its banned words, in isiZulu and Setswana, written by us as first-language speakers. The single biggest content job and the most likely bottleneck. See §2.0.
 - ✅ Every slide, the pitch script, the rehearsal
 - ✅ MoMo developer account, sandbox credentials, and one successful end-to-end sandbox transaction
 - ✅ Reading the Mini App PWA integration spec and design standards
@@ -97,10 +97,10 @@ The theme of today is: **the things that cannot be done at 3am on Thursday.**
 
 | Block | PLATFORM role | EXPERIENCE role |
 |---|---|---|
-| **06:45** 🔴 | **PHONE THE TWO NATIVE SPEAKERS. BEFORE ANYTHING ELSE.** See §2.0 — this is the longest-lead dependency in the entire plan and it currently has no name attached to it. | |
+| **06:45** ✅ | ~~Phone the native speakers~~ — **resolved, they are us.** Languages settled: **isiZulu (Sbu) + Setswana (Lethabo)**. See §2.0 for why this pair is the strongest available. | |
 | **07:00** | Send the clarification email (§1.2) — **and add the two questions in §1.6** | — |
-| **07:30–09:00** | 🔴 **HARD 90-MINUTE TIMEBOX.** MoMo developer account, subscription keys, provision **two** sandbox API users (one held in reserve, untouched, for the demo). Attempt one `transfer` end-to-end. **If SA disbursement is unreachable at 09:00, the labelled demo provider becomes the plan of record — decided Monday, not at 00:30 Thursday.** See §2.2. | Decide the **two demo languages** — the ones you can genuinely quality-assure. Not five. Two. |
-| **10:00–13:00** | Join the developer community. Download the Mini App PWA integration spec + design standards. Read the sandbox Q&A threads. Write down every gotcha. | **CARD CONTENT — the bottleneck.** See §2.1. |
+| **07:30–09:00** | 🔴 **HARD 90-MINUTE TIMEBOX.** MoMo developer account, subscription keys, provision **two** sandbox API users (one held in reserve, untouched, for the demo). Attempt one `transfer` end-to-end. **If SA disbursement is unreachable at 09:00, the labelled demo provider becomes the plan of record — decided Monday, not at 00:30 Thursday.** See §2.2. | **CARD CONTENT — the bottleneck.** 30 isiZulu cards. §2.0.1 |
+| **10:00–13:00** | Join the developer community. Download the Mini App PWA integration spec + design standards. Read the sandbox Q&A threads. Write down every gotcha. | **CARD CONTENT — the bottleneck.** 30 Setswana cards; Sbu does 30 isiZulu in parallel. §2.0.1 |
 | **13:00–15:00** | Draft the OpenAPI contract and the data model on paper. No code. Agree every request/response shape with EXPERIENCE. | Design tokens in a single file (`tokens.css`, per `04_DESIGN.md` §2). Colour, type, spacing, motion, three themes. |
 | **15:00–17:00** | Provision Vercel/Cloudflare + a callback tunnel. Test the tunnel receives a POST. | Screen sketches for the five hero screens. Not Figma — paper or code. |
 | **17:00–18:30** | *(joint)* Walk the whole user journey out loud, screen by screen, until you both describe the identical product. **This is Gate 1 and it is the most valuable hour of the week.** | |
@@ -123,17 +123,35 @@ MTN's sandbox has an **undocumented call-volume quota** with a multi-day cooldow
 
 Also from the same research: MTN's portal-linked **"South Africa Disbursement" appears to be a bulk-payroll product behind a commercial agreement, not a self-serve REST API.** SA availability of `disbursement/v1_0/transfer` in the sandbox is **NOT CONFIRMED**. Hence the timebox above.
 
-### 2.0 🔴 THE DEPENDENCY WITH NO NAME ON IT
+### 2.0 ✅ RESOLVED — THE LANGUAGES ARE OURS
 
-This plan requires **two first-language speakers, for two specific languages, available Monday and Tuesday, for hours, by phone, for free.**
+An earlier version of this plan flagged *"two first-language speakers, unconfirmed, needed for hours"* as the hardest-to-acquire dependency in the project, with no owner and no fallback.
 
-**It never names them.** That is the hardest-to-acquire dependency in the whole project, it has no owner, no name and no confirmation step, and if it fails there is no fallback — because §2.1 is right that a wrong word in a language-preservation app is the most damaging detail possible.
+**It has an owner. Lethabo is a first-language Setswana speaker; Sbu is a first-language isiZulu speaker.**
 
-**Before the clarification email, before the MoMo account, before anything: phone both of them and get a committed two-hour window from each, confirmed in writing.** If you cannot get two, get one and ship one language. One language done properly beats two done from a dictionary.
+That removes the largest external risk in the plan and settles decision #2. **The two demo languages are isiZulu and Setswana**, and this is not a compromise — it is the strongest available pair:
 
-**And cut the target to 30 cards per language.** The four-hour estimate in §2.1 was for *translation*; the actual job is **game design in a second language** — choosing a word describable in 30 seconds, then the four banned words that are the most obvious routes to it — at 2–3 minutes each, plus 3 more for `accepted_answers`. That is 7–9 hours for 120 cards, against 6 hours scheduled on a day that already runs 07:00–21:30 with no slack.
+| Reason | Detail |
+|---|---|
+| **One from each major family** | Nguni (isiZulu, isiXhosa, siSwati, isiNdebele ≈ 45% of home-language speakers) and Sotho-Tswana (Sepedi, Setswana, Sesotho ≈ 26%). Together ≈ 71% — so the architecture is demonstrated across both families rather than tuned to one |
+| **It forces the two-model story** | The architecture split is *measured*, not preference: **w2v-bert-2.0 wins on Nguni, whisper-large-v3-turbo wins on Sotho-Tswana**, by 3–4 WER points each way (`D_SPEECH_AI.md` §1.2). One language from each means you **demonstrate both paths** instead of asserting one |
+| **Setswana carries the best published result anywhere** | Swivuriso took Setswana from **223% → 13% WER** on fine-tuning. The most dramatic citable number in African ASR, and it is our language |
+| **isiZulu carries the headline** | Largest home language at 24.4%, and the source of the **~146% → ~25% WER on one hour of data** figure that the whole pitch rests on |
+| **Both are in Swivuriso** | The seed corpus (CC BY 4.0) covers both, so Track B fine-tuning has a real base on day one |
 
-**Thirty well-built cards with rich accepted-answer sets beat sixty thin ones, and the demo will use eight.**
+> **The pitch line:** *"We each brought our own language, and they're from different families — which is why our stack has two models instead of one."*
+
+### 2.0.1 The risk that replaces it
+
+The dependency is no longer *"will strangers show up?"* It is now **"do we have the hours?"** — a much better problem, but still a real one.
+
+The four-hour estimate in §2.1 was for *translation*. The actual job is **game design in your own language**: choosing a word describable in 30 seconds, then the four banned words that are the most obvious routes to it. That is 2–3 minutes per card, plus ~3 more for `accepted_answers`. **120 cards is 7–9 hours** against a Monday already running 07:00–21:30.
+
+**So: 30 cards per language, not 60.** Thirty well-built cards with rich accepted-answer sets beat sixty thin ones, **and the demo will use eight.** Build the eight demo cards first and to a higher standard than the rest.
+
+**Two advantages you now have that a hired speaker could never give you:**
+- You can write cards **while building**, in gaps, instead of scheduling someone else's time.
+- You can **QA each other's language in the room** at 3am when something reads wrong — which is exactly when it will.
 
 ### 2.1 The card content — do not underestimate this
 For each demo language you need **≈60 playable cards**: a target word plus four banned words, chosen so the word is describable in 30 seconds without them.
@@ -157,7 +175,7 @@ is_gold            a few cards seeded to DO say the banned word — the honeypot
 - The banned words must be the four **most obvious** ways to say it — that is what forces interesting speech.
 - Culturally native, not translated from an English list. A card list translated from English produces English-shaped speech and defeats the purpose.
 - Mixed difficulty, tagged, so difficulty calibration has a range to work with.
-- **Every card checked by a first-language speaker.** No exceptions. A wrong word in a language-preservation app is the single most damaging detail possible.
+- **Every card written by its first-language speaker, and cross-checked by the other.** You are the speakers (§2.0) — but still read each other's aloud. A wrong word in a language-preservation app is the single most damaging detail possible.
 
 **120 cards is roughly four hours of focused work with a native speaker on the phone.** Start it today. If you only get 30 per language, that is enough for the demo — but get them right.
 

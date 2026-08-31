@@ -46,7 +46,7 @@ Three agents died to usage limits and two questions are unanswerable without oth
 | **MoMo Mini App design standards + CSP** | Promised by MTN's programme page, not rendered anywhere public. Dig into the portal. Building against an unknown CSP is a real risk |
 | **Whether SA sandbox disbursement actually exists** | `B_MOMO_API.md` §1a suggests "South Africa Disbursement" is a bulk-payroll product behind a commercial agreement, **not a self-serve API**. If so, our payout demo is the labelled demo provider and we should know that today |
 | **The bulk B2C disbursement fee** | Not the 2% consumer rate. **This one number decides whether R2 rewards are economical at all.** Only MTN can answer it |
-| **Native-speaker sign-off** | Every word of in-game copy, every card. Non-negotiable |
+| ~~Native-speaker sign-off~~ | ✅ **Resolved — it is us.** You are first-language isiZulu, I am first-language Setswana. Languages settled. Still cross-check each other's cards aloud |
 
 ### 2 · CRITIC — the standard I held, hold it back at me
 
@@ -105,7 +105,7 @@ Where I stopped, keep going. Obvious next moves:
 Full detail in the README. In short:
 
 1. **Role split** — the plan assigns me PLATFORM (backend, MoMo, trust), you EXPERIENCE (frontend, product, demo). Confirm and never revisit.
-2. **Which two languages.** Two, not five.
+2. ~~Which two languages~~ — **settled: isiZulu + Setswana.** One from each major family, which forces the two-model story (w2v-bert for Nguni, Whisper for Sotho-Tswana) and gives us Setswana's 223%→13% result.
 3. **Keep the name AMAZWI?** It collides with the Amazwi South African Museum of Literature — a real national institution. My call: keep it and own it. Decide today or not at all.
 4. **Build the sponsor payment screen?** It is the only thing that makes the central fintech claim true.
 5. **Pre-build?** Depends on the organiser's answer. The rule is quoted verbatim in `05_BUILD.md` §1.1.
@@ -115,7 +115,7 @@ Full detail in the README. In short:
 
 ## TODAY, IN ORDER
 
-- [ ] 🔴 **Phone the two native speakers.** Committed two-hour window from each, in writing. **This is the longest-lead dependency in the whole plan and it has no name on it.** No fallback if it fails.
+- [ ] **Card content — 30 isiZulu cards.** I do 30 Setswana in parallel. Target word, four banned words, `accepted_answers`, three distractors, plus a few gold honeypots. **Build the eight demo cards first and to a higher standard.** This is game design in your own language, not translation — budget 2–3 min per card. `05_BUILD.md` §2.0.1
 - [ ] **Organiser email** — the pre-built-code rule, what the "exclusive" IP licence covers, and **what time pitches start Thursday** (three gates assume the morning is free). Draft in `05_BUILD.md` §1.2 and §1.6.
 - [ ] **MoMo: 90-minute hard timebox.** Two sandbox API users, one held in reserve. If SA disbursement is unreachable at 09:00, the labelled demo provider becomes the plan of record **today**, not at 00:30 Thursday.
 - [ ] **Sandbox call budget on the wall — 30 calls.** The quota is undocumented and its cooldown is ~2 days, which outlasts the event. **No automated test ever touches it.**
