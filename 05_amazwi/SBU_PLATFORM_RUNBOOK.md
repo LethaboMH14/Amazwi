@@ -6,9 +6,9 @@ Use this alongside `P0.md`, `plan/02_TECH.md` and `plan/05_BUILD.md`. It is a de
 
 ### Current status (31 August 2026)
 
-- Portal capability: **UNKNOWN — requires an authenticated team-account check**.
-- Collections: **NOT YET CONFIRMED for the event sandbox**.
-- Disbursements: **NOT YET CONFIRMED; South African production-style disbursement is not assumed available**.
+- Portal capability: **catalog visible in authenticated session; callable entitlement still unknown**.
+- Collections: **catalog entry visible; subscription/callability not yet confirmed for the event sandbox**.
+- Disbursements: **catalog entry visible; subscription/callability not yet confirmed; South African production-style disbursement is not assumed available**.
 - Provider mode: keep `DEMO_PROVIDER` as the safe fallback until the portal result is recorded.
 - Settlement currency: do not display a provider currency until the portal test confirms it; the documented generic sandbox expectation is EUR and must not be presented as a South African guarantee.
 

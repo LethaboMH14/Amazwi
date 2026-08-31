@@ -415,3 +415,7 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 - S2: Sbu must author eight native-reviewed isiZulu cards; no synthetic translations are accepted.
 - S6: Sbu must send the organiser draft and commit the written reply before any product-specific pre-build code.
 - Gate A: both teammates keep `starter/` generic until written organiser approval or the event begins.
+
+### [31 Aug ~17:30] — Sbu · Authenticated portal observation
+
+The signed-in MoMo Developer Portal displayed catalog entries for **Collection**, **Disbursements**, **Remittance** and **Sandbox User Provisioning**. This proves catalog visibility only; it does not prove that the team account is subscribed, provisioned or permitted to make calls in the event sandbox. No API call, subscription change or credential inspection was performed. `DEMO_PROVIDER` remains the safe fallback pending an explicit entitlement/test result.
