@@ -8,6 +8,111 @@
 
 ---
 
+# ENTRY — 31 Aug, evening · answers to your five questions
+
+**Based on commit:** `3a28878` (your build-readiness reconciliation)
+**Changed:** `05_amazwi/content/cards_setswana.json` — reviewed by Lethabo, and one blocker surfaced
+**Verified:** ran your `validate_cards.mjs` against both decks (§0). **Unverified:** everything in §§1–5 is product reasoning, not a tested result.
+
+---
+
+## 0. 🔴 BLOCKER FIRST — the Setswana deck fails your validator
+
+Lethabo reviewed and approved all 8 Setswana cards. Then I ran your validator against both decks:
+
+```
+cards_isizulu.json     errors: []     exit 0   ✅
+cards_setswana.json    5 errors       exit 1   ❌
+```
+
+**All five are the same error — `accepted_answers must contain at least 2 non-empty native-reviewed forms`** — on `sw-003, sw-004, sw-006, sw-007, sw-008`.
+
+Cause: your isiZulu deck passes 8/8 because you made the *"singular and plural both count"* call. **The Setswana deck was authored before that convention existed**, so only the two cards with obvious plurals cleared the gate. Your gate is correct and I am not asking you to weaken it — flagging that it would have hard-rejected five of our eight Setswana cards at Gate A import, which is the worst possible place to discover it.
+
+Candidate second forms are listed under `blocker_for_lethabo` in the file. **I deliberately did not add them.** An unreviewed accepted answer silently marks *correct* verifiers wrong — precisely the failure your two-form rule exists to prevent. Lethabo confirms, then I add.
+
+Two of the five (`pula`, `bogobe`) are mass nouns with no natural plural, so the convention does not rescue them.
+
+**Question for you:** for a mass noun, is a widely-used loan word an acceptable second form? Concretely — should `pap` be accepted for `bogobe`? It is what most South Africans would actually type, but it is not Setswana. I would rather you rule on that than have me set a precedent inside your matching contract.
+
+---
+
+## 1. Does the learner/proficient-verifier split still feel fun and understandable?
+
+**Understandable, yes. Fun — with one real hole I think we should close cheaply.**
+
+Your correction was right and I am not reopening it: a 4-way MCQ answer cannot validate the governed set. Two learners agree by chance 6.25% of the time, and agreement proves nothing about language competence.
+
+But it removed something. In the original loop the guess *was* the validation, so the learner's tap had consequence. Now the learner plays a quiz that changes nothing — **and they can tell.** That is a motivation problem rather than a comprehension one, and it is the thing that quietly turns a game back into a survey.
+
+**The cheap fix, with no change to eligibility logic** — give the learner's guess a visible consequence in a *different* currency:
+
+- Report learner outcomes back to the speaker as **feedback**, never as eligibility: *"12 learners tried this, 9 recognised it."* Real signal, zero effect on `UNDERSTOOD`.
+- Make it unmistakable that the clip is **a real person who got paid**, not a database sample. That is the one thing a quiz app structurally cannot copy.
+
+**For you:** does surfacing learner-guess counts to the speaker create an integrity risk in your lane — can a speaker infer anything gameable from the distribution? If yes, I would rather drop it than negotiate it.
+
+## 2. Can the verifier flow collect free text before reveal without feeling like a form?
+
+**Yes — and the reason it usually feels like a form is three specific things, all removable.**
+
+A form reads as a form because of a labelled field, a small submit button, and no sense of liveness. So:
+
+- **No label.** The card context *is* the prompt. A field labelled "Your answer:" is instantly admin.
+- **The input is the hero of the screen**, not a control at the bottom — large type, centred, waveform directly above it. It reads as *answering*, not *filling in*.
+- **One input, one screen.** The referee tap comes **after** reveal, as its own beat.
+
+That last point I would treat as structural rather than cosmetic. Putting *"what did they mean?"* and *"did they break the rule?"* on one screen makes it a form instantly — and it also contaminates the referee vote with answer-commitment, which touches your resolver's independence assumption, not just the feel.
+
+## 3. Does the Impact Map retain the emotional close without public audio?
+
+**Partially. It is genuinely weaker — and there is a substitution that recovers most of it.**
+
+Being honest: hearing a human voice is visceral, and a dot on a map is not. Removing public audio costs us something real. It is still the right call.
+
+What recovers it:
+
+- **Count people, not data.** *"4,182 voices"*, never *"31.4 hours"*. Same number, completely different register.
+- **The judge's own clip, played back to the judge.** That is not public audio — it is a contributor hearing themselves, on their own device, under their own consent. The close becomes *"you just made this"* rather than *"listen to strangers"*, which is arguably more personal, not less.
+- **The map gains its dot live**, during the demo.
+
+**For you — this is a data/consent call in your lane, not mine:** can the receipt safely play back the contributor's *own* clip? I believe that sits inside purpose consent and raises no public-audio concern, but you own it, and I do not want to design the close around something that turns out not to be clean.
+
+## 4. Which neutral shell labels work best across isiZulu and Setswana?
+
+**I want to push back gently on the framing: a "neutral" English shell is not neutral — it is English**, and it quietly contradicts the thesis on the one surface every user sees.
+
+What I would actually do for the competition build:
+
+- **The shell follows the user's declared language** rather than reaching for a neutral third option.
+- Where a word must be shared, **prefer verbs and concrete nouns over abstract ones** — abstract nouns are where the two languages diverge most, and where translation quality is hardest for either of us to check under time pressure.
+- **Let icons and numerals carry the ambiguous cases.** `R2.00` is language-neutral without trying to be.
+- **Always the endonym: `isiZulu`, `Setswana`** — never "Zulu"/"Tswana". Free, and a South African judge will notice.
+
+**For you:** do you agree the shell should follow the declared language? If you would rather ship an English functional shell for demo reliability — given neither of us can properly review the other's UI copy under time pressure — say so and I will build it that way. That is a legitimate trade, and I would rather settle it now than at Gate C.
+
+## 5. Is the judge-only demo visually strong enough that room play can remain optional?
+
+**Yes — and I would go further: room play should be optional by default, not a fallback.**
+
+Room play was my idea originally, and the red team was right to take it apart: five-screen onboarding in ~100 seconds, a hotspot that carries about five devices, and — the part that actually decides it — **it does not demonstrate asynchronous matching**, which is the mechanic.
+
+The judge-only path with three devices shows *more* of the product: speaker records on one phone, **two** verifier phones light up, resolution happens on screen. The two-verifier rule is what makes us not-a-quiz, and room play is the one format that hides it.
+
+So: strong enough, and I would frame room play as an if-the-wifi-holds bonus that never carries load.
+
+---
+
+## WHAT I NEED FROM YOU
+
+1. **Mass-noun second forms** — is a loan word like `pap` acceptable inside your matching contract? (§0)
+2. **Learner-guess counts shown to the speaker** — integrity risk in your lane, yes or no? (§1)
+3. **Own-clip playback on the receipt** — consent-clean? (§3)
+4. **Shell language** — declared-language shell, or English functional shell for demo reliability? (§4)
+5. **Anything in §§1–5 you think is wrong.** These are product-reasoning answers, not tested results. I would rather you disagree now than at Gate C.
+
+---
+
 ## WHAT THIS IS
 
 Two days of research, planning and adversarial review for our Track 2 entry. **Eleven planning documents, six research files, ~42,000 words in the plan and ~40,000 in the evidence.** Nothing is built yet.

@@ -1,118 +1,213 @@
 {
   "language": "setswana",
-  "status": "DRAFT — reasoned from real Setswana vocabulary/grammar, NOT native-confirmed. Lethabo (native speaker) reviews every field before this reaches Gate B. Read each 'reasoning' field — that's what you're actually checking, not just the words.",
+  "status": "REVIEWED BY LETHABO (31 Aug) BUT FAILS VALIDATION — 5 cards have only one accepted answer and are hard-rejected by validate_cards.mjs / the Gate A loader. Content is approved; the deck is NOT importable until each of sw-003, sw-004, sw-006, sw-007, sw-008 has a second native-reviewed accepted form. See blocker_for_lethabo.",
+  "open_question_for_sbu": "PLURAL CONVENTION MISMATCH. cards_isizulu.json applies 'singular and plural both count' (indiza/izindiza, inkomo/izinkomo). The Setswana set below has plurals on sw-001 and sw-002 only, because that is exactly what was reviewed. If the convention should be symmetric, the additions would be: sw-004 matlo, sw-006 dikobo, sw-008 dikolo. sw-003 (pula), sw-005 (meetse) and sw-007 (bogobe) are mass nouns where a plural is not natural, so they would stay single-form either way. NOT added unilaterally — this needs Lethabo's review, since adding an unreviewed accepted answer is exactly the failure mode the review gate exists to prevent.",
   "hero_8": [
     {
       "id": "sw-001",
       "target": "sefofane",
       "gloss_en": "airplane",
-      "blocked_words": ["fofa", "loapi", "maeto", "boemafofane"],
-      "accepted_answers": ["sefofane", "difofane"],
-      "distractors": ["koloi", "teksi", "setimela"],
+      "blocked_words": [
+        "fofa",
+        "loapi",
+        "maeto",
+        "boemafofane"
+      ],
+      "accepted_answers": [
+        "sefofane",
+        "difofane"
+      ],
+      "distractors": [
+        "koloi",
+        "teksi",
+        "setimela"
+      ],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "reasoning": "fofa = the verb root 'fly' inside the word itself — the single most obvious slip. loapi = sky, maeto = journey/travel, boemafofane = airport (contains 'fofane'). difofane is the plural form, included in case a verifier types plural.",
-      "confidence": "medium — the word itself is safe (already used in the mockup), the four blocked words are my best reasoning about what's obvious, not confirmed native instinct."
+      "active": true
     },
     {
       "id": "sw-002",
       "target": "kgomo",
       "gloss_en": "cow / cattle",
-      "blocked_words": ["nama", "poo", "bogadi", "maswi"],
-      "accepted_answers": ["kgomo", "dikgomo"],
-      "distractors": ["podi", "nku", "pere"],
+      "blocked_words": [
+        "nama",
+        "poo",
+        "bogadi",
+        "maswi"
+      ],
+      "accepted_answers": [
+        "kgomo",
+        "dikgomo"
+      ],
+      "distractors": [
+        "podi",
+        "nku",
+        "pere"
+      ],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "reasoning": "nama = meat (the obvious food-association slip), poo = bull, bogadi = bride-price cattle (the strongest cultural association — genuinely hard to describe cattle in this context without reaching for it), maswi = milk.",
-      "confidence": "lower — bogadi is a real and important cultural reference, but whether it's the single most 'obvious first word' vs. something else needs your gut check more than the others."
+      "active": true
     },
     {
       "id": "sw-003",
       "target": "pula",
       "gloss_en": "rain",
-      "blocked_words": ["leru", "loapi", "sefako", "metsi"],
-      "accepted_answers": ["pula"],
-      "distractors": ["letsatsi", "leru", "sefako"],
+      "blocked_words": [
+        "leru",
+        "loapi",
+        "sefako",
+        "metsi"
+      ],
+      "accepted_answers": [
+        "pula"
+      ],
+      "distractors": [
+        "letsatsi",
+        "leru",
+        "sefako"
+      ],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "reasoning": "leru = cloud, loapi = sky, sefako = hail, metsi = water (spelling variant of meetse — deliberately included as a blocked word here since it's the obvious wet-thing association).",
-      "confidence": "⚠️ real risk flagged already: 'pula' is also the currency and the national motto. Decide whether the card description context (a weather-only prompt frame) is enough to avoid ambiguity, or whether this target should be swapped."
+      "active": true
     },
     {
       "id": "sw-004",
       "target": "ntlo",
       "gloss_en": "house / room",
-      "blocked_words": ["tulo", "borulelo", "phaphosi", "aga"],
-      "accepted_answers": ["ntlo"],
-      "distractors": ["phaphosi", "tafole", "sekolo"],
+      "blocked_words": [
+        "tulo",
+        "borulelo",
+        "phaphosi",
+        "aga"
+      ],
+      "accepted_answers": [
+        "ntlo"
+      ],
+      "distractors": [
+        "phaphosi",
+        "tafole",
+        "sekolo"
+      ],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "reasoning": "tulo = place, borulelo = roof, phaphosi = room (a near-synonym, likely to slip out), aga = to build (verb root).",
-      "confidence": "lower than sefofane/sekolo — 'house' is abstract enough that I'm less sure these are truly the FIRST four words vs. a native speaker's actual instinct."
+      "active": true
     },
     {
       "id": "sw-005",
       "target": "meetse",
       "gloss_en": "water",
-      "blocked_words": ["nwa", "noka", "pula", "pompo"],
-      "accepted_answers": ["meetse", "metsi"],
-      "distractors": ["bojalwa", "maswi", "pula"],
+      "blocked_words": [
+        "nwa",
+        "noka",
+        "pula",
+        "pompo"
+      ],
+      "accepted_answers": [
+        "meetse",
+        "metsi"
+      ],
+      "distractors": [
+        "bojalwa",
+        "maswi",
+        "pula"
+      ],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "reasoning": "nwa = drink (verb), noka = river, pula = rain (the closest wet-thing synonym), pompo = tap/pump. 'metsi' included in accepted_answers as a real spelling variant.",
-      "confidence": "medium."
+      "active": true
     },
     {
       "id": "sw-006",
       "target": "kobo",
       "gloss_en": "blanket",
-      "blocked_words": ["apara", "bothitho", "boroko", "lesela"],
-      "accepted_answers": ["kobo"],
-      "distractors": ["seaparo", "mosese", "thapo"],
+      "blocked_words": [
+        "apara",
+        "bothitho",
+        "boroko",
+        "lesela"
+      ],
+      "accepted_answers": [
+        "kobo"
+      ],
+      "distractors": [
+        "seaparo",
+        "mosese",
+        "thapo"
+      ],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "reasoning": "apara = to wear/cover oneself, bothitho = warmth, boroko = sleep, lesela = cloth/fabric.",
-      "confidence": "medium. Traditional Setswana blankets carry real cultural weight — if there's a more specific/evocative term you'd actually reach for, swap it in."
+      "active": true
     },
     {
       "id": "sw-007",
       "target": "bogobe",
       "gloss_en": "maize porridge / pap",
-      "blocked_words": ["mmidi", "seswaa", "morogo", "apaya"],
-      "accepted_answers": ["bogobe"],
-      "distractors": ["seswaa", "morogo", "nama"],
+      "blocked_words": [
+        "mmidi",
+        "seswaa",
+        "morogo",
+        "apaya"
+      ],
+      "accepted_answers": [
+        "bogobe"
+      ],
+      "distractors": [
+        "seswaa",
+        "morogo",
+        "nama"
+      ],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "reasoning": "REPLACED 'dijo' (food) from the earlier worksheet — too generic to describe in 30s without immediately saying a near-synonym. 'bogobe' is concrete and iconic. mmidi = maize/mealie-meal (the ingredient), seswaa = the meat dish commonly eaten with it, morogo = the vegetable relish eaten with it, apaya = to cook.",
-      "confidence": "medium — the swap logic is sound, the specific four words need your check since seswaa/morogo are 'eaten with' associations rather than direct synonyms."
+      "active": true
     },
     {
       "id": "sw-008",
       "target": "sekolo",
       "gloss_en": "school",
-      "blocked_words": ["morutabana", "baithuti", "dibuka", "thuto"],
-      "accepted_answers": ["sekolo"],
-      "distractors": ["ntlo", "tafole", "kereke"],
+      "blocked_words": [
+        "morutabana",
+        "baithuti",
+        "dibuka",
+        "thuto"
+      ],
+      "accepted_answers": [
+        "sekolo"
+      ],
+      "distractors": [
+        "ntlo",
+        "tafole",
+        "kereke"
+      ],
       "campaign_or_deck": "hero-8",
-      "active": true,
-      "reasoning": "morutabana = teacher, baithuti = students/learners, dibuka = books, thuto = education/learning.",
-      "confidence": "medium-high — school vocabulary is fairly standard across dialects, less room for regional variation than the food/cattle cards."
+      "active": true
     }
   ],
   "pool_22_target_candidates": [
-    "podi (goat)", "nku (sheep)", "pere (horse)", "tlou (elephant)",
-    "mmutla (rabbit)", "thipa (knife)", "pitsa (pot)", "tafole (table)",
-    "setlhare (tree)", "letsatsi (sun/day)", "ngwana (child)",
-    "kgetsi (bag)", "selepe (axe)", "teksi (taxi)", "sefako (hail)",
-    "moraka (kraal)", "bojalwa (traditional beer)", "molelo (fire)",
-    "lebati (door)", "phaphosi (bedroom/room)", "tsela (road/path)"
+    "podi (goat)",
+    "nku (sheep)",
+    "pere (horse)",
+    "tlou (elephant)",
+    "mmutla (rabbit)",
+    "thipa (knife)",
+    "pitsa (pot)",
+    "tafole (table)",
+    "setlhare (tree)",
+    "letsatsi (sun/day)",
+    "ngwana (child)",
+    "kgetsi (bag)",
+    "selepe (axe)",
+    "teksi (taxi)",
+    "sefako (hail)",
+    "moraka (kraal)",
+    "bojalwa (traditional beer)",
+    "molelo (fire)",
+    "lebati (door)",
+    "phaphosi (bedroom/room)",
+    "tsela (road/path)"
   ],
-  "instructions_for_lethabo": [
-    "1. All 8 hero cards are now DRAFTED, not empty. Read every 'reasoning' field — that's the actual thing to check, since it shows why each word was chosen, not just what it is.",
-    "2. Say each target out loud and time yourself describing it without the blocked words. If a card fails that test, fix or swap it.",
-    "3. accepted_answers must be EXHAUSTIVE — matching is exact, no fuzzy correction. Add any spelling/casual variant I missed.",
-    "4. pula (sw-003) has a real flagged risk (currency/motto overlap) — decide swap or keep.",
-    "5. Strip 'reasoning' and 'confidence' fields once a card is confirmed — those are review-only, not part of the production schema in content/SCHEMA.md.",
-    "6. Pool candidates below are still unchecked guesses, lower priority than the hero 8."
-  ]
+  "blocker_for_lethabo": {
+    "why": "SCHEMA.md Gate A rule: accepted_answers with fewer than 2 entries is a HARD REJECT, not a warning. cards_isizulu.json passes 8/8 because Sbu applied 'singular and plural both count'. The Setswana deck was authored before that convention existed.",
+    "needed": "One extra native-reviewed accepted form for each of the 5 failing cards. 60 seconds of your judgement, not a research task.",
+    "candidates_NOT_added": {
+      "sw-004 ntlo": "matlo (plural) — follows Sbu's accepted convention",
+      "sw-006 kobo": "dikobo (plural) — follows Sbu's accepted convention",
+      "sw-008 sekolo": "dikolo (plural) — follows Sbu's accepted convention",
+      "sw-003 pula": "mass noun, no natural plural. Options: 'dipula' (rains/rainy seasons) or a common typed variant. YOUR CALL.",
+      "sw-007 bogobe": "mass noun, no natural plural. Strong candidate: 'pap' — the loan word most South Africans would actually type. Possibly 'papa'. YOUR CALL."
+    },
+    "not_added_deliberately": "These are unreviewed by a native speaker. Adding an accepted answer that is wrong silently marks correct verifiers WRONG — the exact failure the 2-form gate exists to prevent. Confirm and I will add them."
+  }
 }

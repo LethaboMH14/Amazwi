@@ -133,6 +133,31 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~18:20] — Lethabo (Opus, TOP) · L1 review + Sbu Q&A
+
+**DID**
+- Lethabo reviewed and approved all 8 Setswana cards, including keeping `pula` despite the flagged currency/motto ambiguity. Stripped worksheet fields (`reasoning`, `confidence`) and marked the deck reviewed, matching the format Sbu used for isiZulu.
+- Answered Sbu's five review questions with reasoning in `HANDOVER_SBU.md`, with four specific questions back to him.
+
+**VERIFIED — and it found a real blocker**
+- Ran Sbu's own `validate_cards.mjs` against both decks rather than assuming approved meant importable:
+  - `cards_isizulu.json` — 0 errors, exit 0
+  - `cards_setswana.json` — **5 errors, exit 1**
+- All five: `accepted_answers must contain at least 2 non-empty native-reviewed forms` (`sw-003`, `sw-004`, `sw-006`, `sw-007`, `sw-008`).
+- **Cause:** Sbu's "singular and plural both count" decision came *after* the Setswana deck was drafted, so only the two cards with obvious plurals cleared his two-form gate. His gate is correct; the deck predates the convention.
+- **Consequence if unnoticed:** five of eight Setswana cards hard-reject at Gate A import, discovered on event day. This is exactly why the validator got run instead of trusted.
+
+**NOT DONE — deliberately**
+- Did **not** add the missing second forms. Candidates are listed in `blocker_for_lethabo` in the file, but an unreviewed accepted answer silently marks *correct* verifiers wrong — the precise failure the two-form rule exists to prevent. Needs Lethabo's confirmation (~60 seconds), then I add them.
+- Two of the five (`pula`, `bogobe`) are mass nouns, so the plural convention does not rescue them — they need a different kind of second form. Asked Sbu whether a loan word (`pap` for `bogobe`) is acceptable inside his matching contract, since that would set a precedent in his lane.
+
+**STATUS CORRECTION**
+- `cards_setswana.json` status now reads **REVIEWED BUT FAILS VALIDATION — not importable**. L1 is *not* done. P0.md deliberately left unchanged rather than marking L1 complete against a deck that fails the gate.
+
+**PING Sbu** — four questions in `HANDOVER_SBU.md`: mass-noun loan words, learner-guess counts as an integrity risk, own-clip playback consent, and declared-language vs English functional shell.
+
+---
+
 ### [31 Aug ~17:35] — Lethabo (Sonnet, BUILD) · L1 · cards drafted, reasoning shown
 
 **DID**
