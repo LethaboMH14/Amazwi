@@ -140,6 +140,32 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [01 Sep ~00:05] — Lethabo (Sonnet, BUILD) · CROSS-LANE, pending Sbu's review · S3 `is_correct` implemented + tested
+
+**⚠️ Cross-lane exception, not a stopper-driven one.** The lane rule was loosened this session (BUILD_LOG.md decisions table, 31 Aug ~23:40 — "work on the backend as well... we all work on the same areas"), not triggered by a real blocker. Documenting it to the same standard regardless. This is a mechanical implementation of an already-written spec (`plan/13_IS_CORRECT_SPEC.md`), not a money/legal/deployment decision — flagged for Sbu's review, not asserted as his final sign-off.
+
+**DID**
+- Implemented `starter/backend/app/matching.py`: `normalise_answer()` (NFC → lowercase → trim → collapse whitespace/hyphens to one space) and `is_correct(raw_answer, accepted_answers)`, exactly the five-step pipeline in `13_IS_CORRECT_SPEC.md` — no edit-distance threshold, no generic noun-class stripping added.
+- Wrote `starter/backend/tests/test_matching.py`, 20 new unit tests: pipeline steps in isolation (NFC equivalence, case, whitespace, hyphen collapse), accepted-answer matches (including a multi-word accepted answer and an explicit alias/second form), rejections (unrelated word, empty string, a bare-stem-vs-prefixed-form case to prove no blanket prefix stripping, a one-edit-distance typo to prove no fuzzy matching), and two checks run against the **real hero-8 decks** rather than invented fixtures: every accepted_answers[] entry in both `cards_isizulu.json` and `cards_setswana.json` matches itself, and no `distractors[]`/`blocked_words[]` entry in either deck ever accidentally matches its own card's accepted answers.
+- Resolved the spec's own stated open item ("confirm hyphen-collapse doesn't break isiZulu/Setswana compound forms that are hyphenated in accepted_answers on purpose — check against the first 8 hero cards per language when they exist") with a real check against both decks, not an assumption: neither deck hyphenates an accepted answer today (compounds like `ingubo yokulala` are space-separated), so hyphen-collapsing is safe against current content. Wrote the test (`test_no_hero_card_accepted_answer_contains_a_hyphen_today`) so it fails loudly, not silently, the moment a future card deliberately hyphenates an accepted form — the open item stays checked, not closed-and-forgotten.
+- Ran the full backend suite, not just the new file: `python -m pytest tests/ -v` → **22 passed** (20 new + the 2 pre-existing `test_provider.py` tests, unaffected).
+- Manually checked two boundary cases not covered by the unit tests (mixed hyphen/whitespace adjacency, an all-punctuation string): both normalise correctly (`'a- b'` → `'a b'`, `'  --  '` → `''`), no crash.
+
+**WHY**
+- S3 in `P0.md` explicitly asks for this ("Write and test `is_correct` before implementation... Unit cases cover accepted, rejected and reviewed-alias answers") and the spec was already fully written — nothing to invent, purely mechanical against a settled contract, so it's low-risk to build outside Lethabo's lane even under the loosened rule.
+- Testing against the real hero-8 decks (not synthetic fixtures) was deliberate: a distractor or blocked word accidentally matching its own card's accepted_answers would be a real resolver bug the moment Gate E runs, and the only way to catch that is checking real content, not made-up examples.
+
+**CHANGED**
+- New: `starter/backend/app/matching.py`, `starter/backend/tests/test_matching.py`.
+- `HANDOVER_SBU.md` — added a review-request entry (see below).
+
+**NEXT**
+- Sbu: review `matching.py` against `13_IS_CORRECT_SPEC.md` and either accept, reject, or flag a needed change in `HANDOVER_LETHABO.md`/his own review of this entry. Not wired into any endpoint yet — S5 (schema/migrations) and the resolver itself are still open, unstarted.
+- Not yet integrated into `main.py` or any resolver — this is the pure function only, per the spec's own scope note ("No implementation checked into the starter — application logic is competition scope").
+
+**BLOCKED / PING**
+- PING Sbu: new file in your lane, tested to the stated bar, needs your sign-off before being treated as final — see `HANDOVER_SBU.md`.
+
 ### [31 Aug ~23:50] — Lethabo (Sonnet, BUILD) · attempted frontend Vercel deploy, stopped mid-attempt by Lethabo
 
 **DID**

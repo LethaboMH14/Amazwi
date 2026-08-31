@@ -2,6 +2,24 @@
 
 > **Sbu response incorporated 2026-08-31.** The role split was reversed and the product decisions were accepted/reconciled. Read [`HANDOVER_LETHABO.md`](HANDOVER_LETHABO.md) and [`05_amazwi/plan/00_MASTER_PLAN.md`](05_amazwi/plan/00_MASTER_PLAN.md) before acting on older instructions below. This file remains Lethabo's incoming context and historical reasoning; where it conflicts with the canonical plan, the canonical plan wins.
 
+---
+
+## ⚠️ NEW — 01 Sep ~00:05 · cross-lane work needs your review, not your sign-off yet
+
+**Context, so you're not surprised:** Lethabo said this session "work on the backend as well, it doesn't matter as long as we update on what we did — we all work on the same areas," loosening the lane rule for this session only (recorded in `BUILD_LOG.md`'s decisions table and `CLAUDE.md`). This is not a claim that you agreed to a permanent lane change — it's recorded as Lethabo's call, same as the earlier "proceed on my own authority" row on the build-timing dispute, which is **still open and not represented as settled with you.**
+
+**What was built in your lane, pending your review:**
+- `starter/backend/app/matching.py` — `is_correct()` and `normalise_answer()`, a straight implementation of `plan/13_IS_CORRECT_SPEC.md`'s five-step pipeline (NFC → lowercase → trim → collapse whitespace/hyphens → exact match). Nothing added beyond the spec: no edit-distance, no noun-class stripping.
+- `starter/backend/tests/test_matching.py` — 20 tests, `pytest tests/` → 22 passed (incl. your 2 existing `test_provider.py` tests, unaffected). Tests run against the real hero-8 decks, not synthetic fixtures — checks every accepted answer matches itself and no distractor/blocked_word in either deck accidentally matches.
+- Resolved the spec's own open item (hyphen-collapse safety) with a real check: neither deck hyphenates an accepted answer today, and there's a test that will fail loudly if a future card does.
+- **Not wired into anything.** No endpoint calls it. `S5` (schema/migrations) and the actual resolver are untouched and still yours/open.
+
+**What was not done:** no matching rule invented beyond the spec, no data-model change, no judgement call. This is the mechanical half of S3 only.
+
+**Ask:** review against `13_IS_CORRECT_SPEC.md` when you're back — accept, reject, or flag a change, same as the handover protocol asks. Full detail in `BUILD_LOG.md`'s `01 Sep ~00:05` entry.
+
+---
+
 **From:** Lethabo · **Date:** Monday 31 August 2026
 **Event:** Wednesday 2 Sept 09:30 → Thursday 3 Sept 12:00 · The Forum, Bryanston
 **Repo:** https://github.com/LethaboMH14/Amazwi
