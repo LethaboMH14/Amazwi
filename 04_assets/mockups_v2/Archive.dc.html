@@ -34,7 +34,7 @@
   <div style="position:relative;z-index:4;height:100%;display:flex;flex-direction:column;padding:28px 0 30px;box-sizing:border-box;">
 
     <div style="padding:0 24px;">
-      <div class="kicker">Aggregate &middot; private by default</div>
+      <div class="kicker">Seeded demo &middot; not traction &middot; private by default</div>
       <div style="margin-top:8px;font-size:34px;line-height:.98;font-weight:800;font-stretch:120%;letter-spacing:-.03em;
         background:linear-gradient(168deg,#EDF1FA 8%,#C7D6F5 60%,#8FA8D8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">Impact Map</div>
       <div class="serif" style="margin-top:6px;font-size:17px;color:var(--dim);">the country's voice, one dot at a time</div>
@@ -54,12 +54,12 @@
 
     <div style="margin-top:16px;padding:0 24px;display:flex;gap:10px;">
       <div class="card" style="flex-grow:1;padding:15px 16px;">
-        <div style="font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.015em;">4 182</div>
-        <div class="kicker" style="margin-top:3px;">Eligible clips</div>
+        <div style="font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.015em;">24</div>
+        <div class="kicker" style="margin-top:3px;">Seeded clips</div>
       </div>
       <div class="card" style="flex-grow:1;padding:15px 16px;">
-        <div style="font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.015em;">31.4 h</div>
-        <div class="kicker" style="margin-top:3px;">Eligible audio</div>
+        <div style="font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.015em;">0.2 h</div>
+        <div class="kicker" style="margin-top:3px;">Seeded audio</div>
       </div>
     </div>
 
@@ -70,7 +70,7 @@
         <div style="width:48px;height:48px;border-radius:11px;background:linear-gradient(140deg,#FF6A3D,#7A2E1A);flex-shrink:0;box-shadow:inset 0 1px 0 var(--hi);"></div>
         <div style="flex-grow:1;">
           <div style="font-size:15px;font-weight:700;">Setswana daily voice mission</div>
-          <div class="serif" style="margin-top:2px;font-size:14px;color:var(--dim);">R 640 remaining &middot; 186 eligible clips</div>
+          <div class="serif" style="margin-top:2px;font-size:14px;color:var(--dim);">R 640 demo budget &middot; 12 seeded clips</div>
         </div>
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
       </div>
@@ -78,7 +78,7 @@
         <div style="width:48px;height:48px;border-radius:11px;background:linear-gradient(140deg,#E8267F,#2E1A2A);flex-shrink:0;box-shadow:inset 0 1px 0 var(--hi);"></div>
         <div style="flex-grow:1;">
           <div style="font-size:15px;font-weight:700;">isiZulu daily voice mission</div>
-          <div class="serif" style="margin-top:2px;font-size:14px;color:var(--dim);">R 512 remaining &middot; 233 eligible clips</div>
+          <div class="serif" style="margin-top:2px;font-size:14px;color:var(--dim);">R 512 demo budget &middot; 12 seeded clips</div>
         </div>
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
       </div>
@@ -113,7 +113,8 @@ class Component extends DCLogic {
         if (x > 196 && x < 232 && y > 120 && y < 158) continue;
         i++;
         const live = i % 5 === 0;
-        const zulu = x > 180;
+        // Seeded visual alternation only; colour does not encode geography.
+        const zulu = i % 2 === 0;
         dots.push({
           x: x, y: y,
           r: live ? 3.4 : 2.2,

@@ -6,7 +6,7 @@
     { "file": "Understood.dc.html","x": 1410, "y": 0, "w": 390, "h": 844, "title": "4 · The money moment" },
     { "file": "Receipt.dc.html",    "x": 1880, "y": 0, "w": 390, "h": 844, "title": "5 · Voice Value Receipt" },
     { "file": "Archive.dc.html",    "x": 2350, "y": 0, "w": 390, "h": 844, "title": "6 · Impact Map (aggregate)" },
-    { "file": "ThemeDemo.dc.html",  "x": 2820, "y": 0, "w": 390, "h": 844, "title": "7 · Theme switch demo — LIVE", "is_interactive": true }
+    { "file": "ThemeDemo.dc.html",  "x": 2820, "y": 0, "w": 390, "h": 844, "title": "7 · Theme tokens — source proof" }
   ],
   "annotations": [
     {
@@ -14,8 +14,7 @@
       "x": 0,
       "y": -300,
       "w": 860,
-      "kind": "title1",
-      "text": "V2 — THE REBUILD. THIS IS THE BAR.\n\nThe v1 set was generic and the diagnosis was specific: everything sat on one elevation plane, every layout was a symmetric vertical stack with uniform padding, there was no scale contrast, nothing overlapped or bled off canvas, and there was no signature device.\n\nThese three fix that. The other seven screens still need the same treatment — do NOT mix v1 and v2 in front of a judge."
+      "text": "V2 HERO FLOW\n\nSix coherent presentation surfaces. Open artboards individually; this canvas is a working board, not a judge-facing deck."
     },
     {
       "id": "note-grammar",
@@ -29,7 +28,7 @@
       "x": 0,
       "y": 900,
       "w": 1330,
-      "text": "UPDATED 31 AUG — SIX OF THE FIVE-HERO-SCREEN SET ARE NOW AT THIS BAR\n\n· Card reveal, Recording, Proficient verifier/referee, The money moment, Voice Value Receipt and Impact Map all carry the v2 treatment now.\n· Still on v1 or unbuilt: Consent, Listen (learner MCQ), Wallet. League is cut per 05_BUILD.md kill rules and is deliberately not on this canvas at all.\n· Card content is real, not placeholder: kgomo and sefofane are sw-002 and sw-001 in cards_setswana.json, both native-confirmed.\n· Only Main.dc.html carries the theme tweak so far — Referee/Receipt/Archive ship on the same night-theme ground as Recording and Understood."
+      "text": "UPDATED 31 AUG — SIX PRESENTATION SURFACES\n\n· Card reveal, Recording, Proficient verifier/referee, money moment, Voice Value Receipt and seeded-demo Impact Map share the v2 treatment.\n· Consent, learner Listen and Wallet are still v1 or unbuilt. League is cut and absent.\n· ThemeDemo is an isolated source proof, not compiled-canvas or app runtime wiring."
     }
   ],
   "launch": { "view": "canvas" }

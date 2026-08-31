@@ -1,9 +1,20 @@
 {
-  "language": "setswana",
-  "status": "REVIEWED — Lethabo native-confirmed all 8 targets, blocked words, accepted answers and distractors on 31 August 2026, including the sw-003 swap from pula to thipa (knife) and thipa's blocked words (sega/bogale/tshipi/lomo) confirmed last, same check as the other 7. Matches cards_isizulu.json's review standard. FOLLOW-UP 31 Aug, not yet aloud-confirmed: validate_cards.mjs flagged blocked_words also appearing as distractors on sw-004/005/007 (LETHABO_NEXT_WORK.md item 1). Swapped sw-004 phaphosi->moraka (kraal), sw-005 pula->jusi (juice), sw-007 seswaa/morogo->ting/diphaphatha (both real distinct Setswana dishes). Validator now runs clean with zero warnings, but these three specific swaps are a proposed judgement call pending the same read-aloud check the original 8 got.",
+  "language": "tn",
+  "review": {
+    "status": "NEEDS_NATIVE_CONFIRMATION",
+    "owner": "Lethabo",
+    "last_reviewed_on": "2026-08-31",
+    "pending_items": [
+      "sw-004 distractor: moraka",
+      "sw-005 distractor: jusi",
+      "sw-007 distractor: ting",
+      "sw-007 distractor: diphaphatha"
+    ]
+  },
   "hero_8": [
     {
       "id": "sw-001",
+      "language": "tn",
       "target": "sefofane",
       "gloss_en": "airplane",
       "blocked_words": [
@@ -26,6 +37,7 @@
     },
     {
       "id": "sw-002",
+      "language": "tn",
       "target": "kgomo",
       "gloss_en": "cow / cattle",
       "blocked_words": [
@@ -48,6 +60,7 @@
     },
     {
       "id": "sw-003",
+      "language": "tn",
       "target": "thipa",
       "gloss_en": "knife",
       "blocked_words": [
@@ -70,6 +83,7 @@
     },
     {
       "id": "sw-004",
+      "language": "tn",
       "target": "ntlo",
       "gloss_en": "house / room",
       "blocked_words": [
@@ -93,6 +107,7 @@
     },
     {
       "id": "sw-005",
+      "language": "tn",
       "target": "meetse",
       "gloss_en": "water",
       "blocked_words": [
@@ -115,6 +130,7 @@
     },
     {
       "id": "sw-006",
+      "language": "tn",
       "target": "kobo",
       "gloss_en": "blanket",
       "blocked_words": [
@@ -137,6 +153,7 @@
     },
     {
       "id": "sw-007",
+      "language": "tn",
       "target": "bogobe",
       "gloss_en": "maize porridge / pap",
       "blocked_words": [
@@ -159,6 +176,7 @@
     },
     {
       "id": "sw-008",
+      "language": "tn",
       "target": "sekolo",
       "gloss_en": "school",
       "blocked_words": [
@@ -180,7 +198,8 @@
       "active": true
     }
   ],
-  "pool_22_target_candidates": [
+  "future_target_candidates_note": "21 entries are listed; 20 are unique beyond hero_8 because thipa is also the sw-003 hero target.",
+  "future_target_candidates": [
     "podi (goat)",
     "nku (sheep)",
     "pere (horse)",

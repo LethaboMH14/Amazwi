@@ -8,32 +8,32 @@
 
 ---
 
-# ENTRY — 31 Aug, evening · answers to your five questions
+## CURRENT OVERRIDE — READ THIS BEFORE THE HISTORICAL ENTRY
 
-**Based on commit:** `3a28878` (your build-readiness reconciliation)
-**Changed:** `05_amazwi/content/cards_setswana.json` — reviewed by Lethabo, and one blocker surfaced
-**Verified:** ran your `validate_cards.mjs` against both decks (§0). **Unverified:** everything in §§1–5 is product reasoning, not a tested result.
+- **Eligibility boundary:** no written organiser approval exists and no organiser email will be sent. No product-specific competition implementation or Gate A–H work begins before the event opens. Pre-event plans, language content, Figma work and static mockups are preparation/reference only — not running-product evidence or submission artifacts.
+- **Setswana cards:** both card validators are structurally green. isiZulu has zero warnings; Setswana has one explicit review warning naming the four replacement distractors `moraka`, `jusi`, `ting` and `diphaphatha`. L1 remains **WAITING** for Lethabo's aloud approval.
+- **Deck:** L5 is **PARTIAL**. The existing file is a reference skeleton, not a finished deck; actual on-site screenshots, the judge-only script, fallback recording and rehearsal remain open.
+- The entry below preserves earlier reasoning. Where its status conflicts with this override or `05_amazwi/P0.md`, the current override wins.
 
 ---
 
-## 0. 🔴 BLOCKER FIRST — the Setswana deck fails your validator
+# ENTRY — 31 Aug, evening · answers to your five questions
 
-Lethabo reviewed and approved all 8 Setswana cards. Then I ran your validator against both decks:
+**Historical base:** `3a28878` (the build-readiness reconciliation at that point)
+**Current verification:** both card decks pass `validate_cards.mjs` with zero errors. The Setswana deck emits one explicit warning because four later distractor replacements still need native aloud confirmation.
+
+---
+
+## 0. 🟠 CURRENT LANGUAGE BLOCKER — validator green, four replacements await native approval
+
+The earlier five accepted-answer errors were resolved. Current verification is:
 
 ```
-cards_isizulu.json     errors: []     exit 0   ✅
-cards_setswana.json    5 errors       exit 1   ❌
+cards_isizulu.json     0 errors · 0 warnings   ✅
+cards_setswana.json    0 errors · 1 explicit native-review warning   ⚠️ structural pass
 ```
 
-**All five are the same error — `accepted_answers must contain at least 2 non-empty native-reviewed forms`** — on `sw-003, sw-004, sw-006, sw-007, sw-008`.
-
-Cause: your isiZulu deck passes 8/8 because you made the *"singular and plural both count"* call. **The Setswana deck was authored before that convention existed**, so only the two cards with obvious plurals cleared the gate. Your gate is correct and I am not asking you to weaken it — flagging that it would have hard-rejected five of our eight Setswana cards at Gate A import, which is the worst possible place to discover it.
-
-Candidate second forms are listed under `blocker_for_lethabo` in the file. **I deliberately did not add them.** An unreviewed accepted answer silently marks *correct* verifiers wrong — precisely the failure your two-form rule exists to prevent. Lethabo confirms, then I add.
-
-Two of the five (`pula`, `bogobe`) are mass nouns with no natural plural, so the convention does not rescue them.
-
-**Question for you:** for a mass noun, is a widely-used loan word an acceptable second form? Concretely — should `pap` be accepted for `bogobe`? It is what most South Africans would actually type, but it is not Setswana. I would rather you rule on that than have me set a precedent inside your matching contract.
+The structural pass does not settle language judgement. Lethabo replaced four overlapping distractors across `sw-004`, `sw-005` and `sw-007`: `moraka`, `jusi`, `ting` and `diphaphatha`. He must read them aloud and explicitly approve or replace them before L1 is complete. Do not weaken the validator or infer native approval from a green result.
 
 ---
 
@@ -228,15 +228,15 @@ Full detail in the README. In short:
 2. ~~Which two languages~~ — **settled: isiZulu + Setswana.** The competition does not build or pitch two ASR models; the advantage is first-language content ownership.
 3. **Keep the name AMAZWI?** It collides with the Amazwi South African Museum of Literature — a real national institution. My call: keep it and own it. Decide today or not at all.
 4. **Build the sponsor payment screen?** It is the only thing that makes the central fintech claim true.
-5. **Pre-build?** Depends on the organiser's answer. The rule is quoted verbatim in `05_BUILD.md` §1.1.
+5. **Pre-build?** No. No written approval exists and no organiser email will be sent. Product-specific competition implementation begins on-site when the event opens; pre-event artifacts are reference/preparation only.
 6. **The kill rules.** Agree them Tuesday, before anyone is emotionally invested.
 
 ---
 
 ## TODAY, IN ORDER
 
-- [ ] **Card content — 30 isiZulu cards.** I do 30 Setswana in parallel. Target word, four banned words, `accepted_answers`, three distractors, plus a few gold honeypots. **Build the eight demo cards first and to a higher standard.** This is game design in your own language, not translation — budget 2–3 min per card. `05_BUILD.md` §2.0.1
-- [ ] **Organiser email** — the pre-built-code rule, what the "exclusive" IP licence covers, and **what time pitches start Thursday** (three gates assume the morning is free). Draft in `05_BUILD.md` §1.2 and §1.6.
+- [ ] **Card content — hero eight first.** isiZulu is approved. Setswana is structurally green but its four replacement distractors need Lethabo's aloud approval. Expand either deck only after the golden path works.
+- [x] **No organiser email.** The conservative event-start boundary now governs pre-built code. Confirm pitch timing and platform details from the event briefing without assuming a positive answer.
 - [ ] **MoMo — Sbu owns this now.** Confirm Collections/Disbursement availability, preserve a sandbox-call budget and keep a labelled demo provider ready. The canonical build plan uses priority gates rather than a clock schedule.
 - [ ] **Sandbox call budget on the wall — 30 calls.** The quota is undocumented and its cooldown is ~2 days, which outlasts the event. **No automated test ever touches it.**
 - [ ] **Write the `is_correct` function on paper** before the card job starts. `02_TECH.md` §3.4.

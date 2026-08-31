@@ -1,19 +1,19 @@
 # AMAZWI — DECK SKELETON (L5)
-### Slide-by-slide scaffold for `06_PITCH.md` §10, real assets only
+### Pre-event reference scaffold for `06_PITCH.md` §10; evidence must come from the on-site build
 
-**Status:** SKELETON — structure and asset sourcing settled, not a finished deck. Assemble in Gamma/Slides/PowerPoint at the event once the placeholder assets below are replaced.
+**Status:** PARTIAL / REFERENCE ONLY — structure and prospective asset sourcing are sketched, but this is not a finished competition deck or a submission artifact. Assemble the deck on-site from the running competition build after the placeholders below are replaced.
 **Rule inherited from `06_PITCH.md`:** slides are subordinate to the live app. If a slide and the app disagree, the app is right and the slide gets fixed.
-**Every visual below is labelled with its real source.** None is invented; where nothing real exists yet, it says so and names the gate that produces it.
+**Evidence rule:** a pre-event Figma render or static mockup is a reference visual, not product proof. Only an on-site running-app capture may be labelled real build evidence. Where that does not exist yet, the slide remains a target or placeholder.
 
 ---
 
-## Asset inventory (what's real today, 31 Aug 2026)
+## Asset inventory (what exists as preparation on 31 Aug 2026)
 
-| Asset | Source | Real or placeholder |
+| Asset | Source | Classification |
 |---|---|---|
-| Button, Banned-word chip, Card, Wallet-receipt component screenshots | Figma file `JPZuFmbhRh9fhkgBLxRymq`, nodes `5:13`/`6:5`/`7:24`/`10:24` | **Real** — actual rendered design-system components, built and screenshotted 31 Aug |
-| Main / Recording / Understood mockup screens | `04_assets/mockups_v2/*.dc.html`, Artifact `27d81ae1-89f7-4f3c-91be-a29d972597b6` | **Real** — high-craft mockup, not wireframe, but not the running app either |
-| Reproducible clip/transcript comparison | — | **Placeholder.** Needs Sbu to run the named ASR model/version once, per `06_PITCH.md` §3, and preserve the output. Nobody has done this yet — it is not blocking L5 but it blocks Slide 1 being real |
+| Button, Banned-word chip, Card, Wallet-receipt component renders | Figma file `JPZuFmbhRh9fhkgBLxRymq`, nodes `5:13`/`6:5`/`7:24`/`10:24` | **Reference only** — pre-event design renders, not stored in this repository and not proof of the running competition app |
+| Main / Recording / Understood mockup screens | `04_assets/mockups_v2/*.dc.html`, Artifact `27d81ae1-89f7-4f3c-91be-a29d972597b6` | **Reference only** — static pre-event design preparation, not the running app or a submission artifact |
+| Reproducible clip/transcript comparison | — | **Placeholder.** On-site, Sbu must select and record an exact ASR model/version and decoding settings, run it once per `06_PITCH.md` §3, and preserve the output. No model is currently named — this blocks Slide 1 being real |
 | Funded-mission-loop diagram | — | **Placeholder.** `04_assets/FIGMA.md` names `figma-generate-diagram` (Mermaid → FigJam) as the intended source; not built. A plain Mermaid version is inlined below as a stand-in |
 | Aggregate Impact Map | — | **Placeholder.** Does not exist until Gate F/G produce real reward events to aggregate |
 | Live app screenshots (Gate A–H) | — | **Placeholder for everything downstream of today.** Every "interim" asset below gets swapped for a real running-app screenshot the moment its gate exists — see the swap column |
@@ -22,7 +22,7 @@
 
 ## SLIDE 1 — Reproducible clip/transcript comparison
 
-**Visual:** PLACEHOLDER — the clip and transcript comparison itself. Swap in the moment Sbu runs the named model.
+**Visual:** PLACEHOLDER — the clip and transcript comparison itself. Swap it in only after Sbu records and runs the exact selected model/version on-site.
 **Script (quoted verbatim, `06_PITCH.md` §3):**
 > "Who understood that?"
 > [Show the reproducible transcript comparison]
@@ -34,7 +34,7 @@
 
 ## SLIDE 2 — Product sentence
 
-**Visual:** Typographic only — no image needed. Optionally the Card component screenshot (`7:24`, real) as a small supporting graphic bottom-right, since it's the first concrete artifact the audience sees.
+**Visual:** Typographic only — no image needed. After Gate B closes on-site, optionally use a capture of the running Card screen as a small supporting graphic bottom-right. The pre-event Figma render is reference only.
 **Script (verbatim, §1 and §3):**
 > "AMAZWI is a MoMo voice game. Play a challenge in your language. When two people understand you, your reward is credited through MoMo."
 
@@ -46,14 +46,14 @@ Memory line, repeated at the close: **"Speak. Be understood. Earn."**
 
 **No slide.** Per `06_PITCH.md` §2 and §4, this beat is the actual running app on one speaker device and two verifier devices, Lethabo narrating, Sbu monitoring provider state. Do not build a slide that competes with it.
 
-**Backup only** if live totally fails (§12 Failure Moves: "Total live failure → play the local fallback recording"): have the Card, Banned-word-chip, Button and Wallet-receipt screenshots (all real, all four nodes above) ready as an emergency static walkthrough if even the fallback video is unavailable. This is a last-resort appendix, not a planned slide — see "Backup appendix" at the bottom of this file.
+**Backup target** if live totally fails (§12 Failure Moves: "Total live failure → play the local fallback recording"): capture the on-site Card, Banned-word, action and Wallet-receipt states from the running app. Pre-event Figma renders are not a no-network competition fallback. This remains a last-resort appendix, not a planned slide — see "Backup appendix" at the bottom of this file.
 
 ---
 
 ## SLIDE 4 — Voice Value Receipt
 
-**Visual:** **Real** — Wallet-receipt component screenshot, Figma node `10:24`. Shows status (`UNDERSTOOD — corpus eligible`), amount bound to `rand-money-only`, the "Sent for payment" language (never "Paid"), and the two-verifier confirmation line.
-**Swap at:** Gate F, for the actual receipt screen of the real contribution just made live on stage.
+**Visual:** **REFERENCE ONLY** — Wallet-receipt Figma node `10:24`. It is not product evidence and its player-facing "corpus eligible" wording must be replaced with plain-language copy before use. Gate F supplies the actual receipt capture from the running app.
+**Becomes usable at:** Gate F, after the actual receipt screen shows the real contribution and every simulated provider/data value is labelled.
 **Script (verbatim, §6):**
 > "One screen proves what was contributed, why it qualified, what it earned, what the person consented to and where the value is now."
 
@@ -63,8 +63,8 @@ Show alongside: contribution ID, declared language, peer-verified semantic label
 
 ## SLIDE 5 — Wallet / provider states
 
-**Visual:** **Real** — same Wallet-receipt component (`10:24`), paired with the `provider_unavailable` copy from `content/error_states.json` ("Payments are running on our test system right now") as the second state shown.
-**Swap at:** Gate F, once real provider-state transitions exist to screenshot (credited → submitted → pending → paid, per §5).
+**Visual:** **REFERENCE ONLY** — the Wallet-receipt component (`10:24`) and `provider_unavailable` copy establish the intended hierarchy. They are not evidence that provider transitions work.
+**Becomes usable at:** Gate F, once the running app produces truthful provider-state captures (credited → submitted → pending → paid, per §5).
 **Script (verbatim, §5):**
 > "The wallet distinguishes credited, submitted, pending and paid. An accepted provider request is not money moved. Repeating the resolver or callback does not create another reward."
 > [if demo provider active] "This external settlement leg is our labelled demo provider because South African hackathon disbursement is not available to us. The state machine and idempotency are real; we are not presenting simulated rands as a production transfer."
@@ -105,17 +105,17 @@ flowchart LR
 
 ---
 
-## SLIDE 8 — Official judging criteria mapped to proof
+## SLIDE 8 — Official judging criteria mapped to target proof
 
-**Visual:** A table, built directly from the organiser's five criteria against what's actually proven. Fill the right column only with things that will be true and live on stage — do not pre-write a claim for a gate that hasn't shipped.
+**Visual:** A table built directly from the organiser's five criteria. Every row below is a **target**, not a current claim. Change TARGET to PROVEN only after the named on-site gate or rehearsal has passed and the evidence is visible in the app.
 
-| Criterion | Proof point |
+| Criterion | Target proof — conditional until verified on-site |
 |---|---|
-| Innovation | Peer-verification-as-validation (two independent listeners, not an ASR judge); learner/verifier split so play scales without diluting corpus quality |
-| Fintech Relevance | MoMo is the funding *and* settlement rail — a sponsor funds the mission, the ledger pays the speaker — not a payment button bolted onto an unrelated app |
-| Feasibility | Judge-only golden path rehearsed with named failure-move substitutions for every point of failure (§12) |
-| Technical Execution | Idempotent ledger, exact-match `is_correct` contract, honest provider-state labelling — shown live in the receipt, not claimed in prose |
-| Presentation | Judge-only live demo *is* the presentation; slides are subordinate per the pitch contract's own rule |
+| Innovation | **TARGET:** show two independent proficient listeners determining eligibility, with learner play visibly separated from governed verification |
+| Fintech Relevance | **TARGET (Gates F/G):** show a funded mission, one auditable ledger credit and an honestly labelled MoMo/demo-provider settlement boundary |
+| Feasibility | **TARGET (Gate H + L6):** complete and rehearse the judge-only golden path, including named failure substitutions, twice from reset |
+| Technical Execution | **TARGET (S3/S5 + Gates E/F):** demonstrate the exact-match `is_correct` contract, idempotent ledger and truthful provider states in the running receipt |
+| Presentation | **TARGET (L5/L6):** use the live on-site build as the presentation; show only captured proof and rehearse so either teammate can present alone |
 
 ---
 
@@ -144,12 +144,14 @@ Stop there — §9 is explicit that the ask ends the pitch, no trailing slide af
 
 ## Backup appendix — static screenshots for total live failure
 
-Per `06_PITCH.md` §12, a total live failure falls back to a recorded video first. If even that is unavailable, these four **real** component screenshots (not the live app, but not invented either) can carry a narrated static walkthrough of the golden path in order: Card (`7:24`, the speaker sees this) → Banned-word chip (`6:5`, what they must avoid) → Button (`5:13`, the flow's own affordance) → Wallet-receipt (`10:24`, the outcome). Never present this appendix as if it were the live app — say plainly it's a static walkthrough.
+Per `06_PITCH.md` §12, a total live failure falls back to an on-site recording of the running app first. If even that is unavailable, use on-site screenshots of the actual build in order: Card → banned-word constraint → primary action → Wallet receipt. The current Figma components may guide composition, but they are pre-event references and cannot serve as competition-build proof. Say plainly whenever a fallback is a static walkthrough.
 
 ---
 
-## Open items before this stops being a skeleton
+## Open items before this stops being a reference skeleton
 
-1. Sbu: run the named ASR model on the opening clip (§3) — the one blocker for Slide 1 being real.
-2. Build the funded-mission-loop diagram in FigJam (`figma-generate-diagram`) — replace the inline Mermaid stand-in on Slide 6.
-3. Nothing else on this page should be touched until a gate produces the real asset it's placeholder for — resist writing sample numbers into Slide 10 "to see how it looks."
+1. On-site: choose and record the exact ASR model/version, decoding settings, permitted opening clip and preserved output (§3); no model is currently named.
+2. On-site: build the funded-mission-loop diagram and replace the inline Mermaid stand-in on Slide 6.
+3. Replace every reference render and placeholder with a capture from a passed build gate; label all seeded/demo values.
+4. Prepare the judge-only script, no-network fallback recording and static capture pack on both laptops and a phone.
+5. Rehearse the complete demo so every judging-criteria row can be changed from TARGET to PROVEN honestly.

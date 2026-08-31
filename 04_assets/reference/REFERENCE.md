@@ -2,6 +2,8 @@
 
 **Source:** provided directly by Lethabo, not sourced by Claude. Kept here so Sbu and any mentor sees exactly what the craft bar is aimed at, and so the reasoning for what we take vs. reject is on the record — not just the images.
 
+**Provenance boundary:** creator links and reuse licences have not yet been recorded for the four external screenshots. Treat them as private internal references only. Do not place them in the pitch deck, submission bundle or public repository release until the original URL, creator and permitted use are documented; reproduce patterns with AMAZWI assets, never the screenshots themselves.
+
 **Correction, same day:** the file first filed as `dribbble-04-rewards-spin-wheel.png` was moved into this folder without being opened first and was wrongly assumed to be another Dribbble shot. It is actually `amazwi-concept-board-full-app.png` — a full concept board for AMAZWI itself, thirteen screens plus a MoMo-integration mockup and closing tagline. That is a materially different, more important asset than an external reference, so it gets its own full section (00) below, analysed for what to keep vs. what conflicts with decisions already locked in `BUILD_LOG.md`. The real fourth Dribbble example (a food-delivery rewards wheel) is correctly filed as `dribbble-04-rewards-spin-wheel.png` and its analysis (section 04) was accurate all along — only the filename mixup is new.
 
 ---
