@@ -53,6 +53,20 @@ Checked Figma Community for genre-appropriate craft references before calling L2
 
 **One gap found**: this genre consistently pairs a confirmation/achievement line with a small badge glyph, not text alone. Queued as a one-line addition to Wallet-receipt's "Confirmed by 2 verifiers" row (a ✓ bound to `understood`) — the edit was written but the Figma MCP Starter-plan **daily call quota ran out mid-session** before it landed. Component `10:24` is still in its last verified-good state (the text-only version already screenshotted), not broken — this is a queued polish, not a regression. Pick up first thing once the quota resets.
 
+## Deeper Community pass — 31 Aug 2026, with reasoning against AI-slop
+
+Lethabo asked for a more deliberate pass than the earlier directional check, specifically hunting for what makes a theme read as professional vs. as generic AI output, and pushed real Dribbble examples in alongside it — those are analysed in full in `04_assets/reference/REFERENCE.md`. This section is the Figma-Community half.
+
+**The AI-slop signature, named explicitly so it's checkable:** centred hero over a soft blob shape, the default purple-to-blue gradient, rounded-everything with no real hierarchy, Inter at every weight, and illustrations generic enough to belong to any product because they belong to none. Every direction below is checked against that list before it's adopted.
+
+**Search 1 — "dark mode gamified mobile app dashboard":** thin results (3 files), nothing above the AI-slop line worth citing.
+
+**Search 2 — "fintech wallet dark theme UI kit":** 28 results. **Coinpay Fintech Finance Mobile App UI kit** (1.7k likes, 128k uses — by far the strongest signal in this search) is the one worth citing: deep navy/indigo ground, white content cards in a disciplined grid, a single blue accent reserved for actions, near-zero decorative gradient. That's structurally the same discipline our own `voice-1-ember`-only-on-CTA rule already enforces — **this confirms Theme A's restraint is the professional choice, not an accident of not having gotten to decoration yet.** QPay and AiWallet (same search) lean on a heavier neon/violet-on-dark treatment — closer to the AI-slop signature (gradient-heavy, decoration standing in for hierarchy) — deliberately not cited as a direction to follow.
+
+**Search 3 — "african pattern textile app ui":** **zero results.** **Search 4 — "textile pattern background mobile app":** zero file results, one unrelated generative-pattern plugin. **This is an honest, useful finding, not a dead end:** there is no polished mainstream precedent for textile-pattern-as-app-chrome to lean on. Two consequences, stated plainly rather than papered over:
+1. The shweshwe/Ndebele pattern direction in our theme system is genuinely differentiated — not generic, which is the opposite of AI-slop by definition.
+2. There's no reference for executing it tastefully, which is real execution risk. **The mitigation is restraint**: a pattern belongs in a border, a divider, a splash/loading moment, or a low-opacity watermark — never a bold full-bleed background wash behind body text. Treat pattern-as-accent, not pattern-as-wallpaper, until there's a version of it actually screenshotted and contrast-checked.
+
 ## Next steps in Figma (not P0, pick up only if time remains)
 
 1. **Queued from today's rate limit**: the ✓ badge on Wallet-receipt's confirmation line (see above)
