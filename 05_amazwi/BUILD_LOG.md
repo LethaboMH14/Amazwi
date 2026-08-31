@@ -119,6 +119,7 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 | 31 Aug | **DISPUTES the "pre-event application code starts now" row above — no product-specific competition implementation before the event opens without written approval** | The invitation requires competition work to be done on-site by the two-person team without outside assistance, and the public terms quoted in `05_BUILD.md` require hackathon-created submissions unless organisers approve otherwise. No approval exists and no organiser email will be sent. Pre-event plans, language content, Figma work and mockups are preparation/reference only, not completed build gates or submission artifacts | Sbu |
 | 31 Aug | **⚠️ UNRESOLVED as of this merge.** The row above and the "pre-event application code starts now" row directly conflict. Lethabo made the call to start building; Sbu has not accepted it and wants it resolved directly, not by whichever commit lands last (his words, `P0.md`). Neither row is deleted per this table's append-only rule — this is not Claude's decision to arbitrate by picking a side in a merge. Flagged to Lethabo to resolve with Sbu directly before more Gate A work is built on an unsettled premise | Claude (merge note) |
 | 31 Aug ~23:37 | **Lethabo explicitly re-affirmed: proceed with Gate A/implementation work now, on his own authority as decision-maker for this call — not represented as settled with Sbu.** Asked directly whether it had been discussed with Sbu since his dispute; Lethabo did not confirm resolution, said to carry on regardless. Recorded honestly: this is Lethabo choosing to proceed while the dispute is open, not a claim that Sbu has accepted it. Sbu should still see and respond to his own disputed row above when he next reviews | Lethabo |
+| 31 Aug ~23:40 | **Lane rule loosened: both teammates' areas are fair game in this session now, as long as everything done is documented.** Supersedes the earlier "stay in Lethabo's lane, cross only on a real stopper" row — Lethabo's words: "work on the backend as well, it doesn't matter as long as we update on what we did — we all work on the same areas." The underlying discipline (document everything, never invent a money/legal/deployment decision that's Sbu's final call, flag backend work as pending his review) still applies | Lethabo |
 
 ---
 
@@ -138,6 +139,23 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 ---
 
 # LOG
+
+### [31 Aug ~23:50] — Lethabo (Sonnet, BUILD) · attempted frontend Vercel deploy, stopped mid-attempt by Lethabo
+
+**DID**
+- Attempted a Gate A frontend deploy via the connected Vercel MCP (`amazwi-frontend`, team `lethabos-projects-09c9304b`, target `preview`).
+- First attempt: created (`dpl_7eQWLTNysrAh25xPpNWLn3DiJxuA`), but the payload omitted `src/tokens.css`, which `main.tsx` imports — the build was very likely broken. Could not confirm either way: a `get_deployment` status check was blocked by the harness's own permission classifier.
+- Second attempt (with `tokens.css` included) failed outright: Vercel API 403, "You don't have permission to create a Preview Deployment for this project."
+- **Lethabo said "do not deploy to Vercel yet" mid-attempt — stopped immediately.** No further Vercel actions taken. Nothing is confirmed live.
+
+**WHY**
+- Was pursuing Gate A's "deploys" exit condition, which the frontend half can attempt independently of Sbu's backend existing.
+
+**NEXT**
+- Do not touch Vercel again without Lethabo's go-ahead. If/when resumed: include the full file set (this pass's mistake — `tokens.css` missing) and check the 403 first — likely a team-permission or plan setting, not something to route around.
+
+**BLOCKED / PING**
+- Vercel deploy is paused on Lethabo's explicit instruction, not a technical blocker alone (though the 403 was real too).
 
 ### [31 Aug, after `66becea`] — Sbu · governance and status reconciliation
 

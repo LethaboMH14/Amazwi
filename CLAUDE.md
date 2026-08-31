@@ -18,7 +18,14 @@ Lethabo decided (31 Aug) to start real competition application code before the e
 
 Do not re-derive product decisions from scratch — they are settled in the files above. Do not re-litigate a decision recorded in `BUILD_LOG.md`'s append-only decisions table without a new dated row.
 
-## The lane rule (set 31 Aug 2026, binding)
+## The lane rule — UPDATED 31 Aug 2026 ~23:40
+
+Lethabo explicitly loosened this: **"work on the backend as well, it doesn't matter as long as we update on what we did — we all work on the same areas."** Both lanes may now be worked in this session. The discipline that made the original rule matter still applies, just without the lane restriction:
+- **Document everything, always** — every real block of work still gets a full `BUILD_LOG.md` entry, same as before.
+- **Never invent a money/legal/deployment-safety decision** that's supposed to be Sbu's final call per `05_BUILD.md` §2 — build to spec, flag anything that looks like a real decision rather than mechanical implementation, for his review.
+- **Say what's provisional.** Backend work done in this session is real work, tested to the same bar as everything else, but Sbu should still review it — frame it that way in the log and in `HANDOVER_SBU.md`, not as if it's beyond question just because it's done.
+
+Original rule text, kept for context on why the discipline exists:
 
 **Lethabo owns Product, Experience and Demo** (`05_BUILD.md` §2): React/frontend, design tokens and screens, recorder/verifier/learner UX, wallet/receipt/Impact Map UI, accessibility, demo runbook, Setswana content, narrative/pitch.
 
