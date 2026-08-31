@@ -7,10 +7,9 @@
       "Never say data, corpus, annotation, task, or submission in player-facing copy. Say voice, clip, round, your turn.",
       "Never lie about money. 'Sent for payment' is not 'Paid.'"
     ],
-    "status": "English is the reviewed base language. isiZulu is a Sbu/Codex draft awaiting Sbu's final first-language approval. Setswana (Lethabo) remains null pending first-language authorship. Do not treat either language as a literal translation task.",
+    "status": "English base reviewed and stable. isiZulu drafted by Sbu/Codex, pending Sbu's own first-language approval. Setswana drafted by Lethabo's session on 31 Aug, same standing — pending Lethabo's own aloud/native check, NOT yet confirmed. Two specific term choices flagged for that check: 'klipo' (a borrowed/loan rendering of 'clip' — used in upload_network_failure and no_verifiers_available) and 'tekanyo' (used consistently for 'round' throughout — check this is the natural gaming term and not just grammatically valid).",
     "shape": "Each state has: title (one line, fits a small screen), body (one or two sentences, explains what happened and what happens next), action (the single button label — never more than one primary action on an error screen), and retryable (bool — whether the action label is a retry or a dismissal)."
   },
-
   "mic_denied": {
     "en": {
       "title": "We can't hear you",
@@ -24,9 +23,13 @@
       "action": "Zama futhi",
       "retryable": true
     },
-    "tn": null
+    "tn": {
+      "title": "Ga re go utlwe",
+      "body": "Sebatli sa gago se tlhoka tumelelo ya maekrofouno go gatisa tekanyo. Sekaseka ditlhophiso tsa sebatli sa gago mme o dumelele maekrofouno, o boe fano.",
+      "action": "Leka gape",
+      "retryable": true
+    }
   },
-
   "browser_unsupported": {
     "en": {
       "title": "This browser can't record",
@@ -40,9 +43,13 @@
       "action": "Kulungile",
       "retryable": false
     },
-    "tn": null
+    "tn": {
+      "title": "Sebatli se, ga se kgone go gatisa",
+      "body": "Go gatisa go tlhoka sengwe se sebatli se se se nang sona. Chrome le Safari mo founong ba a dira.",
+      "action": "Go siame",
+      "retryable": false
+    }
   },
-
   "upload_network_failure": {
     "en": {
       "title": "That didn't send",
@@ -56,9 +63,13 @@
       "action": "Zama futhi manje",
       "retryable": true
     },
-    "tn": null
+    "tn": {
+      "title": "Ga e a romelwa",
+      "body": "Klipo ya gago ga e a romelwa. Sekaseka kgokagano ya gago, o leke gape fa o le mo inthaneteng.",
+      "action": "Leka gape jaanong",
+      "retryable": true
+    }
   },
-
   "no_verifiers_available": {
     "en": {
       "title": "Nobody's ready to listen yet",
@@ -72,9 +83,13 @@
       "action": "Buyela namuhla",
       "retryable": false
     },
-    "tn": null
+    "tn": {
+      "title": "Ga go na yo o iketleeditseng go reetsa",
+      "body": "Re tlhoka batho ba babedi ba ba buang puo eno go utlwa klipo ya gago pele e balwa. Boa moragonyana go bona sephetho.",
+      "action": "Boela kwa gompieno",
+      "retryable": false
+    }
   },
-
   "contribution_waiting_or_expired": {
     "en": {
       "title": "Still waiting to be heard",
@@ -88,9 +103,13 @@
       "action": "Buya kamuva",
       "retryable": false
     },
-    "tn": null
+    "tn": {
+      "title": "E santse e emetse go utlwiwa",
+      "body": "Ga go na ope yo o netefaditseng se gompieno. Fa batho ba babedi ba sa se utlwe ka nako, re tla go bolelela nnete go na le go go tlogela o eme.",
+      "action": "Boa moragonyana",
+      "retryable": false
+    }
   },
-
   "consent_revoked": {
     "en": {
       "title": "Your consent is off",
@@ -104,9 +123,13 @@
       "action": "Bheka imvume",
       "retryable": false
     },
-    "tn": null
+    "tn": {
+      "title": "Tumelelo ya gago e timeditswe",
+      "body": "O e timeditse, ka jalo ga o kgone go tshameka jaanong. Mpho epe e o e setseng o e amogetse ke ya gago. E bulele nako nngwe le nngwe go tswelela pele.",
+      "action": "Sekaseka tumelelo",
+      "retryable": false
+    }
   },
-
   "campaign_empty": {
     "en": {
       "title": "No rounds right now",
@@ -120,9 +143,13 @@
       "action": "Buyela namuhla",
       "retryable": false
     },
-    "tn": null
+    "tn": {
+      "title": "Ga go na ditekanyo jaanong",
+      "body": "Ditekanyo tsa puo eno di khutsitse ka nakwana. Boa moragonyana go bona tekanyo e e latelang.",
+      "action": "Boela kwa gompieno",
+      "retryable": false
+    }
   },
-
   "provider_unavailable": {
     "en": {
       "title": "Payments are running on our test system right now",
@@ -136,9 +163,13 @@
       "action": "Qhubeka",
       "retryable": false
     },
-    "tn": null
+    "tn": {
+      "title": "Ditefo di tsamaya mo tsamaisong ya teko jaanong",
+      "body": "Sengwe le sengwe se sengwe se dira ka mokgwa o o tshwanang. Se se tlhagisitswe ka phepafalo gore go se nne le ope yo o gakanngwang ka se se leng nnete.",
+      "action": "Tswelela",
+      "retryable": false
+    }
   },
-
   "cash_out_failed": {
     "en": {
       "title": "That payout didn't go through",
@@ -152,9 +183,13 @@
       "action": "Zama futhi",
       "retryable": true
     },
-    "tn": null
+    "tn": {
+      "title": "Tuelo eo ga ea tsamaya",
+      "body": "Ga go sepe se se latlhegileng — palogo ya gago ga e a fetoga. Leka gape moragonyana fa ditefo di le teng.",
+      "action": "Leka gape",
+      "retryable": true
+    }
   },
-
   "duplicate_action_ignored": {
     "en": {
       "title": "Already done",
@@ -168,6 +203,11 @@
       "action": "Kulungile",
       "retryable": false
     },
-    "tn": null
+    "tn": {
+      "title": "Go setse go dirilwe",
+      "body": "Seo se setse se diragetse, ka jalo ga go sepe se se fetogileng lekgetlo la bobedi. Ga go na mpho e e oketsegileng, ga go na tefo e e oketsegileng.",
+      "action": "Go siame",
+      "retryable": false
+    }
   }
 }

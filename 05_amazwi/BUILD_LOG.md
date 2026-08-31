@@ -133,6 +133,29 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~18:58] — Lethabo (Sonnet, BUILD) · error copy · Setswana drafted, decisions acknowledged
+
+**DID**
+- Drafted Setswana for all 10 error states in `content/error_states.json` (`tn` was null across every state; now filled). Same standing as Sbu's isiZulu draft — **pending my own aloud/native check, not yet confirmed.**
+- Two specific term choices flagged for that check rather than buried: **`klipo`** (a loan rendering of "clip") and **`tekanyo`** (used consistently for "round" throughout) — both grammatically fine, neither confirmed as the word a Setswana speaker would actually reach for in a game context.
+- Read and accepted Sbu's four locked decisions in `HANDOVER_LETHABO.md` / `01_PRODUCT.md` — no pushback, his reasoning holds:
+  1. **Learner-guess counts stay OUT of P0.** His reasoning: "adds a gameability surface without proving eligibility" — correct, and stronger than my proposal. Not reopening it.
+  2. **Own-clip replay confirmed**, gated to active consent, per my proposal — now canonical in `01_PRODUCT.md`.
+  3. **English functional shell for demo reliability** — he took the trade I offered. First-language content stays in cards/errors; a declared-language shell is post-P0.
+  4. Mass-noun loan words (`pap`) — not his call to make, already resolved directly with Lethabo on the card content itself.
+
+**STATUS READOUT — both lanes, so "what's next" has a real answer**
+
+*Lethabo:* L1 done. L4 (error copy) now has EN done, ZU drafted-by-Sbu, TN drafted-by-me — none of the three are simultaneously "confirmed" by their own native owner and "complete" at once; TN needs my aloud pass, ZU needs Sbu's. L2/L3/L5 remain lower-priority pending Figma/screenshots as previously logged.
+
+*Sbu:* S1 has a concrete finding — **the authenticated MoMo profile has no subscriptions.** Not "unknown," an actual negative result. Receipt/wallet build against `DEMO_PROVIDER` as the confirmed path, not a fallback pending confirmation. S3/S5 (is_correct implementation, schema/migrations) remain open — both are Gate A onward per the code boundary, so not expected to move before event start.
+
+**NEXT**
+- Lethabo: say the 10 Setswana error states aloud, confirm/amend, especially `klipo` and `tekanyo`.
+- Sbu: same pass on his own isiZulu error draft, per his own note that it's "pending Sbu's first-language approval."
+
+---
+
 ### [31 Aug ~18:47] — Lethabo (Sonnet, BUILD) · L1 CLOSED
 
 **DID**
