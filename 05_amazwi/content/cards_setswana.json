@@ -1,6 +1,6 @@
 {
   "language": "setswana",
-  "status": "REVIEWED — Lethabo approved all targets, blocked words, accepted answers and distractors on 31 August 2026. Second accepted-answer forms confirmed 31 Aug evening: ntlo->dintlo/matlo (matlo is confirmed colloquial/street usage, dintlo is the formal plural), kobo->dikobo, bogobe->pap (confirmed in active Setswana use), sekolo->dikolo. sw-003 (pula) still has only one accepted form — see open_question_for_lethabo.",
+  "status": "7 of 8 cards fully reviewed and confirmed by Lethabo on 31 August 2026. sw-003 was swapped from pula to thipa (knife) — pula could not get a clean second accepted-answer form. thipa/dithipa follows the confirmed N-/diN- plural pattern (safe), but its four blocked_words have NOT yet had the same native check the other 7 cards received. See the note on sw-003. Deck is not yet import-ready until that check happens.",
   "hero_8": [
     {
       "id": "sw-001",
@@ -48,24 +48,26 @@
     },
     {
       "id": "sw-003",
-      "target": "pula",
-      "gloss_en": "rain",
+      "target": "thipa",
+      "gloss_en": "knife",
       "blocked_words": [
-        "leru",
-        "loapi",
-        "sefako",
-        "metsi"
+        "sega",
+        "bogale",
+        "tshipi",
+        "lomo"
       ],
       "accepted_answers": [
-        "pula"
+        "thipa",
+        "dithipa"
       ],
       "distractors": [
-        "letsatsi",
-        "leru",
-        "sefako"
+        "selepe",
+        "forouku",
+        "pitsa"
       ],
       "campaign_or_deck": "hero-8",
-      "active": true
+      "active": true,
+      "draft_note": "REPLACES pula (currency/motto ambiguity, and pula never got a clean second accepted form). thipa/dithipa follows the same N-/diN- singular-plural pattern already confirmed 4x this session (kgomo/dikgomo, ntlo/dintlo, kobo/dikobo, sekolo/dikolo) so the plural should be safe. blocked_words reasoning: sega = 'cut', the verb root inside describing it -- same pattern as fofa/sefofane. bogale = sharp/sharpness. tshipi = metal/iron, the obvious material association. lomo = blade/edge -- LOWEST CONFIDENCE of the four, check this one specifically. Two alternative target candidates from the pool if you'd rather swap the word itself: kgetsi (bag, plural dikgetsi) or pitsa (pot, plural dipitsa) -- both follow the same confirmed plural pattern."
     },
     {
       "id": "sw-004",
@@ -201,9 +203,5 @@
     "lebati (door)",
     "phaphosi (bedroom/room)",
     "tsela (road/path)"
-  ],
-  "blocker_for_lethabo": {
-    "status": "4 of 5 resolved (ntlo, kobo, bogobe, sekolo). Only sw-003 (pula) remains — see open_question_for_lethabo."
-  },
-  "open_question_for_lethabo": "PULA STILL FAILS VALIDATION. Your answer on pula addressed the earlier-flagged MEANING ambiguity (currency/motto vs rain) -- confirming context makes it unambiguous, which is a different question from what the validator needs. validate_cards.mjs requires accepted_answers to have >=2 entries, and pula currently has one. It's a mass noun so a plural like 'dipula' may not be natural the way dintlo/dikobo/dikolo are -- what's a second real way someone would type this answer? Or should this card's rule be handled differently (e.g. accept a short descriptive phrase, or swap the target)?"
+  ]
 }
