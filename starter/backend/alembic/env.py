@@ -1,7 +1,7 @@
 import os
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
+from sqlalchemy import create_engine
 from sqlalchemy import pool
 
 from alembic import context
@@ -21,9 +21,19 @@ if config.config_file_name is not None:
 # overrides alembic.ini's placeholder when set (tests/CI/local dev all set
 # it; alembic.ini keeps a non-functional placeholder on purpose so nobody
 # accidentally migrates a default local Postgres with no override).
+#
+# Deliberately NOT using config.set_main_option("sqlalchemy.url", ...) here
+# (the naive approach): alembic.ini is read by Python's ConfigParser, which
+# treats a bare "%" as the start of interpolation syntax. Any URL-encoded
+# password containing a special character -- e.g. "!" becomes "%21" -- then
+# crashes with "invalid interpolation syntax", a real bug this project hit
+# against an actual local PostgreSQL password (see BUILD_LOG.md). Storing
+# the URL in config.attributes instead, and building the Engine directly in
+# run_migrations_online() below, bypasses ConfigParser interpolation
+# entirely -- the URL is a plain Python string the whole way through.
 db_url = os.environ.get("AMAZWI_DATABASE_URL")
 if db_url:
-    config.set_main_option("sqlalchemy.url", db_url)
+    config.attributes["sqlalchemy_url_override"] = db_url
 
 target_metadata = Base.metadata
 
@@ -32,6 +42,10 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+
+def _resolved_url() -> str:
+    return config.attributes.get("sqlalchemy_url_override") or config.get_main_option("sqlalchemy.url")
 
 
 def run_migrations_offline() -> None:
@@ -46,7 +60,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = _resolved_url()
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -65,11 +79,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    connectable = create_engine(_resolved_url(), poolclass=pool.NullPool)
 
     with connectable.connect() as connection:
         context.configure(

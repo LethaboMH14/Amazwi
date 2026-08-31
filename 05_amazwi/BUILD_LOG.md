@@ -140,6 +140,32 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [01 Sep ~02:15] — Lethabo (Sonnet, BUILD) · real local Postgres validation found and fixed a genuine alembic bug
+
+**⚠️ Security note, stated plainly:** the user's local PostgreSQL password was shared in this session so the suite could be tested against their real install. It is not committed anywhere in the repo (only ever passed as an environment variable), but it did appear in this conversation's transcript. The user was advised to rotate that password once this session's work is done.
+
+**DID**
+- User set `AMAZWI_TEST_DATABASE_URL` via `setx` pointing at their real local PostgreSQL 18 (port 5432, installed this session) and asked for it to be validated. First attempt failed on `password authentication failed` — traced to a literal `<...>` placeholder left around the password in the stored value; corrected with a plain `setx`.
+- Re-ran the suite against the real local instance: auth succeeded, but hit a genuine, previously-undiscovered bug — 3 migration tests failed with a ConfigParser interpolation error: `invalid interpolation syntax in 'postgresql://postgres:<redacted>%21@localhost:5432/postgres' at position 35`. Root cause: `alembic/env.py` was calling `config.set_main_option("sqlalchemy.url", db_url)`, and `alembic.ini` is read by Python's `ConfigParser`, which treats a bare `%` as the start of interpolation syntax. The user's real password contains `!`, which SQLAlchemy URL-encodes as `%21` — a completely ordinary password character that nonetheless broke config parsing. This is exactly the kind of bug that only a REAL password with a special character would surface: the embedded `pgserver` test DB uses an auto-generated password with no such characters, so all of tonight's earlier "61/61 passing" claims were accurate for the path actually exercised, but never touched this code path until now.
+- Fixed `alembic/env.py`: instead of writing the URL into the ConfigParser-backed `sqlalchemy.url` option, the override is now stored in `config.attributes` (a plain Python dict Alembic also exposes, entirely bypassing ConfigParser) and the Engine is built directly with `create_engine()` rather than `engine_from_config()`. The URL is now a plain string the whole way through, never re-parsed by ConfigParser.
+- Verified properly this time: ran bare `pytest -v` (not `python -m pytest`, matching the earlier CI-fix discipline) against the real local Postgres — **61 passed.** Then ran BOTH paths (embedded pgserver, and the real local Postgres) in isolated subprocess environments in the same script, to rule out any shell-state bleed-through: **61/61 on each path independently.**
+- Caught and fixed one more small bug surfaced during that isolated-subprocess check: clearing the env var with `set VAR=` in this shell left a whitespace-only value rather than truly unsetting it, which `conftest.py`'s `if _EXTERNAL_DB_URL:` treated as truthy, producing an unhelpful `Could not parse SQLAlchemy URL from string ' '`. Hardened `conftest.py` to `.strip()` and treat blank as unset.
+- Noted for the record: the real local Postgres is measurably faster for this suite than the embedded server (15s vs 83s for the full 61-test run) — worth considering as the default local dev path going forward, not just a CI-parity check.
+
+**WHY**
+- This is the second time tonight that testing against a REAL external system (first `gh`'s actual CI logs, now a real password with a special character) surfaced a bug that every prior local-only verification missed, because the auto-generated/synthetic values used in local testing happened not to exercise the actual failure path. Recording this pattern explicitly: synthetic test credentials/URLs are not a substitute for testing against something a real user actually has, even when the code being tested has nothing to do with authentication per se.
+
+**CHANGED**
+- `starter/backend/alembic/env.py` — URL override now bypasses ConfigParser entirely via `config.attributes`.
+- `starter/backend/tests/conftest.py` — blank/whitespace env var now correctly treated as unset.
+
+**NEXT**
+- User: please rotate the local PostgreSQL password shared in this session, now that its purpose (validating this fix) is done.
+- Push, then confirm via `gh run watch` that CI is still green after this change (it should be unaffected — CI's own auto-generated `postgres:postgres` service-container password has no special characters either, so this bug was never visible there, only against the user's real credential).
+
+**BLOCKED / PING**
+- None.
+
 ### [01 Sep ~02:00] — Lethabo (Sonnet, BUILD) · CI confirmed green via `gh run watch`, directly observed
 
 **DID**

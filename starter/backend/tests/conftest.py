@@ -38,7 +38,12 @@ from app.models import Base
 
 _PGDATA = Path(__file__).parent / ".pgdata_test"
 
-_EXTERNAL_DB_URL = os.environ.get("AMAZWI_TEST_DATABASE_URL")
+# .strip() so a blank-but-set env var (e.g. a shell's "set VAR=" leaving an
+# empty or whitespace-only value, observed while testing this fixture
+# against a real local Postgres) is treated as unset, not as a truthy
+# empty/whitespace URL that then fails deep inside SQLAlchemy's URL parser
+# with an unhelpful "Could not parse SQLAlchemy URL from string ' '".
+_EXTERNAL_DB_URL = (os.environ.get("AMAZWI_TEST_DATABASE_URL") or "").strip() or None
 
 
 @pytest.fixture(scope="session")
