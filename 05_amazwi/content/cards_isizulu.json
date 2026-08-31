@@ -1,0 +1,94 @@
+{
+  "language": "isizulu",
+  "status": "DRAFT — targets and singular/plural policy confirmed by Sbu on 31 August 2026; blocked words and distractors still require his spoken native-review pass.",
+  "hero_8": [
+    {
+      "id": "zu-001",
+      "target": "indiza",
+      "gloss_en": "airplane",
+      "blocked_words": ["ndiza", "isibhakabhaka", "uhambo", "inkundla"],
+      "accepted_answers": ["indiza", "izindiza"],
+      "distractors": ["imoto", "itekisi", "isitimela"],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "confidence": "DRAFT — target accepted; review blocked words and distractors aloud"
+    },
+    {
+      "id": "zu-002",
+      "target": "inkomo",
+      "gloss_en": "cow / cattle",
+      "blocked_words": ["ubisi", "ilobolo", "inyama", "izimpondo"],
+      "accepted_answers": ["inkomo", "izinkomo"],
+      "distractors": ["imbuzi", "imvu", "ihhashi"],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "confidence": "DRAFT — target accepted; confirm ilobolo is a fair blocked word"
+    },
+    {
+      "id": "zu-003",
+      "target": "imvula",
+      "gloss_en": "rain",
+      "blocked_words": ["amafu", "isibhakabhaka", "amanzi", "manzi"],
+      "accepted_answers": ["imvula", "izimvula"],
+      "distractors": ["iqhwa", "ilanga", "umoya"],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "confidence": "DRAFT — target accepted; review blocked words and distractors aloud"
+    },
+    {
+      "id": "zu-004",
+      "target": "indlu",
+      "gloss_en": "house",
+      "blocked_words": ["phila", "uphahla", "amakamelo", "lala"],
+      "accepted_answers": ["indlu", "izindlu"],
+      "distractors": ["ikamelo", "isitolo", "isikole"],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "confidence": "DRAFT — target accepted; review blocked words and distractors aloud"
+    },
+    {
+      "id": "zu-005",
+      "target": "amanzi",
+      "gloss_en": "water",
+      "blocked_words": ["phuza", "umfula", "imvula", "geza"],
+      "accepted_answers": ["amanzi", "amanzi okuphuza"],
+      "distractors": ["ubisi", "utshwala", "ijusi"],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "confidence": "DRAFT — amanzi has no ordinary singular pair; confirm the descriptive second answer is acceptable"
+    },
+    {
+      "id": "zu-006",
+      "target": "ingubo yokulala",
+      "gloss_en": "sleeping blanket",
+      "blocked_words": ["fudumala", "lala", "embesa", "iwuli"],
+      "accepted_answers": ["ingubo yokulala", "izingubo zokulala"],
+      "distractors": ["ijezi", "ilokwe", "indwangu"],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "confidence": "DRAFT — target selected by Sbu; review blocked words and distractors aloud"
+    },
+    {
+      "id": "zu-007",
+      "target": "uphuthu",
+      "gloss_en": "maize porridge / pap",
+      "blocked_words": ["ummbila", "inyama", "umlaza", "pheka"],
+      "accepted_answers": ["uphuthu", "iphalishi"],
+      "distractors": ["isijingi", "irayisi", "imifino"],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "confidence": "DRAFT — uphuthu and iphalishi accepted by Sbu; confirm they are equivalent enough for this card"
+    },
+    {
+      "id": "zu-008",
+      "target": "isikole",
+      "gloss_en": "school",
+      "blocked_words": ["uthisha", "abafundi", "izincwadi", "funda"],
+      "accepted_answers": ["isikole", "izikole"],
+      "distractors": ["indlu", "ibhange", "isonto"],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "confidence": "DRAFT — target accepted; review blocked words and distractors aloud"
+    }
+  ]
+}
