@@ -399,3 +399,19 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 - Six corrections listed in `HANDOVER_LETHABO.md`. No expansion idea is competition scope.
 
 *(Entry reconstructed from Sbu's commit and handover — Sbu, overwrite with your own if the detail is wrong.)*
+
+### [31 Aug ~17:15] — Sbu · Platform readiness review
+
+**DID**
+- Audited the MoMo research, provider boundary, receipt currency disclosure and Gate A constraints.
+- Confirmed that Collections and Disbursements remain external portal questions; no credentials or sandbox calls were made from the repo.
+- Added `SBU_PLATFORM_RUNBOOK.md` with the capability decision record and safe fallback rules.
+- Added `ORGANISER_EMAIL_DRAFT.md` covering pre-build permission, Mini App bridge/CSP, payment products, currency, callbacks and IP clarification.
+- Replaced error copy that promised offline storage, automatic notifications, automatic retries or an unverified content cadence.
+- Verified the generic starter: backend 2/2 tests, frontend 7/7 tests, TypeScript check and production build all pass.
+
+**OPEN / HANDOVER**
+- S1: Sbu must check the authenticated MoMo portal and record Collections/Disbursement availability, currency and provider mode.
+- S2: Sbu must author eight native-reviewed isiZulu cards; no synthetic translations are accepted.
+- S6: Sbu must send the organiser draft and commit the written reply before any product-specific pre-build code.
+- Gate A: both teammates keep `starter/` generic until written organiser approval or the event begins.

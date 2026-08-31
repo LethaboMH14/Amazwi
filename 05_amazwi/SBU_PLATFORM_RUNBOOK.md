@@ -4,6 +4,16 @@ Use this alongside `P0.md`, `plan/02_TECH.md` and `plan/05_BUILD.md`. It is a de
 
 ## S1 — MoMo readiness
 
+### Current status (31 August 2026)
+
+- Portal capability: **UNKNOWN — requires an authenticated team-account check**.
+- Collections: **NOT YET CONFIRMED for the event sandbox**.
+- Disbursements: **NOT YET CONFIRMED; South African production-style disbursement is not assumed available**.
+- Provider mode: keep `DEMO_PROVIDER` as the safe fallback until the portal result is recorded.
+- Settlement currency: do not display a provider currency until the portal test confirms it; the documented generic sandbox expectation is EUR and must not be presented as a South African guarantee.
+
+Record the final outcome in `BUILD_LOG.md` with the date, product, environment and provider mode. Never record credentials or full phone numbers.
+
 1. Sign into the MoMo developer portal using the team account.
 2. Confirm whether **Collections** and **Disbursements** are separately subscribable for the hackathon sandbox.
 3. Open the in-portal API reference and testing page. Record only the capability outcome in `BUILD_LOG.md`: available, unavailable, or unknown.
