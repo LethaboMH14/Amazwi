@@ -2,6 +2,12 @@
 
 **Current entry:** AMAZWI, Track 2 (Entertainment & Lifestyle), Team Sonar (Sbu + Lethabo). `MASTER_CONTEXT.md` at this root is **historical** (UMOYA/Track 1 exploration, superseded) — ignore it for current work.
 
+## ⚠️ Read this before anything else: an unresolved disagreement between the two teammates
+
+Lethabo decided (31 Aug) to start real competition application code before the event, superseding `05_BUILD.md` §1's wait-for-approval rule — see `05_amazwi/BUILD_LOG.md`'s decisions table. **Sbu has since recorded, in the same table and in `P0.md`, that he disputes this** and has not accepted it: his position is that the invitation requires the build to happen on-site by the two-person team, the public terms require hackathon-created work absent organiser approval, and pre-event code/mockups/plans are preparation only, not build-gate progress. Both positions are preserved in `BUILD_LOG.md` — neither was deleted or overwritten, and it is explicitly **not Claude's call to arbitrate by picking a side in a merge.**
+
+**If this is still unresolved when a new session starts:** say so plainly to the user before doing more Gate A / competition-implementation work, and ask whether it's been settled with Sbu since. Continuing to build as if Lethabo's view already won, without checking, would be building on a premise one of the two people who has to submit this doesn't accept. Content work, design-system work, and anything already framed as "preparation/reference, not a build gate" (per Sbu's own framing) is not in dispute and can continue regardless.
+
 ## Read in this order, every new session
 
 1. **This file** — the rules below.
@@ -37,7 +43,9 @@ This is not a lower-effort resumption — match what was already happening:
 
 ## What's already done — don't redo it
 
-As of 31 Aug 2026: L1 (Setswana cards), L2/L3 (Figma design system + craft-pass mockups), L4 (error copy), L5 (deck skeleton + demo script), all of `05_amazwi/LETHABO_NEXT_WORK.md`'s items 1–6 (content fixes, stale-mockup reconciliation, five hero screens, real tokens.css theme switching, accessibility evidence — including a keyboard-reachability gap found *and fixed*), and Gate A's Lethabo-half start (routing, tokens wired into the real frontend, an honest Mini-App/browser-mode label, all tested). Full detail and exact commit-by-commit record in `BUILD_LOG.md`.
+As of 31 Aug 2026, the actual work exists regardless of the disagreement above — what's contested is only whether it counts as *competition build-gate progress* yet, not whether it happened: L1 (Setswana cards, one open item — see below), L2/L3 (Figma design system + craft-pass mockups — Sbu's framing: reference/preparation, recreate on-site), L4 (error copy), L5 (deck skeleton + demo script — Sbu's framing: skeleton only, real screenshots needed on-site), all of `05_amazwi/LETHABO_NEXT_WORK.md`'s items 1–6 (content fixes, stale-mockup reconciliation, five hero screens, real tokens.css theme switching, accessibility evidence — including a keyboard-reachability gap found *and fixed*), and Gate A's Lethabo-half start (routing, tokens wired into a real frontend, an honest Mini-App/browser-mode label, all tested) — **this last one is exactly what Sbu's dispute above is about.** Full detail and exact commit-by-commit record in `BUILD_LOG.md`.
+
+**Still open, not disputed by either side:** L1's four replacement distractors (`moraka`/`jusi`/`ting`/`diphaphatha` in `cards_setswana.json`) need Lethabo's own native read-aloud confirmation before the deck is fully signed off — flagged as a warning by `validate_cards.mjs`, not an error.
 
 **L6 (rehearsal) is deliberately deferred** — Lethabo's call: "we will do L6 later after everything is built." Don't restart it until asked.
 
