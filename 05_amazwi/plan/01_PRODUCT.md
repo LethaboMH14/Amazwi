@@ -140,7 +140,7 @@ Card rules:
 - accepted answers are curated by the first-language owner;
 - illustrations appear only for the speaker if they do not reveal the answer;
 - no listener illustration may leak the target;
-- neutral functional shell labels—Speak, Listen, Wallet, Impact—keep isiZulu and Setswana co-equal.
+- the competition demo uses a reviewed English functional shell for reliability; first-language cards and error copy remain language-specific. A declared-language shell is a post-P0 improvement once both language packs are complete.
 
 Future **MoMo Moments** cards elicit domain-specific intent labels such as buy airtime, send money or check a balance. They are roadmap, not required for the core demo.
 
@@ -209,6 +209,8 @@ Consent scopes:
 
 Scope 4 is off by default and not implemented.
 
+The receipt may offer the contributor a private replay of their own clip only while recording consent remains active. It is not public playback, does not create an archive, and disappears when consent is revoked.
+
 Revocation:
 
 - blocks new contributions until fresh consent;
@@ -231,6 +233,7 @@ Competition gamification stays light:
 - no “you lost” state;
 - no cash or prizes attached to ranking;
 - no chance mechanics, loot boxes, spin or paid entry.
+- learner MCQ earns XP only. Do not show learner-guess counts to speakers in P0; they add a gameability surface without proving eligibility.
 
 IRT, Elo, adaptive difficulty and proficiency credentials are roadmap research, not competition features. The complete evidence remains in `../research/F_GAMIFICATION.md`.
 

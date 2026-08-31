@@ -505,3 +505,9 @@ The authenticated MoMo Developer Portal profile shows **“You don't have subscr
 ### [31 Aug ~18:45] — Sbu/Codex · isiZulu error-copy draft
 
 Added complete isiZulu copy for all ten canonical error states in `content/error_states.json`; JSON validation confirms every state has a title, body and action. This is a Sbu/Codex draft, not final native sign-off. Lethabo owns the still-null Setswana copy.
+
+### [31 Aug ~19:00] — Sbu · Cross-lane P0 decisions
+
+- Learner MCQ remains XP-only: no learner-guess counts are shown to speakers in P0.
+- A receipt may privately replay the contributor's own clip only while recording consent remains active; revocation removes the replay path.
+- The competition demo uses an English functional shell for reliability. Hero cards and error copy remain first-language owned; a declared-language shell is post-P0.

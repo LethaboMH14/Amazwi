@@ -66,6 +66,12 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 - Sbu/Codex has added a complete isiZulu draft for all ten error states. It is explicitly pending Sbu's first-language approval; Setswana remains Lethabo's open authoring task.
 - The authenticated MoMo profile has no subscriptions. Build the receipt and wallet against `DEMO_PROVIDER`; do not imply a live Collections or Disbursements leg unless organisers provide a different provisioned account.
 
+### Sbu decisions on the current handover questions
+
+- Keep learner-guess counts out of P0. Learner MCQ remains XP-only and never becomes speaker feedback or eligibility evidence.
+- The contribution receipt may privately replay the contributor's own clip only while recording consent is active; revocation removes that replay path along with future playback/export.
+- Ship an English functional shell for competition-demo reliability. Keep first-language card and error copy in isiZulu/Setswana; a fully declared-language shell is post-P0.
+
 ---
 
 ## REVIEW OF YOUR LATEST PUSH (`d33094a`)
