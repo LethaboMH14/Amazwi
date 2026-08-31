@@ -100,6 +100,19 @@ Where I stopped, keep going. Obvious next moves:
 
 ---
 
+## LINKS — everything visual lives here
+
+| | Link |
+|---|---|
+| **App mockups** (10 screens) | https://claude.ai/code/artifact/889d9d01-823d-4a84-bd00-7d6e88007903 |
+| **Theme directions** (4 grounds — we are still choosing) | https://claude.ai/code/artifact/3b464f09-c6da-4e97-a831-729d1df53f0d |
+| **Figma design system** (38 variables, 5 collections) | https://www.figma.com/design/JPZuFmbhRh9fhkgBLxRymq |
+
+⚠️ **The two canvases are private by default.** Lethabo: open each one and use the page's **share menu** to give Sbu access — I cannot share them from here.
+⚠️ **The mockups are not finished** — three screens are crafted, seven are wireframes. See [`04_assets/mockups/REFINEMENT_BRIEF.md`](04_assets/mockups/REFINEMENT_BRIEF.md).
+
+---
+
 ## THE SIX DECISIONS THAT NEED BOTH OF US
 
 Full detail in the README. In short:
