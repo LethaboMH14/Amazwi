@@ -131,6 +131,33 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~16:00] — Lethabo (Sonnet, BUILD) · G0 · host bridge
+
+**DID**
+- Built `starter/frontend/src/hostBridge.ts` — same adapter pattern as `provider.py`: a `HostBridge` interface, `StandaloneBridge` (no-op) and `CommunityDocBridge` (real keep-alive heartbeat).
+- 7 tests in `hostBridge.test.ts` (vitest + jsdom): START_JOURNEY handoff, 45s heartbeat interval, `notify('DONE')` actually stops it, `stop()` actually removes the listener.
+- Wired vitest into `package.json`/`vitest.config.ts`, extended `.github/workflows/ci.yml` with a frontend job (test + strict typecheck).
+- `App.tsx` now shows host-bridge mode alongside backend status — still generic, no AMAZWI concept.
+
+**WHY built now, and why as an adapter, not a hard integration**
+- `carry on start building` was the instruction, but S3/S4's own log entry holds a real line: organiser approval on pre-built code is still open (#3), so anything checked in has to be generic scaffolding, not AMAZWI application logic. The heartbeat is genuinely generic — it's a mini-app-shell requirement, not specific to what AMAZWI's game does — so it's on the safe side of that line the way `DemoProvider` is.
+- Built as a swappable adapter, deliberately not a hard dependency, because `02_TECH.md` itself flags the wire protocol as unverified community documentation, not a confirmed spec. `CommunityDocBridge` is a labelled best-guess — the real behaviour gets confirmed with mentors on day one and swaps in without touching anything that calls `HostBridge`.
+
+**VERIFIED, not just written** — ran everything before claiming it works:
+- `pytest` in a clean venv (not reusing an environment that might mask a missing dependency): **2/2 pass**
+- `npm test` (vitest): **7/7 pass**
+- `npx tsc -b --noEmit`: caught a real type error first pass (`StandaloneBridge.notify()`'s signature didn't match the interface) — fixed, then clean
+- `npm run build`: succeeds, 144.5KB JS / 46.6KB gzipped
+
+**CHANGED**
+- `.gitignore` — added `*.tsbuildinfo`, `dist/`, `.vite/` (build artifacts were about to get committed)
+- `starter/README.md` — documents the host bridge and the verification run
+
+**NEXT**
+- Mockup work (v1/v2 iteration) is paused — Figma owns final visual design per today's direction. `content/cards_setswana.json` (L1) is still the real bottleneck and still needs your native-speaker pass, not mine.
+
+---
+
 ### [31 Aug 15:00] — Sbu · TOP/high · Canonical-scope review
 
 **DID**
