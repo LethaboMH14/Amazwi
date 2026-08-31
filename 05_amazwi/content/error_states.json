@@ -36,7 +36,7 @@
   "upload_network_failure": {
     "en": {
       "title": "That didn't send",
-      "body": "Your clip is saved on this phone. We'll send it the moment you have signal again.",
+      "body": "Your clip was not sent. Check your connection, then try again while you are online.",
       "action": "Retry now",
       "retryable": true
     },
@@ -47,7 +47,7 @@
   "no_verifiers_available": {
     "en": {
       "title": "Nobody's ready to listen yet",
-      "body": "We need two people who speak this language to hear your clip before it counts. That can take a little while — we'll let you know.",
+      "body": "We need two people who speak this language to hear your clip before it counts. Check back later to see the result.",
       "action": "Back to today",
       "retryable": false
     },
@@ -80,7 +80,7 @@
   "campaign_empty": {
     "en": {
       "title": "No rounds right now",
-      "body": "This language's rounds are paused for the moment. Check back soon — new ones are added often.",
+      "body": "This language's rounds are paused for the moment. Check back later for the next round.",
       "action": "Back to today",
       "retryable": false
     },
@@ -102,7 +102,7 @@
   "cash_out_failed": {
     "en": {
       "title": "That payout didn't go through",
-      "body": "Nothing was lost — your balance is unchanged. Try again, or wait a moment and we'll retry for you.",
+      "body": "Nothing was lost — your balance is unchanged. Try again later when payments are available.",
       "action": "Try again",
       "retryable": true
     },

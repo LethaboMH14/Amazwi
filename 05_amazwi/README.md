@@ -25,6 +25,9 @@ The earlier plan was reconciled after Sbu's review. Read the canonical documents
 | 10 | [09_MOCKUP_LIBRARY.md](plan/09_MOCKUP_LIBRARY.md) | Design-reference library, not product scope |
 | **11** | [10_SBU_REVIEW.md](plan/10_SBU_REVIEW.md) | Accepted decision overlay and rationale |
 | Roadmap | [11_EXPANSION.md](plan/11_EXPANSION.md) | Roadmap ideas and design/tooling notes; not competition scope and subject to the critique in `HANDOVER_LETHABO.md` |
+| Execution | [P0.md](P0.md) | Current ownership allocation and gate summary; not a timeline |
+| Sbu runbook | [SBU_PLATFORM_RUNBOOK.md](SBU_PLATFORM_RUNBOOK.md) | MoMo, trust and platform checklist with no secrets |
+| Organiser draft | [ORGANISER_EMAIL_DRAFT.md](ORGANISER_EMAIL_DRAFT.md) | Questions required before product-specific pre-event work |
 
 Evidence lives in [`research/`](research/). All seven research files are present, including source-graded gamification work in [`F_GAMIFICATION.md`](research/F_GAMIFICATION.md).
 

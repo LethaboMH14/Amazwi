@@ -2,7 +2,7 @@
 
 **From:** Sbu
 **Date:** Monday 31 August 2026
-**Based on:** Lethabo's handover through repository commit `9653725`
+**Based on:** Lethabo's handover and build-log updates through repository commit `4cfbd92`
 
 ---
 
@@ -17,6 +17,28 @@ I accept the describe-and-guess reframe. I also accepted a narrower, judge-defen
 > **Speak. Be understood. Earn.**
 
 Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MASTER_PLAN.md`](05_amazwi/plan/00_MASTER_PLAN.md). Those now contain the accepted source of truth.
+
+---
+
+## REVIEW OF CURRENT BUILD PROGRESS (`4cfbd92`)
+
+### Accepted
+
+- S1 is correctly marked as Sbu's first external decision: preserve the sandbox-call budget, prove only an available leg, and label the fallback.
+- Gate B is now honestly described as a seeded, pre-resolved fixture; Gate E remains the first live verification proof.
+- The generic host bridge is an adapter with an explicit unverified-protocol label, and the content schema rejects under-filled hero cards.
+- The P0 list now uses canonical gates, safe accepted-answer matching and the sponsored-mission pilot economics.
+
+### Corrections made by Sbu
+
+- `error_states.json` no longer promises offline clip storage, automatic notification, automatic payment retry or an unverified content-release cadence. Those promises contradicted the no-offline/no-durable-worker P0.
+- The current handover base is updated to the latest reviewed commit. Continue logging a concise PING whenever a cross-lane contract changes; the build log is active context, not a substitute for reconciling the canonical documents.
+
+### Your next dependencies
+
+1. Finish the Setswana hero-eight native review: four blocked words, at least two accepted answer variants, three distractors and a play-aloud check per card.
+2. Keep `zu`/`tn` error-copy fields null until each first-language owner writes them; do not literal-translate the English base.
+3. Do not wire AMAZWI-specific screens/content into `starter/` until the organiser’s pre-build answer permits it.
 
 ---
 
