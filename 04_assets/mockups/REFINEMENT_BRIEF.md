@@ -66,9 +66,9 @@ Give it the `.dc.html` source, the craft layer above, and the constraints in §4
 
 **`Consent`** — the least interesting screen doing the most important job. Ask for: an illustrated header (a waveform becoming a shield, or similar), toggle rows with real depth and a satisfying on-state, and a visual distinction between the three required items and the two optional ones.
 
-**`Listen`** — needs tension. It is a timed guessing game and currently looks like a form. Ask for: a playback control that feels tactile, a waveform that shows played-vs-remaining progress, answer options with real press states, and a countdown.
+**`Listen`** — needs tension. It is the MCQ learner game, not a validation screen. Ask for: a playback control that feels tactile, a waveform that shows played-vs-remaining progress, answer options with real press states, a countdown, and a visible XP-only/non-validation note.
 
-**`Referee`** — the most important screen in the product and currently the flattest. Ask for: a clear two-part composition (reveal on top, the referee question as a distinct raised panel below), and a Yes/No pair that reads as a genuine decision rather than two buttons.
+**`Referee`** — the most important screen in the product and currently the flattest. Ask for: a clear two-part composition (the verifier's locked free-text answer on top, reveal and referee question below), and a Yes/No pair that reads as a genuine decision. Do not show the other verifier's answer before this vote.
 
 **`Wallet`** — deliberately restrained, but restraint is not flatness. Ask for: a hero balance card with real material, three genuinely distinct state treatments, and a small sparkline of the week. **Keep it boring. No gradient on the numbers.**
 
@@ -76,7 +76,7 @@ Give it the `.dc.html` source, the craft layer above, and the constraints in §4
 
 **`League`** — the biggest opportunity. Ask for: tier badge iconography, avatars on every row, a promotion zone that visibly glows, and the user's row raised above the others. **No losing state, no national last place.**
 
-**`Archive`** — should be the most beautiful screen. Ask for: the South Africa dot field with depth and glow, dots that vary in size and warmth by density, and story-chain cards with real cover artwork. This is the closing image of the pitch.
+**`Archive`** *(filename retained; screen is now Impact Map)* — should be the most beautiful screen. Ask for: a South Africa aggregate dot field with depth and glow, broad language/campaign totals and funds remaining. No public clip playback, story chains, names or exact locations. This is the closing image.
 
 ---
 
@@ -93,10 +93,13 @@ Paste this block into the prompt.
 - 390×844 phone frame. NO fake status bar — the real one renders on top.
 - Hit targets never below 44px.
 - Two listeners, never three.
+- MCQ is learner gameplay and XP only; two proficient free-text verifiers decide eligibility.
+- Listeners/verifiers do not receive cash in the competition build.
 - The LISTENER referees the banned-word rule, never the speaker.
 - Money screens never say "paid" before the provider confirms.
 - The league has no losing state and no national last place.
 - No randomised/chance mechanics anywhere — SA regulatory constraint.
+- No public raw-audio archive or named attribution. The public map is aggregate.
 - Never generate images of South African people. Illustration, type and texture only.
 - Target ≤200KB first paint: CSS and inline SVG, no image assets, no libraries.
 ```

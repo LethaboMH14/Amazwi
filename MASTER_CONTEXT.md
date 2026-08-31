@@ -1,4 +1,6 @@
 # MASTER CONTEXT — MoMo Mini App Hackathon 2026
+> **Historical exploration only.** UMOYA and the three-track decision predate the selected AMAZWI entry. For the current source of truth, start at [`05_amazwi/README.md`](05_amazwi/README.md) and [`05_amazwi/plan/00_MASTER_PLAN.md`](05_amazwi/plan/00_MASTER_PLAN.md). Do not use this file to assign Team Sonar roles or competition scope.
+
 **Owner:** Lethabo · **Last updated:** 2026-08-15 (Session 3) · **Status:** ✅ **UMOYA LOCKED** (Track 1). Two sibling entries designed for Tracks 2 & 3. Rule clarification pending.
 
 > **New chat? Read this file first, then `02_ideas/THE_THREE_ENTRIES.md` and `02_ideas/MOONSHOTS.md`, then `01_research/RESEARCH_BRIEF.md`.**

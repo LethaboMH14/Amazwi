@@ -1,17 +1,57 @@
 # AMAZWI — RED TEAM
-### Adversarial review of `plan/00`–`07` · written 2026-08-31 · ranked most severe first
+### Adversarial review of `plan/00`–`07` · written 2026-08-31 · historical findings plus accepted second pass
 
 > Every number below is computed from the plan's own stated inputs, not asserted.
 > Each item is a thing that breaks, the file and section it breaks in, and a fix sized
 > for the time actually remaining.
 
+> **Status note:** R1–R23 below document the first plan and remain useful history, but their line references and some fixes were superseded when Team Sonar accepted `10_SBU_REVIEW.md`. The canonical product, technical, business, build and pitch contracts are now `00`–`07`. Do not reintroduce a removed feature merely because an older R-item proposed it.
+
 ---
 
-## THE SINGLE QUESTION YOU CANNOT ANSWER
+## THE TWO QUESTIONS THE SECOND PASS FIXED
 
-> **"You've just told us no system on earth transcribes isiZulu. So how does your app know the speaker didn't just say the word?"**
+> **“Where is the transcript?”**
 
-Eight seconds to ask. It attacks the pitch's most honest beat (`06_PITCH.md` §3 at 2:30, `02_TECH.md` §5.1) and turns it into the thing that kills the mechanic. Answer it before it is asked — fix R1.
+There is none. The game produces a peer-verified semantic or intent label, not the words spoken verbatim. The revised plan no longer prices this as an ASR-ready hour or claims direct speech-to-text training readiness.
+
+> **“Does a correct guess prove the clip is in the declared language?”**
+
+No. It proves two assigned proficient listeners recovered the intended concept. The revised plan stores declared language and human evidence but requires an additional language-quality stage before governed export.
+
+---
+
+# ACCEPTED SECOND-PASS FINDINGS
+
+## R24 · Semantic label was being sold as an ASR transcript
+
+**Attack.** A buyer asks for the text aligned to each clip. The system has only the card target, so the “validated ASR hours” margin disappears.
+
+**Accepted fix.** `00_MASTER_PLAN.md`, `01_PRODUCT.md`, `02_TECH.md`, `03_BUSINESS.md` and `06_PITCH.md` now call the output **elicited spontaneous speech with a peer-verified semantic or intent label**. Transcription and ASR training are downstream curation. The first offer is a sponsored mission per accepted semantic contribution, with a future MoMo Moments intent deck.
+
+## R25 · Learner gameplay and proficient verification were one ambiguous population
+
+**Attack.** Random four-option agreement validates gibberish; a beginner cannot reliably referee blocked words in a language they are learning.
+
+**Accepted fix.** MCQ produces `PLAYED` and XP only. Two proficient free-text matches produce `UNDERSTOOD`; quality and active consent produce `CORPUS_ELIGIBLE`. Only proficient verifiers referee the rule.
+
+## R26 · Permanent, named, public and revocable cannot coexist
+
+**Attack.** Raw voice plus name/place creates identification risk, while “permanent” contradicts withdrawal.
+
+**Accepted fix.** Raw voice is private by default. The public visual is an aggregate Impact Map. Public audio/attribution would require separate opt-in consent and moderation and is not built. Revocation retires audio while retaining a non-audio audit tombstone and financial record.
+
+## R27 · Per-clip instant payout is operationally weaker than ledger credit
+
+**Attack.** Minimum amounts, fees and South African disbursement access may make R2 provider transfers impossible or uneconomic.
+
+**Accepted fix.** Reward credit is immediate in the AMAZWI ledger; MoMo cash-out happens at a transparent viable threshold. Provider state is never overstated. Collections is the preferred real sandbox proof if enabled; other legs may use a labelled demo provider.
+
+## R28 · The scope still described a company, not a two-person build
+
+**Attack.** IRT/Elo, proficiency, ML, public archive, multiple modes, paid listeners, nationwide matching and many services compete with the only loop judges can score.
+
+**Accepted fix.** Competition P0 is one recording, two proficient verifiers, one eligibility decision, one reward, one provider state, one receipt and deterministic reset. Everything else is cut or P1.
 
 ---
 

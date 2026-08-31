@@ -1,152 +1,133 @@
 # AMAZWI — Team Sonar · Track 2 · MoMo Mini App Hackathon 2026
 
-**Event:** Wed 2 Sept 09:30 → Thu 3 Sept 12:00 (26.5 hours) · The Forum, Bryanston
-**Prep remaining:** Monday 31 Aug + Tuesday 1 Sept
-**Team:** Lethabo + Sbu · **Track:** Entertainment & Lifestyle
+**Team:** Sbu + Lethabo
+**Languages:** isiZulu + Setswana
+**Track:** Entertainment & Lifestyle
+**Status:** planning and mockups only; no competition application is built.
 
 ---
 
 ## START HERE
 
-Read in this order. `00_MASTER_PLAN.md` is the spine; everything else is subordinate detail.
+The earlier plan was reconciled after Sbu's review. Read the canonical documents in this order:
 
-| | File | What it is |
+| # | File | Purpose |
 |---|---|---|
-| **1** | [00_MASTER_PLAN.md](plan/00_MASTER_PLAN.md) | **The decision.** What changed and why, the product, the thesis for MTN, what we are not building |
-| 2 | [01_PRODUCT.md](plan/01_PRODUCT.md) | Game design, the scoring model, every screen, gamification, the daily cap, inclusion |
-| 3 | [02_TECH.md](plan/02_TECH.md) | Architecture, data model, AI engineering, the data pipeline, security by design |
-| 4 | [03_BUSINESS.md](plan/03_BUSINESS.md) | Unit economics, pricing, the five buyers, how MTN makes money |
-| 5 | [04_DESIGN.md](plan/04_DESIGN.md) | Visual system, motion, sound, 3D, the mockup pipeline |
-| 6 | [05_BUILD.md](plan/05_BUILD.md) | **Most urgent.** The two prep days, the 26.5-hour gate schedule, packing list |
-| 7 | [06_PITCH.md](plan/06_PITCH.md) | Stage choreography, script, slides, judge Q&A, failure plan |
-| 8 | [07_TRUTH.md](plan/07_TRUTH.md) | **Read before pitching.** Claims register, competitor handling, legal, ethics |
-| 9 | [08_REDTEAM.md](plan/08_REDTEAM.md) | Adversarial review — what breaks and how |
-| 11 | [10_EXPANSION.md](plan/10_EXPANSION.md) | **Sign language, avatars, computer vision — assessed straight.** Two ideas cut with reasons, three added. Plus tooling findings and the Opus/Sonnet switching rule |
-| 10 | [09_MOCKUP_LIBRARY.md](plan/09_MOCKUP_LIBRARY.md) | **Thirteen references critiqued** on texture, shape, colour, feel, completeness and uniqueness — what to take from each, **plus six corrections the AMAZWI concept board needs**. Nothing in it is settled |
+| **1** | [00_MASTER_PLAN.md](plan/00_MASTER_PLAN.md) | Accepted product, scope, judging alignment and ownership |
+| **2** | [01_PRODUCT.md](plan/01_PRODUCT.md) | Speaker, proficient-verifier and learner contracts; screens and reward rules |
+| **3** | [02_TECH.md](plan/02_TECH.md) | Thin-slice architecture, data/state model, ledger and MoMo safety |
+| **4** | [03_BUSINESS.md](plan/03_BUSINESS.md) | Sponsored missions, pilot economics and MTN value |
+| **5** | [04_DESIGN.md](plan/04_DESIGN.md) | Visual system and updated Impact Map direction |
+| **6** | [05_BUILD.md](plan/05_BUILD.md) | One-run priority gates, acceptance tests and kill rules—no timeline |
+| **7** | [06_PITCH.md](plan/06_PITCH.md) | Reliable judge-only demo, speaking ownership, claims and Q&A |
+| **8** | [07_TRUTH.md](plan/07_TRUTH.md) | Claims, competitors, law, ethics and explicit limits |
+| **9** | [08_REDTEAM.md](plan/08_REDTEAM.md) | Historical R1–R23 plus accepted second-pass findings R24–R28 |
+| 10 | [09_MOCKUP_LIBRARY.md](plan/09_MOCKUP_LIBRARY.md) | Design-reference library, not product scope |
+| **11** | [10_SBU_REVIEW.md](plan/10_SBU_REVIEW.md) | Accepted decision overlay and rationale |
+| Roadmap | [10_EXPANSION.md](plan/10_EXPANSION.md) | Roadmap ideas and design/tooling notes; not competition scope and subject to the critique in `HANDOVER_LETHABO.md` |
 
-**Evidence** lives in [`research/`](research/) — A_MTN_CORPORATE · **B_MOMO_API** · C_COMPETITIVE · D_SPEECH_AI · E_SA_CULTURE · **F_GAMIFICATION** · G_BUSINESS. **All seven complete.**
-[`B_MOMO_API.md`](research/B_MOMO_API.md) contains **the hackathon T&Cs quoted verbatim** — judging criteria, the pre-existing-code rule, the IP clause and team size. Read §7 of it before Wednesday.
+Evidence lives in [`research/`](research/). All seven research files are present, including source-graded gamification work in [`F_GAMIFICATION.md`](research/F_GAMIFICATION.md).
 
----
-
-## 📋 FOR SBU — WHAT TO CHECK, AND THE SIX DECISIONS THAT NEED BOTH OF US
-
-**Status: the planning is complete and internally consistent. Nothing has been built.** Read the master plan, then the two documents for your lane, then bring answers to these six.
-
-### Decisions we cannot start without
-
-| # | Decision | Default if we don't decide | Where |
-|---|---|---|---|
-| **1** | **Who is PLATFORM and who is EXPERIENCE?** The source plan assigns Lethabo → backend/MoMo/trust, Sbu → frontend/product/demo. **Confirm it and never revisit it.** | As written | [05_BUILD.md §3](plan/05_BUILD.md) |
-| **2** | ~~Which two languages?~~ **SETTLED: isiZulu + Setswana** — we each speak one natively | — | [05_BUILD.md §2.0](plan/05_BUILD.md) |
-| **3** | **Do we keep the name AMAZWI?** It collides with a national museum. My call: keep it and own it — but decide today or not at all | Keep + own it | [07_TRUTH.md §1](plan/07_TRUTH.md) |
-| **4** | **Do we build the sponsor payment screen?** It's the only thing that makes "money crosses MoMo twice" true — four of our defences rest on it | Build it; cut the story chain | [06_PITCH.md §7a](plan/06_PITCH.md) |
-| **5** | **Do we pre-build?** Depends on the organiser's answer to the email | Generic public starter only | [05_BUILD.md §1](plan/05_BUILD.md) |
-| **6** | **The kill rules** — agree them Tuesday, before anyone is emotionally invested | As written | [05_BUILD.md §6](plan/05_BUILD.md) |
-
-### Where I'd most like your disagreement
-- **The whole reframe** — turning validation into a guessing game, and adding learners as a second population. It's a big change from what we submitted. [00_MASTER_PLAN.md §1](plan/00_MASTER_PLAN.md)
-- **The 26-hour gate schedule.** It's aggressive. If you think a gate is wrong, say so now, not Wednesday. [05_BUILD.md §5](plan/05_BUILD.md)
-- **The live room-play.** It's the highest-risk, highest-reward moment in the pitch. If you're not confident, we do the judge-only demo. [06_PITCH.md §3](plan/06_PITCH.md)
-- **The mockup corrections.** Your concept board is good; six things on it now contradict the plan. [09_MOCKUP_LIBRARY.md §1](plan/09_MOCKUP_LIBRARY.md)
-
-### What is NOT done
-- **Nothing is built.** No application code, no cards written. *(The repo exists and holds planning only.)*
-- ⚠️ **Some gamification numbers can't be independently verified.** [`F_GAMIFICATION.md`](research/F_GAMIFICATION.md) is complete and source-graded, but Duolingo's 25%/4.5× figures are company-sourced and the widely-repeated "63% quit after a broken streak" couldn't be traced to its CHI paper. **Those numbers don't go on a slide.**
-- **Two questions only the organisers can answer**, both in the Monday email: the pre-built-code rule, and what time pitches start Thursday.
-- **One question only MTN can answer:** the actual bulk disbursement fee. It decides whether R2 rewards are economical at all.
+Mockup sources live in [`../04_assets/mockups/`](../04_assets/mockups/). The `.dc.html` sources have been reconciled; the bundled canvas HTML must be regenerated before it is treated as current.
 
 ---
 
-## THE PRODUCT IN ONE SENTENCE
+## PRODUCT CONTRACT
 
-> **AMAZWI is the describe-it-without-saying-the-word game, played in your own language against the whole country — where speaking pays you, and listening teaches you.**
+> **Play a voice challenge in your language. When two people understand you, your reward is credited through MoMo.**
 
-Describe the word without saying the four banned words. Strangers across South Africa guess. If they understand you, everyone scores and MoMo pays. Learners play the guessing side to learn. What comes out is the South African conversational speech data that does not exist.
+> **Speak. Be understood. Earn.**
 
----
+The speaker describes a target without using the target or four blocked words. Two proficient listeners independently type the concept and referee the rule. Audio quality plus active consent produces a corpus-eligible contribution and exactly one reward credit.
 
-## DO THESE TODAY (Monday 31 August)
+Learners play four-option MCQ for XP. MCQ never validates the governed output.
 
-- [x] ✅ **Native speakers — resolved, they are us.** Lethabo is first-language Setswana, Sbu is first-language isiZulu. **Languages settled: isiZulu + Setswana** — one from each major family, which forces the two-model story and gives us the best published result in African ASR (Setswana 223%→13%). [05_BUILD.md §2.0](plan/05_BUILD.md)
-- [ ] **Send the organiser email** about pre-built code — draft in [05_BUILD.md §1.2](plan/05_BUILD.md). Before 09:00. **Add the two questions in §1.6** — especially *what time do pitches start on Thursday*, because three gates assume the morning is free.
-- [ ] **MoMo developer account** → subscription keys for Collections **and Disbursements** → provision sandbox API user → **complete one successful `transfer` end to end.**
-- [ ] **Ask the MoMo community the one financial question that decides the model:** what is the actual **bulk B2C disbursement fee** in South Africa? (Not the 2% consumer rate.) This determines whether R2 micro-rewards are economical at all.
-- [ ] **Start the card content** — **30 cards per language**: Lethabo does Setswana, Sbu does isiZulu, in parallel. Target word, four banned words, `accepted_answers`, three distractors, plus gold honeypots. **Build the eight demo cards first and to a higher standard.** This is game design in your own language, not translation. [05_BUILD.md §2.0.1](plan/05_BUILD.md)
-- [ ] **Decide the name question** — AMAZWI collides with a national museum. Keep it and own it, or switch. [07_TRUTH.md §1](plan/07_TRUTH.md). Decide today or not at all.
-- [ ] **Read [02_TECH.md §1A](plan/02_TECH.md) — the MoMo WebView host contract.** The mini app session dies after **60 seconds without a heartbeat**, and our core interaction is a user who is busy but not tapping for over a minute. Without it the demo dies mid-recording, on stage. Fifteen lines of code. Build it at G0.
-- [ ] Confirm the PLATFORM / EXPERIENCE role split and do not revisit it.
-- [ ] Record the sound assets. Two people, a phone, a quiet room, forty minutes.
+The output is **elicited spontaneous speech with a peer-verified semantic or intent label**. The target is not a transcript and the prototype does not claim ASR-ready hours or WER improvement.
 
 ---
 
-## THE FIVE FACTS THAT CARRY THE PITCH
+## SETTLED DECISIONS
 
-1. **There is no working speech recognition for ten of South Africa's eleven spoken official languages.** Whisper scores 146% WER on Southern Bantu, 223% on Setswana. Above 100% means it invents more than it gets right.
-2. **Google's WAXAL dataset contains zero South African languages.** They funded East and West Africa and skipped us.
-3. **One hour of in-domain data takes isiZulu from ~146% to ~25% WER.** When the baseline is broken, the first hour is worth more than the next thousand.
-4. **MoMo South Africa has ~13m registered users and does not report active ones.** In the 2020 relaunch, ~8% of registered were active. Activation is MTN SA's live problem, and this is a daily-open product.
-5. **Ayoba had 35m MAU and died in March 2026** because free-data signups don't retain. That is the exact failure mode of a "get paid to record" app — which is why the game has to work with the money switched off.
-
----
-
-## 🔴 THE RED TEAM FOUND A HOLE IN THE CORE MECHANIC — FIXED, BUT KNOW IT
-
-**"You've just told us no system on earth transcribes isiZulu. So how does your app know the speaker didn't just say the word?"**
-
-Nothing checked banned words — and it *can't*, because that needs the ASR the product exists to create. The dominant strategy was to say the word: it pays reliably, and listeners get a free correct guess so they'd never report it. Worse than the fraud, it fills the corpus with the target word repeated — the exact opposite of the spontaneous speech the whole thesis rests on, with every quality metric reading green.
-
-**Fixed** by making the listener the referee (one tap on the reveal, both agreeing voids the round) plus gold honeypots that make reporting enforceable. [01_PRODUCT.md §1.1](plan/01_PRODUCT.md). Read it before you build, and have the answer ready before it's asked.
-
-**Four other things the red team caught, all now corrected:**
-- **Three listeners → two.** At three the margin at $100/hr fell to 12% and guess supply ran 33% short, so a third of clips would never resolve. Two balances the loop exactly. [03_BUSINESS.md §2.1](plan/03_BUSINESS.md)
-- **The pitch claimed real money moved.** MTN's own sandbox docs say it doesn't process real money — said to MoMo engineers, that's the credibility kill. [06_PITCH.md §2](plan/06_PITCH.md)
-- **`is_correct` had no definition** — the load-bearing function in the whole system. Now specified, and it needs `accepted_answers` captured in today's card job. [02_TECH.md §3.4](plan/02_TECH.md)
-- **The sandbox has an undocumented quota with a ~2-day cooldown.** Automated tests must never touch it. [05_BUILD.md §2.2](plan/05_BUILD.md)
-
-**All 23 findings are now folded into the plan.** The ones that changed the most:
-
-| | What was wrong | Where it now lives |
-|---|---|---|
-| **R7** | **Cold start.** No `EXPIRED` state — a Tshivenda clip with no listeners stayed `OPEN` and its reward `PENDING` forever, on the screen that must never lie. And the coverage multiplier paid **up to 2.5×** into exactly the small pools where a confederate lands among the listeners **43%** of the time | [02_TECH.md §3.5](plan/02_TECH.md) — 48h expiry, pay half anyway, two-guess minimum, multiplier capped by pool size |
-| **R9** | **The inbound leg doesn't exist.** "Money crosses MoMo twice" carries four separate defences, and the build had 17 items and no way to collect money from anyone | [06_PITCH.md §7a](plan/06_PITCH.md) — build the sponsor screen, or change the sentence |
-| **R10** | **The room-play couldn't complete.** 5-screen onboarding in 100 seconds; a hotspot carries ~5 devices; and the room never actually heard a *recording* | [06_PITCH.md §3](plan/06_PITCH.md) — guest path, room listens to the clip, seeded, rehearsed deflation line |
-| **R13/R14** | **The sleep plan and gate table were mutually exclusive.** G5 and G6 needed both people while one was asleep. G0 had ~30 real minutes for 3 hours of work | [05_BUILD.md §5](plan/05_BUILD.md) — gates re-cut single-lane overnight, G0 into the starter repo |
-| **R15** | **The longest-lead dependency had no name on it** — two native speakers, for hours, Monday and Tuesday, unconfirmed | [05_BUILD.md §2.0](plan/05_BUILD.md) — phone them at 06:45, cut to 30 cards |
-| **R12** | The close described an identifiable, elderly, non-consenting person's finances — against my own instruction three documents earlier | [06_PITCH.md](plan/06_PITCH.md) — corrected |
-| **R16–R23** | Not-a-mini-app · WAXAL listed as both confirmed and unverified · the 70% figure is a vendor's claim · ECAPA's corpus is non-commercial even though its weights aren't · scale table had no demand side · 24 vs 26 hours · card art leaks the answer | folded across all files |
-
-Full detail in [08_REDTEAM.md](plan/08_REDTEAM.md), including its own fix-ordering by day.
+| Decision | Accepted answer |
+|---|---|
+| Roles | **Sbu:** Platform, MoMo, ledger, trust, deployment, isiZulu. **Lethabo:** Product, frontend, experience, demo, Setswana |
+| Languages | isiZulu + Setswana; eight hero cards per language first |
+| Cash | Speakers receive the contribution honorarium; listeners/verifiers receive Voice Points in the competition build |
+| Validation | Two proficient free-text matches; MCQ is gameplay only |
+| Data | Semantic/intent label, not transcript |
+| Public view | Aggregate Impact Map; raw audio and names private by default |
+| Fintech | Funded mission + immutable reward ledger + honest MoMo provider state |
+| Cash-out | Immediate ledger credit; provider settlement at a viable threshold |
+| Demo | Judge-only golden path first; room MCQ is optional |
+| Scope | One mode and one end-to-end loop; ML, IRT/Elo, public archive and extra modes removed |
 
 ---
 
-## THE THREE THINGS MOST LIKELY TO LOSE THIS
+## P0 BUILD
 
-1. **"Isn't this just paid data labelling?"** — answered structurally, not rhetorically: nobody reviews anything, there is no approve button, and half the players earn nothing and are there to learn. [07_TRUTH.md §3](plan/07_TRUTH.md)
-2. **African Next Voices / Swivuriso already does much of this** — Gates-funded, pays contributors, same seven languages. **Build on it and credit it.** Do not pretend it doesn't exist. [07_TRUTH.md §3.1](plan/07_TRUTH.md)
-3. **"What did you build today?"** — one agreed answer, identical from both of you, delivered without defensiveness. [05_BUILD.md §1.5](plan/05_BUILD.md)
+- Mini App host adapter plus visibly labelled browser demo mode
+- isiZulu and Setswana hero decks
+- adult gate and purpose-specific versioned consent
+- real card/timer/recording/audio-quality/upload flow
+- two independent proficient-verifier flows
+- conservative accepted-answer matching and referee decision
+- `VOIDED`, `REVIEW_REQUIRED`, `EXPIRED` and `UNVALIDATED`
+- immutable integer-cent reward ledger and campaign budget
+- Collections if confirmed; labelled demo provider for unavailable legs
+- wallet, Voice Value Receipt and aggregate Impact Map
+- deterministic reset, mobile error states and fallback recording
+
+Anything outside that list is P1 or cut. Full gates and tests: [05_BUILD.md](plan/05_BUILD.md).
 
 ---
 
-## GAPS — what is not covered and what to do about it
+## TEAM SONAR
 
-- ✅ **`F_GAMIFICATION.md` is now complete**, and it found **three things that contradicted the plan** — all fixed: Elo doesn't converge if you select on difficulty while updating it ([02_TECH.md §4.2](plan/02_TECH.md)); team leaderboards harm the losing side while winners gain nothing ([01_PRODUCT.md §7.1](plan/01_PRODUCT.md)); and promotional competitions are governed by **CPA s36, not the Lotteries Act**, with a definition that catches you *regardless of skill* ([07_TRUTH.md §4.3](plan/07_TRUTH.md)).
-- **The T&Cs say "48 hours"; the invitation says 26.5.** Ask at check-in which governs — it changes the gate schedule. [05_BUILD.md §1.1](plan/05_BUILD.md)
-- **The IP clause grants MTN an "exclusive" licence over "demos and products" for marketing purposes.** Probably harmless, genuinely unusual. Ask what it covers.
-- **One legal question is unresolved:** whether a skill-based reward game touches the SA Lotteries Act or National Gambling Act. The design avoids all chance-based mechanics, which should keep it clear, but get a view before any real-money launch. [07_TRUTH.md §4.3](plan/07_TRUTH.md)
-- **The unit economics are a plausibility model, not a forecast.** The two assumptions that move it most are the 70% acceptance rate and the MoMo disbursement fee. Say so.
+### Sbu — Platform, MoMo and Trust
+
+Backend/API, database/states, verification resolver, ledger, campaign funding, payment adapters, consent enforcement, audit, deployment, technical tests, isiZulu content and technical/business proof.
+
+### Lethabo — Product, Experience and Demo
+
+React/frontend state, design system, recording/verifier/learner UX, wallet/receipt/Impact Map UI, accessibility, demo runbook/fallback, Setswana content and the narrative/product presentation.
+
+Both must be able to run the full demo alone.
 
 ---
 
-## RELATIONSHIP TO THE EARLIER PLANNING
+## HANDOVERS
 
-This supersedes the AMAZWI sections of `../02_ideas/THE_THREE_ENTRIES.md` and `../03_build/SUBMISSION_PACK_FITTED.md`, which described a different product — a prompted-recording app with rarity-based pricing and active learning as a centrepiece. Three things changed on evidence:
+- Lethabo's continuously updated incoming context: [`../HANDOVER_SBU.md`](../HANDOVER_SBU.md)
+- Sbu's accepted decisions and handback: [`../HANDOVER_LETHABO.md`](../HANDOVER_LETHABO.md)
 
-| Was | Now | Why |
-|---|---|---|
-| Prompted recording + reviewer queue | **Guessing game; agreement is the validation** | Track 2 fit, fraud, and quality all improve at once |
-| **Rarity pricing** — rarer language earns more | **Coverage pricing** — the data gap earns more | Paying by ethnicity is a headline waiting to happen, and it is economically wrong |
-| Active learning as the technical centrepiece | **Mechanism built, claim withdrawn** | The literature shows uncertainty sampling can underperform random for ASR, and it is not demonstrable in 26 hours |
-| MMS / SeamlessM4T / InkubaLM in the stack | **Removed** | All CC-BY-NC. They cannot ship in a commercial product |
+Use both as a reciprocal, commit-referenced protocol: read the latest incoming handover before crossing lanes, record accepted/rejected decisions in the outgoing handover, and update the canonical document whenever a decision is accepted. A handover proposal alone does not override the canonical plan.
 
-The earlier research (`../01_research/`, `../INFO_LOG.md`, `../01_research/VERIFICATION_STATUS.md`) remains valid and should still be read — particularly the corrections about load shedding, 2G sunset dates, and voice biometrics.
+The handover documents provide collaboration context. `00_MASTER_PLAN.md`–`07_TRUTH.md` are the source of truth for implementation.
+
+---
+
+## EXTERNAL ANSWERS STILL REQUIRED
+
+- current Mini App bridge, heartbeat and CSP specification;
+- Collections availability in the event sandbox;
+- South African Disbursement availability;
+- currency, minimum amount and bulk B2C fee;
+- pre-event code/content rule;
+- submission close and pitch start;
+- scope of the IP clause's “exclusive” marketing licence.
+
+Until confirmed, every unavailable external leg has a visibly labelled provider-adapter fallback.
+
+---
+
+## NON-NEGOTIABLE PITCH TRUTH
+
+- no real-money claim for a sandbox/demo-provider leg;
+- no transcript claim;
+- no live WER improvement;
+- no automatic language proof;
+- no public raw-audio archive;
+- no proficiency credential;
+- no claim that MTN is already a buyer;
+- no criticism of MTN's prior products as the reason to choose AMAZWI;
+- no service or model named as built unless it is running.

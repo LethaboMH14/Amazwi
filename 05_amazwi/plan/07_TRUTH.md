@@ -67,8 +67,8 @@ Decide today or not at all. Do not relitigate this on Wednesday.
 | **English is the 5th home language at 8.7%** — behind isiZulu, isiXhosa, Afrikaans and Sepedi | StatsSA Census 2022 |
 | **81% of South African Grade 4 learners cannot read for meaning in any language** | PIRLS 2021 |
 | **Google's WAXAL contains zero South African languages**; released subset ~1,250 ASR hours, not 11,000 | Google Research paper + HF dataset card |
-| **Whisper large-v3-turbo scores 146.30% WER zero-shot on Southern Bantu languages, 223% on Setswana.** There is no working off-the-shelf ASR for ten of the eleven spoken official languages | arXiv 2606.31642 |
-| **~1 hour of in-domain data takes isiZulu from ~146% to ~23–28% WER; 50 hours reaches ~8%** | NCHLT-based, arXiv 2512.10968 |
+| **In one named published benchmark, Whisper large-v3-turbo scores 146.30% WER zero-shot across the tested Southern Bantu set and 223% on Setswana.** State the model, task and benchmark; do not universalise it to every ASR system | arXiv 2606.31642 |
+| **One NCHLT-based study reports large isiZulu gains from small in-domain fine-tuning sets** | arXiv 2512.10968. ⚠️ Use only with the exact model, split and domain; it is not evidence that one AMAZWI hour creates the same result |
 | **Duolingo added isiZulu (2022, with Nal'ibali/Vodacom), dropped isiXhosa (2023) for low engagement, and has never shipped Afrikaans** | Confirmed |
 | Most Afrikaans home-language speakers are Coloured South Africans — StatsSA reports **"more than 70%" of the Coloured population is Afrikaans-speaking vs 61% of White South Africans** | StatsSA. ⚠️ The widely-quoted precise "56%/40%" split traces to an unverified social-media post — **do not cite that version** |
 | **N|uu has one living first-language speaker**, Katrina Esau, ~92 | Confirmed. ⚠️ See §1 — do not name her or describe her finances on stage |
@@ -79,12 +79,12 @@ Decide today or not at all. Do not relitigate this on Wednesday.
 
 **❌ "Google's WAXAL released 11,000 hours across 27 African languages."**
 The 11,000-hour figure has **no primary source** and appears to describe total raw audio ingested, not released data. The paper and the HuggingFace card give roughly **1,250 ASR hours and ~186 TTS hours**. Google's own channels disagree with each other on language count (19/21/27) and country count (26 vs 40).
-> ✅ **The "zero South African languages" half is CONFIRMED and it is your strongest single fact.**
-> Say: *"Google's WAXAL programme is a real contribution to African speech, and its released subset is on the order of one to two thousand hours — not the eleven thousand in the headline. It covers **no South African language at all.** Google funded East and West Africa and skipped us."*
+> ✅ The “zero South African languages” half is confirmed. Use it as neutral gap context, not an accusation or the entire product case.
+> Say: *"Google's WAXAL programme is a real contribution to African speech. Its released subset covers no South African language, which illustrates why South African collection still matters."*
 
-**❌ "MTN has no AI product."**
-MTN launched what it called Africa's first AI service for Mobile Money in **May 2019** — a text chatbot in Ivory Coast.
-> ✅ **Say instead:** *"MTN's flagship AI-for-payments product is a seven-year-old text chatbot in English and French. There is no shipped consumer AI product in any indigenous South African language."*
+**❌ "MTN has no AI product" or "MTN owns no language asset."**
+The first is false and the second is not established from public evidence. Neither is needed.
+> ✅ Say: *"AMAZWI could make MTN a design partner for governed multilingual voice-intent data."*
 
 **❌ "MTN's AI data centre programme is worth $6 billion."**
 That figure comes from secondary business-press headlines, not an MTN release.
@@ -99,9 +99,23 @@ Only if contracts say so. Say: contributors **retain rights in their recordings*
 **❌ "A contribution improves the model's word error rate live."**
 It does not. Coverage moves immediately; WER moves after a training run against a fixed test set with a named model version.
 
+**❌ "The card target is the transcript."**
+It is a semantic or intent label. The clip still needs verbatim transcription before ordinary supervised ASR training.
+> ✅ Say: *"The prototype produces elicited spontaneous speech with a peer-verified semantic label, audio-quality evidence and consent lineage."*
+
+**❌ "A correct guess proves the clip is in the right language."**
+It proves two assigned listeners recovered the intended concept. Language remains contributor-declared until an additional reliable human or model check exists.
+
+**❌ "No system on earth transcribes isiZulu" or "ten languages have no working ASR."**
+These are absolutes across unknown products, domains and versions.
+> ✅ Say: *"Named off-the-shelf models perform poorly on named published South African-language benchmarks."*
+
+**❌ "No existing corpus has consent lineage."**
+That universal negative is not established, and African Next Voices explicitly addresses consent and data rights.
+
 **❌ "Nobody has thought of using a game to collect speech data."**
 False, and a linguistics-literate judge will know. **Games With A Purpose for language resources is an established research area** with a twenty-year literature — the ESP Game, GWAPs for part-of-speech tagging, serious games for speech-emotion data, a GWAP that collected Arabic transcriptions.
-> ✅ **Say instead:** *"Games With A Purpose for language data is a well-established research idea going back to the ESP Game. What has never been built is a consumer-scale one — for African languages, on a mobile money rail, where the same guess is simultaneously the validation and the language lesson."*
+> ✅ **Say instead:** *"Games With A Purpose for language data is a well-established research idea going back to the ESP Game. AMAZWI combines a voice game, African-language semantic labels, purpose-specific consent and a mobile-money reward rail."*
 > Citing the literature makes you look rigorous. Claiming novelty you don't have makes you look unread.
 
 **❌ "MoMo identity proves one unique human."**
@@ -138,7 +152,7 @@ Duolingo's original business model *was* crowdsourced work funding a free produc
 ### 3.3 The exploitation comparison — raise it yourself
 The first thing a sceptical judge will reach for is **Sama/OpenAI in Kenya** ($1.32–2/hr against $12.50/hr billing) and **Remotasks Kenya** (shut down March 2024, Fairwork 1/10 on fair pay). **Also note the 2026 headwind:** Toloka pivoted away from the open crowd in July 2026, a signal that mass low-skill data work is becoming commercially weaker relative to expert data.
 
-Raise all of it before they do. Your structural differences: rates published before the task and never cut retroactively; consent versioned and revocable; contributors credited by name; adults only; a game designed to be worth playing with the money switched off. **And your asset is scarce, not commoditised** — South African conversational speech is not generic annotation labour.
+Raise all of it before they do. Structural differences in the prototype are: rates published before the task and never cut retroactively; consent versioned and revocable; adults only; raw voice private by default; and learner play designed to work without cash. Describe the output as elicited spontaneous speech with semantic labels, not generic “conversational speech” or finished ASR data.
 
 ---
 
@@ -149,7 +163,7 @@ Raise all of it before they do. Your structural differences: rates published bef
 
 - ✅ **Game mechanics are not protectable.** Describe-a-word-against-a-timer cannot be owned.
 - ❌ **The name, card content and trade dress are.** Never brand anything "30 Seconds". Never reproduce their cards. Never imitate the box.
-- ✅ In the pitch, reference it as a cultural touchstone: *"the describe-it-without-saying-it game every South African has played."*
+- ✅ Describe only the generic mechanic: *"a timed describe-and-guess voice game."* Do not make universal familiarity claims.
 - ⚠️ **Do not put "30 Seconds" in the submitted form** as a product descriptor.
 
 ### 4.2 POPIA
@@ -207,11 +221,12 @@ Full analysis and sources: `research/F_GAMIFICATION.md` §9.
 |---|---|---|
 | **"Swivuriso already does this"** | 🔴 High | §3.1. Build on it, credit it, name the delta. |
 | **"This is a sweatshop"** | 🔴 High | §3.3. Raise it first. |
-| **"It's Track 1 wearing a costume"** | 🔴 High | The room just played it and laughed. Learners pay to be here. |
+| **"It's Track 1 wearing a costume"** | 🔴 High | The room can play the learner mode for XP; the speaker reward is a transparent contribution honorarium. No learner payment or subscription is claimed. |
 | **"Duolingo killed this exact idea"** | 🟠 Med | §3.2. |
 | **Collusion rings** | 🟠 Med | Random assignment, output agreement, gold honeypots, one account per verified identity, rate limits. Cost of attack exceeds payout. |
-| **TTS submissions farming rewards** | 🟠 Med | Spoof detection as a *flag*, duplicate hashing, agreement requirement. Honest limit: anti-spoofing degrades out of domain. |
-| **"Your proficiency score isn't validated"** | 🟠 Med | Correct. Call it an estimate, never a certification, until correlated externally. |
+| **TTS submissions farming rewards** | 🟠 Med | Contribution cap, random assignment and human understanding evidence. No anti-spoof model is claimed in the competition build. |
+| **"Where is the transcript?"** | 🔴 High | There is none: the output is a semantic label. Transcription is a downstream curation step. |
+| **"How do you prove the language?"** | 🔴 High | We do not claim automated proof; declared language plus proficient same-language verifiers is the prototype evidence. |
 | **"You didn't build this today"** | 🔴 High | `05_BUILD.md` §1.5. One agreed answer, identical from both of you. |
 | **Demo fails live** | 🟠 Med | `06_PITCH.md` §6. |
 | **"What's your WER improvement?"** | 🟢 Low | "None today, and we won't pretend otherwise." This wins points. |
@@ -226,7 +241,7 @@ State this on a slide, unprompted, before anyone asks.
 1. **Adults only.** Voice is personal information; children's data carries additional restrictions.
 2. **Consent is versioned, granular, in the contributor's own language, and revocable.** Each item independently declinable.
 3. **Rates are published before the task and never reduced afterwards.** Retroactive rate cuts are the industry's characteristic betrayal.
-4. **Contributors retain rights** and grant a specific, purpose-limited, revocable licence. They are credited by name in the Archive.
+4. **Contributors grant a specific, purpose-limited, revocable licence under actual terms.** Raw audio and attribution are private by default; public sharing would need separate opt-in consent and moderation.
 5. **No biometric authentication.** Voice is the interface, never the lock.
 6. **Coverage pricing, never ethnicity pricing.**
 7. **The game is worth playing with the money off.** Tested, not asserted.
@@ -242,9 +257,9 @@ State this on a slide, unprompted, before anyone asks.
 
 Volunteering limits before being asked is the highest-trust move available, and it inoculates the entire Q&A.
 
-- **No model was retrained during this event.** Coverage moved; word error rate did not, and cannot in 26 hours.
+- **No model was retrained during this event.** The prototype does not claim a WER change.
 - **Two languages are quality-assured**, not twelve. The architecture supports all twelve; the content does not yet exist.
-- **Disbursement runs in the MoMo sandbox**, labelled as such.
-- **The proficiency score is an estimate**, not a validated certification.
-- **Anti-spoofing flags for review**; it does not auto-reject, because out-of-domain performance does not justify that.
-- **Sign language, feature-phone IVR and the elder archive are designed, not built.**
+- **Every payment leg is labelled from the actual provider mode:** sandbox, demo provider or future production.
+- **The output has a semantic label, not a verbatim transcript.**
+- **No proficiency score, biometric uniqueness or anti-spoof ML is built.**
+- **Public audio, sign language, feature-phone IVR and additional modes are not built.**

@@ -27,3 +27,7 @@ The app is used outdoors, in queues and at taxi ranks, in hard South African sun
 ## Attribution
 
 If you use Ndebele geometry, **say it is Ndebele.** Attribution is the whole difference between homage and appropriation, and it costs one caption.
+
+## Integration guardrail
+
+These are visual explorations, not an instruction to add new product scope. The selected theme must pass contrast, mobile sunlight and reduced-motion checks. Use culturally specific references accurately and respectfully; do not treat a living tradition as a generic skin. The functional UI shell remains neutral and co-equal across isiZulu and Setswana.
