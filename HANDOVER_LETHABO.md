@@ -2,7 +2,7 @@
 
 **From:** Sbu
 **Date:** Monday 31 August 2026
-**Based on:** Lethabo's handover and build-log updates through repository commit `4cfbd92`
+**Based on:** Lethabo's handover and build-log updates through repository commit `fea5a8a`
 
 ---
 
@@ -71,6 +71,10 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 - Keep learner-guess counts out of P0. Learner MCQ remains XP-only and never becomes speaker feedback or eligibility evidence.
 - The contribution receipt may privately replay the contributor's own clip only while recording consent is active; revocation removes that replay path along with future playback/export.
 - Ship an English functional shell for competition-demo reliability. Keep first-language card and error copy in isiZulu/Setswana; a fully declared-language shell is post-P0.
+
+### Assigned next work
+
+Use `05_amazwi/LETHABO_NEXT_WORK.md` as the current experience-lane queue. It prioritises: closing explicit content warnings, native error-copy sign-off, removing stale placeholder claims from mockups, producing the five hero screens, wiring tokens, collecting accessibility/resilience evidence, and preparing the screenshot-based pitch/rehearsal pack.
 
 ---
 
