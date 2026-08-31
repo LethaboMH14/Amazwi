@@ -9,51 +9,66 @@
 <helmet>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&display=swap">
   <style>
-    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; }
+    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
     a { color: #FF5A36; } a:hover { color: #E8267F; }
-    .wf { width: 4px; border-radius: 999px; background: linear-gradient(180deg, #E8267F, #FF5A36); }
+    .grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.5; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E"); }
+    .wf { width: 4px; border-radius: 999px; background: linear-gradient(180deg, #FF9A6E, #FF5A36 55%, #E8267F); }
   </style>
 </helmet>
-<div style="width: 390px; height: 844px; background: #14100E; color: #FAF6F1; display: flex; flex-direction: column; align-items: center; padding: 28px 24px 32px; box-sizing: border-box;">
+<div style="width: 390px; height: 844px; background: #14100E; color: #FAF6F1; position: relative; overflow: hidden;">
 
-  <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-    <div style="font-size: 13px; font-weight: 600; color: rgba(250,246,241,0.55);">SEFOFANE</div>
-    <div style="display: flex; align-items: center; gap: 7px; padding: 6px 13px; border-radius: 999px; background: rgba(232,38,127,0.14); border: 1px solid rgba(232,38,127,0.40);">
-      <span style="width: 7px; height: 7px; border-radius: 999px; background: #E8267F; display: block;"></span>
-      <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em;">RECORDING</span>
+  <div style="position: absolute; width: 480px; height: 480px; left: -45px; top: 84px; border-radius: 999px; background: radial-gradient(circle, rgba(255,90,54,0.26) 0%, rgba(232,38,127,0.10) 44%, rgba(20,16,14,0) 68%); filter: blur(10px);"></div>
+  <div class="grain"></div>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; padding: 26px 24px 30px; box-sizing: border-box;">
+
+    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+      <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: rgba(250,246,241,0.45);">SEFOFANE</div>
+      <div style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; background: linear-gradient(180deg, rgba(232,38,127,0.24), rgba(232,38,127,0.10)); border: 1px solid rgba(232,38,127,0.48); box-shadow: inset 0 1px 0 rgba(255,150,200,0.20);">
+        <span style="width: 7px; height: 7px; border-radius: 999px; background: #FF4D8F; display: block; box-shadow: 0 0 10px 2px rgba(232,38,127,0.85);"></span>
+        <span style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.12em;">LIVE</span>
+      </div>
     </div>
-  </div>
 
-  <div style="margin-top: 54px; position: relative; width: 148px; height: 148px;">
-    <svg width="148" height="148" viewBox="0 0 148 148" style="display: block; transform: rotate(-90deg);">
-      <circle cx="74" cy="74" r="66" fill="none" stroke="rgba(250,246,241,0.09)" stroke-width="7"></circle>
-      <circle cx="74" cy="74" r="66" fill="none" stroke="#FF5A36" stroke-width="7" stroke-linecap="round" stroke-dasharray="414.7" stroke-dashoffset="96.7"></circle>
-    </svg>
-    <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-      <div style="font-size: 46px; font-weight: 800; font-stretch: 125%; line-height: 1; font-variant-numeric: tabular-nums;">23</div>
-      <div style="margin-top: 3px; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(250,246,241,0.42);">seconds</div>
+    <div style="margin-top: 50px; position: relative; width: 190px; height: 190px;">
+      <div style="position: absolute; inset: 18px; border-radius: 999px; background: radial-gradient(circle, rgba(255,90,54,0.16) 0%, rgba(20,16,14,0) 72%);"></div>
+      <svg width="190" height="190" viewBox="0 0 190 190" style="display: block; transform: rotate(-90deg);">
+        <defs>
+          <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FF5A36"></stop>
+            <stop offset="100%" stop-color="#E8267F"></stop>
+          </linearGradient>
+        </defs>
+        <circle cx="95" cy="95" r="82" fill="none" stroke="rgba(250,246,241,0.07)" stroke-width="8"></circle>
+        <circle cx="95" cy="95" r="82" fill="none" stroke="url(#ring)" stroke-width="8" stroke-linecap="round" stroke-dasharray="515.2" stroke-dashoffset="120.2"></circle>
+      </svg>
+      <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div style="font-size: 58px; font-weight: 800; font-stretch: 125%; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; text-shadow: 0 0 34px rgba(255,90,54,0.35);">23</div>
+        <div style="margin-top: 4px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(250,246,241,0.36);">seconds left</div>
+      </div>
     </div>
-  </div>
 
-  <div style="margin-top: 52px; width: 100%; height: 96px; display: flex; align-items: center; justify-content: center; gap: 4px;">
-    <div class="wf" style="height: 14px;"></div><div class="wf" style="height: 30px;"></div><div class="wf" style="height: 22px;"></div><div class="wf" style="height: 52px;"></div><div class="wf" style="height: 68px;"></div><div class="wf" style="height: 41px;"></div><div class="wf" style="height: 78px;"></div><div class="wf" style="height: 90px;"></div><div class="wf" style="height: 58px;"></div><div class="wf" style="height: 34px;"></div><div class="wf" style="height: 71px;"></div><div class="wf" style="height: 86px;"></div><div class="wf" style="height: 47px;"></div><div class="wf" style="height: 26px;"></div><div class="wf" style="height: 62px;"></div><div class="wf" style="height: 80px;"></div><div class="wf" style="height: 55px;"></div><div class="wf" style="height: 33px;"></div><div class="wf" style="height: 18px;"></div><div class="wf" style="height: 44px;"></div><div class="wf" style="height: 66px;"></div><div class="wf" style="height: 38px;"></div><div class="wf" style="height: 21px;"></div><div class="wf" style="height: 12px;"></div>
-  </div>
-
-  <div style="margin-top: 20px; display: flex; align-items: center; gap: 9px; padding: 9px 16px; border-radius: 999px; background: rgba(31,138,84,0.13); border: 1px solid rgba(31,138,84,0.34); color: #4FBF85;">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
-    <span style="font-size: 13px; font-weight: 600;">Good level</span>
-  </div>
-
-  <div style="flex-grow: 1;"></div>
-
-  <div style="width: 100%; display: flex; justify-content: center;">
-    <div style="width: 84px; height: 84px; border-radius: 999px; background: linear-gradient(96deg, #FF5A36, #E8267F); display: flex; align-items: center; justify-content: center;">
-      <div style="width: 30px; height: 30px; border-radius: 6px; background: #14100E;"></div>
+    <div style="margin-top: 44px; width: 100%; height: 104px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+      <div class="wf" style="height: 14px;"></div><div class="wf" style="height: 31px;"></div><div class="wf" style="height: 22px;"></div><div class="wf" style="height: 54px;"></div><div class="wf" style="height: 72px;"></div><div class="wf" style="height: 43px;"></div><div class="wf" style="height: 84px;"></div><div class="wf" style="height: 98px;"></div><div class="wf" style="height: 61px;"></div><div class="wf" style="height: 35px;"></div><div class="wf" style="height: 76px;"></div><div class="wf" style="height: 92px;"></div><div class="wf" style="height: 49px;"></div><div class="wf" style="height: 27px;"></div><div class="wf" style="height: 66px;"></div><div class="wf" style="height: 86px;"></div><div class="wf" style="height: 58px;"></div><div class="wf" style="height: 34px;"></div><div class="wf" style="height: 18px;"></div><div class="wf" style="height: 46px;"></div><div class="wf" style="height: 70px;"></div><div class="wf" style="height: 39px;"></div><div class="wf" style="height: 21px;"></div><div class="wf" style="height: 12px;"></div>
     </div>
+
+    <div style="margin-top: 16px; display: flex; align-items: center; gap: 9px; padding: 9px 17px; border-radius: 999px; background: linear-gradient(180deg, rgba(31,138,84,0.22), rgba(31,138,84,0.09)); border: 1px solid rgba(31,138,84,0.42); box-shadow: inset 0 1px 0 rgba(120,220,170,0.16);">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#68D3A0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+      <span style="font-size: 13px; font-weight: 700; color: #68D3A0;">They'll hear you clearly</span>
+    </div>
+
+    <div style="flex-grow: 1;"></div>
+
+    <div style="width: 100%; display: flex; justify-content: center;">
+      <div style="width: 92px; height: 92px; border-radius: 999px; background: linear-gradient(140deg, #FF5A36, #E8267F); display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 46px -12px rgba(232,38,127,0.72), inset 0 2px 0 rgba(255,255,255,0.32);">
+        <div style="width: 30px; height: 30px; border-radius: 7px; background: #14100E;"></div>
+      </div>
+    </div>
+
+    <div style="margin-top: 18px; font-size: 14px; color: rgba(250,246,241,0.42);">Tap to stop</div>
+
   </div>
-
-  <div style="margin-top: 18px; font-size: 14px; color: rgba(250,246,241,0.45);">Tap to stop</div>
-
 </div>
 </x-dc>
 </body>

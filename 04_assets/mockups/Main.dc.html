@@ -9,44 +9,74 @@
 <helmet>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&display=swap">
   <style>
-    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; }
+    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
     a { color: #FF5A36; } a:hover { color: #E8267F; }
+    .grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.5; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E"); }
+    .chip { padding: 10px 16px; border-radius: 10px; font-size: 15px; font-weight: 600; letter-spacing: -0.005em;
+      color: rgba(250,246,241,0.82); background: linear-gradient(180deg, rgba(138,106,31,0.22), rgba(138,106,31,0.10));
+      border: 1px solid rgba(191,148,52,0.42); box-shadow: inset 0 1px 0 rgba(255,214,120,0.14), 0 2px 6px rgba(0,0,0,0.35); }
+    .pill { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px;
+      background: linear-gradient(180deg, rgba(250,246,241,0.10), rgba(250,246,241,0.045));
+      border: 1px solid rgba(250,246,241,0.13); box-shadow: inset 0 1px 0 rgba(250,246,241,0.10); }
   </style>
 </helmet>
-<div style="width: 390px; height: 844px; background: #14100E; color: #FAF6F1; display: flex; flex-direction: column; padding: 28px 24px 32px; box-sizing: border-box;">
+<div style="width: 390px; height: 844px; background: #14100E; color: #FAF6F1; position: relative; overflow: hidden;">
 
-  <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-    <div style="display: flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; background: rgba(250,246,241,0.07); border: 1px solid rgba(250,246,241,0.10);">
-      <span style="width: 7px; height: 7px; border-radius: 999px; background: #FF5A36; display: block;"></span>
-      <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.02em;">Setswana</span>
+  <div style="position: absolute; width: 460px; height: 460px; left: -110px; top: 88px; border-radius: 999px; background: radial-gradient(circle, rgba(255,90,54,0.30) 0%, rgba(232,38,127,0.13) 42%, rgba(20,16,14,0) 68%); filter: blur(8px);"></div>
+  <div style="position: absolute; width: 300px; height: 300px; right: -120px; bottom: 40px; border-radius: 999px; background: radial-gradient(circle, rgba(232,38,127,0.16) 0%, rgba(20,16,14,0) 70%);"></div>
+  <div class="grain"></div>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; padding: 26px 24px 30px; box-sizing: border-box;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="pill">
+        <span style="width: 6px; height: 6px; border-radius: 999px; background: #FF5A36; display: block; box-shadow: 0 0 8px 1px rgba(255,90,54,0.9);"></span>
+        <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.01em;">Setswana</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 3px;">
+        <span style="width: 20px; height: 3px; border-radius: 999px; background: #FF5A36; display: block;"></span>
+        <span style="width: 20px; height: 3px; border-radius: 999px; background: #FF5A36; display: block;"></span>
+        <span style="width: 20px; height: 3px; border-radius: 999px; background: rgba(250,246,241,0.16); display: block;"></span>
+      </div>
     </div>
-    <div style="padding: 7px 14px; border-radius: 999px; background: rgba(255,203,5,0.12); border: 1px solid rgba(255,203,5,0.32); color: #FFCB05; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;">R2.00</div>
+
+    <div style="margin-top: 44px; display: flex; align-items: baseline; gap: 10px;">
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(250,246,241,0.38);">Your word</span>
+      <span style="flex-grow: 1; height: 1px; background: linear-gradient(90deg, rgba(250,246,241,0.16), rgba(250,246,241,0));"></span>
+    </div>
+
+    <div style="margin-top: 14px; font-size: 54px; line-height: 0.92; font-weight: 800; font-stretch: 125%; letter-spacing: -0.035em; background: linear-gradient(168deg, #FFF6F0 8%, #FFC9B4 58%, #F08A9E 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 44px rgba(255,90,54,0.22);">SEFOFANE</div>
+
+    <div style="margin-top: 30px; display: flex; align-items: center; gap: 8px;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#BF9434" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="m5.6 5.6 12.8 12.8"></path></svg>
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #BF9434;">Don't say</span>
+    </div>
+
+    <div style="margin-top: 13px; display: flex; flex-wrap: wrap; gap: 8px;">
+      <div class="chip">fofa</div>
+      <div class="chip">loapi</div>
+      <div class="chip">maeto</div>
+      <div class="chip">boemafofane</div>
+    </div>
+
+    <div style="flex-grow: 1;"></div>
+
+    <div style="padding: 18px 20px; border-radius: 18px; background: linear-gradient(180deg, rgba(42,35,31,0.92), rgba(28,23,20,0.92)); border: 1px solid rgba(250,246,241,0.09); box-shadow: 0 20px 44px -18px rgba(0,0,0,0.9), inset 0 1px 0 rgba(250,246,241,0.07); backdrop-filter: blur(6px);">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 11px;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="rgba(250,246,241,0.62)" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="13" r="8"></circle><path d="M12 9.5V13l2.4 1.8"></path><path d="M9.5 2h5"></path></svg>
+          <span style="font-size: 14.5px; color: rgba(250,246,241,0.78);">30 seconds &middot; 2 listeners</span>
+        </div>
+        <div style="padding: 7px 13px; border-radius: 999px; background: linear-gradient(180deg, rgba(255,203,5,0.20), rgba(255,203,5,0.09)); border: 1px solid rgba(255,203,5,0.42); box-shadow: inset 0 1px 0 rgba(255,231,140,0.28); color: #FFD84D; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;">R2.00</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 12px; padding: 20px; border-radius: 18px; background: linear-gradient(96deg, #FF5A36, #E8267F); color: #1A0D10; font-size: 18px; font-weight: 800; text-align: center; letter-spacing: -0.015em; min-height: 44px; box-sizing: border-box; box-shadow: 0 16px 38px -12px rgba(232,38,127,0.62), inset 0 1px 0 rgba(255,255,255,0.30);">I'm ready</div>
+
+    <div style="margin-top: 15px; text-align: center; font-size: 13px; color: rgba(250,246,241,0.36);">Make a stranger see it</div>
+
   </div>
-
-  <div style="margin-top: 46px; font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(250,246,241,0.42);">Your word</div>
-
-  <div style="margin-top: 10px; font-size: 52px; line-height: 0.94; font-weight: 800; font-stretch: 125%; letter-spacing: -0.02em; text-wrap: balance;">SEFOFANE</div>
-
-  <div style="margin-top: 32px; font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #8A6A1F;">Don't say</div>
-
-  <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
-    <div style="padding: 9px 15px; border-radius: 8px; border: 1.5px solid rgba(138,106,31,0.55); background: rgba(138,106,31,0.10); font-size: 15px; font-weight: 600; color: rgba(250,246,241,0.88);">fofa</div>
-    <div style="padding: 9px 15px; border-radius: 8px; border: 1.5px solid rgba(138,106,31,0.55); background: rgba(138,106,31,0.10); font-size: 15px; font-weight: 600; color: rgba(250,246,241,0.88);">loapi</div>
-    <div style="padding: 9px 15px; border-radius: 8px; border: 1.5px solid rgba(138,106,31,0.55); background: rgba(138,106,31,0.10); font-size: 15px; font-weight: 600; color: rgba(250,246,241,0.88);">maeto</div>
-    <div style="padding: 9px 15px; border-radius: 8px; border: 1.5px solid rgba(138,106,31,0.55); background: rgba(138,106,31,0.10); font-size: 15px; font-weight: 600; color: rgba(250,246,241,0.88);">boemafofane</div>
-  </div>
-
-  <div style="flex-grow: 1;"></div>
-
-  <div style="display: flex; align-items: center; gap: 10px; color: rgba(250,246,241,0.50); font-size: 14px;">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2.5 2"></path><path d="M9 2h6"></path></svg>
-    <span>30 seconds. Two people will listen.</span>
-  </div>
-
-  <div style="margin-top: 18px; padding: 19px; border-radius: 16px; background: linear-gradient(96deg, #FF5A36, #E8267F); color: #14100E; font-size: 18px; font-weight: 800; text-align: center; letter-spacing: -0.01em; min-height: 44px; box-sizing: border-box;">I'm ready</div>
-
-  <div style="margin-top: 14px; text-align: center; font-size: 13px; color: rgba(250,246,241,0.38);">Describe it so a stranger gets it</div>
-
 </div>
 </x-dc>
 </body>

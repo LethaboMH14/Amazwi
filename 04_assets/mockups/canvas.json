@@ -1,45 +1,118 @@
 {
   "artboards": [
-    { "file": "Consent.dc.html",    "x": 0,    "y": 0,   "w": 390, "h": 844, "title": "1 · Consent" },
-    { "file": "Main.dc.html",       "x": 470,  "y": 0,   "w": 390, "h": 844, "title": "2 · Card reveal" },
-    { "file": "Recording.dc.html",  "x": 940,  "y": 0,   "w": 390, "h": 844, "title": "3 · Recording" },
-    { "file": "Listen.dc.html",     "x": 1410, "y": 0,   "w": 390, "h": 844, "title": "4 · Listen & guess" },
-    { "file": "Referee.dc.html",    "x": 1880, "y": 0,   "w": 390, "h": 844, "title": "5 · Reveal & referee" },
-    { "file": "Understood.dc.html", "x": 0,    "y": 964, "w": 390, "h": 844, "title": "6 · The money moment" },
-    { "file": "Wallet.dc.html",     "x": 470,  "y": 964, "w": 390, "h": 844, "title": "7 · Wallet" },
-    { "file": "Receipt.dc.html",    "x": 940,  "y": 964, "w": 390, "h": 844, "title": "8 · Voice Value Receipt" },
-    { "file": "League.dc.html",     "x": 1410, "y": 964, "w": 390, "h": 844, "title": "9 · League" },
-    { "file": "Archive.dc.html",    "x": 1880, "y": 964, "w": 390, "h": 844, "title": "10 · The Archive" }
+    {
+      "file": "Consent.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "1 · Consent — WIREFRAME"
+    },
+    {
+      "file": "Main.dc.html",
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "2 · Card reveal — CRAFTED"
+    },
+    {
+      "file": "Recording.dc.html",
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "3 · Recording — CRAFTED"
+    },
+    {
+      "file": "Listen.dc.html",
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "4 · Listen & guess — WIREFRAME"
+    },
+    {
+      "file": "Referee.dc.html",
+      "x": 1880,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "5 · Reveal & referee — WIREFRAME"
+    },
+    {
+      "file": "Understood.dc.html",
+      "x": 0,
+      "y": 964,
+      "w": 390,
+      "h": 844,
+      "title": "6 · Money moment — CRAFTED"
+    },
+    {
+      "file": "Wallet.dc.html",
+      "x": 470,
+      "y": 964,
+      "w": 390,
+      "h": 844,
+      "title": "7 · Wallet — WIREFRAME"
+    },
+    {
+      "file": "Receipt.dc.html",
+      "x": 940,
+      "y": 964,
+      "w": 390,
+      "h": 844,
+      "title": "8 · Receipt — WIREFRAME"
+    },
+    {
+      "file": "League.dc.html",
+      "x": 1410,
+      "y": 964,
+      "w": 390,
+      "h": 844,
+      "title": "9 · League — WIREFRAME"
+    },
+    {
+      "file": "Archive.dc.html",
+      "x": 1880,
+      "y": 964,
+      "w": 390,
+      "h": 844,
+      "title": "10 · Archive — WIREFRAME"
+    }
   ],
   "annotations": [
     {
+      "id": "note-status",
+      "x": 0,
+      "y": -290,
+      "w": 860,
+      "kind": "title1",
+      "text": "THESE ARE NOT FINISHED. READ THIS FIRST.\n\nThree screens have had a craft pass — Card reveal, Recording, Money moment. They set the bar: ambient glow, film grain, gradient type, elevation with inner top-highlight, real avatars, refined micro-typography.\n\nThe other seven are WIREFRAMES wearing the palette. Correct structure, correct content, no craft. They are below the reference examples and must not go in front of a judge as they are.\n\nRefinement brief: 04_assets/mockups/REFINEMENT_BRIEF.md"
+    },
+    {
+      "id": "note-bar",
+      "x": 940,
+      "y": -290,
+      "w": 860,
+      "text": "WHAT THE CRAFT PASS ADDED (copy this to the other seven)\n\n1. Radial ambient glow behind the focal element — the single biggest win\n2. SVG film grain at 0.5 opacity, overlay blend — makes flat dark UI feel like material\n3. Inner top highlight on every raised surface: inset 0 1px 0 rgba(250,246,241,0.07). THIS is what separates expensive dark UI from amateur\n4. Real elevation: 0 20px 44px -18px rgba(0,0,0,0.9)\n5. Gradient-filled display type with a soft glow, not flat white\n6. Tighter display tracking (-0.035em) and a wider size gap between levels\n7. Avatars with initials — even simple ones read as a real product"
+    },
+    {
       "id": "note-cards",
-      "x": 470,
-      "y": -190,
-      "w": 390,
-      "text": "PLACEHOLDER CARD CONTENT.\nSEFOFANE / ISITHUTHUTHU and their banned words are my best guess, not native-checked. Replace every one — Lethabo on Setswana, Sbu on isiZulu. A wrong word here is the most damaging detail in the whole product."
-    },
-    {
-      "id": "note-referee",
-      "x": 1880,
-      "y": -190,
-      "w": 390,
-      "text": "THE FIX THAT MATTERS.\nThe listener referees the banned-word rule — not the speaker rating their own round. Two listeners agreeing voids it. Without this the dominant strategy is to just say the word."
-    },
-    {
-      "id": "note-money",
       "x": 470,
       "y": 1854,
       "w": 860,
-      "text": "MONEY SCREENS ARE DELIBERATELY BORING.\nNo gradient, tabular numerals, three distinct states, the EUR sandbox label visible, and the wallet never says \"paid\" before MoMo confirms. Yellow appears only where value moves — that is the whole colour rule."
+      "text": "CARD CONTENT IS PLACEHOLDER AND NOT NATIVE-CHECKED.\n\nSEFOFANE / ISITHUTHUTHU and their banned words are a best guess. Replace every one — Lethabo on Setswana, Sbu on isiZulu. A wrong word here is the single most damaging detail in the product."
     },
     {
-      "id": "note-league",
+      "id": "note-rules",
       "x": 1410,
       "y": 1854,
       "w": 860,
-      "text": "TIERED, WITH NO LOSING STATE.\nPromotion zone shaded, your position pinned, progress shown against your own last week. There is no national last place — the research says losing teams are harmed while winners gain nothing."
+      "text": "RULES THAT SURVIVE ANY REDESIGN\n\n• MTN yellow appears ONLY where value moves. Nothing decorative is yellow.\n• A missed guess is ochre, never red. Not being understood is information, not an error.\n• Money screens stay boring — no gradient, tabular numerals, never says 'paid' before MoMo confirms.\n• Two listeners, not three. Everywhere.\n• The LISTENER referees the banned-word rule, never the speaker.\n• No fake status bar — the real one renders on top.\n• The league has no losing state."
     }
   ],
-  "launch": { "view": "canvas" }
+  "launch": {
+    "view": "canvas"
+  }
 }

@@ -4,6 +4,15 @@ Ten artboards, built from the tokens in [`../../05_amazwi/plan/04_DESIGN.md`](..
 
 **Live canvas:** https://claude.ai/code/artifact/889d9d01-823d-4a84-bd00-7d6e88007903
 
+> ⚠️ **NOT FINISHED — three screens are crafted, seven are wireframes.**
+> Held against the reference examples these are below the bar: the wireframes have correct structure and content but no depth, material or composition. **Do not put them in front of a judge as they are.**
+> **→ [REFINEMENT_BRIEF.md](REFINEMENT_BRIEF.md)** — the diagnosis, the craft layer to copy, per-screen asks, and the constraint block to paste into Codex.
+
+| Fidelity | Screens |
+|---|---|
+| ✅ **Crafted** — the bar | `Main` · `Recording` · `Understood` |
+| ⚠️ **Wireframe** — needs the pass | `Consent` · `Listen` · `Referee` · `Wallet` · `Receipt` · `League` · `Archive` |
+
 ## The screens
 
 | # | File | What it settles |
