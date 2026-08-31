@@ -133,6 +133,25 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~18:35] — Lethabo (Sonnet, BUILD) · L1 · 4 of 5 validator errors fixed
+
+**DID**
+- Applied Lethabo's confirmed second accepted-answer forms: `ntlo` → +dintlo/matlo (matlo confirmed as street/colloquial usage, dintlo the formal plural), `kobo` → +dikobo, `bogobe` → +pap (confirmed in active Setswana use), `sekolo` → +dikolo.
+- Re-ran `validate_cards.mjs`: **4 of 5 errors cleared.**
+
+```
+before:  5 errors (sw-003, sw-004, sw-006, sw-007, sw-008)
+after:   1 error  (sw-003 only)
+```
+
+**NOT GUESSED — sw-003 (pula) flagged separately, not silently resolved**
+- Lethabo's answer on pula addressed the *meaning*-ambiguity question (currency/motto vs rain — confirmed context makes it unambiguous), which is a different question from what the validator actually needs (a second typed form). Rather than read his answer as covering both, or invent a plural myself, recorded the precise gap in `open_question_for_lethabo` in the file: pula is a mass noun, `dipula` may not be a natural second form the way the other plurals were, so this needs a specific decision — a real second form, a different rule for this card, or a target swap.
+
+**NEXT**
+- One more decision from Lethabo closes L1 completely.
+
+---
+
 ### [31 Aug ~18:20] — Lethabo (Opus, TOP) · L1 review + Sbu Q&A
 
 **DID**

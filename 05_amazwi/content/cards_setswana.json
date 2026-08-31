@@ -1,7 +1,6 @@
 {
   "language": "setswana",
-  "status": "REVIEWED BY LETHABO (31 Aug) BUT FAILS VALIDATION — 5 cards have only one accepted answer and are hard-rejected by validate_cards.mjs / the Gate A loader. Content is approved; the deck is NOT importable until each of sw-003, sw-004, sw-006, sw-007, sw-008 has a second native-reviewed accepted form. See blocker_for_lethabo.",
-  "open_question_for_sbu": "PLURAL CONVENTION MISMATCH. cards_isizulu.json applies 'singular and plural both count' (indiza/izindiza, inkomo/izinkomo). The Setswana set below has plurals on sw-001 and sw-002 only, because that is exactly what was reviewed. If the convention should be symmetric, the additions would be: sw-004 matlo, sw-006 dikobo, sw-008 dikolo. sw-003 (pula), sw-005 (meetse) and sw-007 (bogobe) are mass nouns where a plural is not natural, so they would stay single-form either way. NOT added unilaterally — this needs Lethabo's review, since adding an unreviewed accepted answer is exactly the failure mode the review gate exists to prevent.",
+  "status": "REVIEWED — Lethabo approved all targets, blocked words, accepted answers and distractors on 31 August 2026. Second accepted-answer forms confirmed 31 Aug evening: ntlo->dintlo/matlo (matlo is confirmed colloquial/street usage, dintlo is the formal plural), kobo->dikobo, bogobe->pap (confirmed in active Setswana use), sekolo->dikolo. sw-003 (pula) still has only one accepted form — see open_question_for_lethabo.",
   "hero_8": [
     {
       "id": "sw-001",
@@ -79,7 +78,9 @@
         "aga"
       ],
       "accepted_answers": [
-        "ntlo"
+        "ntlo",
+        "dintlo",
+        "matlo"
       ],
       "distractors": [
         "phaphosi",
@@ -122,7 +123,8 @@
         "lesela"
       ],
       "accepted_answers": [
-        "kobo"
+        "kobo",
+        "dikobo"
       ],
       "distractors": [
         "seaparo",
@@ -143,7 +145,8 @@
         "apaya"
       ],
       "accepted_answers": [
-        "bogobe"
+        "bogobe",
+        "pap"
       ],
       "distractors": [
         "seswaa",
@@ -164,7 +167,8 @@
         "thuto"
       ],
       "accepted_answers": [
-        "sekolo"
+        "sekolo",
+        "dikolo"
       ],
       "distractors": [
         "ntlo",
@@ -199,15 +203,7 @@
     "tsela (road/path)"
   ],
   "blocker_for_lethabo": {
-    "why": "SCHEMA.md Gate A rule: accepted_answers with fewer than 2 entries is a HARD REJECT, not a warning. cards_isizulu.json passes 8/8 because Sbu applied 'singular and plural both count'. The Setswana deck was authored before that convention existed.",
-    "needed": "One extra native-reviewed accepted form for each of the 5 failing cards. 60 seconds of your judgement, not a research task.",
-    "candidates_NOT_added": {
-      "sw-004 ntlo": "matlo (plural) — follows Sbu's accepted convention",
-      "sw-006 kobo": "dikobo (plural) — follows Sbu's accepted convention",
-      "sw-008 sekolo": "dikolo (plural) — follows Sbu's accepted convention",
-      "sw-003 pula": "mass noun, no natural plural. Options: 'dipula' (rains/rainy seasons) or a common typed variant. YOUR CALL.",
-      "sw-007 bogobe": "mass noun, no natural plural. Strong candidate: 'pap' — the loan word most South Africans would actually type. Possibly 'papa'. YOUR CALL."
-    },
-    "not_added_deliberately": "These are unreviewed by a native speaker. Adding an accepted answer that is wrong silently marks correct verifiers WRONG — the exact failure the 2-form gate exists to prevent. Confirm and I will add them."
-  }
+    "status": "4 of 5 resolved (ntlo, kobo, bogobe, sekolo). Only sw-003 (pula) remains — see open_question_for_lethabo."
+  },
+  "open_question_for_lethabo": "PULA STILL FAILS VALIDATION. Your answer on pula addressed the earlier-flagged MEANING ambiguity (currency/motto vs rain) -- confirming context makes it unambiguous, which is a different question from what the validator needs. validate_cards.mjs requires accepted_answers to have >=2 entries, and pula currently has one. It's a mass noun so a plural like 'dipula' may not be natural the way dintlo/dikobo/dikolo are -- what's a second real way someone would type this answer? Or should this card's rule be handled differently (e.g. accept a short descriptive phrase, or swap the target)?"
 }
