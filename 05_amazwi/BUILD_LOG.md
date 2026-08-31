@@ -135,6 +135,30 @@ PING: <only if the other person must act>
 **PING Lethabo**
 - Starter repo is at `starter/` if you want to point the frontend routes at it instead of starting cold.
 
+---
+
+### [31 Aug ~15:40] — Lethabo (Sonnet high) · BUILD · L1/L2
+
+**DID**
+- L1 started, not finished: built `content/SCHEMA.md` (canonical card fields, matching Sbu's schema exactly — `target`/`blocked_words`/`accepted_answers`/`distractors`, exact-match only per his correction, no fuzzy) and `content/cards_setswana.json` — 8 hero-card slots with target-word candidates only.
+- L2 done for 1 of 10 screens: `Main.dc.html` now has a live theme tweak. Ground/surface/text/border/glow are CSS custom properties on a `.stage[data-theme]` selector, matching `04_assets/themes/tokens.css` values exactly. A dropdown tweak (`shweshwe|dusk|earth|ndebele|ink`) switches it live in the canvas editor.
+
+**WHY — L1 is intentionally incomplete**
+- I am not a Setswana speaker. `blocked_words`, `accepted_answers` and `distractors` require native judgement — "the four most obvious spoken alternatives," not dictionary synonyms — and the docs are explicit, repeatedly, that a wrong word here is the single most damaging detail in the product. Fabricating plausible-looking content I can't verify is worse than leaving it blank; a bad guess gets silently accepted, an empty field does not.
+- I drafted target-word *candidates* only (common concrete Setswana nouns, moderate confidence) so the file is a fill-in worksheet instead of a blank page + schema lookup. **Every blocked_word/accepted_answer/distractor is a stub. None of this is usable content yet.**
+
+**WHY — L2 scoped to 1 file, not all 10**
+- Full live-theme correctness needs every `rgba(250,246,241,x)` (light-text-on-dark) value in each screen re-evaluated for what it should become on the light `earth` theme — that's per-screen craft judgement, not a mechanical variable swap. Doing it properly for `Main.dc.html` and being honest that the other 9 need the same pass (already scoped as Codex's refinement work in `REFINEMENT_BRIEF.md`) beats doing all 10 quickly and wrong.
+- **Verification limit:** ran `seed-canvas --check` (passes) and validated the `data-props` JSON and `var()` references by hand. **Could not get a live visual render this session** — the published artifact needs my authenticated claude.ai session, which the browser tool's tab doesn't share, and local `file://` access was declined. Structurally correct; not yet eyeballed.
+
+**BLOCKED / PING Lethabo (you, reading this)**
+- **`content/cards_setswana.json` needs YOUR pass**, not mine. Confirm/replace the 8 target words, then fill blocked_words/accepted_answers/distractors from real native judgement. Read it out loud before trusting any of it.
+- **The theme tweak pattern is proven on 1 screen.** Applying it to the other 9 is mechanical *if* you accept "ground/surface/text swap, chip-specific rgba values stay as-is for now" as good enough for Wednesday. If you want full per-theme craft correctness on all 10, that's hours, not minutes — say which you want.
+
+**NEXT**
+- Either: (a) confirm the worksheet approach and keep going on L1 content yourself, or (b) tell me to continue the L2 pattern across the remaining 9 screens at "ground-only" fidelity now and defer full craft to Codex's refinement pass.
+
+---
 
 ### [31 Aug 14:40] — Lethabo · TOP/high · P0 allocated
 

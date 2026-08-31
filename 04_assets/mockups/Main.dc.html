@@ -11,6 +11,37 @@
   <style>
     body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
     a { color: #FF5A36; } a:hover { color: #E8267F; }
+
+    /* ===== TOKENS — mirrors 04_assets/themes/tokens.css =====
+       Brand (--voice-1/2, --rand) never appears here: it never changes.
+       Only ground/surface/text/glow move per theme. */
+    .stage {
+      --ground: #0C1123; --ground-deep: #080C1A; --surface: #161B2E;
+      --text: #EAF0FA; --text-dim: #8A97B0; --border: rgba(168,196,232,0.16);
+      --hi: rgba(200,224,255,0.10); --glow: rgba(255,90,54,0.30);
+      background: var(--ground); color: var(--text);
+    }
+    .stage[data-theme="dusk"] {
+      --ground: #2A1740; --ground-deep: #140A0C; --surface: #3A1A2E;
+      --text: #FFF1E8; --text-dim: #C9A996; --border: rgba(255,241,232,0.15);
+      --hi: rgba(255,241,232,0.16); --glow: rgba(255,150,80,0.34);
+    }
+    .stage[data-theme="earth"] {
+      --ground: #FBF2E6; --ground-deep: #EAD7C0; --surface: #FFFFFF;
+      --text: #241408; --text-dim: #6B5238; --border: #E0CDB2;
+      --hi: rgba(255,255,255,0.70); --glow: rgba(224,178,128,0.45);
+    }
+    .stage[data-theme="ndebele"] {
+      --ground: #0B0908; --ground-deep: #000000; --surface: #14100E;
+      --text: #F4EFE6; --text-dim: #A69C8E; --border: #3A322C;
+      --hi: rgba(244,239,230,0.10); --glow: rgba(232,178,42,0.22);
+    }
+    .stage[data-theme="ink"] {
+      --ground: #14100E; --ground-deep: #0A0807; --surface: #2A231F;
+      --text: #FAF6F1; --text-dim: #9A9086; --border: rgba(250,246,241,0.09);
+      --hi: rgba(250,246,241,0.07); --glow: rgba(255,90,54,0.28);
+    }
+
     .grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.5; mix-blend-mode: overlay;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E"); }
     .chip { padding: 10px 16px; border-radius: 10px; font-size: 15px; font-weight: 600; letter-spacing: -0.005em;
@@ -21,10 +52,10 @@
       border: 1px solid rgba(250,246,241,0.13); box-shadow: inset 0 1px 0 rgba(250,246,241,0.10); }
   </style>
 </helmet>
-<div style="width: 390px; height: 844px; background: #14100E; color: #FAF6F1; position: relative; overflow: hidden;">
+<div class="stage" data-theme="{{theme}}" style="width: 390px; height: 844px; position: relative; overflow: hidden;">
 
-  <div style="position: absolute; width: 460px; height: 460px; left: -110px; top: 88px; border-radius: 999px; background: radial-gradient(circle, rgba(255,90,54,0.30) 0%, rgba(232,38,127,0.13) 42%, rgba(20,16,14,0) 68%); filter: blur(8px);"></div>
-  <div style="position: absolute; width: 300px; height: 300px; right: -120px; bottom: 40px; border-radius: 999px; background: radial-gradient(circle, rgba(232,38,127,0.16) 0%, rgba(20,16,14,0) 70%);"></div>
+  <div style="position: absolute; width: 460px; height: 460px; left: -110px; top: 88px; border-radius: 999px; background: radial-gradient(circle, var(--glow) 0%, transparent 68%); filter: blur(8px);"></div>
+  <div style="position: absolute; width: 300px; height: 300px; right: -120px; bottom: 40px; border-radius: 999px; background: radial-gradient(circle, rgba(232,38,127,0.16) 0%, transparent 70%);"></div>
   <div class="grain"></div>
 
   <div style="position: relative; height: 100%; display: flex; flex-direction: column; padding: 26px 24px 30px; box-sizing: border-box;">
@@ -42,8 +73,8 @@
     </div>
 
     <div style="margin-top: 44px; display: flex; align-items: baseline; gap: 10px;">
-      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(250,246,241,0.38);">Your word</span>
-      <span style="flex-grow: 1; height: 1px; background: linear-gradient(90deg, rgba(250,246,241,0.16), rgba(250,246,241,0));"></span>
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-dim);">Your word</span>
+      <span style="flex-grow: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent);"></span>
     </div>
 
     <div style="margin-top: 14px; font-size: 54px; line-height: 0.92; font-weight: 800; font-stretch: 125%; letter-spacing: -0.035em; background: linear-gradient(168deg, #FFF6F0 8%, #FFC9B4 58%, #F08A9E 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 44px rgba(255,90,54,0.22);">SEFOFANE</div>
@@ -62,11 +93,11 @@
 
     <div style="flex-grow: 1;"></div>
 
-    <div style="padding: 18px 20px; border-radius: 18px; background: linear-gradient(180deg, rgba(42,35,31,0.92), rgba(28,23,20,0.92)); border: 1px solid rgba(250,246,241,0.09); box-shadow: 0 20px 44px -18px rgba(0,0,0,0.9), inset 0 1px 0 rgba(250,246,241,0.07); backdrop-filter: blur(6px);">
+    <div class="raised-hint" style="padding: 18px 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 20px 44px -18px rgba(0,0,0,0.9), inset 0 1px 0 var(--hi); backdrop-filter: blur(6px);">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 11px;">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="rgba(250,246,241,0.62)" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="13" r="8"></circle><path d="M12 9.5V13l2.4 1.8"></path><path d="M9.5 2h5"></path></svg>
-          <span style="font-size: 14.5px; color: rgba(250,246,241,0.78);">30 seconds &middot; 2 listeners</span>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="13" r="8"></circle><path d="M12 9.5V13l2.4 1.8"></path><path d="M9.5 2h5"></path></svg>
+          <span style="font-size: 14.5px; color: var(--text-dim);">30 seconds &middot; 2 listeners</span>
         </div>
         <div style="padding: 7px 13px; border-radius: 999px; background: linear-gradient(180deg, rgba(255,203,5,0.20), rgba(255,203,5,0.09)); border: 1px solid rgba(255,203,5,0.42); box-shadow: inset 0 1px 0 rgba(255,231,140,0.28); color: #FFD84D; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums;">R2.00</div>
       </div>
@@ -74,10 +105,17 @@
 
     <div style="margin-top: 12px; padding: 20px; border-radius: 18px; background: linear-gradient(96deg, #FF5A36, #E8267F); color: #1A0D10; font-size: 18px; font-weight: 800; text-align: center; letter-spacing: -0.015em; min-height: 44px; box-sizing: border-box; box-shadow: 0 16px 38px -12px rgba(232,38,127,0.62), inset 0 1px 0 rgba(255,255,255,0.30);">I'm ready</div>
 
-    <div style="margin-top: 15px; text-align: center; font-size: 13px; color: rgba(250,246,241,0.36);">Make a stranger see it</div>
+    <div style="margin-top: 15px; text-align: center; font-size: 13px; color: var(--text-dim);">Make a stranger see it</div>
 
   </div>
 </div>
 </x-dc>
+<script data-dc-script data-props='{"theme":{"editor":"enum","default":"shweshwe","options":["shweshwe","dusk","earth","ndebele","ink"],"section":"Theme"}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.theme ?? 'shweshwe' };
+  }
+}
+</script>
 </body>
 </html>

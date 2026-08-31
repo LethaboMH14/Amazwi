@@ -1,0 +1,111 @@
+{
+  "language": "setswana",
+  "status": "DRAFT WORKSHEET — target words are candidates, everything else needs your native judgement. Nothing here reaches the pitch until you've filled and checked it.",
+  "hero_8": [
+    {
+      "id": "sw-001",
+      "target": "sefofane",
+      "gloss_en": "airplane",
+      "blocked_words": ["", "", "", ""],
+      "accepted_answers": ["sefofane"],
+      "distractors": ["", "", ""],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "note": "Used in the mockup as a placeholder. Common word, likely fine as a target — the 4 blocked_words in the mockup (fofa/loapi/maeto/boemafofane) were my guess and are NOT verified. Check or replace."
+    },
+    {
+      "id": "sw-002",
+      "target": "kgomo",
+      "gloss_en": "cow / cattle",
+      "blocked_words": ["", "", "", ""],
+      "accepted_answers": ["kgomo"],
+      "distractors": ["", "", ""],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "note": "Cattle carry real cultural weight in Setswana-speaking communities (bogadi, wealth) — could be a strong card if the description angle leans into that rather than just 'animal'."
+    },
+    {
+      "id": "sw-003",
+      "target": "pula",
+      "gloss_en": "rain",
+      "blocked_words": ["", "", "", ""],
+      "accepted_answers": ["pula"],
+      "distractors": ["", "", ""],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "note": "Also the currency name and the national motto word — double meaning could make banned-word selection tricky (do you block 'madi'/money-adjacent words, or only weather words?). Your call."
+    },
+    {
+      "id": "sw-004",
+      "target": "ntlo",
+      "gloss_en": "house / room",
+      "blocked_words": ["", "", "", ""],
+      "accepted_answers": ["ntlo"],
+      "distractors": ["", "", ""],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "note": ""
+    },
+    {
+      "id": "sw-005",
+      "target": "meetse",
+      "gloss_en": "water",
+      "blocked_words": ["", "", "", ""],
+      "accepted_answers": ["meetse"],
+      "distractors": ["", "", ""],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "note": ""
+    },
+    {
+      "id": "sw-006",
+      "target": "kobo",
+      "gloss_en": "blanket",
+      "blocked_words": ["", "", "", ""],
+      "accepted_answers": ["kobo"],
+      "distractors": ["", "", ""],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "note": "Traditional Setswana/Basotho blankets are a strong cultural visual if this becomes a card-illustration candidate later — but the illustration must never leak the answer on a LISTENER screen."
+    },
+    {
+      "id": "sw-007",
+      "target": "dijo",
+      "gloss_en": "food",
+      "blocked_words": ["", "", "", ""],
+      "accepted_answers": ["dijo"],
+      "distractors": ["", "", ""],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "note": "Possibly too generic/abstract to describe in 30s without saying near-synonyms immediately (bogobe, nama, etc. might BE the natural description) — consider a more concrete food item instead (e.g. a specific dish) if this proves hard to play."
+    },
+    {
+      "id": "sw-008",
+      "target": "sekolo",
+      "gloss_en": "school",
+      "blocked_words": ["", "", "", ""],
+      "accepted_answers": ["sekolo"],
+      "distractors": ["", "", ""],
+      "campaign_or_deck": "hero-8",
+      "active": true,
+      "note": ""
+    }
+  ],
+  "pool_22_target_candidates": [
+    "podi (goat)", "nku (sheep)", "pere (horse)", "tlou (elephant)",
+    "mmutla (rabbit)", "thipa (knife)", "pitsa (pot)", "tafole (table)",
+    "setlhare (tree)", "letsatsi (sun/day)", "ngwana (child)",
+    "kgetsi (bag)", "selepe (axe)", "teksi (taxi)", "sefako (hail)",
+    "moraka (kraal)", "bojalwa (traditional beer)", "molelo (fire)",
+    "lebati (door)", "dikgomo tsa mmualo (?? -- verify, may not be a real natural phrase)",
+    "phaphosi (bedroom/room)", "tsela (road/path)"
+  ],
+  "instructions_for_lethabo": [
+    "1. For each hero-8 card: confirm or replace the target word, then fill blocked_words[4] with the four most obvious spoken alternatives -- the ones you'd reach for FIRST if someone said 'don't say the word'.",
+    "2. accepted_answers must be EXHAUSTIVE -- matching is exact, no fuzzy correction. List every real variant (spelling, common alternative word) a verifier might type.",
+    "3. distractors[3] -- plausible wrong MCQ options, not absurd ones.",
+    "4. Delete any card whose target doesn't actually work as a 30-second describe-it prompt once you try it out loud.",
+    "5. Pool candidates are UNCHECKED guesses at real words -- several may be wrong, archaic, or not natural. Treat the list as a prompt for your own better ideas, not a source.",
+    "6. Once a card is real, strip the 'note' and 'confidence/status' fields -- those are worksheet-only, not part of the production schema in content/SCHEMA.md."
+  ]
+}
