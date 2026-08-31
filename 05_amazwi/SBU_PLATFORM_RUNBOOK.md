@@ -6,10 +6,10 @@ Use this alongside `P0.md`, `plan/02_TECH.md` and `plan/05_BUILD.md`. It is a de
 
 ### Current status (31 August 2026)
 
-- Portal capability: **catalog visible in authenticated session; callable entitlement still unknown**.
-- Collections: **catalog entry visible; subscription/callability not yet confirmed for the event sandbox**.
-- Disbursements: **catalog entry visible; subscription/callability not yet confirmed; South African production-style disbursement is not assumed available**.
-- Provider mode: keep `DEMO_PROVIDER` as the safe fallback until the portal result is recorded.
+- Portal capability: **authenticated profile checked — no subscriptions exist on this account**.
+- Collections: **catalog entry visible but not subscribed; not callable from the current account**.
+- Disbursements: **catalog entry visible but not subscribed; not callable from the current account; South African production-style disbursement is not assumed available**.
+- Provider mode: **freeze `DEMO_PROVIDER`** unless the hackathon supplies a separately provisioned account.
 - Settlement currency: do not display a provider currency until the portal test confirms it; the documented generic sandbox expectation is EUR and must not be presented as a South African guarantee.
 
 Record the final outcome in `BUILD_LOG.md` with the date, product, environment and provider mode. Never record credentials or full phone numbers.

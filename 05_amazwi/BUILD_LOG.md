@@ -453,3 +453,7 @@ Sbu approved all eight isiZulu cards in `content/cards_isizulu.json`, including 
 - S4 is complete: the generic starter has passed backend and frontend verification; the product-specific code boundary remains intact.
 - The team will not send an organiser email. S6 is therefore a deliberate unknowns policy, not a pending email task. Pre-event product-code permission, Mini App integration details and event-sandbox entitlement remain unknown until event start or a portal result.
 - L1 remains the immediate content blocker: Setswana needs its native pass before any Gate A import. Native error-state copy remains open for both languages.
+
+### [31 Aug ~18:30] — Sbu · MoMo subscription check
+
+The authenticated MoMo Developer Portal profile shows **“You don't have subscriptions.”** The account can view the Collection and Disbursements catalog entries but cannot call either product. `DEMO_PROVIDER` is frozen as the default demo mode; a real sandbox leg is only reconsidered if the hackathon provisions a separate subscribed account. No subscription, API user, credential or payment action was created.

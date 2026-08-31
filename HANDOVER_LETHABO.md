@@ -63,6 +63,7 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 - Sbu will not send organiser questions. Treat pre-event product-code permission and event-specific MoMo/Mini App details as unknown; the generic starter boundary remains in force until event start.
 - Lethabo's next blocking deliverable is the reviewed Setswana hero-eight deck. Resolve the validator errors (five cards with only one accepted answer and deck-level DRAFT status) and each blocked-word/distractor warning before it is marked ready.
 - Both owners still need first-language error copy in `content/error_states.json`; leave a language field null until its owner has authored it.
+- The authenticated MoMo profile has no subscriptions. Build the receipt and wallet against `DEMO_PROVIDER`; do not imply a live Collections or Disbursements leg unless organisers provide a different provisioned account.
 
 ---
 
