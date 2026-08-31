@@ -5,7 +5,8 @@
     { "file": "Referee.dc.html",    "x": 940,  "y": 0, "w": 390, "h": 844, "title": "3 · Proficient verifier / referee" },
     { "file": "Understood.dc.html","x": 1410, "y": 0, "w": 390, "h": 844, "title": "4 · The money moment" },
     { "file": "Receipt.dc.html",    "x": 1880, "y": 0, "w": 390, "h": 844, "title": "5 · Voice Value Receipt" },
-    { "file": "Archive.dc.html",    "x": 2350, "y": 0, "w": 390, "h": 844, "title": "6 · Impact Map (aggregate)" }
+    { "file": "Archive.dc.html",    "x": 2350, "y": 0, "w": 390, "h": 844, "title": "6 · Impact Map (aggregate)" },
+    { "file": "ThemeDemo.dc.html",  "x": 2820, "y": 0, "w": 390, "h": 844, "title": "7 · Theme switch demo — LIVE", "is_interactive": true }
   ],
   "annotations": [
     {
