@@ -118,6 +118,24 @@ PING: <only if the other person must act>
 
 # LOG
 
+### [31 Aug] — Sbu · medium · S3/S4
+
+**DID**
+- `is_correct` spec written on paper — `plan/13_IS_CORRECT_SPEC.md`
+- Generic public starter repo scaffolded — `starter/` (React+Vite frontend, FastAPI backend, `DemoProvider` payment adapter, pytest, GitHub Actions CI). No AMAZWI concept anywhere in it, per the pre-event rule in `05_BUILD.md` §1.
+
+**WHY**
+- Organiser approval on pre-built product code is still open (#3 in the OPEN table) — did not risk it. Everything checked in today is either generic scaffolding or documentation, matching the line the plan already drew.
+
+**NEXT**
+- S1 (MoMo 90-min timebox) and S6 (organiser email) need Sbu directly — not done here.
+- S2 (30 isiZulu cards) needs a native-speaker pass — not done here.
+- Real schema/resolver/is_correct implementation waits for Gate A at event start, or explicit organiser approval.
+
+**PING Lethabo**
+- Starter repo is at `starter/` if you want to point the frontend routes at it instead of starting cold.
+
+
 ### [31 Aug 14:40] — Lethabo · TOP/high · P0 allocated
 
 **DID**
