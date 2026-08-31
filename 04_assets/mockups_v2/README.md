@@ -49,6 +49,10 @@ This now covers all five of `LETHABO_NEXT_WORK.md` item 4's named hero screens (
 
 Earth and Ink were chosen for the demo because they're the two most divergent grounds (light vs. dark-neutral) — the hardest contrast case, not the easiest. Dusk and Ndebele are not wired into this demo file; per `P0.md`, the final three-theme shortlist is still Sbu's and Lethabo's call after a target-device contrast check, not something to preempt here.
 
+## Accessibility & resilience evidence — LETHABO_NEXT_WORK item 6, done 31 Aug 2026
+
+Full findings in **[`ACCESSIBILITY_EVIDENCE.md`](ACCESSIBILITY_EVIDENCE.md)** — not summarised here beyond the headline: touch target sizes pass on every primary CTA except one flagged chip, but **every hero screen's CTA is currently a styled `div`, not a real button — a keyboard-only user cannot reach a single primary action today.** Two new error screens (`ErrorMicDenied.dc.html`, `ErrorProviderUnavailable.dc.html`) demonstrate the fix (real `<button>`, verified `:focus-visible`) but it has not yet been propagated to the five hero screens. Also found: these mockups are fixed 390px-wide canvases and cannot pass a real 200%-zoom reflow check by construction — the real frontend must use relative units from Gate A onward or it inherits the same defect for real.
+
 ✅ **`SEFOFANE` is real, not placeholder** — it's `sw-001` in `05_amazwi/content/cards_setswana.json`, native-confirmed 31 Aug with the identical target and all four blocked words. No change needed here.
 ⚠️ Only `Main.dc.html` carries the theme tweak so far.
 ⚠️ League and Impact Map are v1 wireframes; League is additionally cut per `plan/05_BUILD.md` §6 kill rules and must not appear in any judge-facing compiled canvas regardless of fidelity.

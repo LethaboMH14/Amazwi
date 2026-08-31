@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&family=Instrument+Serif:ital@0;1&display=swap">
+  <style>
+    body { margin:0; -webkit-font-smoothing:antialiased; }
+    .stage{
+      --text:#EDF1FA; --dim:#7E8BA8; --line:rgba(160,186,228,.14); --hi:rgba(190,216,255,.11);
+      font-family:'Archivo',system-ui,sans-serif; color:var(--text);
+      background: linear-gradient(174deg,#0E1428 0%, #0A0E1C 62%, #070A14 100%);
+    }
+    .grain{position:absolute;inset:0;pointer-events:none;opacity:.42;mix-blend-mode:overlay;z-index:3;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");}
+    .serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;}
+    .kicker{font-size:10px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--dim);}
+    /* Real focusable button, not a styled div -- keyboard/AT reachable by default. */
+    button.cta{
+      font-family:inherit; appearance:none; border:none; cursor:pointer;
+      width:100%; min-height:56px; padding:18px; border-radius:18px;
+      background:linear-gradient(96deg,#FF5A36,#E8267F); color:#0A0E1C;
+      font-weight:800; font-size:18px;
+    }
+    button.cta:focus-visible{ outline:3px solid #EDF1FA; outline-offset:3px; }
+  </style>
+</helmet>
+
+<div class="stage" style="width:390px;height:844px;position:relative;overflow:hidden;">
+  <div class="grain"></div>
+  <div style="position:relative;z-index:4;height:100%;display:flex;flex-direction:column;padding:28px 26px 30px;box-sizing:border-box;">
+
+    <div style="flex-grow:1;"></div>
+
+    <div style="display:flex;justify-content:center;">
+      <div style="width:84px;height:84px;border-radius:999px;background:rgba(192,52,26,.14);border:1.5px solid rgba(192,52,26,.4);display:flex;align-items:center;justify-content:center;">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#E8674C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="2" x2="22" y2="22"/><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"/><path d="M5 10v2a7 7 0 0 0 12 5"/><path d="M15 9.34V5a3 3 0 0 0-5.94-.6"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </div>
+    </div>
+
+    <div style="margin-top:26px;font-size:30px;font-weight:800;letter-spacing:-.02em;text-align:center;">We can't hear you</div>
+    <div class="serif" style="margin-top:12px;font-size:19px;color:var(--dim);text-align:center;line-height:1.4;">your browser needs microphone access to record a round — check your site settings and allow the microphone, then come back here</div>
+
+    <div style="flex-grow:1;"></div>
+
+    <button class="cta" type="button">Try again</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
