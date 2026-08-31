@@ -133,6 +133,29 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~17:35] — Lethabo (Sonnet, BUILD) · L1 · cards drafted, reasoning shown
+
+**DID**
+- `content/cards_setswana.json` — all 8 hero cards drafted with real values (target, 4 blocked_words, accepted_answers, 3 distractors), each carrying a `reasoning` field explaining WHY those specific words were chosen and a `confidence` rating, so review is fast rather than starting cold.
+- `content/cards_isizulu_PROPOSAL.md` — same method, 8 candidate cards, **explicitly NOT written into `cards_isizulu.json` or Sbu's `CARDS_ISIZULU_AUTHORING.md`.** isiZulu content is Sbu's owned lane per the confirmed role split; this is a proposal for him to accept/amend/reject through the normal handover, not a fill-in of his file.
+- Swapped `sw-007` from the earlier placeholder `dijo` (food — flagged as too generic to describe in 30s) to `bogobe` (maize porridge/pap), a concrete, iconic target.
+
+**HOW**
+- Reasoned from real Setswana/isiZulu grammar (noun classes, verb roots) and known vocabulary, not invented. Every blocked-word choice states which real linguistic feature motivated it (e.g. `fofa` blocked on `sefofane` because the verb root "fly" sits inside the noun itself).
+- Validated programmatically before treating any of it as usable: confirmed 8 cards, exactly 4 blocked_words and 3 distractors per card, and — the one class of bug that actually breaks the mechanic — **zero overlap between `blocked_words` and `accepted_answers`** on any card (a blocked word that's also a correct answer would make the round unwinnable). All clean.
+- Noted, not silently fixed: 4 cards have a distractor that also appears in that card's `blocked_words`. Not a bug — a word can legitimately be both "don't say this" and "here's a plausible wrong guess" — but flagged for a human glance rather than auto-edited, since that's a content judgement call, not a structural one.
+
+**HONEST STATUS — this is a draft, not finished content**
+- `sw-003` (pula) carries a real flagged risk: the word is also the currency and national motto, which could make banned-word selection ambiguous. Decision needed: keep with a tighter description frame, or swap.
+- The isiZulu proposal has two cards flagged low-confidence: `ZU-06` (ingubo — may need a qualifier since it can mean garment/cloth broadly, not specifically a sleeping blanket) and `ZU-07` (the porridge target itself is unconfirmed — isiZulu has multiple real terms at different consistencies and I don't have the native intuition to pick one).
+- **Every 'reasoning' and 'confidence' field must be read, not skimmed** — that's the actual review, not a stamp of approval on the words alone.
+
+**NEXT**
+- Lethabo: say each Setswana target aloud, time the description, confirm or amend against the reasoning shown. Strip `reasoning`/`confidence` fields once a card is confirmed (worksheet-only, not in the production schema).
+- Sbu: review `cards_isizulu_PROPOSAL.md`, especially ZU-06/ZU-07, and record accepted/rejected/needs-evidence in `HANDOVER_SBU.md` per the continuous handover protocol before anything from it reaches his canonical file.
+
+---
+
 ### [31 Aug ~17:00] — Lethabo (Sonnet, BUILD) · coordination · P0.md
 
 **DID**
