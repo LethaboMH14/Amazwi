@@ -54,7 +54,7 @@ At Gate A, your exit conditions are: API health, database migration, deployment,
 
 ## S6 — organiser message
 
-Use `ORGANISER_EMAIL_DRAFT.md`. Copy the answer into `BUILD_LOG.md` and update the relevant canonical plan section; do not rely on memory or an oral reply.
+The team decided not to send an organiser email. Keep the pre-event permission, current Mini App bridge/CSP and event-sandbox details explicitly labelled **unknown**. Do not add product-specific implementation before event start; preserve `ORGANISER_EMAIL_DRAFT.md` as reference only.
 
 ## Non-negotiable truth checks
 

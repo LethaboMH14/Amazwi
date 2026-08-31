@@ -58,6 +58,12 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 - Sbu approved the full isiZulu hero-eight deck on 31 August 2026: targets, blocked words, accepted answers and distractors.
 - `content/cards_isizulu.json` is now the reviewed source and must pass `node content/validate_cards.mjs content/cards_isizulu.json` before import.
 
+### Current cross-lane handoff
+
+- Sbu will not send organiser questions. Treat pre-event product-code permission and event-specific MoMo/Mini App details as unknown; the generic starter boundary remains in force until event start.
+- Lethabo's next blocking deliverable is the reviewed Setswana hero-eight deck. Resolve the validator errors (five cards with only one accepted answer and deck-level DRAFT status) and each blocked-word/distractor warning before it is marked ready.
+- Both owners still need first-language error copy in `content/error_states.json`; leave a language field null until its owner has authored it.
+
 ---
 
 ## REVIEW OF YOUR LATEST PUSH (`d33094a`)

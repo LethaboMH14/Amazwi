@@ -446,3 +446,10 @@ The signed-in MoMo Developer Portal displayed catalog entries for **Collection**
 ### [31 Aug ~18:00] — Sbu · isiZulu hero-eight approved
 
 Sbu approved all eight isiZulu cards in `content/cards_isizulu.json`, including targets, blocked words, accepted answers and learner distractors. Singular/plural forms count; `ingubo yokulala` is the blanket target; `uphuthu` is the porridge target with `iphalishi` accepted. Authoring-only `confidence` fields were removed and the deck status changed to REVIEWED. The import validator must remain green before Gate A seed import.
+
+### [31 Aug ~18:15] — Sbu · Readiness reconciliation
+
+- S2 is complete: the isiZulu hero-eight deck is native-reviewed and validator-clean.
+- S4 is complete: the generic starter has passed backend and frontend verification; the product-specific code boundary remains intact.
+- The team will not send an organiser email. S6 is therefore a deliberate unknowns policy, not a pending email task. Pre-event product-code permission, Mini App integration details and event-sandbox entitlement remain unknown until event start or a portal result.
+- L1 remains the immediate content blocker: Setswana needs its native pass before any Gate A import. Native error-state copy remains open for both languages.
