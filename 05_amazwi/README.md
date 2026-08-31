@@ -27,10 +27,11 @@ The earlier plan was reconciled after Sbu's review. Read the canonical documents
 | Roadmap | [11_EXPANSION.md](plan/11_EXPANSION.md) | Roadmap ideas and design/tooling notes; not competition scope and subject to the critique in `HANDOVER_LETHABO.md` |
 | Execution | [P0.md](P0.md) | Current ownership allocation and gate summary; not a timeline |
 | Sbu runbook | [SBU_PLATFORM_RUNBOOK.md](SBU_PLATFORM_RUNBOOK.md) | MoMo, trust and platform checklist with no secrets |
-| Organiser draft | [ORGANISER_EMAIL_DRAFT.md](ORGANISER_EMAIL_DRAFT.md) | Questions required before product-specific pre-event work |
-| isiZulu authoring | [content/CARDS_ISIZULU_AUTHORING.md](content/CARDS_ISIZULU_AUTHORING.md) | Native-review worksheet; not an importable deck |
+| Organiser draft | [ORGANISER_EMAIL_DRAFT.md](ORGANISER_EMAIL_DRAFT.md) | Preserved reference only; the team decided not to send it |
+| isiZulu authoring | [content/CARDS_ISIZULU_AUTHORING.md](content/CARDS_ISIZULU_AUTHORING.md) | Historical worksheet; the reviewed source is `cards_isizulu.json` |
 | isiZulu draft | [content/cards_isizulu.json](content/cards_isizulu.json) | Structured hero-eight draft; blocked from import until spoken native review passes |
 | Card review | [content/CARD_REVIEW_2026-08-31.md](content/CARD_REVIEW_2026-08-31.md) | Structural critique and validation command for both hero decks |
+| Lethabo handoff | [LETHABO_NEXT_WORK.md](LETHABO_NEXT_WORK.md) | Prioritised experience-lane tasks with testable exits |
 
 Evidence lives in [`research/`](research/). All seven research files are present, including source-graded gamification work in [`F_GAMIFICATION.md`](research/F_GAMIFICATION.md).
 

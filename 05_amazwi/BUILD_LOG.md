@@ -189,6 +189,15 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 **BLOCKED / PING**
 - None. Sbu: components are visible in the shared Figma file now — check `04_assets/FIGMA.md` before touching the Components page so we don't overwrite each other mid-edit, same rule as Foundations.
 
+### [31 Aug ~19:15] — Sbu/Codex · Experience-lane solidification
+
+- Added `LETHABO_NEXT_WORK.md`: seven ordered experience tasks with observable exits, covering content warnings, native error-copy sign-off, stale mockups, five hero screens, theme wiring, accessibility/resilience evidence and the pitch/rehearsal pack.
+- Added `content/validate_error_states.mjs`; all ten states across English, isiZulu and Setswana pass structural and retry-semantics validation.
+- Reconciled P0 status: role split confirmed; L4 structurally complete but still pending each first-language owner's final aloud approval.
+- Source review found stale placeholder warnings and non-P0 surfaces in the mockup bundle. No visual audit is claimed until the flow is rendered and current screenshots are inspected.
+
+---
+
 ### [31 Aug ~19:05] — Lethabo (Sonnet, BUILD) · error copy · both flagged terms confirmed wrong, fixed
 
 **DID**
