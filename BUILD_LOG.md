@@ -1,3 +1,8 @@
+> ⚠️ **This is pre-AMAZWI session history.**
+> **The live build log is [`05_amazwi/BUILD_LOG.md`](05_amazwi/BUILD_LOG.md)** — that is where entries go from 31 Aug onward.
+
+---
+
 # BUILD LOG
 Newest entries at the top. One entry per working session.
 
