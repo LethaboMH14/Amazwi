@@ -66,7 +66,7 @@ PING: <only if the other person must act>
 | Audio | Web Audio API + MediaRecorder → Opus | Planned | — |
 | Offline | None in P0 | Cut | Retry message, not a persisted audio outbox |
 | Backend | Python 3.12 + FastAPI + Pydantic | Planned | — |
-| DB | PostgreSQL 16 | Planned | Constraints are the product |
+| DB | PostgreSQL 16 | Schema + migration verified | 01 Sep — S5: real schema/migration tested against embedded PostgreSQL 16 (`pgserver`), 46 tests passing. No deployed/production instance yet — this is a verified migration, not a running service |
 | Storage | S3-compatible, private, presigned | Planned | — |
 | Async | Bounded synchronous decisions + polling/recovery action | Decided | Background tasks are not durable jobs |
 | Deploy | Cloudflare Pages / Vercel + container | Planned | — |
@@ -139,6 +139,40 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 ---
 
 # LOG
+
+### [01 Sep ~00:45] — Lethabo (Sonnet, MID) · CROSS-LANE, pending Sbu's review · S5 schema/migrations/ledger implemented + tested against real PostgreSQL 16
+
+**⚠️ Cross-lane exception, not a stopper-driven one** — same loosened-lane basis as the S3 entry above. Schema, migrations and reward-ledger correctness are Sbu's territory (data integrity, `05_BUILD.md` §2) — flagged pending his review throughout, not treated as final.
+
+**DID**
+- Implemented `starter/backend/app/models.py`: SQLAlchemy models for every record in `plan/02_TECH.md` §3 (User, ConsentGrant, Campaign, Card, Contribution, Assignment, EligibilityDecision, RewardEvent, PaymentAttempt, Receipt, AuditEvent), with the state-machine enums from §4 and the CHECK/UNIQUE constraints §8 and `content/SCHEMA.md` actually ask for — enforced at the database level, not just asserted in application code: campaign `committed_cents <= funded_cents`, card `accepted_answers` ≥ 2 / `blocked_words` = 4 / `distractors` = 3 (SCHEMA.md's own build-gate rule), unique `(contribution_id, verifier_id)` on assignments (§5's no-double-assignment rule), unique `(contribution_id, user_id, type)` and unique `idempotency_key` on reward_events (§8 invariant 1/2).
+- Set up real Alembic migrations (`starter/backend/alembic/`), `env.py` wired to the real model metadata (not left as the generated `target_metadata = None` stub) and to an `AMAZWI_DATABASE_URL` env var rather than a hardcoded connection string.
+- Installed `pgserver` (embedded PostgreSQL 16 binary, no Docker/system-Postgres install needed) and used it to generate and actually run the migration against a real PostgreSQL 16 instance — matching the stack table's stated `PostgreSQL 16` exactly, chosen deliberately over SQLite: SQLite has no native ARRAY type and weaker CHECK enforcement, so a SQLite-backed test suite would have silently passed things that fail against the real engine.
+- **Found and fixed a real bug via an actual upgrade→downgrade→upgrade roundtrip, not just a single `upgrade` smoke test**: Alembic's `revision --autogenerate` produced a `downgrade()` that drops the ENUM-backed tables but never drops the PostgreSQL ENUM types themselves (`payment_state`, `contribution_state`, `assignment_mode`) — a known alembic/SQLAlchemy autogenerate gap. Running the full roundtrip against the real embedded Postgres failed the second `upgrade` with `type "payment_state" already exists`. This is exactly Gate H's "judge-only demo survives a reset, twice" failure mode, so it mattered to catch now rather than at the event. Fixed by adding explicit `sa.Enum(...).drop(bind, checkfirst=True)` calls to the migration's `downgrade()`, documented inline with the reasoning. Re-ran the full roundtrip clean afterward.
+- Implemented `starter/backend/app/ledger.py`: `credit_reward`, `request_cash_out`, `apply_payment_callback`, `available_balance_cents` — the operations needed to make §8's six named invariants real and testable. Deliberately does NOT implement the MoMo provider adapter itself (§9, real external-API unknowns) or the assignment/resolver service (§5's pseudocode) — out of scope for this block, left open in NEXT below.
+- Wrote `starter/backend/tests/conftest.py` (session-scoped real-Postgres fixture, function-scoped clean-schema-per-test fixture) and four new test files — `test_migrations.py`, `test_schema_constraints.py`, `test_ledger_invariants.py`, `test_assignment_invariants.py` — 24 new tests total, explicitly mapped to §8's six invariants by name in the test file's own docstring (resolving repeatedly → one reward; repeated cash-out → one reservation; duplicate callback → no double-settlement; failed cash-out → releases reservation; campaign commitment → never exceeds funded budget; revocation → never deletes financial history — proven by construction, since `ledger.py` exposes no delete operation on `RewardEvent` at all).
+- **Caught and fixed two real test-authoring bugs before calling this done, not after**: the first test draft passed a bare random UUID as `contribution_id`, which the FK constraint correctly rejected — fixed by adding a real `_contribution()` seeding helper. The campaign-budget-rejection test called `session.refresh()` on an object that had gone stale after `credit_reward()`'s internal `rollback()`, which invalidated the whole transaction including earlier uncommitted setup rows — fixed by committing the setup before the expected-to-fail call and re-querying fresh by id afterward, with the reasoning documented inline in the test.
+- Ran the full backend suite after every fix, not just the new files: final run — **46 passed, 0 failed**, all against the real embedded PostgreSQL 16 (`app/matching.py`'s 20 S3 tests + `app/provider.py`'s 2 pre-existing tests + this block's 24 new tests, no regressions).
+- Wrote `starter/backend/S5_README.md`: what's built, what's deliberately not, how to run the tests (no Docker needed) and how to run migrations against a real non-test database, plus the ENUM-drop bug writeup so the next person doesn't have to rediscover it.
+- Cleaned up every scratch/throwaway script used during development (`_devdb.py`, `_decode*.py`, `_test_output*.txt` etc.) — nothing temporary was left in the repo; `git status` shows only real, intended files.
+
+**WHY**
+- S5 in `P0.md` explicitly asks for schema/migrations implementing `02_TECH.md`'s accepted answers, violation evidence, `VOIDED`/`EXPIRED` states and idempotent reward events — all present in §3/§4/§8, all now modelled and tested. Continuing the same cross-lane basis and standard as the S3 block earlier tonight.
+- Testing against a real PostgreSQL 16 instance rather than mocking the database was deliberate, not incidental: the entire point of this task is that "constraints are the product" (the stack table's own words for why Postgres was chosen) — a mocked or SQLite-backed test suite would prove nothing about whether those constraints actually hold.
+
+**CHANGED**
+- New: `starter/backend/app/models.py`, `starter/backend/app/ledger.py`, `starter/backend/alembic/` (env.py, script.py.mako, `versions/a3ea8e6c052e_initial_schema.py`), `starter/backend/alembic.ini`, `starter/backend/tests/conftest.py`, `test_migrations.py`, `test_schema_constraints.py`, `test_ledger_invariants.py`, `test_assignment_invariants.py`, `starter/backend/S5_README.md`.
+- `starter/backend/requirements.txt` — added sqlalchemy, alembic, psycopg2-binary (runtime) and pgserver (dev/test only, embedded Postgres for real migration tests without Docker).
+- `HANDOVER_SBU.md`, `P0.md` — review-request entries (see below).
+
+**NEXT**
+- Sbu: review `app/models.py` and `app/ledger.py` against `02_TECH.md` §3/§4/§8 and either accept, reject or flag a change.
+- Assignment/resolver service (§5's pseudocode: no-self-verification, random assignment within the eligible cohort, the actual `UNDERSTOOD`/`VOIDED`/`REVIEW_REQUIRED`/`CORPUS_ELIGIBLE` decision logic) is still open — this block built the schema and ledger it depends on, not the resolver itself.
+- MoMo provider adapter (§9) and consent enforcement (§10) remain open, unstarted.
+- No endpoint wiring yet — `app/main.py` untouched.
+
+**BLOCKED / PING**
+- PING Sbu: two new files in your lane (`models.py`, `ledger.py`), tested to the stated bar (24 new tests, real Postgres, 46/46 passing overall), needs your sign-off before being treated as final — see `HANDOVER_SBU.md`.
 
 ### [01 Sep ~00:05] — Lethabo (Sonnet, BUILD) · CROSS-LANE, pending Sbu's review · S3 `is_correct` implemented + tested
 

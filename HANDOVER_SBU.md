@@ -4,6 +4,23 @@
 
 ---
 
+## ⚠️ NEW — 01 Sep ~00:45 · second cross-lane block: schema, migrations, reward ledger
+
+Same session, same loosened-lane basis as the S3 entry directly below this one. Built S5 (`P0.md`): the SQLAlchemy schema, a real Alembic migration and the reward-ledger functions needed for §8's six invariants.
+
+**What was built in your lane, pending your review:**
+- `starter/backend/app/models.py` — every record from `02_TECH.md` §3, with the §4/§8/`content/SCHEMA.md` CHECK and UNIQUE constraints enforced at the DB level (campaign budget ceiling, card field-count rules, no-double-verifier-assignment, unique reward per contribution/user/type).
+- `starter/backend/alembic/` — a real migration, tested with a genuine upgrade→downgrade→upgrade roundtrip against embedded PostgreSQL 16 (via `pgserver`, no Docker needed). This caught a real bug: autogenerate's `downgrade()` doesn't drop PostgreSQL ENUM types, which broke the second upgrade. Fixed and documented inline in the migration file — flagging this because it's exactly the kind of thing Gate H's demo-reset requirement would hit live if it weren't caught now.
+- `starter/backend/app/ledger.py` — `credit_reward`, `request_cash_out`, `apply_payment_callback`, `available_balance_cents`. Explicitly does NOT implement the MoMo adapter (§9) or the assignment/resolver service (§5) — left open.
+- 24 new tests across 4 files, all against real Postgres, 0 mocks. Full suite: 46/46 passing.
+- Full writeup, including the ENUM-drop bug, in `starter/backend/S5_README.md`.
+
+**What was not done:** no MoMo integration, no resolver/assignment-creation logic, no endpoint wiring, no data-model decision beyond what `02_TECH.md` already specifies.
+
+**Ask:** same as before — review against `02_TECH.md` §3/§4/§8 when you're back, accept/reject/flag. Full detail in `BUILD_LOG.md`'s `01 Sep ~00:45` entry.
+
+---
+
 ## ⚠️ NEW — 01 Sep ~00:05 · cross-lane work needs your review, not your sign-off yet
 
 **Context, so you're not surprised:** Lethabo said this session "work on the backend as well, it doesn't matter as long as we update on what we did — we all work on the same areas," loosening the lane rule for this session only (recorded in `BUILD_LOG.md`'s decisions table and `CLAUDE.md`). This is not a claim that you agreed to a permanent lane change — it's recorded as Lethabo's call, same as the earlier "proceed on my own authority" row on the build-timing dispute, which is **still open and not represented as settled with you.**
