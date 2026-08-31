@@ -133,6 +133,28 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [31 Aug ~16:15] — Lethabo (Sonnet, BUILD) · L4 · error-state copy
+
+**DID**
+- `content/error_states.json` — all ten human error/edge states from `02_TECH.md` §12 (mic denied, unsupported browser, upload failure, no verifiers available, waiting/expired, consent revoked, campaign empty, provider unavailable, cash-out failed, duplicate action ignored), matched exactly against the spec list, not approximated.
+- Cross-referenced in `content/SCHEMA.md`.
+
+**HOW**
+- English only, as the reviewed base language. `zu`/`tn` fields exist in the shape but are `null` placeholders, not translations — same discipline as the card content worksheets: native authorship, not translation-from-English.
+- Validated programmatically rather than by eye: a script confirmed exactly 10 states present (matching the spec count) and checked every string against the four forbidden player-facing words in `04_DESIGN.md` §7 (data/corpus/annotation/task/submission — replaced with clip/round/voice throughout).
+
+**WHY L4 over L2/L3**
+- Given today's direction (Figma owns final visual design, mockup iteration is exploratory only), more `.dc.html` polish has falling marginal value. Error copy is real content the shipped app needs regardless of what Figma produces visually, it's unblocked, and — like the card content — it's copy/content rather than product-specific code, so it stays on the safe side of the pre-event line Sbu and I have both been holding (S4, and his explicit "nothing in frontend scope should depend on [unconfirmed specs]").
+
+**NOT DONE**
+- Not wired into `starter/`. Wiring AMAZWI-specific error states into the actual running app is product-specific integration — same boundary as the game screens, waiting on the same organiser answer.
+- isiZulu/Setswana copy is not written. That's native-authorship work for Sbu/me respectively, not something to fill from here.
+
+**NEXT**
+- L1 (Setswana cards) remains the real bottleneck and still needs actual native-speaker time, not tooling.
+
+---
+
 ### [31 Aug] — Sbu · medium · plan critique + fixes
 
 **DID**

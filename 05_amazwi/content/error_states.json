@@ -1,0 +1,123 @@
+{
+  "_meta": {
+    "purpose": "Human copy for every error/edge state named in plan/02_TECH.md §12. Ten states, exhaustive — do not add an eleventh without updating that spec first.",
+    "tone_rules_from": "plan/04_DESIGN.md §7",
+    "tone_rules": [
+      "Short, warm, direct, second person. 'Waiting for two proficient listeners.' Not 'Your submission has been queued for validation.'",
+      "Never say data, corpus, annotation, task, or submission in player-facing copy. Say voice, clip, round, your turn.",
+      "Never lie about money. 'Sent for payment' is not 'Paid.'"
+    ],
+    "status": "English is the reviewed base language. isiZulu (Sbu) and Setswana (Lethabo) translations are NOT filled in below — each is a native-authorship task, not a translation-from-English task, per the same discipline as content/cards_*.json. Filling these with a literal translation would repeat the exact mistake the card-content worksheets were built to avoid.",
+    "shape": "Each state has: title (one line, fits a small screen), body (one or two sentences, explains what happened and what happens next), action (the single button label — never more than one primary action on an error screen), and retryable (bool — whether the action label is a retry or a dismissal)."
+  },
+
+  "mic_denied": {
+    "en": {
+      "title": "We can't hear you",
+      "body": "Your browser needs microphone access to record a round. Check your browser's site settings and allow the microphone, then come back here.",
+      "action": "Try again",
+      "retryable": true
+    },
+    "zu": null,
+    "tn": null
+  },
+
+  "browser_unsupported": {
+    "en": {
+      "title": "This browser can't record",
+      "body": "Recording needs a feature this browser doesn't have. Chrome and Safari on a phone both work.",
+      "action": "Got it",
+      "retryable": false
+    },
+    "zu": null,
+    "tn": null
+  },
+
+  "upload_network_failure": {
+    "en": {
+      "title": "That didn't send",
+      "body": "Your clip is saved on this phone. We'll send it the moment you have signal again.",
+      "action": "Retry now",
+      "retryable": true
+    },
+    "zu": null,
+    "tn": null
+  },
+
+  "no_verifiers_available": {
+    "en": {
+      "title": "Nobody's ready to listen yet",
+      "body": "We need two people who speak this language to hear your clip before it counts. That can take a little while — we'll let you know.",
+      "action": "Back to today",
+      "retryable": false
+    },
+    "zu": null,
+    "tn": null
+  },
+
+  "contribution_waiting_or_expired": {
+    "en": {
+      "title": "Still waiting to be heard",
+      "body": "Nobody's confirmed this one yet. If two people don't hear it in time, we'll tell you honestly rather than leave it hanging.",
+      "action": "Check back later",
+      "retryable": false
+    },
+    "zu": null,
+    "tn": null
+  },
+
+  "consent_revoked": {
+    "en": {
+      "title": "Your consent is off",
+      "body": "You've turned this off, so you can't play right now. Any reward you already earned is still yours. Turn it back on any time to keep going.",
+      "action": "Review consent",
+      "retryable": false
+    },
+    "zu": null,
+    "tn": null
+  },
+
+  "campaign_empty": {
+    "en": {
+      "title": "No rounds right now",
+      "body": "This language's rounds are paused for the moment. Check back soon — new ones are added often.",
+      "action": "Back to today",
+      "retryable": false
+    },
+    "zu": null,
+    "tn": null
+  },
+
+  "provider_unavailable": {
+    "en": {
+      "title": "Payments are running on our test system right now",
+      "body": "Everything else still works exactly the same. This is clearly marked so nobody is confused about what's real.",
+      "action": "Continue",
+      "retryable": false
+    },
+    "zu": null,
+    "tn": null
+  },
+
+  "cash_out_failed": {
+    "en": {
+      "title": "That payout didn't go through",
+      "body": "Nothing was lost — your balance is unchanged. Try again, or wait a moment and we'll retry for you.",
+      "action": "Try again",
+      "retryable": true
+    },
+    "zu": null,
+    "tn": null
+  },
+
+  "duplicate_action_ignored": {
+    "en": {
+      "title": "Already done",
+      "body": "That already happened, so nothing changed the second time. No extra reward, no extra charge.",
+      "action": "OK",
+      "retryable": false
+    },
+    "zu": null,
+    "tn": null
+  }
+}

@@ -28,3 +28,11 @@ Canonical fields, from `plan/02_TECH.md` §3 and `plan/05_BUILD.md` §3. Do not 
 **No placeholder card reaches the pitch.** No illustration appears on a listener screen if it leaks the target.
 
 **Build-gate check (Gate A, before card import):** the loader rejects any card where `confidence` is still `"DRAFT..."`, any `blocked_words`/`distractors` entry is `""`, or `accepted_answers` has fewer than 2 entries (the bare target alone is not exhaustive — see field rule above). This is a hard reject, not a warning, so an under-filled card cannot silently reach a verifier screen.
+
+---
+
+## error_states.json
+
+Companion file, same directory. Ten human error/edge states, exact match to `plan/02_TECH.md` §12 — validated programmatically, not by eye (see the build log entry that added it). English is the reviewed base; `zu`/`tn` fields are `null` placeholders, not translations-from-English — Sbu and Lethabo author those natively, same discipline as the card content.
+
+**Not yet wired into `starter/`.** It's a content artifact, not application code — wiring AMAZWI-specific error states into the actual app is product-specific integration, which stays behind the same pre-event organiser-approval line as everything else in `starter/`.
