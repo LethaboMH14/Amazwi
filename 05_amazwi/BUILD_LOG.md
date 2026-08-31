@@ -140,6 +140,36 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [01 Sep ~01:50] — Lethabo (Sonnet, BUILD) · CORRECTION · the real CI bug, found via gh CLI access
+
+**⚠️ Corrects the "01 Sep ~01:10" entry below.** That entry diagnosed the backend CI failures as "no Postgres available in the job" and fixed it by adding a `postgres:16` service container. That fix was reasonable and is being kept (real Postgres in CI is still correct), but **it was not what was actually failing.** The user connected `gh auth login` this session, which made the real CI logs readable for the first time — the previous diagnosis was made blind (private repo, no `gh`/API access) and was wrong. Recording the correction openly rather than quietly patching over it.
+
+**DID**
+- Ran `gh run list` and `gh run view <id> --log-failed` against the actual private repo's Actions history — every single backend CI run tonight (`33450175042`, `33449746241`, `33447761009`, `33443645619`, `33440147911`, `33397200964`, `33393659062`) failed identically, including the run AFTER the Postgres-service-container fix landed. The real error, unchanged across all of them:
+  ```
+  ImportError while loading conftest '.../starter/backend/tests/conftest.py'.
+  tests/conftest.py:37: in <module>
+      from app.models import Base
+  E   ModuleNotFoundError: No module named 'app'
+  ```
+- Root cause: `ci.yml` runs bare `pytest -v`, and bare `pytest` does **not** add the current working directory to `sys.path`. Every local verification run all session used `python -m pytest`, which DOES add cwd to `sys.path` automatically — that's precisely why this was invisible locally and only ever failed in CI. The Postgres-container fix from the previous entry was solving a real but different problem (there genuinely was no DB in the job before that fix) while this import failure meant the test suite never even got as far as trying to use a database.
+- **Reproduced the exact CI failure locally before claiming a fix**, by running bare `pytest -v` (not `python -m pytest`) from `starter/backend`: got the identical `ModuleNotFoundError`. This is the same discipline as the earlier ENUM-drop bug — reproduce first, then fix, then re-verify, not fix-by-plausible-story.
+- Added `starter/backend/pytest.ini` with `pythonpath = .`, which adds the backend root to `sys.path` regardless of invocation style. Re-ran the identical bare `pytest -v` command — **61 passed**, matching CI's exact invocation this time, not a proxy for it.
+
+**WHY**
+- The previous entry's diagnosis was stated honestly as unverified ("BLOCKED / PING: cannot directly confirm... based on a locally-reproduced, structurally sound diagnosis, not a confirmed read of the actual CI output") rather than asserted as certain — that honesty is exactly what makes this correction possible to write cleanly now instead of having to first walk back an overclaimed "fixed."
+- Reproducing the failure with the EXACT command CI runs (`pytest -v`, not `python -m pytest -v`) rather than the command used all session is what caught this — a near-identical but not-identical repro would have kept missing it indefinitely.
+
+**CHANGED**
+- New: `starter/backend/pytest.ini`.
+- `.github/workflows/ci.yml`'s Postgres service container from the previous entry is KEPT, not reverted — it's a real, separate improvement (CI now has a real Postgres 16 to test against, which it didn't have at all before tonight), it's just not what was causing the visible failures.
+
+**NEXT**
+- Push this fix and confirm the next GitHub Actions run is actually green via `gh run watch` / `gh run list`, closing the loop with a directly observed result instead of another local-repro-only claim.
+
+**BLOCKED / PING**
+- None — this is now confirmed via direct CI log access, not inferred.
+
 ### [01 Sep ~01:30] — Lethabo (Sonnet, MID) · CROSS-LANE, pending Sbu's review · §5 assignment/resolver service implemented + tested against real PostgreSQL 16
 
 **⚠️ Cross-lane, extends beyond S5's original scope** — same loosened-lane basis as the two entries above. S5 asked for "schema/migrations... including accepted answers, violation evidence, VOIDED, EXPIRED and idempotent reward events"; this block goes further into the assignment/resolution service itself, which was explicitly left open in S5's own NEXT note. Flagged pending Sbu's review, same as the rest of tonight's backend work.
