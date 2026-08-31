@@ -1,0 +1,194 @@
+/* ============================================================
+   AMAZWI — DESIGN TOKENS + THEME SWITCHER
+   Drop this in first. Every component consumes tokens, never hex.
+
+   Switch a theme:   document.documentElement.dataset.theme = 'dusk'
+   Themes: shweshwe (default) · dusk · earth · ndebele · ink
+
+   THE RULE: --voice-* and --rand NEVER change between themes.
+   Only ground, surface, text and texture move. That single
+   constraint is what makes five themes look like one product.
+   ============================================================ */
+
+:root {
+  /* ---- BRAND — invariant across every theme ---- */
+  --voice-1:      #FF5A36;   /* ember   */
+  --voice-2:      #E8267F;   /* magenta */
+  --voice-grad:   linear-gradient(96deg, var(--voice-1), var(--voice-2));
+  --rand:         #FFCB05;   /* MONEY ONLY. Nothing decorative is yellow. */
+  --understood:   #1F8A54;
+  --missed:       #8A6A1F;   /* ochre, never red */
+  --danger:       #C0341A;   /* destructive actions only */
+  --calm:         #4C6FA5;   /* info, consent, privacy */
+
+  /* ---- TYPE ---- */
+  --font: 'Archivo', system-ui, -apple-system, sans-serif;
+  --fs-display: 52px;  --fs-h1: 30px; --fs-h2: 22px;
+  --fs-body:    15px;  --fs-sm: 13px; --fs-label: 11px;
+  --tracking-display: -0.035em;
+  --tracking-label:    0.22em;
+
+  /* ---- SPACE / SHAPE / MOTION ---- */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 22px; --sp-6: 30px; --sp-7: 44px;
+  --r-sm: 8px; --r-md: 14px; --r-lg: 18px; --r-pill: 999px;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur-in: 200ms; --dur-out: 120ms;
+
+  /* ---- DEFAULT THEME: A · Midnight Shweshwe ---- */
+  --ground:      #0C1123;
+  --ground-deep: #080C1A;
+  --surface:     #161B2E;
+  --text:        #EAF0FA;
+  --text-dim:    #8A97B0;
+  --border:      rgba(168,196,232,0.16);
+  --hi:          rgba(200,224,255,0.10);   /* inner top highlight */
+  --glow:        rgba(255,90,54,0.30);
+  --texture-opacity: 0.30;
+  --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cg fill='none' stroke='%23A8C4E8' stroke-width='0.7'%3E%3Ccircle cx='24' cy='24' r='9'/%3E%3Ccircle cx='24' cy='24' r='4.5'/%3E%3Cpath d='M24 6 L30 12 L24 18 L18 12 Z'/%3E%3Cpath d='M24 30 L30 36 L24 42 L18 36 Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ---- B · Highveld Dusk ---- */
+[data-theme="dusk"] {
+  --ground:      #2A1740;
+  --ground-deep: #140A0C;
+  --surface:     #3A1A2E;
+  --text:        #FFF1E8;
+  --text-dim:    #C9A996;
+  --border:      rgba(255,241,232,0.15);
+  --hi:          rgba(255,241,232,0.16);
+  --glow:        rgba(255,150,80,0.34);
+  --texture-opacity: 0;
+  --texture: none;
+  --ground-mesh:
+    radial-gradient(ellipse 120% 60% at 18% 4%,  rgba(88,42,120,0.85) 0%, rgba(88,42,120,0) 58%),
+    radial-gradient(ellipse 130% 50% at 88% 26%, rgba(196,68,64,0.55) 0%, rgba(196,68,64,0) 60%),
+    linear-gradient(178deg, #2A1740 0%, #40182C 32%, #140A0C 100%);
+}
+
+/* ---- C · Red Earth — the Day theme. MANDATORY, not optional. ---- */
+[data-theme="earth"] {
+  --ground:      #FBF2E6;
+  --ground-deep: #EAD7C0;
+  --surface:     #FFFFFF;
+  --text:        #241408;
+  --text-dim:    #6B5238;
+  --border:      #E0CDB2;
+  --hi:          rgba(255,255,255,0.70);
+  --glow:        rgba(224,178,128,0.45);
+  --texture-opacity: 0.22;
+  --shadow-blend: multiply;
+}
+
+/* ---- D · Ndebele — September / Heritage skin ---- */
+[data-theme="ndebele"] {
+  --ground:      #0B0908;
+  --ground-deep: #000000;
+  --surface:     #14100E;
+  --text:        #F4EFE6;
+  --text-dim:    #A69C8E;
+  --border:      #3A322C;
+  --hi:          rgba(244,239,230,0.10);
+  --glow:        rgba(232,178,42,0.22);
+  --r-sm: 4px; --r-md: 4px; --r-lg: 4px;   /* hard geometry, not soft */
+  --nd-red:    #E8452A;
+  --nd-yellow: #E8B22A;
+  --nd-blue:   #2B5FBF;
+  --nd-green:  #1F8A54;
+  --texture-opacity: 0;
+}
+
+/* ---- E · Ink — the neutral shell. Ships when no theme is chosen. ---- */
+[data-theme="ink"] {
+  --ground:      #14100E;
+  --ground-deep: #0A0807;
+  --surface:     #2A231F;
+  --text:        #FAF6F1;
+  --text-dim:    #9A9086;
+  --border:      rgba(250,246,241,0.09);
+  --hi:          rgba(250,246,241,0.07);
+  --glow:        rgba(255,90,54,0.28);
+  --texture-opacity: 0;
+}
+
+/* ---- Respect the system preference when no theme is set ---- */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --ground: #FBF2E6; --ground-deep: #EAD7C0; --surface: #FFFFFF;
+    --text: #241408; --text-dim: #6B5238; --border: #E0CDB2;
+    --hi: rgba(255,255,255,0.70); --texture-opacity: 0.22;
+  }
+}
+
+/* ============================================================
+   PRIMITIVES — the craft layer, tokenised.
+   ============================================================ */
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--ground-mesh, var(--ground));
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Film grain. ~400 bytes, no asset. Turns flat fill into material. */
+.grain::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  opacity: 0.5; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+/* Theme texture (shweshwe print on A, earth grain on C, none elsewhere) */
+.texture::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  opacity: var(--texture-opacity); background-image: var(--texture);
+}
+
+/* Ambient glow behind the focal element — the biggest single craft win */
+.glow {
+  position: absolute; border-radius: var(--r-pill); pointer-events: none;
+  background: radial-gradient(circle, var(--glow) 0%, transparent 68%);
+  filter: blur(8px);
+}
+
+/* Raised surface. The inset highlight is what separates expensive
+   dark UI from amateur dark UI — it reads as an edge catching light. */
+.raised {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: 0 20px 44px -18px rgba(0,0,0,0.9), inset 0 1px 0 var(--hi);
+}
+
+.btn-primary {
+  background: var(--voice-grad);
+  color: var(--ground-deep);
+  border-radius: var(--r-lg);
+  padding: 20px; min-height: 44px;
+  font-weight: 800; font-size: 18px; text-align: center;
+  box-shadow: 0 16px 38px -12px rgba(232,38,127,0.60), inset 0 1px 0 rgba(255,255,255,0.30);
+}
+
+/* Money. Yellow appears here and nowhere else. */
+.money {
+  color: var(--rand);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+.label {
+  font-size: var(--fs-label); font-weight: 700;
+  letter-spacing: var(--tracking-label); text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.display {
+  font-size: var(--fs-display); font-weight: 800;
+  font-stretch: 125%; line-height: 0.92;
+  letter-spacing: var(--tracking-display);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
