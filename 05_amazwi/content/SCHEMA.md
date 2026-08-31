@@ -29,6 +29,8 @@ Canonical fields, from `plan/02_TECH.md` §3 and `plan/05_BUILD.md` §3. Do not 
 
 **Build-gate check (Gate A, before card import):** the loader rejects any card where `confidence` is still `"DRAFT..."`, any `blocked_words`/`distractors` entry is `""`, or `accepted_answers` has fewer than 2 entries (the bare target alone is not exhaustive — see field rule above). This is a hard reject, not a warning, so an under-filled card cannot silently reach a verifier screen.
 
+Use `node validate_cards.mjs <cards.json>` during authoring. The validator also rejects normalised duplicates and overlaps between accepted answers and blocked words/distractors, and warns when a blocked word is reused as a distractor.
+
 ---
 
 ## error_states.json

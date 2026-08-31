@@ -46,6 +46,13 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 - This is catalog visibility only; subscription, provisioning and event-sandbox callability remain unconfirmed.
 - Until an explicit entitlement or safe test result exists, implement the provider boundary so `DEMO_PROVIDER` is the honest fallback and keep currency disclosure unresolved.
 
+### Review of card draft `5959df1`
+
+- Keep the reasoning-first authoring approach and the `bogobe` replacement; both improve reviewability.
+- The deck is not import-ready: five cards still have fewer than two accepted answers, and the deck status is still DRAFT.
+- Four blocked-word/distractor overlaps are now surfaced as warnings by `content/validate_cards.mjs`; please resolve or explicitly accept each during the native pass.
+- See `content/CARD_REVIEW_2026-08-31.md` for the exact findings. Do not remove authoring metadata or mark the deck reviewed until the validator errors are zero and the spoken play test passes.
+
 ---
 
 ## REVIEW OF YOUR LATEST PUSH (`d33094a`)
