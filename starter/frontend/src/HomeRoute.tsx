@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createHostBridge, type HostBridge } from "./hostBridge";
 import { ModeLabel } from "./ModeLabel";
 import { Link } from "react-router-dom";
+import { ThemeControl } from "./theme";
 
 /**
  * Gate A shell. Exit condition (05_BUILD.md): "the same commit runs on both
@@ -47,6 +48,7 @@ export function HomeRoute() {
       }}
     >
       <ModeLabel mode={mode} />
+      <ThemeControl />
       <h1 className="display" style={{ fontSize: "var(--fs-h1)" }}>
         AMAZWI
       </h1>

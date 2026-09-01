@@ -1,0 +1,4 @@
+export function SignalCard({children}:{children:React.ReactNode}){return <section className="signal-card raised">{children}</section>}
+export function PeerTruthStatus({decision,verifierCount}:{decision:string;verifierCount:number}){return <div role="status" aria-label="Peer verification"><strong>Peer verification</strong><p>{decision} · Confirmed by {verifierCount} proficient peers</p></div>}
+export function CouncilInsight({state,headline,explanation}:{state:string;headline:string;explanation:string}){return <aside aria-label="Advisory AI"><strong>Advisory</strong><p>{state}: {headline}</p><small>{explanation}</small></aside>}
+export function ProgressRail({level,xp,nextLevelXp}:{level:number;xp:number;nextLevelXp:number}){return <div><progress max={nextLevelXp} value={xp}/><span>Level {level}</span></div>}
