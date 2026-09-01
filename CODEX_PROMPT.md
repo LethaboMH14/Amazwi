@@ -1,52 +1,70 @@
-# AMAZWI — continue the implementation programme
+# AMAZWI — finish the implementation programme: Plans 02, 03, 04, completely
 
-Pull first (`f1e9d03` or later). CI is green — the cross-platform object-key fix (`9fb9d75`) landed and passed. Re-confirm with `gh run watch --exit-status` on your first push before assuming it's still green.
+Pull first (`2e0726f` or later — CI confirmed green on that commit). Do not stop until every remaining task in all three plans is done, tested, and pushed, or you hit one of the stop conditions below. This is the full remainder of the programme — work through it in order, don't skip ahead and leave gaps.
 
-Read `CLAUDE.md`, `05_amazwi/P0.md`, and the last ~8 `BUILD_LOG.md` entries before continuing — don't re-derive context. The pre-event build dispute is resolved (Sbu accepted 1 Sep); do not reopen it. Both lanes are open to you, but backend/money/data/deployment work stays labelled pending Sbu's review.
+Read `CLAUDE.md`, `05_amazwi/P0.md`, and the last ~10 `BUILD_LOG.md` entries first. The pre-event build dispute is resolved — don't reopen it.
 
 ## Rules, unchanged
 
 - TDD always: failing test → green → broader suite → focused commit.
 - Real PostgreSQL 16 for schema/migration/resolver/consent/outbox/export tests. Never SQLite.
 - Verify, don't assume — run the suite, typecheck, build; render UI in a browser and look at it.
-- State limitations plainly. Every real block of work gets a full `BUILD_LOG.md` DID/HOW/WHY/CHANGED/NEXT/BLOCKED-PING entry.
+- Confirm CI green with `gh run watch --exit-status` (or `gh run list`) after every push. If `gh` can't authenticate in your environment, say so explicitly in the log instead of silently skipping the check — don't let that become a habit for the rest of the programme.
+- Every real block of work gets a full `BUILD_LOG.md` DID/HOW/WHY/CHANGED/NEXT/BLOCKED-PING entry.
 - Pull before you start, push before you stop, verify sync after pushing (`git fetch` + compare `rev-parse`).
 - Commit prefixes: `Consent:` `Audio:` `Peers:` `Council:` `Data:` `ML:` `UI:` `Ops:` `Hardening:` `Docs:`
-- **Vercel stays paused.** No deployment path, ever, in this pass.
-- Peer verification is authoritative; AI Council output is advisory only and may never touch eligibility, money, consent, audio retention, campaign launch, export approval, or model aliases.
-- Tick plan checkboxes in `docs/superpowers/plans/*.md` as you actually finish each task — they're currently unreliable, so keep them honest going forward rather than leaving another batch stale.
+- **Vercel stays paused.** No deployment path, ever.
+- Peer verification is authoritative; AI Council output is advisory only — never touches eligibility, money, consent, audio retention, campaign launch, export approval, or model aliases.
+- Tick plan checkboxes in `docs/superpowers/plans/*.md` as you actually finish each task — keep them honest as you go.
 
-## What's left
+## Plan 02 remainder (`docs/superpowers/plans/2026-09-01-amazwi-02-council-data-models.md`)
 
-### Plan 02 — Stages 4–6 (`docs/superpowers/plans/2026-09-01-amazwi-02-council-data-models.md`)
+Task 12's CPU-safe packaging slice is done (`2e0726f`). Still open, per Codex's own remaining-work list plus the original Task 13/14 scope:
 
-Tasks 1–11 are done. Remaining:
-- **Task 12:** finish Kaggle notebook-compatible scripts (`kaggle/reserve_run.py`, `amazwi_ml/budget.py` exist) — reproducible, seeded, **downloads nothing**. Enforce and test the 60-GPU-hour aggregate / 30-hour-per-account reservation guard.
+- Fixture tests for Task 12's `train_asr.py`/`evaluate_asr.py`/`package_run.py`.
+- Enforce phase-specific budget allocation ranges within the 60-GPU-hour aggregate / 30-hour-per-account guard (not just the aggregate cap).
 - **Task 13:** deterministic LightGBM and XGBoost tabular challengers, fixed seeds, run through the existing tournament/promotion gate.
-- **Task 14:** generate model cards and evidence hashes; complete Stage 4–6 acceptance. Model cards are generated evidence, never hand-written winner claims. A challenger failing its predeclared threshold must be blocked from promotion with no improvement language anywhere in the output.
+- Full ASR metric reports and embedded-span metrics (beyond the basic WER/CER already in `amazwi_ml/metrics.py`).
+- Complete the approved-export immutability trigger (flagged as still required back when the provenance firewall was drafted).
+- **Task 14:** model cards and evidence hashes — generated evidence only, never hand-written winner claims; a challenger failing its predeclared threshold must be blocked from promotion with no improvement language anywhere in the output.
+- Stage 4–6 end-to-end evidence acceptance, written up honestly.
 
-**Hard gate:** no external dataset download, no Kaggle GPU execution, without explicit licence/terms and budget preflight approval. Code and synthetic fixtures only. If you hit that wall, stop and report rather than proceeding.
+**Hard gate, still in force:** no external dataset download, no Kaggle GPU execution, without explicit licence/terms and budget preflight approval. Code and synthetic fixtures only. If you hit that wall, stop and report rather than proceeding.
 
-### Plan 03 — Signal Flow UI and Ops (`docs/superpowers/plans/2026-09-01-amazwi-03-signal-flow-ops.md`)
+## Plan 03 (`docs/superpowers/plans/2026-09-01-amazwi-03-signal-flow-ops.md`)
 
-Themes, primitives, and the `/result/:contributionId` receipt route are built. Remaining:
-- Task 0 (tooling/fixtures lock), finish Tasks 1/2/5 (route lock, typed API contracts, home/consent/record/verify/result routes — `src/styles/` doesn't exist yet and the locked file structure expects it).
+Themes, primitives, and the `/result/:contributionId` receipt route are built. Everything else:
+
+- Task 0: tooling/fixtures lock.
+- Finish Tasks 1/2/5: route lock, typed API contracts with visible failure mapping, home/consent/record/verify/result routes. `src/styles/` doesn't exist yet — the locked file structure expects it.
 - Task 7–8: Coverage Constellation backend contract + render. Aggregate dots/counts only — no public raw audio, no names.
 - Task 9: mission proposals, human-only MTN authorisation — no agent may launch a campaign.
 - Task 10: MTN Language Ops route.
-- Task 11: 320–480px, 200% zoom, keyboard, screen-reader gates — the mockups' fixed-390px limitation is a hard requirement to actually fix here.
+- Task 11: 320–480px, 200% zoom, keyboard, screen-reader gates — actually fix the mockups' fixed-390px reflow limitation, don't just note it.
 - Task 12: visual regression + evidence-gated Figma drift check against `JPZuFmbhRh9fhkgBLxRymq`. Do not claim Figma parity from static mockups alone.
 - Task 13: verify the visible engagement-to-operations loop.
 
-Both themes (Midnight Shweshwe, Signal Daylight) are equal first-class citizens — every check must pass on both.
+Both themes (Midnight Shweshwe, Signal Daylight) are equal first-class citizens — every check passes on both.
 
-### Plan 04 — Stage 9 hardening (`docs/superpowers/plans/2026-09-01-amazwi-04-hardening-demo.md`)
+## Plan 04 (`docs/superpowers/plans/2026-09-01-amazwi-04-hardening-demo.md`)
 
-Task 1 partially done. Tasks 2–12 open: injectable auth with no production impersonation path; rate-limit adapters (document the in-memory limit honestly); PII/secret-safe structured logging; deterministic seed/reset structurally disabled in production; deterministic failure injection + safety drills; full Playwright coverage of the governed workflow; browser-visible failure + reduced-motion drills; accessibility/performance/target-device evidence; CI expansion with no deployment path added; fallback artefacts + two clean deterministic reset-and-demo cycles on target devices; final evidence and honesty review.
+Task 1 partially done. All of Tasks 2–12:
 
-Run this only once the integrated local workflow actually exists end to end.
+- Injectable auth with no production impersonation path.
+- Rate-limit adapters — document the in-memory limit honestly, don't imply distributed enforcement.
+- PII/secret-safe structured logging.
+- Deterministic seed/reset, structurally disabled in production (not just flag-guarded).
+- Deterministic failure injection and backend safety drills.
+- Full Playwright coverage driving the complete governed workflow end to end.
+- Browser-visible failure and reduced-motion drills.
+- Accessibility, performance, and physical target-device evidence.
+- CI expansion — without adding any deployment path.
+- Fallback artefacts, and two clean deterministic reset-and-demo cycles proven on target devices.
+- Final evidence and honesty review — this is the last task in the entire programme; it should state plainly what actually works end to end and what doesn't.
 
-## Programme acceptance — all must hold when done
+Run Plan 04 only once Plans 02 and 03 leave an integrated local workflow that actually works.
+
+## Programme acceptance — all must hold when you're done
 
 - Browser → API → private storage → two peers → resolver → reward → outbox → Council → receipt passes end to end.
 - Revocation blocks new playback/assignment/export while preserving earned money and audit evidence.
