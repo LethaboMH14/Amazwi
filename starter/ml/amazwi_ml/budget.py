@@ -3,6 +3,8 @@ import json,os
 from pathlib import Path
 class BudgetExceeded(Exception):pass
 class AccountBudgetExceeded(Exception):pass
+class PhaseBudgetExceeded(Exception):pass
+PHASE_LIMITS={"PREFLIGHT":(0,6),"FIXED_TOURNAMENT":(6,14),"ISIZULU_ADAPTATION":(14,30),"SETSWANA_ADAPTATION":(30,46),"TABULAR_CHALLENGERS":(46,54),"REPRODUCIBILITY":(54,60)}
 def _load(path):return json.loads(path.read_text()) if path.exists() else {"entries":[]}
 def reserve_gpu_run(path:Path,*,run_id,account_alias,phase,requested_hours,manifest_sha256,config_sha256):
     if account_alias not in {"team-sonar-a","team-sonar-b"} or requested_hours<=0 or len(manifest_sha256)!=64 or len(config_sha256)!=64:raise ValueError("invalid reservation")
@@ -11,6 +13,9 @@ def reserve_gpu_run(path:Path,*,run_id,account_alias,phase,requested_hours,manif
     active=sum(e.get("actual_gpu_hours",e["requested_hours"]) for e in entries);account=sum(e.get("actual_gpu_hours",e["requested_hours"]) for e in entries if e["account_alias"]==account_alias)
     if active+requested_hours>60:raise BudgetExceeded("aggregate 60-hour budget exceeded")
     if account+requested_hours>30:raise AccountBudgetExceeded("30-hour account budget exceeded")
+    if phase not in PHASE_LIMITS: raise ValueError("unknown phase")
+    lo,hi=PHASE_LIMITS[phase]; used=sum(e.get("actual_gpu_hours",e["requested_hours"]) for e in entries if e["phase"]==phase)
+    if used+requested_hours>hi-lo: raise PhaseBudgetExceeded("phase allocation exceeded")
     entry={"run_id":run_id,"account_alias":account_alias,"phase":phase,"requested_hours":requested_hours,"manifest_sha256":manifest_sha256,"config_sha256":config_sha256,"state":"RESERVED"};entries.append(entry);entries.sort(key=lambda e:e["run_id"]);path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix(".tmp");tmp.write_text(json.dumps(data,sort_keys=True,separators=(",",":"))+"\n");os.replace(tmp,path);return entry
 def complete_gpu_run(path:Path,*,run_id,actual_gpu_hours,artefact_sha256):
  if actual_gpu_hours<0 or len(artefact_sha256)!=64:raise ValueError("invalid completion")

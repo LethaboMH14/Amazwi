@@ -1351,3 +1351,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** `starter/ml/kaggle/train_asr.py`, `evaluate_asr.py`, `package_run.py`.
 - **NEXT:** Add fixture tests and enforce phase allocation limits in the budget ledger.
 - **BLOCKED-PING:** CI status could not be queried because `gh` is not authenticated in this environment; no GPU or dataset run was attempted.
+
+### [01 Sep] — Sibusiso · Plan 02 budget/test completion
+
+- **DID:** Added phase-specific reservation ceilings and synthetic tests for offline campaign tooling.
+- **HOW:** Enforced the six declared phase windows alongside aggregate 60-hour and per-account 30-hour limits.
+- **WHY:** Prevent a valid total budget from being spent outside the approved allocation.
+- **CHANGED:** `starter/ml/amazwi_ml/budget.py`, `starter/ml/tests/test_budget.py`.
+- **NEXT:** Add deterministic tabular challengers and full metric/evidence fixtures.
+- **BLOCKED-PING:** No GPU, Kaggle, model or external dataset execution; CI status remains unavailable without `gh` authentication.
