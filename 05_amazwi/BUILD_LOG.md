@@ -5,6 +5,28 @@
 
 ---
 
+### [01 Sep] — Sbu (Claude, direct) · Plan 03 · signalMotion/theme tests, and a real shared test-infra bug found and fixed
+
+**DID**
+- `src/signalMotion.test.ts` (11 tests) — `animateSignal` returns `null` and never calls `element.animate` when `reduced=true`; calls it with real keyframes and a finite positive duration when motion is allowed; every one of the 7 declared motion kinds (`press`/`enter`/`waveformFold`/`peerConnect`/`receiptRise`/`mapRipple`/`celebrate`) has a finite duration; `fill: "both"` is used so end-state persists. jsdom has no real WAAPI, so this verifies the *contract* with `element.animate` via a spy rather than depending on incomplete jsdom animation support — noted in the test file itself.
+- `src/theme.test.tsx` (9 tests) — `isNdebeleSeason` pure-function cases (true in September regardless of query string, false outside it without the override, true outside September with `?season=heritage`, ignores wrong/unrelated query params, true on both boundary days of September); `ThemeProvider`/`ThemeControl` integration: defaults to midnight, restores a saved `daylight` choice, switching the control updates context + the `data-theme` DOM attribute + `localStorage` together, and both first-class themes are offered as options.
+
+**Found and fixed a real shared-infrastructure bug, not just a test gap.** `vitest.config.ts` has `globals: false`, so `@testing-library/react`'s automatic per-test DOM cleanup — which depends on detecting a global `afterEach` — never registered. Every existing test file only rendered once, so this was invisible; my `theme.test.tsx` renders multiple times per file and immediately hit "Found multiple elements" failures from leaked DOM nodes across tests. Fixed at the source in `src/test-setup.ts` with an explicit `afterEach(cleanup)` rather than patching around it per-file, since any future multi-render test file would have hit the same latent bug.
+
+**Full frontend suite: 36/36 passing** (16 prior + 20 new), `tsc -b --noEmit` clean.
+
+**WHY**
+- `isNdebeleSeason` and the reduced-motion gate are exactly Plan 03 Task 3 ("equal themes and seasonal Ndebele eligibility") and part of Task 4's motion requirements — both had zero coverage.
+
+**BLOCKED / PING**
+- Still cannot verify anything requiring an actual browser render (visual, not just jsdom-simulated) from this environment — no Postgres either, so nothing backend-integrated. Staying on pure-logic and component-contract slices.
+- No GPU, external dataset download, Kaggle execution, payment or deployment action taken.
+
+**NEXT**
+- Look at `api/client.ts`/`api/contracts.ts` for untested logic, then the remaining route components' non-rendering logic.
+
+---
+
 ### [01 Sep] — Sbu (Claude, direct) · Plan 02 · manifest/splits/external-preflight fixture tests — every ML module now covered
 
 **DID**
