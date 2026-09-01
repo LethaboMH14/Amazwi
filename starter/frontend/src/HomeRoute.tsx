@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createHostBridge, type HostBridge } from "./hostBridge";
 import { ModeLabel } from "./ModeLabel";
+import { Link } from "react-router-dom";
 
 /**
  * Gate A shell. Exit condition (05_BUILD.md): "the same commit runs on both
@@ -50,6 +51,7 @@ export function HomeRoute() {
         AMAZWI
       </h1>
       <p style={{ color: "var(--text-dim)" }}>backend: {backendStatus}</p>
+      <Link to="/consent">Contribute an isiZulu voice card</Link>
     </main>
   );
 }
