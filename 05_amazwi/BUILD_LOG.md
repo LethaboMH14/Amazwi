@@ -1333,3 +1333,12 @@ Added complete isiZulu copy for all ten canonical error states in `content/error
 ### [01 Sep] — Sibusiso · build restriction accepted as superseded
 
 Sibusiso explicitly accepts the team's decision to continue product-specific implementation before the event. The earlier dispute and restriction are superseded, not deleted, so the append-only history remains accurate. Existing code may be used as the working baseline; the event's in-person/no-outside-assistance rule and honest build-history disclosure still apply.
+
+### [01 Sep] — Sibusiso · Cross-platform storage boundary fix
+
+- **DID:** Fixed private object-key validation for Linux and Windows syntax.
+- **HOW:** Rejects drive-letter prefixes, backslashes, POSIX absolute paths, traversal, empty keys and NUL bytes before path resolution.
+- **WHY:** `Path.is_absolute()` alone silently accepted `C:/...` on Linux.
+- **CHANGED:** `starter/backend/app/storage/local.py` and rejection coverage in `test_local_storage.py`; commit `9fb9d75`.
+- **NEXT:** Run the Linux CI job and PostgreSQL suites in the provisioned runtime.
+- **BLOCKED-PING:** No deployment, external download or payment action was performed.
