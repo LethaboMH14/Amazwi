@@ -20,8 +20,9 @@
 - Confirmed v3's dataset-revision resolution matched the pre-existing approval record exactly, rather than assuming preflight and runtime would agree.
 
 **NEXT / BLOCKED-PING**
-- **Waiting on Lethabo**: add a Kaggle Secret labelled `HF_TOKEN` (real HF access token as the value) and attach it to this kernel via the kernel editor's Add-ons → Secrets menu, then re-push or re-run. Nothing else in the pipeline needs a human right now — v4 is pushed and will get exactly as far as the token check, then fail with the specific, actionable message from the code fix above, until that secret is attached.
-- Once it actually starts training: still need to reconcile the governance ledger for real (per the prior entry), and confirm the checkpoint/metrics this produces are non-trivial before treating the run as a success.
+- ~~Waiting on Lethabo: add HF_TOKEN secret~~ — **done.** Confirmed via Lethabo's own screenshot of the Kaggle editor: `HF_TOKEN` is attached and checked in the Secrets panel, **Version #5 with GPU P100 running (23 minutes in)**, status bar showing `Generating train split... (Fetching worker time...)` — that's `datasets`' own live progress text, meaning it is genuinely past the token/auth check and dataset resolution, actively pulling real Swivuriso audio. v4 (the version this session pushed) correctly shows "Failed" in the version history — that run happened before the secret was attached; v5 is the real one.
+- Note for whoever checks next: this session's own API-based log polling (`KaggleApi.kernels_logs()`) returned 0 characters for several minutes while the run was genuinely active — it does not appear to reflect true live tail output reliably. Trust the Kaggle web UI's own status/progress display over that API call for an in-progress run; the API log pull is more reliable once a run has actually finished.
+- Once it actually completes: still need to reconcile the governance ledger for real (per the prior entry), and confirm the checkpoint/metrics this produces are non-trivial before treating the run as a success.
 
 ---
 
