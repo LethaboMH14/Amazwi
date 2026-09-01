@@ -5,6 +5,21 @@
 
 ---
 
+### [01 Sep ~17:05] — Jcode · verification/fix · reported commit errors
+
+**ROOT CAUSE**
+- The reported commits passed their isolated backend tests, but the repository-wide Ruff gate exposed latent errors: an unreachable migration assertion referencing an undefined `result`, unused imports, and an unused exception binding. These were real CI-quality errors even though pytest alone was green.
+- The public acceptance test also exposed an incorrect test assumption: contributor playback is governed by `RECORD_PROCESS_ROUND`, while verifier assignment eligibility is governed by `ASSIGNED_VERIFIER_PLAYBACK`.
+
+**FIXED AND VERIFIED**
+- Corrected the migration helper, removed unused imports/bindings, and added `test_governed_peer_e2e.py` covering contribution creation, private upload/finalisation, playback, two authenticated verifiers, reward resolution, pending/result boundaries, consent revocation, and post-revocation assignment rejection.
+- Ruff passed, migration plus public acceptance tests passed **8/8**, and the complete backend suite passed after the fix. No datasets, model providers, access tokens, or GPU were used.
+
+**TRACEABILITY**
+- Public routes and integration boundaries now have concrete API assertions. The resulting corrective commit is the forward fix; the historical commit hashes remain immutable Git history.
+
+---
+
 ### [01 Sep ~16:52] — Jcode · hardening · Task 5 acceptance gaps closed
 
 **DID**

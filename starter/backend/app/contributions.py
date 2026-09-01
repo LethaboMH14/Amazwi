@@ -19,7 +19,7 @@ from app.models import (
     Contribution,
     ContributionState,
 )
-from app.storage import AudioHashMismatch, AudioUnavailable, LocalAudioObjectStore
+from app.storage import AudioUnavailable, LocalAudioObjectStore
 
 
 class ContributionError(Exception):

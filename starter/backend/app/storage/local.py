@@ -6,7 +6,7 @@ import hashlib
 import hmac
 import io
 import json
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 from app.storage.base import (

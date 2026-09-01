@@ -4,7 +4,6 @@ import uuid
 import pytest
 from fastapi.testclient import TestClient
 
-from app.cohorts import select_next_verifier
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity
 from app.main import app

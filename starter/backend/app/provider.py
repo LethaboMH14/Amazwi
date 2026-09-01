@@ -1,7 +1,7 @@
 """Payment-provider adapter interface. No product concept here — generic reward/payout shape only."""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Protocol

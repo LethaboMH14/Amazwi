@@ -3,7 +3,6 @@ import hashlib
 import uuid
 
 import pytest
-from sqlalchemy import select
 
 from app.contributions import (
     AudioDurationInvalid,
@@ -13,7 +12,7 @@ from app.contributions import (
     finalise_audio,
 )
 from app.identity import AuthenticatedIdentity
-from app.models import Campaign, CampaignRewardRule, Card, ConsentGrant, ConsentScope, Contribution, ContributionState, User
+from app.models import Campaign, CampaignRewardRule, Card, ConsentGrant, ConsentScope, ContributionState, User
 from app.storage import LocalAudioObjectStore
 
 

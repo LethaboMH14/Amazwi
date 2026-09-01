@@ -11,10 +11,7 @@ from sqlalchemy.orm import Session
 from app.api_types import AudioFinaliseRequest, AudioUploadResponse, ContributionCreateRequest, PlaybackResponse
 from app.audio import get_audio_store
 from app.contributions import (
-    AudioDurationInvalid,
-    AudioFormatUnsupported,
     AudioNotAuthorised,
-    CampaignRewardNotConfigured,
     begin_audio_upload,
     create_contribution,
     finalise_audio,
@@ -25,7 +22,7 @@ from app.consent import require_active_scope
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity
 from app.models import AudioObject, ConsentScope, Contribution
-from app.storage import AudioHashMismatch, AudioUnavailable, InvalidAudioToken, LocalAudioObjectStore
+from app.storage import AudioUnavailable, InvalidAudioToken, LocalAudioObjectStore
 
 
 router = APIRouter(tags=["contributions", "audio"])

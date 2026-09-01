@@ -32,6 +32,9 @@ def _run_alembic(*args: str, db_uri: str) -> None:
         capture_output=True,
         text=True,
     )
+    assert result.returncode == 0, (
+        f"alembic {' '.join(args)} failed:\nstdout={result.stdout}\nstderr={result.stderr}"
+    )
 
 
 def _alembic_result(*args: str, db_uri: str):
@@ -45,9 +48,6 @@ def _alembic_result(*args: str, db_uri: str):
         env=env,
         capture_output=True,
         text=True,
-    )
-    assert result.returncode == 0, (
-        f"alembic {' '.join(args)} failed:\nstdout={result.stdout}\nstderr={result.stderr}"
     )
 
 

@@ -95,7 +95,7 @@ def credit_reward(
             # Execute constraints now, while the caller can still roll back
             # its wider transaction. Do not publish a partial reward yet.
             session.flush()
-    except IntegrityError as exc:
+    except IntegrityError:
         if not commit:
             raise
         session.rollback()
