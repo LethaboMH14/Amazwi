@@ -56,7 +56,9 @@ def answer_assignment(
     identity: AuthenticatedIdentity = Depends(get_current_identity),
     session: Session = Depends(get_session),
 ) -> AssignmentResponse:
-    assignment = session.get(Assignment, assignment_id)
+    assignment = session.scalar(
+        select(Assignment).where(Assignment.id == assignment_id).with_for_update()
+    )
     if assignment is None or assignment.verifier_id != identity.user_id:
         raise HTTPException(status_code=403, detail={"code": "ASSIGNMENT_NOT_AUTHORISED"})
     if assignment.answered_at is not None:
@@ -86,7 +88,31 @@ def referee_assignment(
     identity: AuthenticatedIdentity = Depends(get_current_identity),
     session: Session = Depends(get_session),
 ) -> AssignmentResponse:
-    return answer_assignment(assignment_id, request, identity, session)
+    assignment = session.scalar(
+        select(Assignment).where(Assignment.id == assignment_id).with_for_update()
+    )
+    if assignment is None or assignment.verifier_id != identity.user_id:
+        raise HTTPException(status_code=403, detail={"code": "ASSIGNMENT_NOT_AUTHORISED"})
+    if assignment.mode != AssignmentMode.PROFICIENT_VERIFIER:
+        raise HTTPException(status_code=409, detail={"code": "REFEREE_NOT_ALLOWED"})
+    if assignment.answered_at is not None:
+        raise HTTPException(status_code=409, detail={"code": "ASSIGNMENT_ALREADY_ANSWERED"})
+    contribution = session.get(Contribution, assignment.contribution_id)
+    card = session.get(Card, contribution.card_id) if contribution else None
+    if contribution is None or card is None:
+        raise HTTPException(status_code=404, detail={"code": "NO_ASSIGNMENT"})
+    assignment.answer_text = request.answer_text
+    assignment.answer_normalised = normalise_answer(request.answer_text)
+    assignment.matched = is_correct(request.answer_text, card.accepted_answers)
+    assignment.violation_vote = request.violation_vote
+    from datetime import datetime, timezone
+    assignment.answered_at = datetime.now(timezone.utc)
+    session.commit()
+    try:
+        resolve_from_persisted_state(session, assignment.contribution_id)
+    except ResolutionNotReadyError:
+        pass
+    return _assignment_response(assignment)
 
 
 @router.get("/contributions/{contribution_id}/result", response_model=ContributionResult)

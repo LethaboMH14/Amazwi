@@ -13,16 +13,24 @@ Covers:
 from __future__ import annotations
 
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
+from threading import Barrier
 
 import pytest
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 from app.models import (
     Assignment,
     AssignmentMode,
+    AudioObject,
+    AudioObjectState,
     Campaign,
+    CampaignRewardRule,
     Card,
+    ConsentGrant,
+    ConsentScope,
     Contribution,
     ContributionState,
     EligibilityDecision,
@@ -31,8 +39,10 @@ from app.models import (
 )
 from app.resolver import (
     AudioNotAssignableError,
+    CampaignRewardNotConfiguredError,
     SelfVerificationError,
     create_assignment,
+    resolve_from_persisted_state,
     resolve_contribution,
 )
 
@@ -369,3 +379,70 @@ def test_resolve_called_twice_returns_same_decision_and_credits_one_reward(db_se
     assert d1.contribution_id == d2.contribution_id
     rewards = db_session.query(RewardEvent).filter_by(contribution_id=contribution.id).all()
     assert len(rewards) == 1
+
+
+def test_persisted_resolution_uses_snapshot_and_is_idempotent_across_sessions(db_session):
+    speaker = _user(db_session)
+    v1, v2 = _user(db_session), _user(db_session)
+    campaign = _campaign(db_session, funded_cents=1_000)
+    contribution = _contribution(db_session, speaker, campaign)
+    rule = CampaignRewardRule(
+        campaign_id=campaign.id,
+        version="snapshot-v2",
+        contribution_reward_cents=125,
+        effective_from=datetime.now(timezone.utc),
+    )
+    db_session.add(rule)
+    db_session.flush()
+    contribution.reward_rule_id = rule.id
+    db_session.add(ConsentGrant(
+        user_id=speaker.id,
+        version="consent-v3",
+        scope=ConsentScope.RECORD_PROCESS_ROUND,
+    ))
+    db_session.add(AudioObject(
+        contribution_id=contribution.id,
+        object_key=f"audio/{contribution.id}",
+        sha256="a" * 64,
+        mime_type="audio/wav",
+        codec="pcm",
+        duration_ms=1000,
+        byte_length=10,
+        state=AudioObjectState.AVAILABLE,
+    ))
+    db_session.commit()
+    _answered_assignment(db_session, contribution, v1, matched=True, violation_vote=False)
+    _answered_assignment(db_session, contribution, v2, matched=True, violation_vote=False)
+
+    barrier = Barrier(2)
+
+    def resolve_in_new_session():
+        session = Session(db_session.bind)
+        try:
+            barrier.wait(timeout=10)
+            decision = resolve_from_persisted_state(session, contribution.id)
+            return decision.contribution_id, decision.corpus_eligible
+        finally:
+            session.close()
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        decisions = list(executor.map(lambda _: resolve_in_new_session(), range(2)))
+
+    assert {decision_id for decision_id, _ in decisions} == {contribution.id}
+    assert all(corpus_eligible for _, corpus_eligible in decisions)
+    assert db_session.query(EligibilityDecision).filter_by(contribution_id=contribution.id).count() == 1
+    assert db_session.query(RewardEvent).filter_by(contribution_id=contribution.id).count() == 1
+    db_session.refresh(campaign)
+    assert campaign.committed_cents == 125
+
+
+def test_persisted_resolution_rejects_missing_reward_rule_without_decision(db_session):
+    speaker = _user(db_session)
+    v1, v2 = _user(db_session), _user(db_session)
+    contribution = _contribution(db_session, speaker)
+    _answered_assignment(db_session, contribution, v1, matched=True, violation_vote=False)
+    _answered_assignment(db_session, contribution, v2, matched=True, violation_vote=False)
+
+    with pytest.raises(CampaignRewardNotConfiguredError):
+        resolve_from_persisted_state(db_session, contribution.id)
+    assert db_session.get(EligibilityDecision, contribution.id) is None

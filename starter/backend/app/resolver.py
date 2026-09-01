@@ -44,6 +44,7 @@ from app.models import (
     AudioObject,
     AudioObjectState,
     CampaignRewardRule,
+    Card,
     Contribution,
     ContributionState,
     EligibilityDecision,
@@ -110,37 +111,125 @@ class ResolutionNotReadyError(Exception):
     pass
 
 
+class CampaignRewardNotConfiguredError(ValueError):
+    pass
+
+
 def resolve_from_persisted_state(session: Session, contribution_id: uuid.UUID) -> EligibilityDecision:
-    """Resolve only from persisted audio, consent, reward, and peer state."""
+    """Resolve only from persisted state, in one caller-owned transaction."""
+    # The contribution lock serialises concurrent second-answer resolution.
+    contribution = session.scalar(
+        select(Contribution).where(Contribution.id == contribution_id).with_for_update()
+    )
+    if contribution is None:
+        raise ValueError(f"no such contribution {contribution_id}")
     existing = session.get(EligibilityDecision, contribution_id)
     if existing is not None:
         return existing
-    contribution = session.get(Contribution, contribution_id)
-    if contribution is None:
-        raise ValueError(f"no such contribution {contribution_id}")
+
     completed = session.scalars(
         select(Assignment).where(
             Assignment.contribution_id == contribution_id,
             Assignment.mode == AssignmentMode.PROFICIENT_VERIFIER,
             Assignment.answered_at.is_not(None),
-        )
+        ).order_by(Assignment.answered_at, Assignment.id)
     ).all()
-    if len(completed) < 2:
-        raise ResolutionNotReadyError(f"contribution {contribution_id} needs two proficient answers")
+    if len(completed) != 2:
+        raise ResolutionNotReadyError(f"contribution {contribution_id} needs exactly two proficient answers")
+
     audio = session.scalar(select(AudioObject).where(AudioObject.contribution_id == contribution_id))
     try:
         consent = require_active_scope(session, contribution.speaker_id, ConsentScope.RECORD_PROCESS_ROUND)
     except ConsentRequiredError:
         consent = None
+
     rule = session.get(CampaignRewardRule, contribution.reward_rule_id) if contribution.reward_rule_id else None
-    return resolve_contribution(
-        session,
-        contribution_id=contribution_id,
-        audio_quality_passed=audio is not None and audio.state == AudioObjectState.AVAILABLE,
-        consent_active=consent is not None,
-        reward_amount_cents=rule.contribution_reward_cents if rule else None,
-        campaign_id=rule.campaign_id if rule else None,
+    card = session.get(Card, contribution.card_id)
+    if rule is None or card is None or rule.campaign_id != card.campaign_id:
+        raise CampaignRewardNotConfiguredError("contribution has no matching snapshotted campaign reward rule")
+
+    try:
+        decision = _resolve_uncommitted(
+            session,
+            contribution=contribution,
+            proficient_answers=completed,
+            audio_quality_passed=audio is not None and audio.state == AudioObjectState.AVAILABLE,
+            consent_active=consent is not None,
+            consent_version=consent.version if consent is not None else "n/a",
+            reward_amount_cents=rule.contribution_reward_cents,
+            campaign_id=rule.campaign_id,
+        )
+        session.commit()
+        return decision
+    except Exception:
+        session.rollback()
+        raise
+
+
+def _resolve_uncommitted(
+    session: Session,
+    *,
+    contribution: Contribution,
+    proficient_answers: list[Assignment],
+    audio_quality_passed: bool,
+    consent_active: bool,
+    consent_version: str,
+    reward_amount_cents: Optional[int] = None,
+    campaign_id: Optional[uuid.UUID] = None,
+) -> EligibilityDecision | None:
+    """Build the decision and reward inside the caller's transaction."""
+    if len(proficient_answers) < 2:
+        contribution.state = ContributionState.OPEN
+        return None
+    a, b = proficient_answers[0], proficient_answers[1]
+    if a.violation_vote and b.violation_vote:
+        contribution.state = ContributionState.VOIDED
+        understood, corpus_eligible = False, False
+        reason = "both verifiers voted a banned-word violation"
+    elif bool(a.violation_vote) != bool(b.violation_vote):
+        contribution.state = ContributionState.REVIEW_REQUIRED
+        understood, corpus_eligible = False, False
+        reason = "verifiers disagreed on the banned-word violation vote"
+    elif bool(a.matched) and bool(b.matched):
+        understood = True
+        corpus_eligible = audio_quality_passed and consent_active
+        if corpus_eligible:
+            contribution.state = ContributionState.CORPUS_ELIGIBLE
+            reason = "understood by both verifiers, audio quality passed, consent active"
+        else:
+            contribution.state = ContributionState.UNVALIDATED
+            reason = "understood by both verifiers but " + (
+                "consent not active" if not consent_active else "audio quality did not pass"
+            )
+    else:
+        understood, corpus_eligible = False, False
+        contribution.state = ContributionState.UNVALIDATED
+        reason = "not both verifier answers matched accepted_answers"
+
+    decision = EligibilityDecision(
+        contribution_id=contribution.id,
+        understood=understood,
+        corpus_eligible=corpus_eligible,
+        reason=reason,
+        consent_version=consent_version,
     )
+    session.add(decision)
+    if corpus_eligible:
+        if reward_amount_cents is None or reward_amount_cents <= 0:
+            raise CampaignRewardNotConfiguredError(
+                "corpus-eligible resolution requires a positive reward_amount_cents"
+            )
+        credit_reward(
+            session,
+            contribution_id=contribution.id,
+            user_id=contribution.speaker_id,
+            reward_type="SPEAKER_HONORARIUM",
+            amount_cents=reward_amount_cents,
+            idempotency_key=f"resolve-{contribution.id}",
+            campaign_id=campaign_id,
+            commit=False,
+        )
+    return decision
 
 
 def resolve_contribution(
@@ -184,13 +273,12 @@ def resolve_contribution(
     persist yet, matching the pseudocode's "remain OPEN" branch, which is
     a non-decision, not a decision recorded as some placeholder state.
     """
-    existing = session.get(EligibilityDecision, contribution_id)
-    if existing is not None:
-        return existing
-
     contribution = session.get(Contribution, contribution_id)
     if contribution is None:
         raise ValueError(f"no such contribution {contribution_id}")
+    existing = session.get(EligibilityDecision, contribution_id)
+    if existing is not None:
+        return existing
 
     proficient_answers = session.execute(
         select(Assignment).where(
@@ -200,75 +288,17 @@ def resolve_contribution(
         )
     ).scalars().all()
 
-    if len(proficient_answers) < 2:
-        contribution.state = ContributionState.OPEN
-        session.commit()
-        return None
-
-    # §5: "exactly two completed proficient-verifier assignments are
-    # required for automatic resolution" -- only the first two count;
-    # a third, if one somehow exists, is not part of the decision. This
-    # mirrors the pseudocode's binary branching (it only ever reasons
-    # about "both" answers/votes), which presumes exactly two.
-    a, b = proficient_answers[0], proficient_answers[1]
-
-    if a.violation_vote and b.violation_vote:
-        contribution.state = ContributionState.VOIDED
-        understood = False
-        corpus_eligible = False
-        reason = "both verifiers voted a banned-word violation"
-    elif bool(a.violation_vote) != bool(b.violation_vote):
-        contribution.state = ContributionState.REVIEW_REQUIRED
-        understood = False
-        corpus_eligible = False
-        reason = "verifiers disagreed on the banned-word violation vote"
-    elif bool(a.matched) and bool(b.matched):
-        understood = True
-        if audio_quality_passed and consent_active:
-            corpus_eligible = True
-            reason = "understood by both verifiers, audio quality passed, consent active"
-            contribution.state = ContributionState.CORPUS_ELIGIBLE
-        else:
-            corpus_eligible = False
-            reason = (
-                "understood by both verifiers but "
-                + ("consent not active" if not consent_active else "audio quality did not pass")
-            )
-            contribution.state = ContributionState.UNVALIDATED
-    else:
-        understood = False
-        corpus_eligible = False
-        reason = "not both verifier answers matched accepted_answers"
-        contribution.state = ContributionState.UNVALIDATED
-
-    decision = EligibilityDecision(
-        contribution_id=contribution_id,
-        understood=understood,
-        corpus_eligible=corpus_eligible,
-        reason=reason,
-        consent_version="v1" if consent_active else "n/a",
-    )
-    session.add(decision)
-
     try:
-        if corpus_eligible:
-            if reward_amount_cents is None or reward_amount_cents <= 0:
-                raise ValueError(
-                    "a corpus-eligible resolution requires a positive reward_amount_cents"
-                )
-            # §5: "credit speaker reward once." Keep this uncommitted until
-            # the contribution state and EligibilityDecision can commit with
-            # it. A failed budget check must leave all three unchanged.
-            credit_reward(
-                session,
-                contribution_id=contribution_id,
-                user_id=contribution.speaker_id,
-                reward_type="SPEAKER_HONORARIUM",
-                amount_cents=reward_amount_cents,
-                idempotency_key=f"resolve-{contribution_id}",
-                campaign_id=campaign_id,
-                commit=False,
-            )
+        decision = _resolve_uncommitted(
+            session,
+            contribution=contribution,
+            proficient_answers=proficient_answers,
+            audio_quality_passed=audio_quality_passed,
+            consent_active=consent_active,
+            consent_version="v1" if consent_active else "n/a",
+            reward_amount_cents=reward_amount_cents,
+            campaign_id=campaign_id,
+        )
         session.commit()
     except Exception:
         session.rollback()

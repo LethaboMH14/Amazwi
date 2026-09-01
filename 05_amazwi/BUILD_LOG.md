@@ -5,6 +5,22 @@
 
 ---
 
+### [01 Sep ~16:52] — Jcode · hardening · Task 5 acceptance gaps closed
+
+**DID**
+- Refactored persisted-state resolution around a row lock and an uncommitted decision builder, so decision, contribution state, reward, and campaign commitment commit atomically.
+- Added exact-two-answer enforcement, active round-consent derivation with persisted consent version, immutable reward-rule/card campaign matching, and a stable missing-rule error.
+- Locked assignment rows during answer/referee writes and made referee handling explicit for proficient assignments instead of aliasing the answer route.
+- Added a real PostgreSQL two-session concurrent resolution test proving one decision, one reward, and one campaign commitment.
+
+**VERIFIED**
+- Focused resolver/cohort/peer suite: **24/24 passed**. Full backend suite: **91/91 passed**. Python compilation and `git diff --check` passed.
+
+**STATUS**
+- Task 5 hardening is implemented and ready for the full Task 7 governed-flow acceptance test. No datasets, model providers, access tokens, or GPU were used.
+
+---
+
 ### [01 Sep ~16:44] — Jcode · verification · Tasks 4 and 5 whole-result review
 
 **VERIFIED**
