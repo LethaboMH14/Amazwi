@@ -415,3 +415,59 @@ class CouncilOutput(Base):
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, nullable=False)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     __table_args__ = (UniqueConstraint("event_id", "specialist", "model_version", name="uq_council_event_specialist_version"),)
+
+class DatasetSourceClass(str, enum.Enum):
+    EXTERNAL_LICENSED = "EXTERNAL_LICENSED"
+    AMAZWI_OPTED_IN = "AMAZWI_OPTED_IN"
+    EVALUATION_ONLY = "EVALUATION_ONLY"
+    SYNTHETIC_FIXTURE = "SYNTHETIC_FIXTURE"
+class DatasetSourceState(str, enum.Enum):
+    REGISTERED = "REGISTERED"
+    PREFLIGHT_PASSED = "PREFLIGHT_PASSED"
+    BLOCKED = "BLOCKED"
+    REVOKED = "REVOKED"
+class DatasetExportState(str, enum.Enum):
+    DRAFT = "DRAFT"
+    APPROVED = "APPROVED"
+    REVOKED = "REVOKED"
+
+class DatasetSource(Base):
+    __tablename__ = "dataset_sources"
+    source_id: Mapped[str] = mapped_column(String, primary_key=True)
+    version: Mapped[str] = mapped_column(String, nullable=False)
+    repository_url: Mapped[str] = mapped_column(String, nullable=False)
+    exact_revision: Mapped[str] = mapped_column(String, nullable=False)
+    license_spdx: Mapped[str] = mapped_column(String, nullable=False)
+    restrictions_json: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    allowed_tasks: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=False)
+    languages: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=False)
+    state: Mapped[DatasetSourceState] = mapped_column(SAEnum(DatasetSourceState, name="dataset_source_state"), nullable=False)
+    registry_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    reviewed_by: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    reviewed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+class DatasetExport(Base):
+    __tablename__ = "dataset_exports"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    state: Mapped[DatasetExportState] = mapped_column(SAEnum(DatasetExportState, name="dataset_export_state"), nullable=False)
+    purpose: Mapped[str] = mapped_column(String, nullable=False)
+    requested_by: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    approved_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    manifest_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    manifest_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    revoked_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+class DatasetExportRow(Base):
+    __tablename__ = "dataset_export_rows"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    export_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("dataset_exports.id"), nullable=False)
+    source_class: Mapped[DatasetSourceClass] = mapped_column(SAEnum(DatasetSourceClass, name="dataset_source_class"), nullable=False)
+    source_record_id: Mapped[str] = mapped_column(String, nullable=False)
+    contribution_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("contributions.id"), nullable=True)
+    object_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    consent_version: Mapped[str | None] = mapped_column(String, nullable=True)
+    included: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    exclusion_reason: Mapped[str | None] = mapped_column(String, nullable=True)
+    __table_args__ = (CheckConstraint("(source_class = 'AMAZWI_OPTED_IN' AND contribution_id IS NOT NULL) OR (source_class <> 'AMAZWI_OPTED_IN' AND contribution_id IS NULL)", name="ck_dataset_row_source_link"), UniqueConstraint("export_id", "source_class", "source_record_id", name="uq_dataset_export_source_record"))

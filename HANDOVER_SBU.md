@@ -35,6 +35,12 @@ an AI performance claim. The worker process, read-only Council status route,
 dataset provenance/export schema and ML manifest/evidence package remain
 unfinished and require focused tests before acceptance.
 
+Dataset provenance schema is now drafted in migration `d9e0f1a2b3c4` with
+source classes, licence/review metadata, export lifecycle state, manifest
+fields and a database check preventing external rows from carrying AMAZWI
+contribution IDs (or vice versa). Export candidate/approval services,
+immutability triggers and PostgreSQL schema tests are still required.
+
 The recoverable worker and read-only Council status API are now implemented in
 `1d96339`. `run_council_worker.py --once` claims leased events, runs the four
 deterministic specialists, completes successful events and retries failures;
