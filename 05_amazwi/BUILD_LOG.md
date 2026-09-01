@@ -1360,3 +1360,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** `starter/ml/amazwi_ml/budget.py`, `starter/ml/tests/test_budget.py`.
 - **NEXT:** Add deterministic tabular challengers and full metric/evidence fixtures.
 - **BLOCKED-PING:** No GPU, Kaggle, model or external dataset execution; CI status remains unavailable without `gh` authentication.
+
+### [01 Sep] — Sibusiso · Plan 02 tabular challenger scaffold
+
+- **DID:** Added deterministic, CPU-safe tabular candidate interfaces and protected-feature checks.
+- **HOW:** Fixed feature allowlists, stable candidate ordering, deterministic predictions and hashable evidence output.
+- **WHY:** Establish a safe interface for quality-risk and mission-ranking challengers without allowing identity or reward leakage.
+- **CHANGED:** `starter/ml/amazwi_ml/tabular.py`, `starter/ml/kaggle/train_tabular.py`, synthetic tests.
+- **NEXT:** Replace the placeholder challenger predictors with pinned LightGBM/XGBoost training once fixture metrics and dependencies are available.
+- **BLOCKED-PING:** No model download, GPU run, external data access or promotion alias change.
