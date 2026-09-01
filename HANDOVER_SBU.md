@@ -21,6 +21,12 @@ then an outbox worker with `FOR UPDATE SKIP LOCKED`. The frontend still needs a
 dedicated result route and browser-level MediaRecorder tests. No Council output
 may alter peer truth, consent, audio retention, rewards or model aliases.
 
+Outbox leasing primitives are now implemented in `app/outbox.py` with
+`claim_events`, ownership-checked completion, exponential retry backoff capped
+at five minutes, and audited administrative release via
+`scripts/recover_outbox.py`. These remain pending real PostgreSQL concurrency
+verification before being called production-ready.
+
 ### Contract correction — 01 Sep
 
 The recording client was reviewed against the actual backend routes and
