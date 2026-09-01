@@ -5,6 +5,22 @@
 
 ---
 
+### [01 Sep ~17:23] — Jcode · Plan 01 closeout verification
+
+**VERIFIED**
+- Re-ran the isolated real-PostgreSQL concurrency resolver acceptance after the first full-suite run lost its embedded `pgserver` instance: **1 passed** (`test_persisted_resolution_uses_snapshot_and_is_idempotent_across_sessions`).
+- Re-ran the complete backend suite against a fresh real PostgreSQL 16 instance: **94 passed in 65.65s**.
+- Frontend validation passed: **14 tests**, TypeScript compilation and Vite production build completed successfully.
+
+**INTERPRETATION**
+- The first full-suite failure was environmental: the embedded PostgreSQL process terminated during the run, causing the resolver connection failure and eight downstream fixture errors. The focused concurrency test and clean full rerun both passed; no source fix was made for that transient server crash.
+- Plan 01 Stages 1–3 implementation is green for automated coverage. Remaining Plan 01 acceptance gaps are physical/browser and human evidence: real multi-device recording/playback, target-device accessibility/resilience evidence, four Setswana distractor aloud approval, finished pitch/fallback pack and rehearsal. These are not claimed complete here.
+
+**HANDOFF TO PLAN 02**
+- Plan 02 may start from the current committed backend/frontend baseline. Its first implementation target is the PostgreSQL outbox and Council schema, consuming the persisted peer-resolution event boundary. No deployment, external dataset download, model call or GPU run was performed.
+
+---
+
 ### [01 Sep ~17:40] — Jcode · integration review · Sbu update reconciliation
 
 **SBU WORK REVIEWED**
