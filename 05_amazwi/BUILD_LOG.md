@@ -5,6 +5,26 @@
 
 ---
 
+### [02 Sep ~00:45] — Lethabo's session · Claude · v1-v4 pushes, real bugs at every stage, one manual step left
+
+**DID — the actual sequence, not the sanitised version:**
+- v1 (git clone): failed immediately — `fatal: could not read Username for 'https://github.com'`. The GitHub repo is private; Kaggle's environment has no credentials for it. **Did not** make the repo public or embed a token to work around this — chose a private Kaggle Dataset instead (see below).
+- v2 (sibling files next to the script): failed immediately — `ERROR: Could not open requirements file: ... No such file or directory`. Kaggle script kernels do not bundle files placed next to the pushed script; only the one designated `code_file` runs.
+- v3 (Kaggle Dataset `lethabomh14/amazwi-ml-support-files`, mounted at `/kaggle/input/`, staged into a writable `/kaggle/working/ml/` copy): **got real progress** — pip install of the full `requirements-kaggle.txt` stack succeeded (torch, transformers, datasets, peft, ~2.5GB of downloads, ~217s), the exact dataset revision resolved correctly (`3f988acc73676291de8a17a26abe2c716003233d`, matching the already-approved `preflight_swivuriso.json` — a real consistency check that passed) — then failed at `load_dataset(...)`: `DatasetNotFoundError: Dataset 'dsfsi-anv/za-african-next-voices-compressed' is a gated dataset on the Hub. You must be authenticated to access it.` This session's HF OAuth connector does not transfer into the separate Kaggle execution environment.
+- Fixed by reading the token from a **Kaggle Secret** (`kaggle_secrets.UserSecretsClient().get_secret("HF_TOKEN")`) rather than ever handling the raw token value myself — pushed as v4.
+- **This is a real, hard stop needing Lethabo specifically**: there is no API or `kernel-metadata.json` field to attach a Kaggle Secret programmatically (confirmed by reading the `kaggle` package's own push implementation — no `secret` reference anywhere in it). It's UI-only, on kaggle.com, in the account owner's own session. Documented the exact three-click path in `starter/ml/kaggle/KAGGLE_RUN.md`.
+- **A real local tooling bug found along the way, unrelated to the kernel itself**: `kaggle kernels output`'s CLI wrapper opens the downloaded log file in the system default text encoding (`cp1252` on this Windows machine) instead of UTF-8, so it crashed (`'charmap' codec can't encode characters`) trying to write a log containing non-ASCII bytes, silently producing a 0-byte log file with no indication of *why* it was empty. Worked around it by calling the underlying `KaggleApi.kernels_logs()` method directly and writing the result as UTF-8 myself — not a fix to the installed package, just how the real log got read for the rest of this entry.
+
+**VERIFIED, not assumed:**
+- Confirmed each of v1/v2/v3's failures from the actual downloaded log content, not the exit status alone.
+- Confirmed v3's dataset-revision resolution matched the pre-existing approval record exactly, rather than assuming preflight and runtime would agree.
+
+**NEXT / BLOCKED-PING**
+- **Waiting on Lethabo**: add a Kaggle Secret labelled `HF_TOKEN` (real HF access token as the value) and attach it to this kernel via the kernel editor's Add-ons → Secrets menu, then re-push or re-run. Nothing else in the pipeline needs a human right now — v4 is pushed and will get exactly as far as the token check, then fail with the specific, actionable message from the code fix above, until that secret is attached.
+- Once it actually starts training: still need to reconcile the governance ledger for real (per the prior entry), and confirm the checkpoint/metrics this produces are non-trivial before treating the run as a success.
+
+---
+
 ### [02 Sep ~00:15] — Lethabo's session · Claude · real Kaggle GPU run started, cross-lane, pending review
 
 **DID**

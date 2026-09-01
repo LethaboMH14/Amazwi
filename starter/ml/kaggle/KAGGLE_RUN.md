@@ -22,6 +22,18 @@ cp kaggle/kernel_entrypoint.py kaggle/kernel_push/amazwi-overnight-asr.py
 cd kaggle/kernel_push && python -m kaggle kernels push -p .
 ```
 
+## One manual step that only the account owner can do: the HF_TOKEN secret
+
+Swivuriso (`dsfsi-anv/za-african-next-voices-compressed`) is a **gated** Hugging Face dataset — `load_dataset(...)` fails with `DatasetNotFoundError: ... You must be authenticated to access it` without a real HF token attached. There is no API or `kernel-metadata.json` field to attach a Kaggle Secret programmatically — Kaggle deliberately keeps that UI-only, and a real credential value should never be typed into a script or committed to this repo regardless.
+
+**To unblock a run:**
+1. On kaggle.com, open this kernel's editor (or go to Account → Settings → Secrets).
+2. Add a secret labelled exactly `HF_TOKEN`, value = a real Hugging Face access token (huggingface.co → Settings → Access Tokens).
+3. Attach it to this kernel via the editor's **Add-ons → Secrets** menu, toggle it on.
+4. Re-run (or `kaggle kernels push` again, which re-triggers a run).
+
+The script reads it via `kaggle_secrets.UserSecretsClient().get_secret("HF_TOKEN")` and fails with a clear, specific message naming exactly this if the secret isn't attached — it does not proceed unauthenticated.
+
 ## Monitoring
 
 ```bash

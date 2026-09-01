@@ -78,7 +78,27 @@ def main() -> int:
     from datasets import load_dataset  # noqa: E402
     from huggingface_hub import dataset_info  # noqa: E402
 
-    info = dataset_info(DATASET_REPO)
+    # Swivuriso is a gated HF dataset -- needs an HF token. Read it from a
+    # Kaggle Secret (added via the kernel editor's Add-ons > Secrets, never
+    # typed into this script or committed anywhere) rather than embedding a
+    # token in code. Fails loudly and specifically if it's not attached,
+    # rather than proceeding unauthenticated and hitting a confusing
+    # DatasetNotFoundError deep inside `datasets`.
+    try:
+        from kaggle_secrets import UserSecretsClient
+
+        hf_token = UserSecretsClient().get_secret("HF_TOKEN")
+    except Exception as exc:  # noqa: BLE001 - want the real reason surfaced, not swallowed
+        raise RuntimeError(
+            "Could not read the HF_TOKEN Kaggle Secret. Attach it via this kernel's "
+            "Add-ons > Secrets menu (label must be exactly HF_TOKEN) before running. "
+            f"Underlying error: {exc}"
+        ) from exc
+    from huggingface_hub import login as hf_login
+
+    hf_login(token=hf_token)
+
+    info = dataset_info(DATASET_REPO, token=hf_token)
     exact_revision = info.sha
     print(f"Resolved exact dataset revision: {exact_revision}", flush=True)
 
@@ -88,7 +108,7 @@ def main() -> int:
     trainer_records: list[dict] = []
     governance_records: list[ManifestRecord] = []
     for lang in LANGUAGES:
-        ds = load_dataset(DATASET_REPO, lang, split=SPLIT, revision=exact_revision)
+        ds = load_dataset(DATASET_REPO, lang, split=SPLIT, revision=exact_revision, token=hf_token)
         for i, row in enumerate(ds):
             audio = row["audio"]
             out_path = audio_dir / f"{lang}_{SPLIT}_{i:06d}.wav"
