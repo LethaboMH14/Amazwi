@@ -5,6 +5,23 @@
 
 ---
 
+### [01 Sep] — Sbu (Claude, direct) · Plan 03 · API client failure-mapping tests
+
+**DID**
+- `src/api/client.test.ts` (11 tests) — `request()`'s response handling: 200 returns parsed JSON, 204 returns `undefined` **and never calls `.json()` at all** (calling `.json()` on a real 204 throws — this guards a real bug, not a style choice), non-ok responses raise `ApiError` carrying the server's `code`/`detail`, a non-JSON error body falls back to `HTTP_ERROR`/a generic message, requests are prefixed with `/api`. `userMessage()`: 401→sign-in prompt, 409→round-unavailable message regardless of server detail text, other `ApiError` statuses use the server's own message, a plain `Error` uses its message, a non-`Error` throw falls back to the generic string.
+- This is Plan 03 Task 2's "typed API contracts and visible failure mapping" — had zero unit coverage before (only exercised indirectly through `ConsentRoute.test.tsx`/`HomeRoute.test.tsx`'s happy paths).
+- Caught my own weak first-draft assertion before committing: an unawaited `expect(...).resolves.toBeDefined()` that vitest flagged as a warning and that didn't actually prove `.json()` was skipped for a 204. Replaced with a real spy assertion (`expect(jsonSpy).not.toHaveBeenCalled()`).
+- **Full frontend suite: 47/47 passing** (36 prior + 11 new), `tsc -b --noEmit` clean.
+
+**BLOCKED / PING**
+- Same standing limitation: no Postgres/Docker here, so nothing backend-integrated or requiring a real browser render is attempted from this environment.
+- No GPU, external dataset download, Kaggle execution, payment or deployment action taken.
+
+**NEXT**
+- Continue toward Plan 03's remaining testable-without-a-browser scope, then reassess whether the next gap needs a real render/device (which stays out of scope here) or is genuinely pure logic.
+
+---
+
 ### [01 Sep] — Sbu (Claude, direct) · Plan 03 · signalMotion/theme tests, and a real shared test-infra bug found and fixed
 
 **DID**
