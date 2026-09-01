@@ -1342,3 +1342,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** `starter/backend/app/storage/local.py` and rejection coverage in `test_local_storage.py`; commit `9fb9d75`.
 - **NEXT:** Run the Linux CI job and PostgreSQL suites in the provisioned runtime.
 - **BLOCKED-PING:** No deployment, external download or payment action was performed.
+
+### [01 Sep] — Sibusiso · CPU-safe campaign packaging
+
+- **DID:** Completed the no-download Kaggle-compatible Task 12 entry points.
+- **HOW:** Added explicit candidate/manifest/seed arguments for ASR preflight, offline evaluation and hash-addressed packaging; no network client is imported.
+- **WHY:** Preserve reproducibility and keep the 60-hour campaign gate separate from execution.
+- **CHANGED:** `starter/ml/kaggle/train_asr.py`, `evaluate_asr.py`, `package_run.py`.
+- **NEXT:** Add fixture tests and enforce phase allocation limits in the budget ledger.
+- **BLOCKED-PING:** CI status could not be queried because `gh` is not authenticated in this environment; no GPU or dataset run was attempted.
