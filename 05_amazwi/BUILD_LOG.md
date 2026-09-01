@@ -5,6 +5,22 @@
 
 ---
 
+### [01 Sep ~16:44] — Jcode · verification · Tasks 4 and 5 whole-result review
+
+**VERIFIED**
+- Re-ran Python compilation, the public import/router smoke check, `git diff --check`, and the full backend suite: **89/89 tests passed**.
+- Confirmed all Task 4 and Task 5 public routes are registered and the shipped commits are synchronized with `origin/main` at `d7d29cc`.
+- The focused checks reported **5/5 Task 4 tests** and **22/22 Task 5 cohort/peer/resolver tests** in the earlier integrated run.
+
+**TRACEABILITY RESULT**
+- The implemented backend slices are verified for their covered paths: consent-gated contribution creation, private audio finalisation/playback re-authorisation, eligible verifier selection, authenticated assignment ownership, answer deduplication, pending result polling, and persisted-state resolver entrypoint wiring.
+- Full written Task 5 acceptance remains **partially covered**, not fully closed: the repository still needs the non-committing resolver refactor, distinct referee/violation semantics, real two-session concurrency and reward-idempotency coverage, and broader two-verifier/learner-exclusion end-to-end tests.
+
+**STATUS**
+- Tasks 4 and 5 backend slices are shipped and regression-verified. The listed hardening items remain explicitly pending before claiming complete end-to-end acceptance.
+
+---
+
 ### [01 Sep ~16:05] — Jcode · implementation · Task 5 complete
 
 **DID**
