@@ -54,6 +54,12 @@ contract now exposes outcome, reward amount and currency. This is the visible
 peer-truth-first receipt; the Signal Flow visual polish, Coverage Constellation
 and operations screens remain separate acceptance work.
 
+Plan 03 UI foundations are now shipped in `e747caa`: season-aware theme
+selection (Midnight, Daylight and September Ndebele), tokenised Signal Card
+materials, peer-truth/advisory primitives, and finite reduced-motion-safe
+Signal animations. Operations surfaces and visual/browser evidence remain
+open; these primitives are intentionally small and composable.
+
 ### Contract correction — 01 Sep
 
 The recording client was reviewed against the actual backend routes and
