@@ -1,0 +1,10 @@
+{
+  "dataset_id": "swivuriso",
+  "decision": "APPROVED",
+  "exact_revision": "3f988acc73676291de8a17a26abe2c716003233d",
+  "intended_task": "ASR_TRAINING",
+  "registry_sha256": "5e845126044b0ee6b83479204b7e31c7d4d947cc61e94402e4cfc6f51ad6c25e",
+  "reviewed_at": "2026-09-01T19:18:43Z",
+  "reviewer": "LethaboMH14",
+  "terms_accepted": true
+}
