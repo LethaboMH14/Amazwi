@@ -1,0 +1,1 @@
+{"baseline":{"wer":0.4,"cer":0.2,"embedded_span_error":0.3},"candidate":{"wer":0.36,"cer":0.2,"embedded_span_error":0.3},"evaluation_manifest_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}

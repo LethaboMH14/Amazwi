@@ -1,0 +1,1 @@
+{"baseline":{"brier":0.5,"aucpr":0.7,"ece":0.04,"max_protected_gap":0.1,"ndcg10":0.5,"map10":0.4},"candidate":{"brier":0.49,"aucpr":0.7,"ece":0.05,"max_protected_gap":0.12,"ndcg10":0.52,"map10":0.4}}

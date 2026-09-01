@@ -1,5 +1,19 @@
 # AMAZWI — BUILD LOG
 
+### [01 Sep ~18:22] — Jcode · Plan 02 Tasks 11–12 · deterministic tournament and budget/Kaggle slice
+
+**VERIFIED**
+- Implemented deterministic tournament evidence types, candidate ranking, exact ASR gates, exact QUALITY_RISK and MISSION_RANKING gates, stable reason-code ordering, and advisory no-alias-mutation decisions.
+- Implemented atomic canonical JSON GPU ledger with 60-hour aggregate cap, 30-hour account cap, locked phase caps (6/8/16/16/8/6), duplicate/hash/input checks, reservation completion, fsync, and replace.
+- Added pinned Kaggle requirements, budget metadata, CPU-safe no-download entry points, synthetic fixtures, and tests. Targeted suite run twice: **8 passed** each run. Four `--help` paths and `reserve_run.py --show` completed without GPU, network, provider, or model execution.
+- No dataset/model download, GPU reservation, Kaggle submission, provider call, or model-result claim was made.
+
+**REMAINING GAPS**
+- Kaggle training/evaluation/package entry points are intentionally safe scaffolds, not resource-backed training or artifact packaging implementations.
+- Plan 02 tabular challengers, evidence/model cards, and backend Stage 4–6 acceptance remain open.
+
+---
+
 ### [01 Sep ~18:08] — Jcode · Plan 02 ML progress checkpoint · governed primitives and external preflight
 
 **VERIFIED**
