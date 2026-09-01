@@ -8,7 +8,7 @@
 
 ## CURRENT OVERRIDE — READ THIS BEFORE OLDER SECTIONS
 
-- **Eligibility boundary:** no written organiser approval exists and the team will not request it. No product-specific competition implementation or Gate A–H work begins before the event opens. Pre-event plans, language content, Figma work and static mockups are preparation/reference only — not running-product evidence or submission artifacts.
+- **Build decision (1 Sep 2026):** Sbu/Sibusiso accepts proceeding with product-specific implementation before the event. Existing code and assets may be the team's working baseline. The hackathon's in-person/no-outside-assistance rule still applies during the event, and the actual build history must remain honest.
 - **Setswana cards:** both card validators are structurally green. isiZulu has zero warnings; Setswana has one explicit review warning naming `moraka`, `jusi`, `ting` and `diphaphatha`. L1 is **WAITING** for Lethabo's aloud/native approval.
 - **Deck:** L5 is **PARTIAL**. The ten-slide file is a reference skeleton; the actual competition deck, on-site screenshots, judge-only script and no-network fallback recording remain open.
 - Older review snapshots below preserve decision history. Where their status wording conflicts with this override, this override and `05_amazwi/P0.md` govern.
@@ -68,7 +68,7 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 
 ### Current cross-lane handoff
 
-- Sbu will not send organiser questions. The conservative boundary is final: no product-specific competition implementation before the event opens. Pre-event product artifacts remain reference/preparation only.
+- Sbu will not send organiser questions. The build decision is now accepted: product-specific implementation may continue before the event, with the in-person/no-outside-assistance rule and honest build-history disclosure retained.
 - Lethabo's immediate language deliverable is the aloud decision on the four replacement distractors. Structural validation is already green.
 - Setswana error copy is reviewed; isiZulu remains pending Sbu's first-language approval. Structural error-state validation is green across all three language fields.
 - The authenticated MoMo profile has no subscriptions. Build the receipt and wallet against `DEMO_PROVIDER`; do not imply a live Collections or Disbursements leg unless organisers provide a different provisioned account.

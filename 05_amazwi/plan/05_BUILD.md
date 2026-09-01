@@ -20,9 +20,9 @@ The team has chosen not to seek written answers before the event. The following 
 - submission close and pitch start;
 - the scope of the IP clause's “exclusive” marketing licence.
 
-No written approval will be sought before the event. Therefore **no product-specific application code and no Gate A–H implementation begins before the event opens**. The invitation also says all competition work must be completed on-site by the two-person team without outside assistance; a teammate cannot waive that condition by recording an internal "accepted risk."
+The team has decided that product-specific implementation may continue before the event. The invitation's in-person/no-outside-assistance condition still governs work performed during the hackathon itself, and the team must disclose its actual build history if asked.
 
-Pre-event research, plans, reviewed language content, design explorations and mockups are **preparation/reference only**. They are not competition implementation, running-product evidence or submission artifacts. At the event, Sbu and Lethabo must create the competition implementation themselves, on-site, and may use only material the organisers' rules permit. Keep the existing history intact and disclose the preparation boundary honestly; never relabel pre-event work as event-built.
+Pre-event research, plans, reviewed language content, design explorations, mockups and application code may be used as the team's working baseline. Keep the existing history intact and disclose the preparation/build timeline honestly; never claim a pre-event artefact was created during the event.
 
 ---
 

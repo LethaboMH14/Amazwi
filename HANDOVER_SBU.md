@@ -4,7 +4,7 @@
 
 ---
 
-## ⚠️ NEW — 01 Sep ~04:35 · implementation programme approved; autonomous execution starting
+## ✅ CURRENT — 01 Sep · implementation programme approved; autonomous execution starting
 
 Lethabo has now approved moving from the written design into an executable plan
 and instructed continuous autonomous implementation with frequent commits and
@@ -18,9 +18,9 @@ the four subsystem plans beside it cover Stages 1–3, 4–6, 7–8 and 9:
 
 The first implementation wave is scoped consent → private local audio → real
 peer API. It uses failing tests first and real PostgreSQL migration/invariant
-checks. This instruction does not resolve the pre-event timing disagreement and
-does not represent your approval of backend/data/money decisions. All such work
-remains clearly pending your review. No deployment is resumed.
+checks. Sbu/Sibusiso now accepts the pre-event implementation decision. This
+does not represent approval of backend/data/money decisions; those remain
+pending Sbu's technical review. No deployment is resumed until that review.
 
 **Review request when you return:** consent partial-unique/index semantics,
 revocation races, private playback authorisation, resolver integration and any

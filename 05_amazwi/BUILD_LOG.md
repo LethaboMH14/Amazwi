@@ -1306,3 +1306,7 @@ Added complete isiZulu copy for all ten canonical error states in `content/error
 - Learner MCQ remains XP-only: no learner-guess counts are shown to speakers in P0.
 - A receipt may privately replay the contributor's own clip only while recording consent remains active; revocation removes the replay path.
 - The competition demo uses an English functional shell for reliability. Hero cards and error copy remain first-language owned; a declared-language shell is post-P0.
+
+### [01 Sep] — Sibusiso · build restriction accepted as superseded
+
+Sibusiso explicitly accepts the team's decision to continue product-specific implementation before the event. The earlier dispute and restriction are superseded, not deleted, so the append-only history remains accurate. Existing code may be used as the working baseline; the event's in-person/no-outside-assistance rule and honest build-history disclosure still apply.
