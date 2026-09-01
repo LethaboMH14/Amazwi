@@ -17,3 +17,24 @@ class ConsentState(BaseModel):
     version: str
     granted_at: datetime
     revoked_at: datetime | None
+
+
+class ContributionCreateRequest(BaseModel):
+    card_id: str
+
+
+class AudioUploadResponse(BaseModel):
+    audio_object_id: str
+    object_key: str
+
+
+class AudioFinaliseRequest(BaseModel):
+    sha256: str = Field(min_length=64, max_length=64)
+    mime_type: str
+    codec: str
+    duration_ms: int
+    byte_length: int
+
+
+class PlaybackResponse(BaseModel):
+    url: str

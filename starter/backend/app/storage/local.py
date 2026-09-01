@@ -133,6 +133,9 @@ class LocalAudioObjectStore:
         ) as exc:
             raise InvalidAudioToken("invalid audio token") from exc
 
+    def token_payload(self, token: str) -> dict:
+        return self._decode_token(token)
+
     def open_private(self, token: str, *, audience: str, now: datetime, purpose: str | None = None) -> io.BytesIO:
         payload = self._decode_token(token)
         if payload.get("aud") != audience or (purpose is not None and payload.get("purpose") != purpose):

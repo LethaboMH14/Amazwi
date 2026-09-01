@@ -5,6 +5,33 @@
 
 ---
 
+### [01 Sep ~14:35] — Jcode · implementation · Task 4 complete
+
+**DID**
+- Added consent-gated contribution creation with persisted campaign reward-rule snapshots.
+- Added private audio upload and finalisation with supported-format, duration, SHA-256, and byte-length checks.
+- Added contributor playback token issuance and streaming re-authorisation, so revoking round consent blocks an already-issued URL before bytes are opened.
+- Added Task 4 service/API tests and stable error-code handling.
+
+**HOW**
+- Wrote Task 4 service and API tests first and confirmed the expected missing-module failure.
+- Kept contribution and audio service functions non-committing. Routes own the transaction boundary and derive speaker identity only from `AuthenticatedIdentity`.
+- Focused Task 4 tests passed **5/5**. The full backend suite will be rerun after Task 5 integration before the final combined push verification.
+
+**TASK STATUS**
+- **Current:** Plan 01 Task 4, contribution creation, private upload/finalisation, and consent-aware contributor playback, complete.
+- **Next:** Plan 01 Task 5, closed-cohort selection and real peer assignment/answer/referee/result APIs.
+
+**DATASETS / AI / GPU RESOURCE PLAN**
+- Task 4 used **no datasets**, Kaggle, Hugging Face, Featherless AI, OpenRouter, access tokens, model calls, or GPU.
+- Task 5 is deterministic peer/API work and also does not require model-provider access or GPU.
+- Dataset manifests and licensed Kaggle/Hugging Face downloads remain deferred to Plan 02’s governed data-refinery tasks. Advisory AI provider selection remains deferred until peer truth is persisted.
+
+**BLOCKED / PING**
+- Task 4 is complete and ready for Task 5 integration. Vercel remains paused. No deployment or external data/model access was performed.
+
+---
+
 ### [01 Sep ~12:10] — Jcode · implementation · Task 3 complete
 
 **DID**

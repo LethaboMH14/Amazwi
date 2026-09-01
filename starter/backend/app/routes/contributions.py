@@ -1,0 +1,166 @@
+from __future__ import annotations
+
+from contextlib import contextmanager
+from collections.abc import Iterator
+import uuid
+
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.api_types import AudioFinaliseRequest, AudioUploadResponse, ContributionCreateRequest, PlaybackResponse
+from app.audio import get_audio_store
+from app.contributions import (
+    AudioDurationInvalid,
+    AudioFormatUnsupported,
+    AudioNotAuthorised,
+    CampaignRewardNotConfigured,
+    begin_audio_upload,
+    create_contribution,
+    finalise_audio,
+    issue_contributor_playback_token,
+)
+from app.consent import ConsentRequiredError
+from app.consent import require_active_scope
+from app.db import get_session
+from app.identity import AuthenticatedIdentity, get_current_identity
+from app.models import AudioObject, ConsentScope, Contribution
+from app.storage import AudioHashMismatch, AudioUnavailable, InvalidAudioToken, LocalAudioObjectStore
+
+
+router = APIRouter(tags=["contributions", "audio"])
+
+
+@contextmanager
+def _transaction(session: Session) -> Iterator[None]:
+    transaction = session.begin_nested() if session.in_transaction() else session.begin()
+    with transaction:
+        yield
+
+
+def _error(exc: Exception) -> HTTPException:
+    code = str(exc)
+    if isinstance(exc, ConsentRequiredError):
+        code = "CONSENT_REQUIRED"
+    mapping = {
+        "CONSENT_REQUIRED": 403,
+        "CAMPAIGN_REWARD_NOT_CONFIGURED": 409,
+        "AUDIO_FORMAT_UNSUPPORTED": 415,
+        "AUDIO_DURATION_INVALID": 422,
+        "AUDIO_NOT_AUTHORISED": 403,
+        "AUDIO_UNAVAILABLE": 404,
+        "AUDIO_HASH_MISMATCH": 422,
+    }
+    return HTTPException(status_code=mapping.get(code, 400), detail={"code": code})
+
+
+@router.post("/contributions", status_code=status.HTTP_201_CREATED)
+def create_contribution_route(
+    request: ContributionCreateRequest,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+):
+    try:
+        with _transaction(session):
+            contribution = create_contribution(
+                session, principal=identity, card_id=uuid.UUID(request.card_id)
+            )
+    except Exception as exc:
+        if isinstance(exc, HTTPException):
+            raise
+        raise _error(exc) from exc
+    return {"id": str(contribution.id), "state": contribution.state.value, "reward_rule_id": str(contribution.reward_rule_id)}
+
+
+@router.post("/contributions/{contribution_id}/audio/uploads", response_model=AudioUploadResponse)
+def create_audio_upload(
+    contribution_id: uuid.UUID,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+    store: LocalAudioObjectStore = Depends(get_audio_store),
+):
+    try:
+        with _transaction(session):
+            audio = begin_audio_upload(session, store, contribution_id, identity.user_id)
+    except Exception as exc:
+        raise _error(exc) from exc
+    return AudioUploadResponse(audio_object_id=str(audio.id), object_key=audio.object_key)
+
+
+@router.put("/private-audio/uploads/{audio_object_id}")
+async def upload_audio(
+    audio_object_id: uuid.UUID,
+    request: Request,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+    store: LocalAudioObjectStore = Depends(get_audio_store),
+):
+    audio = session.get(AudioObject, audio_object_id)
+    if audio is None:
+        raise HTTPException(status_code=404, detail={"code": "AUDIO_UNAVAILABLE"})
+    contribution = session.get(Contribution, audio.contribution_id)
+    if contribution is None or contribution.speaker_id != identity.user_id:
+        raise HTTPException(status_code=403, detail={"code": "AUDIO_NOT_AUTHORISED"})
+    try:
+        require_active_scope(session, identity.user_id, ConsentScope.RECORD_PROCESS_ROUND)
+    except ConsentRequiredError as exc:
+        raise _error(exc) from exc
+    try:
+        store.write_upload(audio.object_key, await request.body())
+    except Exception as exc:
+        raise _error(exc) from exc
+    return {"status": "uploaded"}
+
+
+@router.post("/contributions/{contribution_id}/audio/finalise")
+def finalise_audio_route(
+    contribution_id: uuid.UUID,
+    request: AudioFinaliseRequest,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+    store: LocalAudioObjectStore = Depends(get_audio_store),
+):
+    try:
+        with _transaction(session):
+            contribution = session.get(Contribution, contribution_id)
+            if contribution is None or contribution.speaker_id != identity.user_id:
+                raise AudioNotAuthorised("AUDIO_NOT_AUTHORISED")
+            audio = finalise_audio(session, store, contribution_id, **request.model_dump())
+    except Exception as exc:
+        raise _error(exc) from exc
+    return {"audio_object_id": str(audio.id), "state": audio.state.value}
+
+
+@router.post("/contributions/{contribution_id}/playback", response_model=PlaybackResponse)
+def contributor_playback(
+    contribution_id: uuid.UUID,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+    store: LocalAudioObjectStore = Depends(get_audio_store),
+):
+    try:
+        token = issue_contributor_playback_token(session, store, contribution_id, identity)
+    except Exception as exc:
+        raise _error(exc) from exc
+    return PlaybackResponse(url=f"/private-audio/play/{token}")
+
+
+@router.get("/private-audio/play/{token}")
+def play_audio(
+    token: str,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+    store: LocalAudioObjectStore = Depends(get_audio_store),
+):
+    try:
+        now = __import__("datetime").datetime.now(__import__("datetime").timezone.utc)
+        payload = store.token_payload(token)
+        audio = session.scalar(select(AudioObject).where(AudioObject.object_key == payload.get("key")))
+        contribution = session.get(Contribution, audio.contribution_id) if audio else None
+        if contribution is None or contribution.speaker_id != identity.user_id:
+            raise InvalidAudioToken("audio token is not authorised for this user")
+        require_active_scope(session, identity.user_id, ConsentScope.RECORD_PROCESS_ROUND)
+        body = store.open_private(token, audience=str(identity.user_id), now=now, purpose="REPLAY").read()
+    except (InvalidAudioToken, AudioUnavailable, ConsentRequiredError) as exc:
+        raise HTTPException(status_code=403, detail={"code": "AUDIO_NOT_AUTHORISED"}) from exc
+    return Response(content=body, media_type="application/octet-stream")

@@ -3,9 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.provider import DemoProvider
 from app.routes import consent_router
+from app.routes.contributions import router as contribution_router
 
 app = FastAPI(title="starter")
 app.include_router(consent_router)
+app.include_router(contribution_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
