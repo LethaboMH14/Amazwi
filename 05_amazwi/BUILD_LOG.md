@@ -5,6 +5,31 @@
 
 ---
 
+### [01 Sep ~11:42] — Jcode · implementation · consent service and API
+
+**DID**
+- Added server-side consent grant, active-scope enforcement, auditable revocation, and idempotent grant behavior.
+- Added typed consent API routes for create, list, and revoke operations.
+- Added a fail-closed identity dependency that rejects missing or malformed identity headers and prevents request-body impersonation.
+
+**HOW**
+- Wrote service and API tests first and confirmed the expected missing-module failures.
+- Added row locking for grant/revocation operations, no internal service commits, audit-event creation, and transaction handling for production and dependency-overridden sessions.
+- Verified consent, API, migration, resolver, ledger, matching, provider, and schema paths together against real PostgreSQL fixtures.
+
+**CHANGED**
+- `starter/backend/app/consent.py`, `config.py`, `db.py`, `identity.py`, `api_types.py` — service, configuration, database, identity, and typed contracts.
+- `starter/backend/app/routes/consents.py`, `routes/__init__.py`, `app/main.py` — consent endpoints and router registration.
+- `starter/backend/tests/test_consent.py`, `test_consent_api.py` — service, audit, revocation, authentication, and anti-impersonation coverage.
+
+**NEXT**
+- Implement Plan 01 Task 3: local private audio object storage with traversal, token, quarantine, and expiry tests.
+
+**BLOCKED / PING**
+- No blocker for Task 3. Vercel remains paused.
+
+---
+
 ### [01 Sep ~11:13] — Jcode · implementation · reward-rule trigger hardening
 
 **DID**
