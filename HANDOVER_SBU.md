@@ -60,6 +60,13 @@ materials, peer-truth/advisory primitives, and finite reduced-motion-safe
 Signal animations. Operations surfaces and visual/browser evidence remain
 open; these primitives are intentionally small and composable.
 
+The next Plan 03/04 hardening slice is now on `main` (`0560c38` after rebase):
+runtime mode parsing rejects insecure production/demo combinations, backend
+`Settings` uses secret-safe typed fields and production validators, and the UI
+has polite/assertive status announcement primitives for accessible async
+flows. This is boundary infrastructure; it is not a substitute for external
+auth/rate limiting or device/browser evidence.
+
 ### Contract correction — 01 Sep
 
 The recording client was reviewed against the actual backend routes and
