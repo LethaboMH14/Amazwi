@@ -6,7 +6,7 @@
     { "file": "Understood.dc.html","x": 1410, "y": 0, "w": 390, "h": 844, "title": "4 · The money moment" },
     { "file": "Receipt.dc.html",    "x": 1880, "y": 0, "w": 390, "h": 844, "title": "5 · Voice Value Receipt" },
     { "file": "Archive.dc.html",    "x": 2350, "y": 0, "w": 390, "h": 844, "title": "6 · Impact Map (aggregate)" },
-    { "file": "ThemeDemo.dc.html",  "x": 2820, "y": 0, "w": 390, "h": 844, "title": "7 · Theme switch demo — LIVE", "is_interactive": true },
+    { "file": "ThemeDemo.dc.html",  "x": 2820, "y": 0, "w": 390, "h": 844, "title": "7 · Theme tokens — source proof", "is_interactive": true },
     { "file": "ErrorMicDenied.dc.html",           "x": 0,    "y": 964, "w": 390, "h": 844, "title": "8 · Error — mic denied" },
     { "file": "ErrorProviderUnavailable.dc.html", "x": 470,  "y": 964, "w": 390, "h": 844, "title": "9 · Error — provider unavailable" }
   ],
