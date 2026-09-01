@@ -41,7 +41,7 @@ def retry_event(session: Session, event_id: uuid.UUID, worker_id: str, now: date
     event = session.scalar(select(OutboxEvent).where(OutboxEvent.id == event_id).with_for_update())
     if event is None or event.claimed_by != worker_id:
         raise ValueError("OUTBOX_WORKER_NOT_OWNER")
-    delay = min(2 ** max(event.attempt_count - 1, 0), 300)
+    delay = min(2 ** max(event.attempt_count, 0), 300)
     event.available_at = now + timedelta(seconds=delay)
     event.last_error = error[:2000]
     event.claimed_at = None
