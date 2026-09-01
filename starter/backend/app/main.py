@@ -21,5 +21,6 @@ provider = DemoProvider()
 
 
 @app.get("/health")
+@app.get("/api/health")
 def health() -> dict:
     return {"status": "ok", "provider_mode": provider.mode}
