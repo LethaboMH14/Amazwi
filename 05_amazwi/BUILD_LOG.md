@@ -140,6 +140,21 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [01 Sep ~02:25] — Lethabo (Sonnet, BUILD) · §5 zero-value reward guard regression-covered
+
+**DID**
+- Added the missing companion regression to the transaction correction: when both verifiers make a contribution eligible but no positive `reward_amount_cents` is supplied, resolver raises `ValueError` and persists neither terminal state, decision nor reward. This prevents the old implicit `0` fallback from becoming a database-level failure or a misleading zero-value financial event.
+- Verified the resolver suite: **17 passed**. Verified the complete backend suite on real PostgreSQL: **63 passed in 65.91s**.
+
+**WHY**
+- The resolver has no authority to choose speaker remuneration. Requiring the calling campaign flow to provide a positive amount is safer than silently creating a zero-cent reward or inventing a default amount in this cross-lane implementation.
+
+**NEXT**
+- Commit and push the regression test and documentation. Sbu's §5/§8 review remains pending.
+
+**BLOCKED / PING**
+- None.
+
 ### [01 Sep ~02:22] — Lethabo (Sonnet, BUILD) · direct CI confirmation for §5 transaction correction
 
 **DID**

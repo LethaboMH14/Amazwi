@@ -19,9 +19,10 @@ the existing decision rather than credit the speaker.
 - `credit_reward(..., commit=False)` is an explicit internal option for the
   resolver's wider transaction. Normal ledger callers retain their existing
   commit behavior.
-- A real PostgreSQL regression test makes a reward exceed campaign funding
-  and proves state remains `OPEN`, no decision exists and no reward exists.
-  Full backend suite: **62/62 passing**.
+- Real PostgreSQL regression tests prove both that a reward cannot exceed
+  campaign funding and that eligible resolution requires an explicit positive
+  amount. Both failures leave state `OPEN`, with no decision or reward.
+  Full backend suite: **63/63 passing**.
 
 **Scope boundary:** no reward amount was invented. A corpus-eligible call now
 requires its caller to supply a positive amount instead of implicitly trying

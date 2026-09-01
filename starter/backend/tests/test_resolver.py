@@ -286,6 +286,28 @@ def test_resolve_rolls_back_state_and_decision_when_reward_cannot_be_committed(d
     assert db_session.query(RewardEvent).filter_by(contribution_id=contribution.id).count() == 0
 
 
+def test_resolve_eligible_requires_a_positive_explicit_reward_amount(db_session):
+    """The resolver may not silently turn an omitted amount into 0 cents."""
+    speaker = _user(db_session)
+    v1, v2 = _user(db_session), _user(db_session)
+    contribution = _contribution(db_session, speaker)
+    _answered_assignment(db_session, contribution, v1, matched=True, violation_vote=False)
+    _answered_assignment(db_session, contribution, v2, matched=True, violation_vote=False)
+
+    with pytest.raises(ValueError, match="positive reward_amount_cents"):
+        resolve_contribution(
+            db_session,
+            contribution_id=contribution.id,
+            audio_quality_passed=True,
+            consent_active=True,
+        )
+
+    db_session.refresh(contribution)
+    assert contribution.state == ContributionState.OPEN
+    assert db_session.get(EligibilityDecision, contribution.id) is None
+    assert db_session.query(RewardEvent).filter_by(contribution_id=contribution.id).count() == 0
+
+
 def test_resolve_both_matched_but_quality_failed_unvalidated_no_reward(db_session):
     speaker = _user(db_session)
     v1, v2 = _user(db_session), _user(db_session)

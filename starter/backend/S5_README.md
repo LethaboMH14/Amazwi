@@ -33,7 +33,7 @@ sign-off — that stays Sbu's per `05_BUILD.md` §2. See `HANDOVER_SBU.md`.
   stated `PostgreSQL 16` exactly.
 - `tests/test_migrations.py`, `test_schema_constraints.py`,
   `test_ledger_invariants.py`, `test_assignment_invariants.py`,
-  `test_resolver.py` — 40 new tests, all run against real Postgres, 0
+  `test_resolver.py` — 41 new tests, all run against real Postgres, 0
   mocks.
 
 ## Not here (deliberately, not an oversight)
