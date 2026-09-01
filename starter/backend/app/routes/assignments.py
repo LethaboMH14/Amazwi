@@ -12,7 +12,7 @@ from app.cohorts import select_next_verifier
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
 from app.matching import is_correct, normalise_answer
-from app.models import Assignment, AssignmentMode, Card, Contribution, EligibilityDecision
+from app.models import Assignment, AssignmentMode, Card, Contribution, EligibilityDecision, RewardEvent
 from app.resolver import ResolutionNotReadyError, create_assignment, resolve_from_persisted_state
 
 
@@ -133,6 +133,8 @@ def contribution_result(
         return ContributionResult(status="PENDING")
     return ContributionResult(
         status="RESOLVED",
+        outcome="CORPUS_ELIGIBLE" if decision.corpus_eligible else "UNVALIDATED",
+        reward_minor=session.scalar(select(RewardEvent.amount_cents).where(RewardEvent.contribution_id == contribution_id).limit(1)) or 0,
         understood=decision.understood,
         corpus_eligible=decision.corpus_eligible,
         reason=decision.reason,

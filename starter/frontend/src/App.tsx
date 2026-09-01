@@ -3,6 +3,7 @@ import { HomeRoute } from "./HomeRoute";
 import { ConsentRoute } from "./features/consent/ConsentRoute";
 import { RecordingRoute } from "./features/recording/RecordingRoute";
 import { VerificationRoute } from "./features/verification/VerificationRoute";
+import { ResultRoute } from "./features/result/ResultRoute";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/consent" element={<ConsentRoute />} />
         <Route path="/record/:contributionId" element={<RecordingRoute />} />
         <Route path="/verify" element={<VerificationRoute />} />
+        <Route path="/result/:contributionId" element={<ResultRoute />} />
       </Routes>
     </BrowserRouter>
   );

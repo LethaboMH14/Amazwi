@@ -48,6 +48,12 @@ deterministic specialists, completes successful events and retries failures;
 without exposing raw audio or provider secrets. Real PostgreSQL worker tests
 and dataset provenance/export work remain mandatory before final acceptance.
 
+Plan 03 routing is now closed for the core golden path: the frontend has a
+dedicated `/result/:contributionId` receipt route and the backend result
+contract now exposes outcome, reward amount and currency. This is the visible
+peer-truth-first receipt; the Signal Flow visual polish, Coverage Constellation
+and operations screens remain separate acceptance work.
+
 ### Contract correction — 01 Sep
 
 The recording client was reviewed against the actual backend routes and

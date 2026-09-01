@@ -53,6 +53,9 @@ class AssignmentResponse(BaseModel):
 
 class ContributionResult(BaseModel):
     status: str
+    outcome: str | None = None
+    reward_minor: int = 0
+    currency: str = "ZAR"
     understood: bool | None = None
     corpus_eligible: bool | None = None
     reason: str | None = None
