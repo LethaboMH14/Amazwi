@@ -9,7 +9,7 @@ export const api={
  uploadAudio:async(id:string,blob:Blob)=>{const r=await fetch(`/api/private-audio/uploads/${id}`,{method:"PUT",headers:{...headers(),"Content-Type":blob.type},body:blob});if(!r.ok)throw new ApiError(r.status,"UPLOAD_FAILED","Audio upload failed.");},
  finaliseAudio:(id:string,sha256:string,blob:Blob)=>request(`/contributions/${id}/audio/finalise`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sha256,mime_type:blob.type||"audio/webm",codec:"webm",duration_ms:0,byte_length:blob.size})}),
  getNextAssignment:(id:string,language="zu")=>request<Assignment>(`/assignments/next?contribution_id=${encodeURIComponent(id)}&language=${encodeURIComponent(language)}`),
- submitAnswer:(id:string,answer:string)=>request(`/assignments/${id}/answer`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({answer_text:answer})}),
+ submitAnswer:(id:string,answer:string)=>request(`/assignments/${id}/answer`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({answer_text:answer,violation_vote:false})}),
  getResult:(id:string)=>request<Result>(`/contributions/${id}/result`),
 };
 export function userMessage(e:unknown){if(e instanceof ApiError&&e.status===401)return "Sign in to MoMo to continue.";if(e instanceof ApiError&&e.status===409)return "This action is not available for the current round.";return e instanceof Error?e.message:"Something went wrong. Please try again.";}
