@@ -21,6 +21,15 @@ then an outbox worker with `FOR UPDATE SKIP LOCKED`. The frontend still needs a
 dedicated result route and browser-level MediaRecorder tests. No Council output
 may alter peer truth, consent, audio retention, rewards or model aliases.
 
+### Contract correction — 01 Sep
+
+The recording client was reviewed against the actual backend routes and
+corrected in `bda63cf`: upload creation is now bodyless, finalisation sends the
+server-required hash/mime/codec/duration/size fields, and answer submission
+uses `answer_text`. This removes a concrete integration failure before browser
+testing. Duration is currently reported as zero and must be measured before
+production/demo acceptance.
+
 Lethabo has now approved moving from the written design into an executable plan
 and instructed continuous autonomous implementation with frequent commits and
 pushes. The master execution contract is
