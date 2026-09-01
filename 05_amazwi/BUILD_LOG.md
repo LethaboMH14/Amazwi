@@ -5,6 +5,26 @@
 
 ---
 
+### [01 Sep] — Sbu (Claude, direct) · Plan 02 · manifest/splits/external-preflight fixture tests — every ML module now covered
+
+**DID**
+- `test_manifest.py` (7 tests) — canonical-hash determinism regardless of record order, NFC normalisation of Unicode fields, hash changes on real content change, immutable-write rebuild-is-a-no-op, and conflicting-rewrite raises `ImmutableManifestConflict`. Directly exercises the Program Acceptance line "one immutable dataset manifest rebuilds with an identical canonical hash."
+- `test_splits.py` (7 tests) — missing `speaker_id` on a non-excluded record raises, assignment is deterministic per seed and differs across seeds, **every record from the same speaker lands in the same split** (the actual speaker-safety guarantee, not just an assumption), train/dev/test ratios land within tolerance over 2000 synthetic speakers, deterministic output ordering.
+- `test_external.py` (15 tests) — the hard external-dataset download-preflight gate. Covers every rejection path: prohibited task, task not in the allow-list, terms not accepted, missing exact revision, unknown dataset, `acquisition_blocked` datasets (even for an otherwise-allowed task), empty allowed-tasks list, no evidence, evidence for the wrong dataset/task, evidence against a since-mutated registry (stale-approval detection via the registry hash), and a forged non-`APPROVED` decision object. Also loads and asserts against the real `registry/external_datasets.yaml`.
+- Full `starter/ml` suite: **81 passed** (52 prior + 29 new). Every module in `amazwi_ml/` (`budget`, `evidence`, `external`, `manifest`, `metrics`, `splits`, `tabular`, `tournament`) now has real test coverage — none did except `budget` and `tabular` before this session's work.
+
+**WHY**
+- `external.py::require_download_preflight` is the actual mechanism enforcing the programme's repeated hard rule ("no external dataset download... without explicit licence/terms and budget preflight approval"). It had zero tests, so nothing was actually proving the gate holds against a stale, mismatched, or forged approval — only that the happy path worked if you never tried to defeat it.
+
+**BLOCKED / PING**
+- Real-Postgres export-trigger migration test still can't run from this machine — same limitation as prior entries, unchanged. Everything else in `starter/ml` is now exercised.
+- No GPU, external dataset download, Kaggle execution, payment or deployment action taken.
+
+**NEXT**
+- Plan 02's remaining non-test work (Task 14 model-card generation wired to real tournament output, Stage 4-6 acceptance write-up) is mechanical integration, not test-gap work — better suited to whichever session is actively driving that wiring. Moving to look for the next verifiable non-DB gap, likely in Plan 03's frontend logic.
+
+---
+
 ### [01 Sep] — Sbu (Claude, direct) · Plan 02 · tournament + evidence fixture tests
 
 **DID**
