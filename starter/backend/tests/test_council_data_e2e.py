@@ -1,8 +1,13 @@
 from datetime import datetime, timezone
 import uuid
 
+from fastapi.testclient import TestClient
+
 from app.datasets import approve_export, create_export, revoke_export
 from app.council import DataStewardRulesV1, ExplainerRulesV1, LanguageScoutRulesV1, SoundSentinelRulesV1, run_council_event
+from app.db import get_session
+from app.identity import AuthenticatedIdentity, get_current_identity
+from app.main import app
 from app.models import (
     Assignment, AssignmentMode, AudioObject, AudioObjectState, Card, Campaign,
     CampaignRewardRule, ConsentGrant, ConsentScope, Contribution,
@@ -105,3 +110,128 @@ def test_resolver_reward_outbox_and_retry_are_idempotent(db_session):
     assert len(claimed) == 1
     retry_at = retry_event(db_session, claimed[0].id, "e2e-worker", datetime.now(timezone.utc), "temporary")
     assert retry_at > datetime.now(timezone.utc)
+
+
+def test_governed_export_routes_complete_public_acceptance_path(db_session):
+    now = datetime.now(timezone.utc)
+    speaker = User(
+        id=uuid.uuid4(),
+        provider_subject="export-api-speaker",
+        declared_languages=["tn"],
+        age_confirmed_at=now,
+        created_at=now,
+    )
+    campaign = Campaign(
+        id=uuid.uuid4(),
+        name="Export API",
+        language="tn",
+        budget_cents=1000,
+        funded_cents=1000,
+        committed_cents=0,
+        provider_mode="DEMO_PROVIDER",
+    )
+    card = Card(
+        id=uuid.uuid4(),
+        language="tn",
+        target="kgomo",
+        blocked_words=["a", "b", "c", "d"],
+        accepted_answers=["kgomo", "kgomo"],
+        distractors=["x", "y", "z"],
+        campaign_id=campaign.id,
+        active=True,
+    )
+    contribution = Contribution(
+        id=uuid.uuid4(),
+        speaker_id=speaker.id,
+        card_id=card.id,
+        declared_language="tn",
+        state=ContributionState.CORPUS_ELIGIBLE,
+    )
+    db_session.add(speaker)
+    db_session.flush()
+    db_session.add(campaign)
+    db_session.flush()
+    db_session.add(card)
+    db_session.flush()
+    db_session.add(contribution)
+    db_session.flush()
+    db_session.add_all(
+        [
+            AudioObject(
+                id=uuid.uuid4(),
+                contribution_id=contribution.id,
+                object_key="api/audio",
+                sha256="a" * 64,
+                state=AudioObjectState.AVAILABLE,
+                byte_length=4,
+                duration_ms=1000,
+            ),
+            ConsentGrant(
+                user_id=speaker.id,
+                version="model-v1",
+                scope=ConsentScope.RETAIN_MODEL_DEVELOPMENT,
+                granted_at=now,
+            ),
+        ]
+    )
+    db_session.commit()
+
+    app.dependency_overrides[get_session] = lambda: db_session
+    app.dependency_overrides[get_current_identity] = lambda: AuthenticatedIdentity(
+        speaker.id, speaker.provider_subject
+    )
+    try:
+        with TestClient(app) as client:
+            drafted = client.post(
+                "/dataset-exports",
+                json={
+                    "purpose": "ASR training",
+                    "rows": [
+                        {
+                            "source_class": "AMAZWI_OPTED_IN",
+                            "source_record_id": "record-api-1",
+                            "contribution_id": str(contribution.id),
+                            "object_sha256": "a" * 64,
+                        }
+                    ],
+                },
+            )
+            assert drafted.status_code == 201, drafted.text
+            export_id = drafted.json()["id"]
+            assert drafted.json()["state"] == "DRAFT"
+
+            approved = client.post(
+                f"/dataset-exports/{export_id}/approve",
+                json={"manifest_id": "manifest-api-1", "manifest_sha256": "b" * 64},
+            )
+            assert approved.status_code == 200, approved.text
+            assert approved.json()["state"] == "APPROVED"
+            assert approved.json()["manifest_sha256"] == "b" * 64
+
+            revoked = client.post(f"/dataset-exports/{export_id}/revoke")
+            assert revoked.status_code == 200, revoked.text
+            assert revoked.json()["state"] == "REVOKED"
+
+            model_consent = db_session.query(ConsentGrant).filter_by(
+                user_id=speaker.id, scope=ConsentScope.RETAIN_MODEL_DEVELOPMENT
+            ).one()
+            db_session.delete(model_consent)
+            db_session.commit()
+            rejected = client.post(
+                "/dataset-exports",
+                json={
+                    "purpose": "ASR training",
+                    "rows": [
+                        {
+                            "source_class": "AMAZWI_OPTED_IN",
+                            "source_record_id": "record-api-2",
+                            "contribution_id": str(contribution.id),
+                            "object_sha256": "a" * 64,
+                        }
+                    ],
+                },
+            )
+            assert rejected.status_code == 422, rejected.text
+            assert "consent" in rejected.json()["detail"].lower()
+    finally:
+        app.dependency_overrides.clear()
