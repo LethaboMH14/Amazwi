@@ -1,5 +1,19 @@
 # AMAZWI — BUILD LOG
 
+### [01 Sep ~18:08] — Jcode · Plan 02 ML progress checkpoint · governed primitives and external preflight
+
+**VERIFIED**
+- The initial `starter/ml` package is now present with canonical manifest hashing, deterministic speaker-group splits, ASR metric primitives, an external dataset registry, and revision/task-scoped download preflight.
+- The corrected ML test suite passes **19/19** with `cd starter\ml && python -m pytest -q`; Python compilation also passes.
+- Added CPU-safe deterministic tournament gates, strict ASR artefact/evaluation-manifest checks, the account/aggregate/phase budget ledger, locked Kaggle budget metadata, and no-network entry-point help surfaces. The expanded ML suite passes **28/28**; explicit module compilation and all four script help paths pass.
+- No external download, network access, provider call, GPU, or model result was used.
+
+**STATUS / NEXT**
+- This closes only the first governed Plan 02 implementation slice. Tournament promotion gates, the 60-hour budget ledger, tabular evaluation, evidence/model cards, Kaggle entry points, and backend Stage 4–6 acceptance remain open.
+- Task 02 is therefore in progress, not complete. Continue with deterministic CPU-safe tournament and budget controls before any resource-backed run.
+
+---
+
 ### [01 Sep ~17:55] — Jcode · Plan 02 ML first checkpoint · manifest/splits/metrics slice
 
 **DID**
@@ -7,8 +21,8 @@
 - Added deterministic ASR metric APIs and tests; ant corrected the metric implementation and expectations for standard CER and required slice ordering during this checkpoint.
 
 **VERIFIED / BLOCKED**
-- Initial red run reached the expected metric failure after manifest and split tests executed. Later post-correction Python validation commands stalled in the local command runner, so no fresh green count is claimed. Generated `__pycache__` files were removed.
-- No datasets, providers, network downloads, GPU, model training, or model-result claims were made. Registry/preflight, tournament, budget/Kaggle, tabular, and evidence tasks remain open.
+- The metric implementation and expectations were corrected, and the combined first-slice validation is recorded above. Generated `__pycache__` files were removed.
+- No datasets, providers, network downloads, GPU, model training, or model-result claims were made. Tournament, budget/Kaggle, tabular, and evidence tasks remain open.
 
 **NEXT**
 - Rerun `cd starter\ml && C:\Python311\python.exe -m pytest tests\test_manifest.py tests\test_splits.py tests\test_metrics.py -q` in a stable process before treating this slice as green.
@@ -25,7 +39,7 @@
 - The backend whole-suite rerun reached 78 passed before the local embedded `pgserver` process failed during schema recreation; 16 tests then errored on the dead server. This is a repeatable local-fixture reliability problem, not evidence of a source regression. The earlier clean run of **94/94** and isolated concurrency acceptance remain valid evidence; CI uses a PostgreSQL 16 service container rather than embedded `pgserver`.
 
 **TASK 02 READINESS CHECK**
-- The repository contains the Plan 02 backend Council/outbox slices and their schema tests, but no `starter/ml` package exists yet. Plan 02 is therefore **not complete** and its model/data-campaign requirements remain open. The next concrete implementation boundary is the missing governed ML/data package and its acceptance tests, after confirming the existing Council/outbox paths against the stable CI-style PostgreSQL service.
+- The repository contains the Plan 02 backend Council/outbox slices and their schema tests, plus the initial governed `starter/ml` package slices recorded above. Plan 02 is therefore **not complete** and its model/data-campaign requirements remain open. The next concrete implementation boundary is deterministic tournament and budget enforcement, followed by tabular/evidence acceptance, after confirming the existing Council/outbox paths against the stable CI-style PostgreSQL service.
 
 ---
 

@@ -1,0 +1,13 @@
+{
+  "aggregate_cap_hours": 60,
+  "account_cap_hours": 30,
+  "phase_caps_hours": {
+    "PREFLIGHT_SPLITS": 6,
+    "FIXED_TOURNAMENT": 8,
+    "ISIZULU_ADAPTATION": 16,
+    "SETSWANA_ADAPTATION": 16,
+    "TABULAR_CHALLENGERS": 8,
+    "REPRODUCIBILITY": 6
+  },
+  "accounts": ["team-sonar-a", "team-sonar-b"]
+}
