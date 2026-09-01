@@ -50,8 +50,8 @@ def create_export(session: Session, *, purpose: str, requested_by: UUID, rows: I
             contribution = session.get(Contribution, contribution_id)
             audio = session.scalar(select(AudioObject).where(AudioObject.contribution_id == contribution_id))
             consent = _active_consent(session, contribution.speaker_id) if contribution else None
-            if not contribution or contribution.state != ContributionState.RESOLVED:
-                raise ExportRejected("only resolved contributions may be exported")
+            if not contribution or contribution.state != ContributionState.CORPUS_ELIGIBLE:
+                raise ExportRejected("only corpus-eligible contributions may be exported")
             if not audio or audio.state != AudioObjectState.AVAILABLE:
                 raise ExportRejected("audio must be available")
             if not consent:
