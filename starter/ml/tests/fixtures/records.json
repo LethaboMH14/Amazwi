@@ -1,0 +1,5 @@
+[
+  {"record_id":"r-2","source_id":"synthetic","speaker_id":"speaker-b","text":"buy airtime","language":"en","source_class":"SYNTHETIC_FIXTURE"},
+  {"record_id":"r-1","source_id":"synthetic","speaker_id":"speaker-a","text":"ngicela imali","language":"zu","source_class":"SYNTHETIC_FIXTURE"},
+  {"record_id":"r-3","source_id":"synthetic","speaker_id":"speaker-a","text":"ngiyabonga","language":"zu","source_class":"SYNTHETIC_FIXTURE"}
+]
