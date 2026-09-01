@@ -35,6 +35,13 @@ an AI performance claim. The worker process, read-only Council status route,
 dataset provenance/export schema and ML manifest/evidence package remain
 unfinished and require focused tests before acceptance.
 
+The recoverable worker and read-only Council status API are now implemented in
+`1d96339`. `run_council_worker.py --once` claims leased events, runs the four
+deterministic specialists, completes successful events and retries failures;
+`GET /contributions/{id}/council` reports DISABLED/PENDING/PARTIAL/READY/FAILED
+without exposing raw audio or provider secrets. Real PostgreSQL worker tests
+and dataset provenance/export work remain mandatory before final acceptance.
+
 ### Contract correction — 01 Sep
 
 The recording client was reviewed against the actual backend routes and
