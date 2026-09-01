@@ -76,8 +76,15 @@ def test_upgrade_creates_all_expected_tables(clean_db_uri, db_engine):
         "assignments", "eligibility_decisions", "reward_events",
         "payment_attempts", "receipts", "audit_events", "alembic_version",
         "audio_objects", "verifier_qualifications", "campaign_reward_rules",
+        "outbox_events", "council_outputs",
     }
     assert expected.issubset(tables), tables
+    contribution_foreign_keys = inspector.get_foreign_keys("contributions")
+    assert any(
+        fk["constrained_columns"] == ["reward_rule_id"]
+        and fk["referred_table"] == "campaign_reward_rules"
+        for fk in contribution_foreign_keys
+    ), contribution_foreign_keys
 
 
 def test_downgrade_then_upgrade_roundtrip_succeeds(clean_db_uri, db_engine):

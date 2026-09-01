@@ -5,6 +5,17 @@
 
 ---
 
+### [01 Sep ~17:29] — Jcode · whole-result verification follow-up
+
+**RESULT**
+- Frontend and content checks passed again: **14 frontend tests**, TypeScript, Vite build, isiZulu card validator (0 errors/0 warnings), Setswana card validator (0 errors, 1 explicitly pending native-review warning), error-state validator (0 errors), and `git diff --check`.
+- The backend whole-suite rerun reached 78 passed before the local embedded `pgserver` process failed during schema recreation; 16 tests then errored on the dead server. This is a repeatable local-fixture reliability problem, not evidence of a source regression. The earlier clean run of **94/94** and isolated concurrency acceptance remain valid evidence; CI uses a PostgreSQL 16 service container rather than embedded `pgserver`.
+
+**TASK 02 READINESS CHECK**
+- The repository contains the Plan 02 backend Council/outbox slices and their schema tests, but no `starter/ml` package exists yet. Plan 02 is therefore **not complete** and its model/data-campaign requirements remain open. The next concrete implementation boundary is the missing governed ML/data package and its acceptance tests, after confirming the existing Council/outbox paths against the stable CI-style PostgreSQL service.
+
+---
+
 ### [01 Sep ~17:23] — Jcode · Plan 01 closeout verification
 
 **VERIFIED**
