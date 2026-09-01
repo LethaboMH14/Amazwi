@@ -1,6 +1,8 @@
 from __future__ import annotations
 import re,unicodedata
 class InvalidReference(ValueError): pass
+class TokenSpan:
+ def __init__(self,start:int,end:int,language:str): self.start=start;self.end=end;self.language=language
 def normalise_transcript(text:str)->str:return " ".join(re.sub(r"[^\w\s]"," ",unicodedata.normalize("NFC",text).casefold()).split())
 def _distance(a,b):
     d=list(range(len(b)+1))
@@ -17,3 +19,11 @@ def character_error_rate(reference:str,hypothesis:str)->float:
     r=normalise_transcript(reference).replace(" ","");h=normalise_transcript(hypothesis).replace(" ","")
     if not r:return 0.0 if not h else (_ for _ in ()).throw(InvalidReference("non-empty hypothesis with empty reference"))
     return _distance(r,h)/len(r)
+def embedded_span_error(reference:str,hypothesis:str,spans)->float:
+    ref=normalise_transcript(reference).split(); hyp=normalise_transcript(hypothesis).split()
+    if not ref:return 0.0 if not hyp else (_ for _ in ()).throw(InvalidReference("non-empty hypothesis with empty reference"))
+    total=0; errors=0
+    for span in spans:
+        expected=ref[span.start:span.end]; total+=len(expected)
+        errors+=_distance(expected,hyp[span.start:span.end])
+    return errors/total if total else 0.0

@@ -1369,3 +1369,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** `starter/ml/amazwi_ml/tabular.py`, `starter/ml/kaggle/train_tabular.py`, synthetic tests.
 - **NEXT:** Replace the placeholder challenger predictors with pinned LightGBM/XGBoost training once fixture metrics and dependencies are available.
 - **BLOCKED-PING:** No model download, GPU run, external data access or promotion alias change.
+
+### [01 Sep] — Sibusiso · Plan 02 embedded-span metric
+
+- **DID:** Added token-span error reporting with the same explicit empty-reference policy as WER/CER.
+- **HOW:** Normalised reference/hypothesis tokens are aligned per declared span; no transcript is used to alter peer truth.
+- **WHY:** Code-switch performance must be reported separately from aggregate ASR scores.
+- **CHANGED:** `starter/ml/amazwi_ml/metrics.py`.
+- **NEXT:** Add exact-value metric fixtures and replace tabular placeholders with real pinned challengers.
+- **BLOCKED-PING:** Synthetic/CPU-only; no external data, GPU or deployment action.
