@@ -1387,3 +1387,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** `starter/ml/amazwi_ml/tabular.py`, `starter/ml/tests/test_tabular.py`.
 - **NEXT:** Add exact metric reports, export immutability and generated acceptance evidence.
 - **BLOCKED-PING:** The runtime package install downloaded dependencies only; no model/dataset download, GPU/Kaggle job or deployment occurred.
+
+### [01 Sep] — Sibusiso · Plan 02 approved-export immutability
+
+- **DID:** Added the PostgreSQL trigger protecting approved export evidence.
+- **HOW:** Blocks later changes to manifest identity/hash, purpose and approval fields while allowing the separately audited revocation state transition.
+- **WHY:** An approved manifest must remain reproducible evidence, not a mutable label.
+- **CHANGED:** `d9e0f1a2b3c4_dataset_exports.py`.
+- **NEXT:** Run real PostgreSQL migration tests and generate Stage 4–6 acceptance evidence.
+- **BLOCKED-PING:** Migration execution is pending the PostgreSQL 16 environment; no export was approved or downloaded.
