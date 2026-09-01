@@ -1,0 +1,14 @@
+{
+  "id": "lethabomh14/amazwi-overnight-asr",
+  "title": "Amazwi Overnight Asr",
+  "code_file": "amazwi-overnight-asr.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": ["lethabomh14/amazwi-ml-support-files"],
+  "competition_sources": [],
+  "kernel_sources": []
+}

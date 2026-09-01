@@ -5,6 +5,34 @@
 
 ---
 
+### [02 Sep ~00:15] — Lethabo's session · Claude · real Kaggle GPU run started, cross-lane, pending review
+
+**DID**
+- Lethabo authorised connecting real Kaggle and Hugging Face access this session (already-authenticated connectors, confirmed via `hf_whoami` and `kaggle config view` — account `lethabomh14`) and explicitly asked for a real overnight training/fine-tune run, not a dry plan.
+- Checked the real Swivuriso dataset structure via the HF connector before building anything: `dsfsi-anv/za-african-next-voices-compressed` has dedicated `zul`/`tsn` (isiZulu/Setswana) configs with their own `dev`/`dev_test`/`train` splits. Chose the **dev splits only** (~683MB, ~8,000 clips combined) as the bounded overnight scope — explicitly not the full ~3,000-hour, 7-language corpus, and not the much larger `train` split.
+- Built `starter/ml/kaggle/kernel_entrypoint.py`, reusing the repo's own tested gates (`reserve_run.py`, `train_asr.py`, `amazwi_ml.manifest`) rather than reimplementing them inside the kernel.
+- **Found and fixed three real bugs before spending any GPU quota, each verified by actually running the failing case, not inspection:**
+  1. `amazwi_ml.manifest.ManifestRecord` has no `audio_path` field (it's a portable, hash-only governance format) — `train_asr.py` needs a different, local-path-inclusive manifest shape. Building the canonical-manifest object and calling it a day would have produced a file the trainer's own validation rejects. Now builds both: the trainer-format manifest `train_asr.py` actually reads, and a separate canonical governance manifest via `amazwi_ml.manifest` as an audit artifact.
+  2. Invoking `kaggle/reserve_run.py` as a script (not `python -m`) puts the script's own directory on `sys.path[0]`, not cwd — `amazwi_ml` (living directly under `starter/ml`) was invisible without `PYTHONPATH` set explicitly. **This was never caught by the existing test suite**, because `test_kaggle_scripts.py` only subprocess-invokes these scripts with `--help`, which exits before the import runs. Confirmed by actually running `--reserve` locally against a throwaway ledger copy, watching it fail, fixing it, watching it succeed.
+  3. Kaggle script kernels do not bundle sibling files placed next to the pushed script — assumed this from the git-clone attempt's angle first (which failed separately: the GitHub repo is private, Kaggle has no credentials for it, and rather than making the repo public or embedding a token, chose a private Kaggle Dataset instead). Fixed by uploading `amazwi_ml/`, `reserve_run.py`, `train_asr.py`, `budget.json`, `preflight_swivuriso.json` and both requirements files as a private Kaggle Dataset (`lethabomh14/amazwi-ml-support-files`), mounted read-only at `/kaggle/input/...`, staged into a writable `/kaggle/working/ml/` copy at kernel start (since `reserve_run.py` needs to write `budget.json` and `/kaggle/input/` is read-only).
+- Pushed kernel `lethabomh14/amazwi-overnight-asr` three times (v1: git-clone-private-repo failure: v2: sibling-files-not-bundled failure; v3: **RUNNING**, confirmed via `kaggle kernels status`, not assumed from a successful push alone — a push succeeding only means Kaggle accepted the code, not that it ran).
+- **Declined a request to receive/write a Kaggle API token directly** (`~/.kaggle/kaggle.json` already existed from prior work, so this didn't end up mattering, but the line was held regardless) — credential handling stays a hard boundary even when explicitly asked, per standing operating rules, not just project convention.
+
+**WHY**
+- Real due diligence before spending a limited, real, non-renewable-tonight resource (GPU-hours): checked the actual dataset structure rather than assuming the design doc's ~3,000-hour figure was the run size, and ran the actual reservation/validation code paths locally before trusting them unattended on Kaggle overnight.
+
+**CHANGED / ADDED**
+- `starter/ml/kaggle/kernel_entrypoint.py` — new, the real kernel source.
+- `starter/ml/kaggle/kernel_push/`, `starter/ml/kaggle/dataset_push/` — push-ready metadata (not duplicated source; `KAGGLE_RUN.md` documents the re-stage/re-push commands).
+- `starter/ml/kaggle/KAGGLE_RUN.md` — new, full explanation of the private-repo-vs-Kaggle-dataset decision, monitoring commands, and the run's actual scope stated plainly.
+
+**NEXT / BLOCKED-PING**
+- **Governance ledger reconciliation is provisional, stated plainly, not hidden**: the reservation happened inside the Kaggle run against its own staged copy of `budget.json`, not this repo's canonical one directly. `starter/ml/kaggle/budget.json` needs manual reconciliation from the run's actual completed-run output once it finishes — do not assume it already reflects this run.
+- This entire run is filed under **cross-lane, pending Sbu's review** per the loosened lane rule — a real GPU-hour spend is exactly the kind of thing that should get his eyes once it completes, not treated as unilaterally final.
+- Once the run completes: pull `kaggle kernels output`, verify the checkpoint/metrics actually exist and are non-trivial (not a silent no-op success), reconcile the budget ledger for real, and record actual GPU-hours used (not the 10-hour request) in this log.
+
+---
+
 ### [01 Sep, Lethabo's session] — Claude · merge resolution · caught real data loss in jcode's local BUILD_LOG.md
 
 **FOUND**
