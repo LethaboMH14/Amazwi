@@ -22,6 +22,7 @@ from sqlalchemy import (
     CheckConstraint,
     DateTime,
     Enum as SAEnum,
+    Float,
     ForeignKey,
     Integer,
     Index,
@@ -409,7 +410,7 @@ class CouncilOutput(Base):
     state: Mapped[CouncilOutputState] = mapped_column(SAEnum(CouncilOutputState, name="council_output_state"), nullable=False)
     input_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
     output_json: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
-    confidence: Mapped[float | None] = mapped_column(nullable=True)
+    confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
     retry_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     failure_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, nullable=False)
