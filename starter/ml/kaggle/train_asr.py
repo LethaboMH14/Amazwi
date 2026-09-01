@@ -52,8 +52,8 @@ def _sha256(path: Path) -> str:
 
 
 def validate_training_inputs(args: argparse.Namespace) -> None:
-    if args.candidate_id != "whisper-large-v3-turbo-peft":
-        raise ValueError("this adapter currently supports whisper-large-v3-turbo-peft only")
+    if args.candidate_id not in CANDIDATES:
+        raise ValueError("unsupported training candidate")
     if not args.manifest.is_file():
         raise ValueError("manifest file is required")
     if args.manifest_sha256 != _sha256(args.manifest):
@@ -100,6 +100,8 @@ def run_training(args: argparse.Namespace) -> Path:
         import torch
         from datasets import Audio, Dataset
         from transformers import (
+            AutoModelForCTC,
+            AutoProcessor,
             Seq2SeqTrainer,
             Seq2SeqTrainingArguments,
             WhisperForConditionalGeneration,
@@ -121,29 +123,40 @@ def run_training(args: argparse.Namespace) -> Path:
     dataset = Dataset.from_list(
         [{"audio": row["audio_path"], "sentence": row["text"]} for row in train_rows]
     ).cast_column("audio", Audio(sampling_rate=16000))
-    processor = WhisperProcessor.from_pretrained(args.model_revision)
-    model = WhisperForConditionalGeneration.from_pretrained(args.model_revision)
-    model.config.forced_decoder_ids = None
-    model.config.suppress_tokens = []
+    is_whisper = args.candidate_id == "whisper-large-v3-turbo-peft"
+    if is_whisper:
+        processor = WhisperProcessor.from_pretrained(args.model_revision)
+        model = WhisperForConditionalGeneration.from_pretrained(args.model_revision)
+        model.config.forced_decoder_ids = None
+        model.config.suppress_tokens = []
+    else:
+        processor = AutoProcessor.from_pretrained(args.model_revision)
+        model = AutoModelForCTC.from_pretrained(args.model_revision)
 
     def prepare(batch):
         audio = batch["audio"]
-        batch["input_features"] = processor.feature_extractor(
-            audio["array"], sampling_rate=audio["sampling_rate"]
-        ).input_features[0]
-        batch["labels"] = processor.tokenizer(batch["sentence"]).input_ids
+        if is_whisper:
+            batch["model_inputs"] = processor.feature_extractor(
+                audio["array"], sampling_rate=audio["sampling_rate"]
+            ).input_features[0]
+            batch["labels"] = processor.tokenizer(batch["sentence"]).input_ids
+        else:
+            batch["model_inputs"] = processor(
+                audio["array"], sampling_rate=audio["sampling_rate"]
+            ).input_values[0]
+            batch["labels"] = processor.tokenizer(batch["sentence"]).input_ids
         return batch
 
     dataset = dataset.map(prepare, remove_columns=dataset.column_names)
 
     class Collator:
         def __call__(self, features):
-            inputs = torch.tensor([item["input_features"] for item in features], dtype=torch.float32)
+            inputs = torch.tensor([item["model_inputs"] for item in features], dtype=torch.float32)
             labels = processor.tokenizer.pad(
                 [{"input_ids": item["labels"]} for item in features], return_tensors="pt"
             ).input_ids
             labels = labels.masked_fill(labels == processor.tokenizer.pad_token_id, -100)
-            return {"input_features": inputs, "labels": labels}
+            return {"input_features" if is_whisper else "input_values": inputs, "labels": labels}
 
     training = Seq2SeqTrainingArguments(
         output_dir=str(output / "checkpoint"),
@@ -166,7 +179,7 @@ def run_training(args: argparse.Namespace) -> Path:
         args=training,
         train_dataset=dataset,
         data_collator=Collator(),
-        tokenizer=processor.feature_extractor,
+        tokenizer=processor.feature_extractor if is_whisper else processor.tokenizer,
     )
     trainer.train(resume_from_checkpoint=args.resume_from_checkpoint)
     trainer.save_model(str(output / "checkpoint"))

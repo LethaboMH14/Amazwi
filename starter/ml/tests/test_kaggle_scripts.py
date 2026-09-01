@@ -1,4 +1,5 @@
 from pathlib import Path
+import hashlib
 import importlib.util
 import subprocess
 import sys
@@ -62,7 +63,7 @@ def test_evaluation_inputs_reject_missing_checkpoint(tmp_path):
     args = evaluate_asr.parse_evaluate_args(
         [
             "--manifest", str(manifest),
-            "--manifest-sha256", "a" * 64,
+            "--manifest-sha256", hashlib.sha256(manifest.read_bytes()).hexdigest(),
             "--dataset-revision", "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
             "--preflight-evidence", str(tmp_path / "preflight.json"),
             "--checkpoint", str(tmp_path / "missing"),
@@ -96,14 +97,14 @@ def test_evaluation_inputs_reject_manifest_hash_mismatch(tmp_path):
         evaluate_asr.validate_evaluation_inputs(args)
 
 
-def test_training_rejects_comparator_until_its_adapter_exists(tmp_path):
+def test_training_accepts_ctc_comparator_gate_without_model_import(tmp_path):
     manifest = tmp_path / "evaluation.json"
     manifest.write_text("[]", encoding="utf-8")
     args = train_asr.parse_train_args(
         [
             "--candidate-id", "xls-r-mms-comparator",
             "--manifest", str(manifest),
-            "--manifest-sha256", "a" * 64,
+            "--manifest-sha256", hashlib.sha256(manifest.read_bytes()).hexdigest(),
             "--dataset-revision", "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
             "--preflight-evidence", str(tmp_path / "preflight.json"),
             "--model-revision", "facebook/wav2vec2-xls-r-300m",
@@ -112,5 +113,6 @@ def test_training_rejects_comparator_until_its_adapter_exists(tmp_path):
             "--run-id", "run-1",
         ]
     )
-    with pytest.raises(ValueError, match="supports whisper"):
-        train_asr.validate_training_inputs(args)
+    preflight = tmp_path / "preflight.json"
+    preflight.write_text("{}", encoding="utf-8")
+    train_asr.validate_training_inputs(args)
