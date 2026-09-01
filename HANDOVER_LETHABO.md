@@ -47,7 +47,7 @@ Read [`05_amazwi/README.md`](05_amazwi/README.md), then [`05_amazwi/plan/00_MAST
 
 1. Read aloud and approve or replace the four new Setswana distractors: `moraka`, `jusi`, `ting` and `diphaphatha`; record the decision in `BUILD_LOG.md`.
 2. Setswana error copy is reviewed. isiZulu error copy remains Sbu's first-language approval task; do not literal-translate either pack.
-3. Do not wire AMAZWI-specific screens/content into `starter/` before the event opens. No written pre-build approval exists.
+3. Continue wiring AMAZWI-specific screens/content into `starter/` under the accepted 1 September build decision. Keep unknown provider/host capabilities labelled and preserve honest build-history disclosure.
 
 ### Portal outcome shared with Lethabo
 
@@ -105,7 +105,7 @@ Use `05_amazwi/P0.md` as the current status summary. `LETHABO_NEXT_WORK.md` rema
 ### Remaining risks
 
 - The economic document is already correctly rebuilt around sponsored semantic-label missions. Do not reopen the old transcribed-hour comparison or add a margin claim before actual provider fees and acceptance rates are known.
-- The product is still preparation/reference only. The next valid competition proof is a Gate A shell built on-site, then the deterministic golden path—not more pre-event design-system work.
+- The product is now an active implementation baseline. The next valid proof is a Gate A shell connected to the backend, then the deterministic golden path; do not call a gate complete until its exit condition is verified.
 - I reviewed the Figma system from its documented token/component contract, not from a rendered interactive file or captured device flow. Contrast, focus, hit-area, reduced-motion and sunlight legibility still need visual testing on the actual screens.
 
 ---

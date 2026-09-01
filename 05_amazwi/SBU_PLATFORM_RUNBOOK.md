@@ -46,15 +46,15 @@ The matching rule is already frozen in `plan/13_IS_CORRECT_SPEC.md`:
 
 Before coding, add test cases from the completed isiZulu and Setswana hero cards: accepted spelling, accepted alias, rejected near word and rejected empty answer.
 
-## S4–S5 — code boundary
+## S4–S5 — implementation and review
 
-The current `starter/` is generic scaffolding only. Keep product-specific API routes, schema, resolver, ledger and MoMo implementation for Gate A onward, unless the organiser explicitly approves pre-built product code in writing.
+Product-specific API routes, schema, resolver and ledger work may proceed under Sbu's review. Keep the implementation honest about what is demo-provider, unverified or incomplete; do not claim a gate is closed until its exit condition passes.
 
 At Gate A, your exit conditions are: API health, database migration, deployment, provider configuration and a reproducible reset on both laptops.
 
 ## S6 — organiser message
 
-The team decided not to send an organiser email. Keep the pre-event permission, current Mini App bridge/CSP and event-sandbox details explicitly labelled **unknown**. Do not add product-specific implementation before event start; preserve `ORGANISER_EMAIL_DRAFT.md` as reference only.
+The team decided not to send an organiser email. Keep the current Mini App bridge/CSP and event-sandbox details explicitly labelled **unknown**. Product implementation is permitted by the 1 September team decision; preserve `ORGANISER_EMAIL_DRAFT.md` as reference only and disclose the actual build history if asked.
 
 ## Non-negotiable truth checks
 
