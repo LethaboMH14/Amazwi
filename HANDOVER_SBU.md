@@ -48,6 +48,13 @@ active model-development consent, approval rechecks those conditions under a
 row lock, and revocation is audited. The approved-export immutability trigger
 and PostgreSQL tests are still required before this is final.
 
+Plan 02 reproducibility primitives are now committed in `72cc3fb`: immutable
+canonical manifests, speaker-safe deterministic splits, normalised WER/CER,
+registry-hashed external-data preflight, explicit prohibitions on synthesis
+tasks, and a local 60-GPU-hour/30-hours-per-account reservation guard. These
+are controls only: no dataset, model or Kaggle GPU run has been downloaded,
+started or claimed.
+
 The recoverable worker and read-only Council status API are now implemented in
 `1d96339`. `run_council_worker.py --once` claims leased events, runs the four
 deterministic specialists, completes successful events and retries failures;
