@@ -1,0 +1,2 @@
+import {describe,expect,it} from "vitest";import {parseRuntimeConfig} from "./config";
+describe("runtime boundaries",()=>{it("rejects demo controls in production",()=>expect(()=>parseRuntimeConfig({VITE_AMAZWI_MODE:"production",VITE_AMAZWI_API_BASE_URL:"https://api.example.invalid",VITE_AMAZWI_DEMO_CONTROLS:"true"})).toThrow("demo controls are forbidden in production"));it("rejects insecure production API",()=>expect(()=>parseRuntimeConfig({VITE_AMAZWI_MODE:"production",VITE_AMAZWI_API_BASE_URL:"http://localhost"})).toThrow("HTTPS"));});
