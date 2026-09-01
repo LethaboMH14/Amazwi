@@ -17,6 +17,9 @@ def test_object_key_cannot_escape_storage_root(store):
         store.write_upload("../secret", b"x")
     with pytest.raises(InvalidObjectKey):
         store.write_upload("C:/secret", b"x")
+    for key in ("", "/etc/passwd", r"..\secret", r"audio\one", "voice\x00raw"):
+        with pytest.raises(InvalidObjectKey):
+            store.write_upload(key, b"x")
 
 
 def test_write_verify_and_finalise_use_sha256_and_atomic_state(store):

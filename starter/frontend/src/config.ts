@@ -1,0 +1,3 @@
+export type RuntimeMode="test"|"demo"|"production";
+export interface RuntimeConfig{mode:RuntimeMode;apiBaseUrl:string;demoControls:boolean;}
+export function parseRuntimeConfig(env:Record<string,string|undefined>):RuntimeConfig{const mode=(env.VITE_AMAZWI_MODE||"demo") as RuntimeMode;const apiBaseUrl=env.VITE_AMAZWI_API_BASE_URL||"/api";const demoControls=env.VITE_AMAZWI_DEMO_CONTROLS==="true";if(!["test","demo","production"].includes(mode))throw new Error("invalid runtime mode");if(mode==="production"&&(demoControls||!apiBaseUrl.startsWith("https://")))throw new Error(demoControls?"demo controls are forbidden in production":"production requires an HTTPS API base URL");return{mode,apiBaseUrl,demoControls};}

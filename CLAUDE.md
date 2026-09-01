@@ -2,11 +2,13 @@
 
 **Current entry:** AMAZWI, Track 2 (Entertainment & Lifestyle), Team Sonar (Sbu + Lethabo). `MASTER_CONTEXT.md` at this root is **historical** (UMOYA/Track 1 exploration, superseded) — ignore it for current work.
 
-## ⚠️ Read this before anything else: an unresolved disagreement between the two teammates
+## ✅ Settled 1 Sep 2026: the pre-event build question is resolved — do not reopen it
 
-Lethabo decided (31 Aug) to start real competition application code before the event, superseding `05_BUILD.md` §1's wait-for-approval rule — see `05_amazwi/BUILD_LOG.md`'s decisions table. **Sbu has since recorded, in the same table and in `P0.md`, that he disputes this** and has not accepted it: his position is that the invitation requires the build to happen on-site by the two-person team, the public terms require hackathon-created work absent organiser approval, and pre-event code/mockups/plans are preparation only, not build-gate progress. Both positions are preserved in `BUILD_LOG.md` — neither was deleted or overwritten, and it is explicitly **not Claude's call to arbitrate by picking a side in a merge.**
+Lethabo decided (31 Aug) to start real competition application code before the event, superseding `05_BUILD.md` §1's wait-for-approval rule. Sbu disputed it at the time. **Sbu accepted it on 1 September** — recorded in `05_amazwi/P0.md`: *"Sbu/Sibusiso accepts Lethabo's decision to proceed with AMAZWI-specific implementation before the event. The earlier dispute is superseded; historical rows remain for audit history only."*
 
-**If this is still unresolved when a new session starts:** say so plainly to the user before doing more Gate A / competition-implementation work, and ask whether it's been settled with Sbu since. Continuing to build as if Lethabo's view already won, without checking, would be building on a premise one of the two people who has to submit this doesn't accept. Content work, design-system work, and anything already framed as "preparation/reference, not a build gate" (per Sbu's own framing) is not in dispute and can continue regardless.
+Pre-event code is a legitimate working baseline. The team still follows the invitation's in-person / no-outside-assistance rule during the hackathon, and still discloses the actual build history honestly if asked. Both original positions stay in `BUILD_LOG.md` as audit history — do not delete them, and do not re-litigate the decision without a new dated row.
+
+⚠️ **`05_BUILD.md` §1 still contains the older wait-for-approval wording.** `P0.md` and this file supersede it. That paragraph is stale and should be reconciled the next time anyone edits that document.
 
 ## Read in this order, every new session
 
@@ -69,7 +71,16 @@ This is not a lower-effort resumption — match what was already happening:
 
 ## What's already done — don't redo it
 
-As of 31 Aug 2026, the actual work exists regardless of the disagreement above — what's contested is only whether it counts as *competition build-gate progress* yet, not whether it happened: L1 (Setswana cards, one open item — see below), L2/L3 (Figma design system + craft-pass mockups — Sbu's framing: reference/preparation, recreate on-site), L4 (error copy), L5 (deck skeleton + demo script — Sbu's framing: skeleton only, real screenshots needed on-site), all of `05_amazwi/LETHABO_NEXT_WORK.md`'s items 1–6 (content fixes, stale-mockup reconciliation, five hero screens, real tokens.css theme switching, accessibility evidence — including a keyboard-reachability gap found *and fixed*), and Gate A's Lethabo-half start (routing, tokens wired into a real frontend, an honest Mini-App/browser-mode label, all tested) — **this last one is exactly what Sbu's dispute above is about.** Full detail and exact commit-by-commit record in `BUILD_LOG.md`.
+Pre-event content/design work: L1 (Setswana cards, one open item — see below), L2/L3 (Figma design system + craft-pass mockups), L4 (error copy), L5 (deck skeleton + demo script), and all of `05_amazwi/LETHABO_NEXT_WORK.md`'s items 1–6 (content fixes, stale-mockup reconciliation, five hero screens, real tokens.css theme switching, accessibility evidence including a keyboard-reachability gap found *and fixed*).
+
+**Governed Intelligence programme, as of 1 Sep** (the checkboxes inside the four plan files under `docs/superpowers/plans/` are **not reliable** — 322 of them are unticked even though most of Plan 01 and much of Plan 02 is actually built and tested; go by `BUILD_LOG.md` commits and `HANDOVER_SBU.md`, not the checkbox state):
+
+- **Plan 01, Stages 1–3 — done.** Consent, private audio storage, real peer API, and the matching frontend flows (consent, recording, verification).
+- **Plan 02, Stages 4–6 — mostly done.** Tasks 1–11 shipped: transactional outbox with `SKIP LOCKED` leasing, resolver-transaction event emission, deterministic advisory Council specialists, the recoverable worker + read-only status API, dataset provenance/export-firewall schema, immutable manifests/speaker-safe splits, external-dataset preflight gate, WER/CER/tabular metrics, deterministic tournament and promotion gates. **Remaining:** Task 12 (Kaggle packaging, no downloads), Task 13 (LightGBM/XGBoost challengers), Task 14 (model cards, evidence hashes, Stage acceptance).
+- **Plan 03, Stages 7–8 — partial.** Themes, Signal Flow primitives, and the peer-truth-first `/result/:contributionId` receipt route are built. **Remaining:** Task 0 (tooling lock), finishing Tasks 1/2/5, Coverage Constellation (7–8), missions/MTN authorisation (9), the MTN Language Ops route (10), the 320–480px/zoom/keyboard/screen-reader gates (11), visual regression + Figma drift check against `JPZuFmbhRh9fhkgBLxRymq` (12), and the engagement-to-operations loop verification (13).
+- **Plan 04, Stage 9 — barely started.** Only Task 1 (runtime boundaries) is partially in. Tasks 2–12 (auth, rate limits, PII-safe logging, deterministic reset disabled in production, failure drills, Playwright e2e, accessibility/perf/device evidence, CI expansion, fallback artefacts, final honesty review) are all open.
+
+⚠️ **CI was red as of the last check (commits `d4026bf`, `72cc3fb`, `6f9505c`)** — `test_object_key_cannot_escape_storage_root` fails on Linux CI while passing on Windows: `app/storage/local.py`'s traversal guard uses `Path(...).is_absolute()`, which doesn't reject a Windows-style `C:/...` key on POSIX. If this hasn't been fixed since, fix it first — it's a real security-boundary portability bug, not a flaky test. Confirm green with `gh run watch --exit-status`, not just locally.
 
 **Still open, not disputed by either side:** L1's four replacement distractors (`moraka`/`jusi`/`ting`/`diphaphatha` in `cards_setswana.json`) need Lethabo's own native read-aloud confirmation before the deck is fully signed off — flagged as a warning by `validate_cards.mjs`, not an error.
 

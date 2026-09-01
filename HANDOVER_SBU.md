@@ -41,6 +41,26 @@ fields and a database check preventing external rows from carrying AMAZWI
 contribution IDs (or vice versa). Export candidate/approval services,
 immutability triggers and PostgreSQL schema tests are still required.
 
+The provenance firewall service is now drafted in `app/datasets.py`: exports
+are requested as drafts, external sources require preflight-passed state and
+purpose permission, AMAZWI rows require peer eligibility/audio availability and
+active model-development consent, approval rechecks those conditions under a
+row lock, and revocation is audited. The approved-export immutability trigger
+and PostgreSQL tests are still required before this is final.
+
+Plan 02 reproducibility primitives are now committed in `72cc3fb`: immutable
+canonical manifests, speaker-safe deterministic splits, normalised WER/CER,
+registry-hashed external-data preflight, explicit prohibitions on synthesis
+tasks, and a local 60-GPU-hour/30-hours-per-account reservation guard. These
+are controls only: no dataset, model or Kaggle GPU run has been downloaded,
+started or claimed.
+
+`6f9505c` adds deterministic ranking and promotion gates (with no model-alias
+write path), evidence-index/model-card generators that suppress improvement
+claims after failed promotion, and completion tracking for the same local GPU
+budget ledger. The remaining ML work is test fixtures/reports, tabular
+challengers and safe no-download training/evaluation packaging scripts.
+
 The recoverable worker and read-only Council status API are now implemented in
 `1d96339`. `run_council_worker.py --once` claims leased events, runs the four
 deterministic specialists, completes successful events and retries failures;
@@ -59,6 +79,13 @@ selection (Midnight, Daylight and September Ndebele), tokenised Signal Card
 materials, peer-truth/advisory primitives, and finite reduced-motion-safe
 Signal animations. Operations surfaces and visual/browser evidence remain
 open; these primitives are intentionally small and composable.
+
+The next Plan 03/04 hardening slice is now on `main` (`0560c38` after rebase):
+runtime mode parsing rejects insecure production/demo combinations, backend
+`Settings` uses secret-safe typed fields and production validators, and the UI
+has polite/assertive status announcement primitives for accessible async
+flows. This is boundary infrastructure; it is not a substitute for external
+auth/rate limiting or device/browser evidence.
 
 ### Contract correction — 01 Sep
 
