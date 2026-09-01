@@ -186,7 +186,7 @@ git commit -m "Council: add transactional outbox and advisory schema"
 
 ```python
 def test_resolver_commits_one_event_with_decision_and_reward(db_session, resolved_fixture):
-    decision = resolved_fixture.resolve(reward_amount_cents=200)
+    decision = resolved_fixture.resolve()
     events = db_session.scalars(select(OutboxEvent)).all()
     assert len(events) == 1
     assert events[0].dedupe_key == f"contribution-resolved:{decision.contribution_id}"
@@ -197,7 +197,7 @@ def test_resolver_commits_one_event_with_decision_and_reward(db_session, resolve
 def test_reward_failure_rolls_back_decision_state_and_outbox(db_session, underfunded_fixture):
     before = underfunded_fixture.contribution.state
     with pytest.raises(InsufficientCampaignFunds):
-        underfunded_fixture.resolve(reward_amount_cents=200)
+        underfunded_fixture.resolve()
     assert underfunded_fixture.reload().state == before
     assert db_session.get(EligibilityDecision, underfunded_fixture.contribution.id) is None
     assert db_session.scalar(select(func.count()).select_from(OutboxEvent)) == 0
@@ -222,7 +222,7 @@ def enqueue_event(session: Session, *, event_type: str, aggregate_type: str, agg
 
 - [ ] **Step 4: Insert the event before the resolver's existing single commit**
 
-After decision and optional `credit_reward(..., commit=False)`, call `session.flush()` so `decided_at` exists, enqueue the event, then retain the existing `session.commit()`/rollback block. Early return for an existing decision must return the existing event rather than create another one.
+After decision and optional `credit_reward(..., commit=False)` using the contribution's snapshotted `CampaignRewardRule`, call `session.flush()` so `decided_at` exists, enqueue the event, then retain the single commit/rollback block. `resolve_from_persisted_state` continues to return `EligibilityDecision`; on retry it returns the existing decision and separately verifies that the matching deduplicated outbox event exists, creating it only as a repair inside the same locked transaction if a pre-Stage-4 historical decision has none. `ResolutionNotReadyError` remains the sole precondition outcome before two completed proficient answers and emits no event.
 
 - [ ] **Step 5: Run focused and broader authority tests**
 

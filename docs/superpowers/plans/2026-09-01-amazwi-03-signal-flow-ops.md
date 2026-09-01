@@ -34,7 +34,7 @@
 
 ## Mandatory Execution Order
 
-Execute tasks in this dependency order, not numeric-document order: **Task 0 → Task 2 → Task 3 → Task 1 → Tasks 4–13**. Task 2 owns the API types consumed by Task 1, and Task 3 owns the theme provider consumed by `AppShell`. Do not create temporary interfaces, `as any` casts, placeholder route components, or test-only production branches to bypass this order.
+Execute tasks in this dependency order, not numeric-document order: **Task 0 → Task 2 → Task 3 → Task 1 → Tasks 4–13**. Task 2 owns the API types consumed by Task 1, and Task 3 owns the theme provider consumed by `AppShell`. Do not create temporary interfaces, `as any` casts, stub route components, or test-only production branches to bypass this order.
 
 ### Task 0: Lock frontend tooling, scripts, and deterministic browser fixtures
 
@@ -353,7 +353,7 @@ describe("apiRequest", () => {
       JSON.stringify({ code: "CONSENT_REQUIRED", scope: "RECORD_PROCESS_ROUND" }),
       { status: 403, headers: { "content-type": "application/json" } },
     )));
-    await expect(apiRequest("/consents/u1")).rejects.toEqual(
+    await expect(apiRequest("/consents/me")).rejects.toEqual(
       new ApiError(403, "CONSENT_REQUIRED", { scope: "RECORD_PROCESS_ROUND" }),
     );
   });
@@ -438,12 +438,13 @@ export interface OpsDto {
 ```ts
 export interface AmazwiApi {
   getHome(): Promise<{ xp: number; level: number; nextLevelXp: number; missions: MissionProposalDto[] }>;
-  getConsents(userId: string): Promise<ConsentStateDto[]>;
-  grantConsent(request: { userId: string; version: "2026-09-01"; scopes: ConsentScope[] }): Promise<ConsentStateDto[]>;
+  getConsents(): Promise<ConsentStateDto[]>;
+  grantConsent(request: { version: "2026-09-01"; scopes: ConsentScope[] }): Promise<ConsentStateDto[]>;
+  createContribution(cardId: string): Promise<{ id: string; rewardAmountCents: number; rewardRuleVersion: string }>;
   beginAudioUpload(contributionId: string): Promise<{ audioObjectId: string; uploadPath: string }>;
   uploadPrivateAudio(uploadPath: string, body: Blob): Promise<void>;
   finaliseAudio(contributionId: string, request: { sha256: string; mimeType: "audio/webm" | "audio/ogg" | "audio/wav"; codec: string; durationMs: number; byteLength: number }): Promise<{ contributionId: string; state: "RECORDED" }>;
-  getAssignment(verifierId: string): Promise<AssignmentDto | null>;
+  getAssignment(): Promise<AssignmentDto | null>;
   getPlayback(assignmentId: string): Promise<{ url: string; expiresAt: string }>;
   submitAnswer(assignmentId: string, request: { rawAnswer: string }): Promise<{ answerLocked: true }>;
   submitReferee(assignmentId: string, request: { violation: "YES" | "NO" }): Promise<{ revealed: true; contributionId: string }>;
@@ -455,7 +456,7 @@ export interface AmazwiApi {
 }
 ```
 
-Map methods exactly to `GET /consents/{userId}`, `POST /consents`, `POST /contributions/{id}/audio/uploads`, `PUT /private-audio/uploads/{audioObjectId}`, `POST /contributions/{id}/audio/finalise`, `GET /assignments/next?verifier_id={id}`, `POST /assignments/{id}/playback`, `POST /assignments/{id}/answer`, `POST /assignments/{id}/referee`, `GET /contributions/{id}/result`, `GET /contributions/{id}/receipt`, `GET /impact`, `GET /ops`, and `POST /ops/missions/{id}/authorise`. `authoriseMission` sends only an empty body plus `Idempotency-Key`; it never accepts reward or budget values from the browser.
+Map methods exactly to `GET /consents/me`, `POST /consents`, `POST /contributions` with only `card_id`, `POST /contributions/{id}/audio/uploads`, `PUT /private-audio/uploads/{audioObjectId}`, `POST /contributions/{id}/audio/finalise`, `GET /assignments/next`, `POST /assignments/{id}/playback`, `POST /assignments/{id}/answer`, `POST /assignments/{id}/referee`, `GET /contributions/{id}/result`, `GET /contributions/{id}/receipt`, `GET /impact`, `GET /ops`, and `POST /ops/missions/{id}/authorise`. Browser methods never send a user, speaker, verifier, campaign, reward amount or reward-rule version to select authority. `authoriseMission` sends only an empty body plus `Idempotency-Key`; it never accepts reward or budget values from the browser.
 
 - [ ] **Step 5: Run API and frontend suites**
 
@@ -693,7 +694,7 @@ git commit -m "UI: add Signal Flow primitives and reduced motion"
 - Create: `starter/frontend/src/features/golden-path.test.tsx`
 
 **Interfaces:**
-- Home consumes `getHome()` and uses `ProgressRail` for Kuest-inspired status hierarchy.
+- Home consumes `getHome()`, uses `ProgressRail` for Kuest-inspired status hierarchy, calls `createContribution(cardId)` for the authenticated user, then navigates to the returned `/record/:contributionId`.
 - Consent grants `RECORD_PROCESS_ROUND` and `ASSIGNED_VERIFIER_PLAYBACK`; `RETAIN_MODEL_DEVELOPMENT` is a separate unchecked-by-default control.
 - Recording keeps raw audio in memory only and uses the Stage 1 upload/finalise API.
 - Verification locks free text before violation reveal and never shows AI output.
@@ -727,15 +728,23 @@ it("keeps the captured Blob in memory and retries the same failed upload", async
   expect(api.uploadPrivateAudio).toHaveBeenNthCalledWith(2, expect.any(String), blob);
 });
 
+it("creates the contribution server-side before opening the recorder", async () => {
+  api.createContribution.mockResolvedValue({ id: "c1", rewardAmountCents: 200, rewardRuleVersion: "speaker-v1" });
+  render(<HomeRoute api={api} />);
+  await user.click(await screen.findByRole("button", { name: /start mission/i }));
+  expect(api.createContribution).toHaveBeenCalledWith("card-1");
+  expect(location.pathname).toBe("/record/c1");
+});
+
 it("refreshes an expired assignment-bound playback URL", async () => {
   api.getPlayback.mockRejectedValueOnce(new ApiError(410, "AUDIO_UNAVAILABLE", {}));
-  render(<VerificationRoute api={api} verifierId="v1" />);
+  render(<VerificationRoute api={api} />);
   await user.click(await screen.findByRole("button", { name: "Get a new playback link" }));
   expect(api.getPlayback).toHaveBeenCalledTimes(2);
 });
 
 it("locks free text before the separate violation vote and reveal", async () => {
-  render(<VerificationRoute api={api} verifierId="v1" />);
+  render(<VerificationRoute api={api} />);
   await user.type(await screen.findByLabelText("What did you hear?"), "ke a leboga");
   await user.click(screen.getByRole("button", { name: "Lock answer" }));
   expect(screen.getByLabelText("What did you hear?")).toBeDisabled();
@@ -758,7 +767,7 @@ Expected: FAIL because Signal Flow route implementations and recovery states are
 
 - [ ] **Step 3: Implement the Kuest-inspired home hierarchy**
 
-Render one progress rail, then mission cards with one mission accent each. Accents encode mission mode, not payout. Show fixed reward copy only when returned by the API. Do not render mascot art, a leaderboard of personal earnings, or a reward wheel.
+Render one progress rail, then mission cards with one mission accent each. Accents encode mission mode, not payout. On start, call `createContribution(cardId)` and use only the returned contribution ID and persisted reward display fields; the browser never supplies speaker or reward configuration. Show fixed reward copy only when returned by the API. Do not render mascot art, a leaderboard of personal earnings, or a reward wheel.
 
 - [ ] **Step 4: Implement consent, recording, verification, and result state machines**
 

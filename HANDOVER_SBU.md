@@ -4,6 +4,30 @@
 
 ---
 
+## ⚠️ NEW — 01 Sep ~04:35 · implementation programme approved; autonomous execution starting
+
+Lethabo has now approved moving from the written design into an executable plan
+and instructed continuous autonomous implementation with frequent commits and
+pushes. The master execution contract is
+`docs/superpowers/plans/2026-09-01-amazwi-governed-intelligence-program.md`;
+the four subsystem plans beside it cover Stages 1–3, 4–6, 7–8 and 9:
+`2026-09-01-amazwi-01-governance-audio-peers.md`,
+`2026-09-01-amazwi-02-council-data-models.md`,
+`2026-09-01-amazwi-03-signal-flow-ops.md` and
+`2026-09-01-amazwi-04-hardening-demo.md`.
+
+The first implementation wave is scoped consent → private local audio → real
+peer API. It uses failing tests first and real PostgreSQL migration/invariant
+checks. This instruction does not resolve the pre-event timing disagreement and
+does not represent your approval of backend/data/money decisions. All such work
+remains clearly pending your review. No deployment is resumed.
+
+**Review request when you return:** consent partial-unique/index semantics,
+revocation races, private playback authorisation, resolver integration and any
+schema/migration changes before they are treated as final in your lane.
+
+---
+
 ## ⚠️ NEW — 01 Sep ~04:00 · approved maximum-scope design, implementation not started
 
 Lethabo approved a substantial expansion design in

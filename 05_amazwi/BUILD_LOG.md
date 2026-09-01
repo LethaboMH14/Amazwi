@@ -5,6 +5,33 @@
 
 ---
 
+### [01 Sep ~04:35] — Lethabo (planning, TOP) · implementation programme approved; autonomous execution authorised
+
+**DID**
+- Lethabo explicitly approved moving from the written design into implementation planning and then instructed continuous autonomous implementation, with commits and pushes throughout.
+- Split the maximum-scope design into an executable master programme plus four independently survivable subsystem plans under `docs/superpowers/plans/`.
+- Defined the detailed stage plans for governance/audio/peers, Council/data/models, Signal Flow/MTN Ops and hardening/demo.
+
+**HOW**
+- Mapped the current FastAPI/SQLAlchemy/PostgreSQL and React/Vite code before locking exact files and interfaces.
+- Plans use TDD steps, real PostgreSQL migration tests, explicit failure gates and focused commit boundaries. Later subsystem plans cover Council/data/models, Signal Flow/MTN Ops and hardening/demo.
+
+**CHANGED**
+- `docs/superpowers/plans/2026-09-01-amazwi-governed-intelligence-program.md` — master dependency graph, file structure, global constraints and programme acceptance.
+- `docs/superpowers/plans/2026-09-01-amazwi-01-governance-audio-peers.md` — exact Stage 1–3 implementation tasks.
+- `docs/superpowers/plans/2026-09-01-amazwi-02-council-data-models.md` — exact Stage 4–6 Council, provenance, ML and Kaggle tasks.
+- `docs/superpowers/plans/2026-09-01-amazwi-03-signal-flow-ops.md` — exact Stage 7–8 UI, motion, impact and human-authorised ops tasks.
+- `docs/superpowers/plans/2026-09-01-amazwi-04-hardening-demo.md` — exact Stage 9 security, failure-drill and demo-evidence tasks.
+- `P0.md`, `CLAUDE.md`, `HANDOVER_SBU.md` — implementation-plan pointer, autonomous-execution instruction and retained authority boundaries.
+
+**NEXT**
+- Self-review and publish the complete plan set, then execute Stage 1 with failing tests first.
+
+**BLOCKED / PING**
+- No user question blocks execution. The Vercel deployment remains paused. Backend/money/data/deployment changes remain cross-lane and pending Sbu's review, not final on his behalf.
+
+---
+
 ## THE DISCIPLINE
 
 We never sit in the same head, so **the repo is the shared brain.** Four rules:

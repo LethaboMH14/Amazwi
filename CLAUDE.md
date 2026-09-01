@@ -16,14 +16,24 @@ Lethabo decided (31 Aug) to start real competition application code before the e
 4. [`05_amazwi/README.md`](05_amazwi/README.md) — product contract, settled decisions, file map for the full plan corpus (`05_amazwi/plan/00_MASTER_PLAN.md` onward).
 5. [`HANDOVER_SBU.md`](HANDOVER_SBU.md) / [`HANDOVER_LETHABO.md`](HANDOVER_LETHABO.md) — the two teammates' reciprocal handover notes. Check both for anything addressed to you that hasn't been actioned yet.
 
-**New approved design, implementation not started:**
+**Approved design and executable programme; autonomous implementation authorised:**
 [`05_amazwi/plan/16_GOVERNED_INTELLIGENCE_DESIGN.md`](05_amazwi/plan/16_GOVERNED_INTELLIGENCE_DESIGN.md)
 records Lethabo's approved maximum-scope expansion: Gate C consent, Gate D
 private audio, Gate E real peers, then an advisory AI Council, governed data
 refinery, external-dataset/Kaggle model campaign, MTN Language Ops and the
 Figma-first Signal Flow UI. It does not claim those stages are built. The
 paused Vercel deployment remains paused, peer truth remains authoritative, and
-cross-lane implementation remains pending Sbu's review.
+cross-lane implementation remains pending Sbu's review. Lethabo subsequently
+approved moving into implementation and instructed uninterrupted autonomous
+execution with frequent commits and pushes. The execution contract is
+[`docs/superpowers/plans/2026-09-01-amazwi-governed-intelligence-program.md`](docs/superpowers/plans/2026-09-01-amazwi-governed-intelligence-program.md),
+with subsystem plans for
+[Stages 1–3](docs/superpowers/plans/2026-09-01-amazwi-01-governance-audio-peers.md),
+[Stages 4–6](docs/superpowers/plans/2026-09-01-amazwi-02-council-data-models.md),
+[Stages 7–8](docs/superpowers/plans/2026-09-01-amazwi-03-signal-flow-ops.md) and
+[Stage 9](docs/superpowers/plans/2026-09-01-amazwi-04-hardening-demo.md).
+Do not infer stage completion from plan approval; only fresh acceptance evidence
+changes build status.
 
 Do not re-derive product decisions from scratch — they are settled in the files above. Do not re-litigate a decision recorded in `BUILD_LOG.md`'s append-only decisions table without a new dated row.
 
