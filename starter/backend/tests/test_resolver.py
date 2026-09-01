@@ -25,6 +25,7 @@ from app.models import (
     Card,
     Contribution,
     ContributionState,
+    EligibilityDecision,
     RewardEvent,
     User,
 )
@@ -252,6 +253,37 @@ def test_resolve_both_matched_quality_and_consent_ok_corpus_eligible_and_reward_
     reward = db_session.query(RewardEvent).filter_by(contribution_id=contribution.id).one()
     assert reward.amount_cents == 200
     assert reward.user_id == speaker.id
+
+
+def test_resolve_rolls_back_state_and_decision_when_reward_cannot_be_committed(db_session):
+    """§5 requires resolution to be one transaction, including its reward.
+
+    A reward that exceeds the funded campaign budget must not leave a terminal
+    contribution state or an EligibilityDecision behind. Otherwise a retry
+    would see the decision and never be able to credit the speaker.
+    """
+    speaker = _user(db_session)
+    v1, v2 = _user(db_session), _user(db_session)
+    campaign = _campaign(db_session, funded_cents=100, committed_cents=0)
+    contribution = _contribution(db_session, speaker, campaign)
+    _answered_assignment(db_session, contribution, v1, matched=True, violation_vote=False)
+    _answered_assignment(db_session, contribution, v2, matched=True, violation_vote=False)
+
+    with pytest.raises(IntegrityError):
+        resolve_contribution(
+            db_session,
+            contribution_id=contribution.id,
+            audio_quality_passed=True,
+            consent_active=True,
+            reward_amount_cents=200,
+            campaign_id=campaign.id,
+        )
+
+    db_session.rollback()
+    db_session.refresh(contribution)
+    assert contribution.state == ContributionState.OPEN
+    assert db_session.get(EligibilityDecision, contribution.id) is None
+    assert db_session.query(RewardEvent).filter_by(contribution_id=contribution.id).count() == 0
 
 
 def test_resolve_both_matched_but_quality_failed_unvalidated_no_reward(db_session):

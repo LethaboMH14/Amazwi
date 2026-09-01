@@ -140,6 +140,30 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [01 Sep ~02:20] — Lethabo (Sonnet, BUILD) · CROSS-LANE, pending Sbu's review · §5 resolution made genuinely atomic
+
+**DID**
+- Confirmed the preceding special-character database-URL fix on the real GitHub Actions run (`33452035801`): watch command exited successfully after backend and frontend completion. This closed the CI loop for commit `853d8ee`, rather than assuming the local PostgreSQL result implied CI.
+- Added a regression test for `02_TECH.md` §5's actual transaction requirement: an eligible contribution with a reward larger than the campaign's funded budget raises the database constraint error and must leave the contribution `OPEN`, with neither `EligibilityDecision` nor `RewardEvent` persisted.
+- The test failed against the prior resolver exactly as suspected: state and decision committed before `credit_reward()` attempted the budget-checked write, so the failed reward stranded an already-decided contribution and made a later safe retry impossible.
+- Corrected `app/resolver.py` and `app/ledger.py`: terminal state, decision and reward now share one commit. `credit_reward(commit=False)` flushes its constraint checks without publishing the reward, then the resolver commits all three or rolls all three back. A corpus-eligible call must now receive a positive `reward_amount_cents`; it no longer silently attempts an invalid zero-cent event.
+- Verified all resolver branches plus the new rollback case: **16 passed**. Then ran the complete backend suite: **62 passed in 38.08s**, using real PostgreSQL.
+
+**WHY**
+- "Safe to call repeatedly" requires more than an idempotent reward row. If a terminal decision is stored before its reward fails, the existing-decision early return prevents the intended retry from ever attempting that reward again. The corrected boundary makes the specification's transaction promise true instead of merely documented.
+
+**CHANGED**
+- `starter/backend/app/resolver.py` — one terminal-resolution transaction and explicit positive reward input.
+- `starter/backend/app/ledger.py` — controlled non-committing internal path for a caller-owned transaction.
+- `starter/backend/tests/test_resolver.py` — real campaign-budget rollback regression.
+- `starter/backend/S5_README.md`, `P0.md`, `HANDOVER_SBU.md` — scope, verification and Sbu-review status updated.
+
+**NEXT**
+- Commit and push this correction. Sbu must review the ledger/resolver transaction boundary before it is treated as final platform or money-policy work.
+
+**BLOCKED / PING**
+- **PING Sbu:** cross-lane correction is ready for §5/§8 review. No new reward amount, MoMo policy, consent rule or deployment choice was decided here.
+
 ### [01 Sep ~02:15] — Lethabo (Sonnet, BUILD) · real local Postgres validation found and fixed a genuine alembic bug
 
 **⚠️ Security note, stated plainly:** the user's local PostgreSQL password was shared in this session so the suite could be tested against their real install. It is not committed anywhere in the repo (only ever passed as an environment variable), but it did appear in this conversation's transcript. The user was advised to rotate that password once this session's work is done.

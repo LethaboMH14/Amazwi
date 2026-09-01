@@ -40,6 +40,7 @@ def credit_reward(
     amount_cents: int,
     idempotency_key: str,
     campaign_id: Optional[uuid.UUID] = None,
+    commit: bool = True,
 ) -> RewardEvent:
     """§8 invariant 1: resolving the same contribution repeatedly creates
     one reward. Idempotent on (contribution_id, user_id, reward_type) --
@@ -57,7 +58,10 @@ def credit_reward(
     same transaction as reward credit") -- the DB CHECK constraint
     (committed_cents <= funded_cents) is what actually enforces invariant
     5 (campaign commitments never exceed the funded budget); this function
-    just makes sure both writes commit or roll back together.
+    just makes sure both writes commit or roll back together. Set ``commit``
+    to False only when a caller owns a wider transaction, such as §5's
+    resolver which must atomically persist contribution state, the decision,
+    and the reward.
     """
     existing = session.execute(
         select(RewardEvent).where(
@@ -85,8 +89,15 @@ def credit_reward(
         campaign.committed_cents += amount_cents
 
     try:
-        session.commit()
+        if commit:
+            session.commit()
+        else:
+            # Execute constraints now, while the caller can still roll back
+            # its wider transaction. Do not publish a partial reward yet.
+            session.flush()
     except IntegrityError as exc:
+        if not commit:
+            raise
         session.rollback()
         # Distinguish a benign race (another caller's identical resolver
         # call landed first on the SAME (contribution, user, type) triple)

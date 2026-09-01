@@ -171,35 +171,15 @@ def resolve_contribution(
 
     if a.violation_vote and b.violation_vote:
         contribution.state = ContributionState.VOIDED
-        session.commit()
-        decision = EligibilityDecision(
-            contribution_id=contribution_id,
-            understood=False,
-            corpus_eligible=False,
-            reason="both verifiers voted a banned-word violation",
-            consent_version="n/a",
-        )
-        session.add(decision)
-        session.commit()
-        return decision
-
-    if bool(a.violation_vote) != bool(b.violation_vote):
+        understood = False
+        corpus_eligible = False
+        reason = "both verifiers voted a banned-word violation"
+    elif bool(a.violation_vote) != bool(b.violation_vote):
         contribution.state = ContributionState.REVIEW_REQUIRED
-        session.commit()
-        decision = EligibilityDecision(
-            contribution_id=contribution_id,
-            understood=False,
-            corpus_eligible=False,
-            reason="verifiers disagreed on the banned-word violation vote",
-            consent_version="n/a",
-        )
-        session.add(decision)
-        session.commit()
-        return decision
-
-    both_matched = bool(a.matched) and bool(b.matched)
-
-    if both_matched:
+        understood = False
+        corpus_eligible = False
+        reason = "verifiers disagreed on the banned-word violation vote"
+    elif bool(a.matched) and bool(b.matched):
         understood = True
         if audio_quality_passed and consent_active:
             corpus_eligible = True
@@ -226,21 +206,29 @@ def resolve_contribution(
         consent_version="v1" if consent_active else "n/a",
     )
     session.add(decision)
-    session.commit()
 
-    if corpus_eligible:
-        # §5: "credit speaker reward once." credit_reward() (app/ledger.py)
-        # is itself idempotent on (contribution_id, user_id, type), which
-        # is exactly what makes "safe to call repeatedly" true for this
-        # whole function, not just for the decision-row half of it.
-        credit_reward(
-            session,
-            contribution_id=contribution_id,
-            user_id=contribution.speaker_id,
-            reward_type="SPEAKER_HONORARIUM",
-            amount_cents=reward_amount_cents if reward_amount_cents is not None else 0,
-            idempotency_key=f"resolve-{contribution_id}",
-            campaign_id=campaign_id,
-        )
+    try:
+        if corpus_eligible:
+            if reward_amount_cents is None or reward_amount_cents <= 0:
+                raise ValueError(
+                    "a corpus-eligible resolution requires a positive reward_amount_cents"
+                )
+            # §5: "credit speaker reward once." Keep this uncommitted until
+            # the contribution state and EligibilityDecision can commit with
+            # it. A failed budget check must leave all three unchanged.
+            credit_reward(
+                session,
+                contribution_id=contribution_id,
+                user_id=contribution.speaker_id,
+                reward_type="SPEAKER_HONORARIUM",
+                amount_cents=reward_amount_cents,
+                idempotency_key=f"resolve-{contribution_id}",
+                campaign_id=campaign_id,
+                commit=False,
+            )
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
 
     return decision

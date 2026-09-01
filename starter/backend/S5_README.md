@@ -21,7 +21,10 @@ sign-off — that stays Sbu's per `05_BUILD.md` §2. See `HANDOVER_SBU.md`.
   `apply_payment_callback`, `available_balance_cents`.
 - `app/resolver.py` — §5's assignment invariants (no-self-verification,
   expired/voided-audio rejection) and the resolver pseudocode implemented
-  verbatim: `create_assignment()`, `resolve_contribution()`.
+  verbatim: `create_assignment()`, `resolve_contribution()`. Terminal
+  resolution persists contribution state, its EligibilityDecision and a
+  corpus-eligible reward in one transaction, so a failed reward cannot
+  strand a decision that prevents a later retry.
 - `tests/conftest.py` — a real Postgres fixture with two backends: an
   external `AMAZWI_TEST_DATABASE_URL` (used by CI's `postgres:16` service
   container, or your own local Postgres install) takes priority when set;
@@ -30,17 +33,17 @@ sign-off — that stays Sbu's per `05_BUILD.md` §2. See `HANDOVER_SBU.md`.
   stated `PostgreSQL 16` exactly.
 - `tests/test_migrations.py`, `test_schema_constraints.py`,
   `test_ledger_invariants.py`, `test_assignment_invariants.py`,
-  `test_resolver.py` — 39 new tests, all run against real Postgres, 0
+  `test_resolver.py` — 40 new tests, all run against real Postgres, 0
   mocks.
 
 ## Not here (deliberately, not an oversight)
 
 - The MoMo provider adapter itself (§9) — real external-API unknowns,
   separate piece of work.
-- The assignment-creation service (who gets assigned what, no-self-
-  verification enforcement) and the resolver (§5's pseudocode) — this
-  session built the schema/ledger layer S5 asks for; the resolver is
-  still open.
+- Random eligible-cohort selection for assignments. `create_assignment()`
+  enforces no-self-verification, but it deliberately takes the selected
+  verifier from a future dispatcher rather than inventing cohort logic
+  before §7/§10 exist.
 - Consent enforcement (§10) and audio storage (§7).
 - Any FastAPI endpoint wiring — `app/main.py` is untouched.
 

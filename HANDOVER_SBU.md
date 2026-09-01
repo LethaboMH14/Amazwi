@@ -4,6 +4,36 @@
 
 ---
 
+## ⚠️ NEW — 01 Sep ~02:20 · resolver transaction correction, pending your review
+
+While continuing the §5 work, a regression test found that the earlier
+resolver committed a terminal `EligibilityDecision` before it attempted the
+speaker reward. A campaign-budget failure could therefore leave a contribution
+marked `CORPUS_ELIGIBLE` with no reward, and an idempotent retry would return
+the existing decision rather than credit the speaker.
+
+**What changed in your lane, pending your review:**
+- `resolve_contribution()` now commits terminal contribution state, decision
+  and any reward only once. It rolls all three back when the reward cannot be
+  committed.
+- `credit_reward(..., commit=False)` is an explicit internal option for the
+  resolver's wider transaction. Normal ledger callers retain their existing
+  commit behavior.
+- A real PostgreSQL regression test makes a reward exceed campaign funding
+  and proves state remains `OPEN`, no decision exists and no reward exists.
+  Full backend suite: **62/62 passing**.
+
+**Scope boundary:** no reward amount was invented. A corpus-eligible call now
+requires its caller to supply a positive amount instead of implicitly trying
+to create an invalid zero-cent reward. MoMo, consent derivation, cohort
+selection and endpoints remain unbuilt.
+
+**Ask:** review this transaction boundary against `02_TECH.md` §5 and §8.
+This is Lethabo's documented cross-lane correction, not a final platform or
+money-policy sign-off.
+
+---
+
 ## ⚠️ NEW — 01 Sep ~01:30 · third cross-lane block: §5 assignment/resolver service
 
 Same session, extends past S5's original scope into §5 itself (named as the next open item in the previous entry below).
