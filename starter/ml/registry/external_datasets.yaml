@@ -1,0 +1,21 @@
+datasets:
+  swivuriso:
+    revision_required: true
+    allowed_tasks: [ASR_TRAINING, ASR_EVALUATION]
+    prohibited_tasks: [TTS, VOICE_CLONING, SPEECH_SYNTHESIS, HUMAN_VOICE_REPLICATION]
+  afriswitch:
+    revision_required: true
+    allowed_tasks: [ASR_EVALUATION]
+    acquisition_blocked: true
+  common-voice-26-setswana:
+    revision_required: true
+    allowed_tasks: [ASR_TRAINING, ASR_EVALUATION]
+  nchlt:
+    allowed_tasks: []
+    blocked_reason: Exact hosted version and licence not approved.
+  lwazi:
+    allowed_tasks: []
+    blocked_reason: Exact hosted version and licence not approved.
+  fleurs:
+    allowed_tasks: []
+    blocked_reason: Exact hosted version and licence not approved.
