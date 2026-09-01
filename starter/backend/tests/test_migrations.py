@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 
 import pytest
@@ -93,3 +94,69 @@ def test_downgrade_drops_all_three_enum_types(clean_db_uri, db_engine):
         result = conn.execute(text("SELECT typname FROM pg_type WHERE typtype='e'"))
         remaining_enums = {row[0] for row in result}
     assert remaining_enums == set(), f"downgrade left enum types behind: {remaining_enums}"
+
+
+def _seed_reward_rule(db_engine):
+    from sqlalchemy import text
+
+    campaign_id = uuid.uuid4()
+    rule_id = uuid.uuid4()
+    with db_engine.begin() as conn:
+        conn.execute(
+            text(
+                "INSERT INTO campaigns "
+                "(id, name, language, budget_cents, funded_cents, committed_cents, provider_mode) "
+                "VALUES (:id, 'Test', 'tn', 1000, 1000, 0, 'DEMO_PROVIDER')"
+            ),
+            {"id": campaign_id},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO campaign_reward_rules "
+                "(id, campaign_id, version, contribution_reward_cents, effective_from) "
+                "VALUES (:id, :campaign_id, 'v1', 100, now())"
+            ),
+            {"id": rule_id, "campaign_id": campaign_id},
+        )
+    return campaign_id, rule_id
+
+
+def test_reward_rule_financial_terms_cannot_be_updated_or_deleted(clean_db_uri, db_engine):
+    from sqlalchemy import text
+
+    _run_alembic("upgrade", "head", db_uri=clean_db_uri)
+    campaign_id, rule_id = _seed_reward_rule(db_engine)
+    with pytest.raises(Exception, match="campaign reward terms are immutable"):
+        with db_engine.begin() as conn:
+            conn.execute(
+                text(
+                    "UPDATE campaign_reward_rules "
+                    "SET contribution_reward_cents = 200 WHERE id = :id"
+                ),
+                {"id": rule_id},
+            )
+    with pytest.raises(Exception, match="campaign reward rules cannot be deleted"):
+        with db_engine.begin() as conn:
+            conn.execute(
+                text("DELETE FROM campaign_reward_rules WHERE id = :id"),
+                {"id": rule_id},
+            )
+    assert campaign_id is not None
+
+
+def test_reward_rule_retirement_is_one_way(clean_db_uri, db_engine):
+    from sqlalchemy import text
+
+    _run_alembic("upgrade", "head", db_uri=clean_db_uri)
+    _, rule_id = _seed_reward_rule(db_engine)
+    with db_engine.begin() as conn:
+        conn.execute(
+            text("UPDATE campaign_reward_rules SET retired_at = now() WHERE id = :id"),
+            {"id": rule_id},
+        )
+    with pytest.raises(Exception, match="retired_at transition is immutable"):
+        with db_engine.begin() as conn:
+            conn.execute(
+                text("UPDATE campaign_reward_rules SET retired_at = NULL WHERE id = :id"),
+                {"id": rule_id},
+            )

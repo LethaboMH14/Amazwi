@@ -91,6 +91,34 @@ def upgrade() -> None:
         unique=True,
         postgresql_where=sa.text("retired_at IS NULL"),
     )
+    op.execute(
+        sa.text(
+            """
+            CREATE FUNCTION protect_campaign_reward_rule() RETURNS trigger
+            LANGUAGE plpgsql AS $$
+            BEGIN
+                IF TG_OP = 'DELETE' THEN
+                    RAISE EXCEPTION 'campaign reward rules cannot be deleted';
+                END IF;
+                IF OLD.campaign_id IS DISTINCT FROM NEW.campaign_id
+                   OR OLD.version IS DISTINCT FROM NEW.version
+                   OR OLD.contribution_reward_cents IS DISTINCT FROM NEW.contribution_reward_cents
+                   OR OLD.effective_from IS DISTINCT FROM NEW.effective_from THEN
+                    RAISE EXCEPTION 'campaign reward terms are immutable';
+                END IF;
+                IF OLD.retired_at IS NOT NULL
+                   AND NEW.retired_at IS DISTINCT FROM OLD.retired_at THEN
+                    RAISE EXCEPTION 'retired_at transition is immutable';
+                END IF;
+                RETURN NEW;
+            END;
+            $$;
+            CREATE TRIGGER protect_campaign_reward_rule_trigger
+            BEFORE UPDATE OR DELETE ON campaign_reward_rules
+            FOR EACH ROW EXECUTE FUNCTION protect_campaign_reward_rule();
+            """
+        )
+    )
     op.create_table(
         "verifier_qualifications",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
@@ -154,6 +182,13 @@ def downgrade() -> None:
     )
     op.drop_table("verifier_qualifications")
     op.drop_index("uq_campaign_active_reward_rule", table_name="campaign_reward_rules")
+    op.execute(
+        sa.text(
+            "DROP TRIGGER IF EXISTS protect_campaign_reward_rule_trigger "
+            "ON campaign_reward_rules"
+        )
+    )
+    op.execute(sa.text("DROP FUNCTION IF EXISTS protect_campaign_reward_rule()"))
     op.drop_table("campaign_reward_rules")
     op.drop_index("uq_consent_active_user_scope", table_name="consent_grants")
     op.alter_column(
