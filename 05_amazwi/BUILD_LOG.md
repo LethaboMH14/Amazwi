@@ -140,6 +140,19 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [01 Sep ~02:22] — Lethabo (Sonnet, BUILD) · direct CI confirmation for §5 transaction correction
+
+**DID**
+- Watched GitHub Actions run `33454333211` for pushed commit `c749b9b` to completion with `gh run watch --exit-status`.
+- **Both jobs passed:** backend in **1m21s** (including the real PostgreSQL 16 service and bare `pytest -v`) and frontend in **22s** (`npm test` and `npx tsc -b --noEmit`). This is direct remote verification of the resolver transaction fix, not a restatement of local `62/62` results.
+- GitHub repeated its existing non-blocking Node 20 deprecation annotation for upstream Actions. It did not affect either job and is unchanged from the preceding successful runs.
+
+**NEXT**
+- Push this documentation confirmation. The §5/§8 transaction-boundary review remains pending Sbu; CI green does not constitute that review.
+
+**BLOCKED / PING**
+- None.
+
 ### [01 Sep ~02:20] — Lethabo (Sonnet, BUILD) · CROSS-LANE, pending Sbu's review · §5 resolution made genuinely atomic
 
 **DID**
