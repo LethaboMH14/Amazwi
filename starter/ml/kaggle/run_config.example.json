@@ -1,0 +1,17 @@
+{
+  "candidate_id": "whisper-large-v3-turbo-peft",
+  "account_alias": "team-sonar-a",
+  "dataset_id": "swivuriso",
+  "dataset_revision": "REPLACE_WITH_APPROVED_IMMUTABLE_REVISION",
+  "model_revision": "REPLACE_WITH_APPROVED_IMMUTABLE_MODEL_REVISION",
+  "manifest": "REPLACE_WITH_IMMUTABLE_MANIFEST_PATH",
+  "manifest_sha256": "REPLACE_WITH_64_CHAR_SHA256",
+  "preflight_evidence": "REPLACE_WITH_APPROVED_PREFLIGHT_EVIDENCE",
+  "reservation_id": "REPLACE_WITH_BUDGET_RESERVATION",
+  "seed": 20260901,
+  "training_hours": 24,
+  "evaluation_hours": 4,
+  "packaging_hours": 2,
+  "asr_only": true,
+  "prohibited_tasks": ["tts", "voice_cloning", "speech_synthesis", "human_voice_replication"]
+}
