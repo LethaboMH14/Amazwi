@@ -11,6 +11,7 @@
 - Added PostgreSQL enforcement preventing reward-rule campaign, version, amount, or effective-time edits.
 - Added one-way retirement enforcement and delete rejection.
 - Added migration tests that first failed without the trigger, then passed after implementation.
+- Added migration tests proving valid legacy consent scopes are preserved and invalid legacy scopes fail before conversion; all 7 migration tests passed.
 
 **HOW**
 - The focused trigger tests produced the expected `DID NOT RAISE` failures against the prior migration.

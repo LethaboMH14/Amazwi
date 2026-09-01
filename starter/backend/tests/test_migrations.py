@@ -32,6 +32,20 @@ def _run_alembic(*args: str, db_uri: str) -> None:
         capture_output=True,
         text=True,
     )
+
+
+def _alembic_result(*args: str, db_uri: str):
+    import os
+
+    env = os.environ.copy()
+    env["AMAZWI_DATABASE_URL"] = db_uri
+    return subprocess.run(
+        [sys.executable, "-m", "alembic", *args],
+        cwd=BACKEND_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+    )
     assert result.returncode == 0, (
         f"alembic {' '.join(args)} failed:\nstdout={result.stdout}\nstderr={result.stderr}"
     )
@@ -94,6 +108,65 @@ def test_downgrade_drops_all_three_enum_types(clean_db_uri, db_engine):
         result = conn.execute(text("SELECT typname FROM pg_type WHERE typtype='e'"))
         remaining_enums = {row[0] for row in result}
     assert remaining_enums == set(), f"downgrade left enum types behind: {remaining_enums}"
+
+
+def test_upgrade_preserves_valid_legacy_consent_scope(clean_db_uri, db_engine):
+    from sqlalchemy import text
+
+    _run_alembic("upgrade", "a3ea8e6c052e", db_uri=clean_db_uri)
+    user_id = uuid.uuid4()
+    consent_id = uuid.uuid4()
+    with db_engine.begin() as conn:
+        conn.execute(
+            text(
+                "INSERT INTO users (id, provider_subject, declared_languages, created_at) "
+                "VALUES (:id, 'legacy-user', ARRAY['tn'], now())"
+            ),
+            {"id": user_id},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO consent_grants "
+                "(id, user_id, version, scope, granted_at) "
+                "VALUES (:id, :user_id, 'legacy', 'RECORD_PROCESS_ROUND', now())"
+            ),
+            {"id": consent_id, "user_id": user_id},
+        )
+    _run_alembic("upgrade", "head", db_uri=clean_db_uri)
+    with db_engine.connect() as conn:
+        scope = conn.execute(
+            text("SELECT scope::text FROM consent_grants WHERE id = :id"),
+            {"id": consent_id},
+        ).scalar_one()
+    assert scope == "RECORD_PROCESS_ROUND"
+
+
+def test_upgrade_rejects_invalid_legacy_consent_scope_before_conversion(clean_db_uri, db_engine):
+    from sqlalchemy import text
+
+    _run_alembic("upgrade", "a3ea8e6c052e", db_uri=clean_db_uri)
+    user_id = uuid.uuid4()
+    with db_engine.begin() as conn:
+        conn.execute(
+            text(
+                "INSERT INTO users (id, provider_subject, declared_languages, created_at) "
+                "VALUES (:id, 'invalid-legacy-user', ARRAY['tn'], now())"
+            ),
+            {"id": user_id},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO consent_grants "
+                "(id, user_id, version, scope, granted_at) "
+                "VALUES (:id, :user_id, 'legacy', 'NOT_A_SCOPE', now())"
+            ),
+            {"id": uuid.uuid4(), "user_id": user_id},
+        )
+    result = _alembic_result("upgrade", "head", db_uri=clean_db_uri)
+    assert result.returncode != 0
+    assert "invalid scopes" in result.stderr
+    with db_engine.connect() as conn:
+        assert conn.execute(text("SELECT count(*) FROM consent_grants")).scalar_one() == 1
 
 
 def _seed_reward_rule(db_engine):
