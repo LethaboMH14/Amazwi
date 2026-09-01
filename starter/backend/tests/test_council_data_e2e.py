@@ -4,8 +4,9 @@ import uuid
 from app.datasets import approve_export, create_export, revoke_export
 from app.council import DataStewardRulesV1, ExplainerRulesV1, LanguageScoutRulesV1, SoundSentinelRulesV1, run_council_event
 from app.models import (
-    AudioObject, AudioObjectState, Card, Campaign, ConsentGrant, ConsentScope,
-    Contribution, ContributionState, User, OutboxEvent,
+    Assignment, AssignmentMode, AudioObject, AudioObjectState, Card, Campaign,
+    CampaignRewardRule, ConsentGrant, ConsentScope, Contribution,
+    ContributionState, EligibilityDecision, OutboxEvent, User,
 )
 
 
@@ -64,3 +65,43 @@ def test_export_rejects_missing_model_consent(db_session):
     from app.datasets import ExportRejected
     with pytest.raises(ExportRejected):
         create_export(db_session, purpose="ASR training", requested_by=speaker.id, rows=[{"source_class": "AMAZWI_OPTED_IN", "source_record_id": "record-2", "contribution_id": contribution.id, "object_sha256": "a" * 64}])
+
+
+def test_resolver_reward_outbox_and_retry_are_idempotent(db_session):
+    from app.outbox import claim_events, retry_event
+    from app.resolver import resolve_contribution
+
+    now = datetime.now(timezone.utc)
+    speaker = User(id=uuid.uuid4(), provider_subject="resolver-export", declared_languages=["tn"])
+    v1 = User(id=uuid.uuid4(), provider_subject="resolver-v1", declared_languages=["tn"])
+    v2 = User(id=uuid.uuid4(), provider_subject="resolver-v2", declared_languages=["tn"])
+    campaign = Campaign(id=uuid.uuid4(), name="Resolver", language="tn", budget_cents=1000, funded_cents=1000, committed_cents=0, provider_mode="DEMO_PROVIDER")
+    card = Card(id=uuid.uuid4(), language="tn", target="kgomo", blocked_words=["a", "b", "c", "d"], accepted_answers=["kgomo", "kgomo"], distractors=["x", "y", "z"], campaign_id=campaign.id)
+    rule = CampaignRewardRule(id=uuid.uuid4(), campaign_id=campaign.id, version="r1", contribution_reward_cents=100, effective_from=now)
+    contribution = Contribution(id=uuid.uuid4(), speaker_id=speaker.id, card_id=card.id, declared_language="tn", state=ContributionState.OPEN, reward_rule_id=rule.id)
+    db_session.add_all([speaker, v1, v2])
+    db_session.flush()
+    db_session.add(campaign)
+    db_session.flush()
+    db_session.add(card)
+    db_session.flush()
+    db_session.add(rule)
+    db_session.flush()
+    db_session.add(contribution)
+    db_session.flush()
+    db_session.add_all([
+        ConsentGrant(user_id=speaker.id, version="c1", scope=ConsentScope.RECORD_PROCESS_ROUND),
+        AudioObject(contribution_id=contribution.id, object_key="resolver/audio", sha256="a" * 64, state=AudioObjectState.AVAILABLE, byte_length=4, duration_ms=1000),
+        Assignment(contribution_id=contribution.id, verifier_id=v1.id, mode=AssignmentMode.PROFICIENT_VERIFIER, matched=True, violation_vote=False, answered_at=now),
+        Assignment(contribution_id=contribution.id, verifier_id=v2.id, mode=AssignmentMode.PROFICIENT_VERIFIER, matched=True, violation_vote=False, answered_at=now),
+    ])
+    db_session.commit()
+    decision = resolve_contribution(db_session, contribution_id=contribution.id, audio_quality_passed=True, consent_active=True, reward_amount_cents=100, campaign_id=campaign.id)
+    assert decision.corpus_eligible is True
+    assert db_session.query(EligibilityDecision).filter_by(contribution_id=contribution.id).count() == 1
+    events = db_session.query(OutboxEvent).filter_by(aggregate_id=contribution.id).all()
+    assert len(events) == 1
+    claimed = claim_events(db_session, worker_id="e2e-worker", now=datetime.now(timezone.utc), limit=1)
+    assert len(claimed) == 1
+    retry_at = retry_event(db_session, claimed[0].id, "e2e-worker", datetime.now(timezone.utc), "temporary")
+    assert retry_at > datetime.now(timezone.utc)
