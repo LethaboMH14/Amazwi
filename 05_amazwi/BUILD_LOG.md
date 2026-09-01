@@ -5,7 +5,24 @@
 
 ---
 
-### [01 Sep ~17:40] — Jcode · integration review · Sbu update reconciliation
+### [01 Sep] — Sbu (Claude, direct) · Plan 02 · ML metrics fixture tests
+
+**DID**
+- Added `starter/ml/tests/test_metrics.py` — 18 tests with hand-verified expected values, covering `normalise_transcript` (case-fold, punctuation, Unicode NFC), `word_error_rate`, `character_error_rate` and `embedded_span_error`, including empty-reference/`InvalidReference` edge cases and multi-span averaging. `metrics.py` had zero test coverage before this.
+- Full `starter/ml` suite: **22 passed** (4 pre-existing + 18 new).
+
+**WHY**
+- Codex's own remaining-work notes flagged "exact fixture validation is still needed" for the embedded-span metric, and the full metric module had no report/test evidence at all. This closes that specific gap with real, hand-computed expected values (e.g. WER "the cat sat"→"the cat sit" = 1 substitution / 3 ref words = 1/3), not just a smoke test.
+
+**BLOCKED / PING**
+- **Could not run the real-PostgreSQL migration test for the export-immutability trigger (`1efd1ef`) from this machine** — this sandbox has no Postgres, no Docker, and no network access to install `pgserver`. That work needs to happen in an environment that has it (Codex's does). Did not fake a pass on this.
+- No GPU, external dataset download, Kaggle execution, payment or deployment action taken.
+
+**NEXT**
+- Real-Postgres export-trigger migration test (needs Codex's environment or a local Postgres).
+- Task 14 (model cards, evidence hashes, Stage 4–6 acceptance), then Plan 03.
+
+
 
 **SBU WORK REVIEWED**
 - Sbu pushed **26 commits** after our `ac8ecfa`, covering the consent/recording/verification frontend slices, API contract alignment, transactional Council outbox, leasing/recovery worker, deterministic advisory specialists, Council status API, dataset provenance/export schema, result receipt fields, themes, Signal Flow primitives, and handover/status documentation.
