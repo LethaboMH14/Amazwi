@@ -140,6 +140,9 @@ def test_governed_peer_flow_through_public_api(db_session, tmp_path):
             assert result.status_code == 200, result.text
             assert result.json() == {
                 "status": "RESOLVED",
+                "outcome": "CORPUS_ELIGIBLE",
+                "reward_minor": 100,
+                "currency": "ZAR",
                 "understood": True,
                 "corpus_eligible": True,
                 "reason": "understood by both verifiers, audio quality passed, consent active",

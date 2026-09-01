@@ -5,6 +5,29 @@
 
 ---
 
+### [01 Sep ~17:40] — Jcode · integration review · Sbu update reconciliation
+
+**SBU WORK REVIEWED**
+- Sbu pushed **26 commits** after our `ac8ecfa`, covering the consent/recording/verification frontend slices, API contract alignment, transactional Council outbox, leasing/recovery worker, deterministic advisory specialists, Council status API, dataset provenance/export schema, result receipt fields, themes, Signal Flow primitives, and handover/status documentation.
+
+**ERRORS FOUND AND FIXED**
+- Real PostgreSQL migration verification found duplicate enum creation in the new Council and dataset migrations. Both migrations now explicitly create enum types once and use `create_type=False` for table columns.
+- Frontend acceptance found `HomeRoute.test.tsx` rendered a router `Link` without a router provider. The test now uses `MemoryRouter`.
+- Updated the governed API acceptance assertion for Sbu's expanded result contract: outcome, reward minor units, and currency.
+
+**VERIFIED**
+- Backend: **94 passed**, Ruff passed, and compilation passed.
+- Frontend: **14 passed**, TypeScript passed.
+- Public governed-flow, migration, result-receipt, consent, recording, verification, Council, outbox, and dataset paths were included in the review. Fixes are ready to push in the next commit.
+
+**PLAN STATUS**
+- Plan 01 governance/audio/peer backend and Sbu's frontend slices are implemented; integration fixes above are now complete.
+- Plan 02 Council/data work is implemented in slices, but worker concurrency, provenance/export acceptance, and provider/model evaluation remain open.
+- Plan 03 UI foundations are implemented, while browser evidence, operations screens, accessibility/resilience evidence on the real app, finished deck, fallback recording, and rehearsal remain open.
+- Plan 04 hardening/demo, full on-device acceptance, deployment decision, and final evidence packaging remain open.
+
+---
+
 ### [01 Sep ~17:05] — Jcode · verification/fix · reported commit errors
 
 **ROOT CAUSE**

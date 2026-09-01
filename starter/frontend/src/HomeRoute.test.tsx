@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { HomeRoute } from "./HomeRoute";
 
 describe("HomeRoute API contract", () => {
@@ -10,7 +11,11 @@ describe("HomeRoute API contract", () => {
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(new Response(JSON.stringify({ status: "ok", provider_mode: "demo" }), { status: 200 }));
 
-    render(<HomeRoute />);
+    render(
+      <MemoryRouter>
+        <HomeRoute />
+      </MemoryRouter>,
+    );
 
     await waitFor(() => expect(screen.getByText("backend: ok (demo)")).toBeInTheDocument());
     expect(fetchMock).toHaveBeenCalledWith("/api/health");
