@@ -37,12 +37,17 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.ledger import credit_reward
+from app.consent import require_active_scope, ConsentRequiredError
 from app.models import (
     Assignment,
     AssignmentMode,
+    AudioObject,
+    AudioObjectState,
+    CampaignRewardRule,
     Contribution,
     ContributionState,
     EligibilityDecision,
+    ConsentScope,
 )
 
 
@@ -73,7 +78,8 @@ def create_assignment(
         not swallow; that's the caller's signal.
       - learner MCQ never counting toward the resolution threshold: the
         resolver below only counts AssignmentMode.PROFICIENT_VERIFIER rows.
-    """
+        """
+
     contribution = session.get(Contribution, contribution_id)
     if contribution is None:
         raise ValueError(f"no such contribution {contribution_id}")
@@ -98,6 +104,43 @@ def create_assignment(
     session.add(assignment)
     session.commit()
     return assignment
+
+
+class ResolutionNotReadyError(Exception):
+    pass
+
+
+def resolve_from_persisted_state(session: Session, contribution_id: uuid.UUID) -> EligibilityDecision:
+    """Resolve only from persisted audio, consent, reward, and peer state."""
+    existing = session.get(EligibilityDecision, contribution_id)
+    if existing is not None:
+        return existing
+    contribution = session.get(Contribution, contribution_id)
+    if contribution is None:
+        raise ValueError(f"no such contribution {contribution_id}")
+    completed = session.scalars(
+        select(Assignment).where(
+            Assignment.contribution_id == contribution_id,
+            Assignment.mode == AssignmentMode.PROFICIENT_VERIFIER,
+            Assignment.answered_at.is_not(None),
+        )
+    ).all()
+    if len(completed) < 2:
+        raise ResolutionNotReadyError(f"contribution {contribution_id} needs two proficient answers")
+    audio = session.scalar(select(AudioObject).where(AudioObject.contribution_id == contribution_id))
+    try:
+        consent = require_active_scope(session, contribution.speaker_id, ConsentScope.RECORD_PROCESS_ROUND)
+    except ConsentRequiredError:
+        consent = None
+    rule = session.get(CampaignRewardRule, contribution.reward_rule_id) if contribution.reward_rule_id else None
+    return resolve_contribution(
+        session,
+        contribution_id=contribution_id,
+        audio_quality_passed=audio is not None and audio.state == AudioObjectState.AVAILABLE,
+        consent_active=consent is not None,
+        reward_amount_cents=rule.contribution_reward_cents if rule else None,
+        campaign_id=rule.campaign_id if rule else None,
+    )
 
 
 def resolve_contribution(

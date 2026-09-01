@@ -38,3 +38,21 @@ class AudioFinaliseRequest(BaseModel):
 
 class PlaybackResponse(BaseModel):
     url: str
+
+
+class AssignmentAnswerRequest(BaseModel):
+    answer_text: str = Field(min_length=1, max_length=500)
+    violation_vote: bool = False
+
+
+class AssignmentResponse(BaseModel):
+    id: str
+    contribution_id: str
+    mode: str
+
+
+class ContributionResult(BaseModel):
+    status: str
+    understood: bool | None = None
+    corpus_eligible: bool | None = None
+    reason: str | None = None

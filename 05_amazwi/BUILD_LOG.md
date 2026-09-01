@@ -5,6 +5,34 @@
 
 ---
 
+### [01 Sep ~16:05] — Jcode · implementation · Task 5 complete
+
+**DID**
+- Added persisted closed-cohort verifier selection using active speaker playback consent, age confirmation, language qualification, speaker exclusion, and prior-assignment exclusion.
+- Added authenticated next-assignment, answer, referee, and contribution-result endpoints.
+- Added exact answer normalisation/matching, duplicate-answer protection, authenticated ownership checks, pending-result representation, and persisted-state resolver entrypoint wiring after the second answer.
+
+**HOW**
+- Wrote cohort and peer API tests first and confirmed the expected missing-module failure for the cohort module.
+- Kept verifier identity derived from `AuthenticatedIdentity`; request bodies cannot select the acting user. Existing resolver and ledger tests remain in the regression run.
+- Focused peer/cohort/resolver tests passed **22/22**. Full backend suite passed **89/89**. Python compilation passed.
+
+**TASK STATUS**
+- **Completed:** Plan 01 Tasks 4 and 5, including their backend service and API slices.
+- **Next:** Plan 01 Task 6, frontend consent, recording, verification, and result routes.
+- **After that:** Plan 01 Task 7, end-to-end governed-flow acceptance and truth-document updates.
+
+**DATASETS / AI / GPU RESOURCE PLAN**
+- Tasks 4 and 5 used **no datasets**, Kaggle, Hugging Face, Featherless AI, OpenRouter, access tokens, model calls, or GPU.
+- Task 6 is frontend/API integration and does not require GPU or external model access.
+- Plan 02’s governed data refinery will require licensed dataset manifests and provenance before any Kaggle/Hugging Face download. The later advisory Council may use Featherless AI or OpenRouter after provider selection and credentials are explicitly approved.
+- GPU provisioning is needed only for the later isiZulu/Setswana ASR tournament and fine-tuning campaign, not for the completed application-flow tasks.
+
+**BLOCKED / PING**
+- Tasks 4 and 5 are pushed and verified. Vercel remains paused. No external data/model access or deployment was performed.
+
+---
+
 ### [01 Sep ~14:35] — Jcode · implementation · Task 4 complete
 
 **DID**
