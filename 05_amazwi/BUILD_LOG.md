@@ -1,5 +1,18 @@
 # AMAZWI — BUILD LOG
 
+### [01 Sep ~17:55] — Jcode · Plan 02 ML first checkpoint · manifest/splits/metrics slice
+
+**DID**
+- Added synthetic-only `starter/ml` package scaffolding, pinned CPU requirements, canonical manifest models and hashing, immutable writes, deterministic speaker-group splits, and fixture-driven tests.
+- Added deterministic ASR metric APIs and tests; ant corrected the metric implementation and expectations for standard CER and required slice ordering during this checkpoint.
+
+**VERIFIED / BLOCKED**
+- Initial red run reached the expected metric failure after manifest and split tests executed. Later post-correction Python validation commands stalled in the local command runner, so no fresh green count is claimed. Generated `__pycache__` files were removed.
+- No datasets, providers, network downloads, GPU, model training, or model-result claims were made. Registry/preflight, tournament, budget/Kaggle, tabular, and evidence tasks remain open.
+
+**NEXT**
+- Rerun `cd starter\ml && C:\Python311\python.exe -m pytest tests\test_manifest.py tests\test_splits.py tests\test_metrics.py -q` in a stable process before treating this slice as green.
+
 **Live log for the build phase.** Both of us write here. Newest entry at the top.
 *(Pre-AMAZWI session history lives in [`../BUILD_LOG.md`](../BUILD_LOG.md).)*
 
