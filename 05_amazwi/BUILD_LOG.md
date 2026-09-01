@@ -1378,3 +1378,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** `starter/ml/amazwi_ml/metrics.py`.
 - **NEXT:** Add exact-value metric fixtures and replace tabular placeholders with real pinned challengers.
 - **BLOCKED-PING:** Synthetic/CPU-only; no external data, GPU or deployment action.
+
+### [01 Sep] — Sibusiso · Plan 02 real synthetic tabular challengers
+
+- **DID:** Replaced the tabular scaffold with actual CPU-only LightGBM and XGBoost training on synthetic fixtures.
+- **HOW:** Pinned `lightgbm==4.6.0`, `xgboost==3.0.4` and `scikit-learn==1.6.1`; one-thread, fixed-seed estimators generate hash-stable predictions.
+- **WHY:** Candidate IDs now correspond to real fitted learners when fixtures contain both classes.
+- **CHANGED:** `starter/ml/amazwi_ml/tabular.py`, `starter/ml/tests/test_tabular.py`.
+- **NEXT:** Add exact metric reports, export immutability and generated acceptance evidence.
+- **BLOCKED-PING:** The runtime package install downloaded dependencies only; no model/dataset download, GPU/Kaggle job or deployment occurred.
