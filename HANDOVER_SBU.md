@@ -41,6 +41,13 @@ fields and a database check preventing external rows from carrying AMAZWI
 contribution IDs (or vice versa). Export candidate/approval services,
 immutability triggers and PostgreSQL schema tests are still required.
 
+The provenance firewall service is now drafted in `app/datasets.py`: exports
+are requested as drafts, external sources require preflight-passed state and
+purpose permission, AMAZWI rows require peer eligibility/audio availability and
+active model-development consent, approval rechecks those conditions under a
+row lock, and revocation is audited. The approved-export immutability trigger
+and PostgreSQL tests are still required before this is final.
+
 The recoverable worker and read-only Council status API are now implemented in
 `1d96339`. `run_council_worker.py --once` claims leased events, runs the four
 deterministic specialists, completes successful events and retries failures;
