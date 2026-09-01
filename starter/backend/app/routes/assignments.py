@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from app.api_types import AssignmentAnswerRequest, AssignmentResponse, ContributionResult
 from app.cohorts import select_next_verifier
 from app.db import get_session
-from app.identity import AuthenticatedIdentity, get_current_identity
+from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
 from app.matching import is_correct, normalise_answer
 from app.models import Assignment, AssignmentMode, Card, Contribution, EligibilityDecision
 from app.resolver import ResolutionNotReadyError, create_assignment, resolve_from_persisted_state
@@ -34,6 +34,7 @@ def next_assignment(
     identity: AuthenticatedIdentity = Depends(get_current_identity),
     session: Session = Depends(get_session),
 ) -> AssignmentResponse:
+    require_identity_user(session, identity)
     verifier = select_next_verifier(session, contribution_id, language, random.SystemRandom(), identity.user_id)
     if verifier is None:
         raise HTTPException(status_code=404, detail={"code": "NO_ASSIGNMENT"})
@@ -56,6 +57,7 @@ def answer_assignment(
     identity: AuthenticatedIdentity = Depends(get_current_identity),
     session: Session = Depends(get_session),
 ) -> AssignmentResponse:
+    require_identity_user(session, identity)
     assignment = session.scalar(
         select(Assignment).where(Assignment.id == assignment_id).with_for_update()
     )
@@ -88,6 +90,7 @@ def referee_assignment(
     identity: AuthenticatedIdentity = Depends(get_current_identity),
     session: Session = Depends(get_session),
 ) -> AssignmentResponse:
+    require_identity_user(session, identity)
     assignment = session.scalar(
         select(Assignment).where(Assignment.id == assignment_id).with_for_update()
     )
@@ -121,6 +124,7 @@ def contribution_result(
     identity: AuthenticatedIdentity = Depends(get_current_identity),
     session: Session = Depends(get_session),
 ) -> ContributionResult:
+    require_identity_user(session, identity)
     contribution = session.get(Contribution, contribution_id)
     if contribution is None or contribution.speaker_id != identity.user_id:
         raise HTTPException(status_code=403, detail={"code": "AUDIO_NOT_AUTHORISED"})

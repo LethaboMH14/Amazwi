@@ -20,7 +20,7 @@ from app.contributions import (
 from app.consent import ConsentRequiredError
 from app.consent import require_active_scope
 from app.db import get_session
-from app.identity import AuthenticatedIdentity, get_current_identity
+from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
 from app.models import AudioObject, ConsentScope, Contribution
 from app.storage import AudioUnavailable, InvalidAudioToken, LocalAudioObjectStore
 
@@ -58,6 +58,7 @@ def create_contribution_route(
     session: Session = Depends(get_session),
 ):
     try:
+        require_identity_user(session, identity)
         with _transaction(session):
             contribution = create_contribution(
                 session, principal=identity, card_id=uuid.UUID(request.card_id)
@@ -77,6 +78,7 @@ def create_audio_upload(
     store: LocalAudioObjectStore = Depends(get_audio_store),
 ):
     try:
+        require_identity_user(session, identity)
         with _transaction(session):
             audio = begin_audio_upload(session, store, contribution_id, identity.user_id)
     except Exception as exc:
@@ -93,6 +95,7 @@ async def upload_audio(
     store: LocalAudioObjectStore = Depends(get_audio_store),
 ):
     audio = session.get(AudioObject, audio_object_id)
+    require_identity_user(session, identity)
     if audio is None:
         raise HTTPException(status_code=404, detail={"code": "AUDIO_UNAVAILABLE"})
     contribution = session.get(Contribution, audio.contribution_id)
@@ -118,6 +121,7 @@ def finalise_audio_route(
     store: LocalAudioObjectStore = Depends(get_audio_store),
 ):
     try:
+        require_identity_user(session, identity)
         with _transaction(session):
             contribution = session.get(Contribution, contribution_id)
             if contribution is None or contribution.speaker_id != identity.user_id:
@@ -136,6 +140,7 @@ def contributor_playback(
     store: LocalAudioObjectStore = Depends(get_audio_store),
 ):
     try:
+        require_identity_user(session, identity)
         token = issue_contributor_playback_token(session, store, contribution_id, identity)
     except Exception as exc:
         raise _error(exc) from exc
@@ -150,6 +155,7 @@ def play_audio(
     store: LocalAudioObjectStore = Depends(get_audio_store),
 ):
     try:
+        require_identity_user(session, identity)
         now = __import__("datetime").datetime.now(__import__("datetime").timezone.utc)
         payload = store.token_payload(token)
         audio = session.scalar(select(AudioObject).where(AudioObject.object_key == payload.get("key")))

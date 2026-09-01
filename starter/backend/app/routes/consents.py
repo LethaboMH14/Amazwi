@@ -14,7 +14,7 @@ from app.consent import (
     revoke_scope,
 )
 from app.db import get_session
-from app.identity import AuthenticatedIdentity, get_current_identity
+from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
 from app.models import ConsentGrant, ConsentScope, User
 
 
@@ -31,10 +31,7 @@ def _state(grant: ConsentGrant) -> ConsentState:
 
 
 def _require_user(session: Session, identity: AuthenticatedIdentity) -> User:
-    user = session.get(User, identity.user_id)
-    if user is None:
-        raise HTTPException(status_code=401, detail={"code": "AUTHENTICATION_REQUIRED"})
-    return user
+    return require_identity_user(session, identity)
 
 
 @contextmanager

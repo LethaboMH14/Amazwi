@@ -76,6 +76,26 @@ def test_consent_api_cannot_impersonate_another_user(api_client, db_session, use
     ) is None
 
 
+def test_consent_api_rejects_mismatched_provider_subject(db_session, users):
+    authenticated, other = users
+
+    app.dependency_overrides[get_session] = lambda: db_session
+    app.dependency_overrides[get_current_identity] = lambda: AuthenticatedIdentity(
+        user_id=authenticated.id,
+        provider_subject=other.provider_subject,
+    )
+    try:
+        with TestClient(app) as client:
+            response = client.post(
+                "/consents",
+                json={"version": "2026-09-01", "scopes": ["RECORD_PROCESS_ROUND"]},
+            )
+        assert response.status_code == 401
+        assert response.json()["detail"]["code"] == "AUTHENTICATION_REQUIRED"
+    finally:
+        app.dependency_overrides.clear()
+
+
 def test_consent_api_requires_identity():
     with TestClient(app) as client:
         response = client.post(
