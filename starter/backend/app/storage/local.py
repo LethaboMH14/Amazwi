@@ -6,6 +6,7 @@ import hashlib
 import hmac
 import io
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -29,6 +30,10 @@ class LocalAudioObjectStore:
     def _relative_key(self, object_key: str) -> Path:
         if not object_key or "\x00" in object_key:
             raise InvalidObjectKey("object key is empty or contains a NUL byte")
+        # Validate POSIX and Windows syntax identically on every host. Path()
+        # is platform-sensitive, so Linux otherwise treats C:/x as relative.
+        if object_key.startswith(("/", "\\")) or "\\" in object_key or re.match(r"^[A-Za-z]:", object_key):
+            raise InvalidObjectKey("object key must use safe relative POSIX syntax")
         candidate = Path(object_key)
         if candidate.is_absolute() or ".." in candidate.parts:
             raise InvalidObjectKey("object key must remain below the storage root")
