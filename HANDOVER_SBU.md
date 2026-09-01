@@ -27,6 +27,14 @@ at five minutes, and audited administrative release via
 `scripts/recover_outbox.py`. These remain pending real PostgreSQL concurrency
 verification before being called production-ready.
 
+The deterministic advisory Council contract layer is now shipped in
+`app/council.py` (`d779217`): versioned Data Steward, Sound Sentinel, Language
+Scout and Explainer baselines, canonical input hashing, idempotent output
+persistence and explicit authority isolation. This is a rules baseline, not
+an AI performance claim. The worker process, read-only Council status route,
+dataset provenance/export schema and ML manifest/evidence package remain
+unfinished and require focused tests before acceptance.
+
 ### Contract correction — 01 Sep
 
 The recording client was reviewed against the actual backend routes and
