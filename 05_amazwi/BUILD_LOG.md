@@ -5,6 +5,20 @@
 
 ---
 
+### [01 Sep ~11:08] — Jcode · verification · Stage 1 schema slice
+
+**DID**
+- Re-ran the complete backend suite after the push: **64 passed** in one process.
+- Re-ran the governance and migration acceptance tests: **4 passed**.
+- Ran Python compilation across backend application, Alembic, and test modules with no errors.
+- Verified the ORM metadata contains all three new tables, all three active-record indexes, the positive reward constraint, and the contribution reward-rule foreign key.
+- Verified migration downgrade removes the new PostgreSQL enum types through the migration test.
+
+**BLOCKED / PING**
+- Task 1 is not fully closed: the migration does not yet install the specified reward-rule immutability/retirement/delete triggers or their dedicated tests. Those remain the next schema hardening change and are not being represented as complete.
+
+---
+
 ### [01 Sep ~11:03] — Jcode · implementation · Stage 1 schema slice
 
 **DID**
