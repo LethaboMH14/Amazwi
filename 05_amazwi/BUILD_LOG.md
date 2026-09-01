@@ -5,6 +5,28 @@
 
 ---
 
+### [01 Sep] — Sbu (Claude, direct) · Plan 03 · digest() and StatusAnnouncer tests — pure-logic scan complete
+
+**DID**
+- Exported `digest()` from `RecordingRoute.tsx` (was a private module-level function) and added `digest.test.ts` (5 tests) — SHA-256 hex output matches Node's own independent `crypto.createHash("sha256")` computation, matches the published empty-string test vector, is a 64-char lowercase hex string, is deterministic, and differs for different content. This is the SHA-256 upload-integrity mechanism `HANDOVER_SBU.md` references — had zero coverage.
+- **Found a real jsdom environment limitation while doing this:** jsdom's polyfilled global `Blob` does not implement `.arrayBuffer()` (a real browser's does), so calling `digest()` with a jsdom-constructed `Blob` throws `TypeError: blob.arrayBuffer is not a function` — worth knowing before anyone tries to write a full `RecordingRoute` component-render test that exercises this path. Worked around it in the test only (Node's own spec-complete `Blob`, cast once through a `testBlob()` helper since its type isn't structurally identical to DOM's `Blob`) — `RecordingRoute.tsx` itself is untouched, no product code changed to work around a test-environment gap.
+- `SignalPrimitives.test.tsx` (5 tests) — `StatusAnnouncer`'s actual accessibility contract, previously untested: the message region is `aria-live="polite"`, the error region is `aria-live="assertive"` **and only gets `role="alert"` when an error is actually present**, both regions render even when only one prop is supplied. Also covers `PeerTruthStatus`'s `role="status"` announcement content. This is exactly Plan 03/04's screen-reader acceptance surface.
+- **Full frontend suite: 57/57 passing** (47 prior + 10 new), `tsc -b --noEmit` clean.
+
+**Scanned the rest of the frontend for remaining pure-logic gaps and found none left.** `api/contracts.ts` is types-only (nothing to test). `VerificationRoute.tsx`/`ResultRoute.tsx` have no extractable pure functions — what's left there is component/render behavior (fetch-mocked route tests, same pattern as `ConsentRoute.test.tsx`), a different category from what was asked this round, not a pure-logic gap.
+
+**WHY**
+- Both were genuine zero-coverage gaps directly tied to acceptance criteria already named in the plan docs (upload integrity, screen-reader announcements) rather than speculative extra tests.
+
+**BLOCKED / PING**
+- Standing limitation unchanged: no Postgres/Docker here, and no real browser/device render available, so nothing backend-integrated or visually-verified is attempted from this environment.
+- No GPU, external dataset download, Kaggle execution, payment or deployment action taken.
+
+**NEXT**
+- Pure-logic scan of `starter/ml` and `starter/frontend` is now exhausted. Remaining Plan 03/04 work needs either Postgres, a real browser render, or a physical device — none available here. Handing back to whichever environment has those (Codex's has Postgres) for the DB/browser-dependent remainder.
+
+---
+
 ### [01 Sep] — Sbu (Claude, direct) · Plan 03 · API client failure-mapping tests
 
 **DID**
