@@ -5,6 +5,34 @@
 
 ---
 
+### [01 Sep ~12:10] — Jcode · implementation · Task 3 complete
+
+**DID**
+- Implemented the local private audio object-store adapter with safe root-bounded keys, pending uploads, SHA-256 and byte-length verification, atomic finalisation, signed playback tokens, quarantine, and deletion.
+- Added focused tests for traversal, hash mismatch, atomic pending-to-final state, token tampering, expiry, wrong audience, quarantine, and deletion.
+
+**HOW**
+- Wrote the storage tests first and confirmed the expected missing-package failure before adding the adapter.
+- Used HMAC-SHA256 signatures with URL-safe base64 payloads. The adapter never exposes a static directory and returns bytes only through explicit private-open methods.
+- Focused storage tests passed **4/4**. Full backend regression passed **79/79**. Python compilation passed.
+
+**TASK STATUS**
+- **Current:** Plan 01 Task 3, local private audio storage, complete and pushed.
+- **Next:** Plan 01 Task 4, contribution creation, upload/finalisation, consent-aware playback, and revocation checks.
+- **After that:** Task 5 closed-cohort peer API, Task 6 frontend flows, Task 7 end-to-end acceptance.
+
+**DATASETS / AI / GPU RESOURCE PLAN**
+- Task 3 used **no datasets**, Kaggle, Hugging Face, Featherless AI, OpenRouter, access tokens, model calls, or GPU.
+- Task 4 and Task 5 remain deterministic application work and do not require GPU or model-provider access.
+- Kaggle/Hugging Face datasets become relevant only in Plan 02’s governed data-refinery and model-campaign tasks. They require dataset manifests, licence/provenance recording, and credentials only when a gated download actually needs them.
+- Featherless AI or OpenRouter becomes relevant only for the later advisory Council/provider integration, after peer truth is persisted. No provider has been selected or called yet.
+- GPU capacity becomes relevant for the later isiZulu/Setswana ASR/model tournament and fine-tuning campaign, not for the current storage, consent, audio, or peer API tasks. Sbu should provision GPU access before those Plan 02 training tasks start, not now.
+
+**BLOCKED / PING**
+- Task 3 is complete. Vercel remains paused. No deployment or external model/data access was performed.
+
+---
+
 ### [01 Sep ~11:42] — Jcode · implementation · consent service and API
 
 **DID**
