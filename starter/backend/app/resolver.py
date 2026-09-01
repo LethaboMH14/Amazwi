@@ -37,6 +37,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.ledger import credit_reward
+from app.outbox import enqueue_contribution_resolved
 from app.consent import require_active_scope, ConsentRequiredError
 from app.models import (
     Assignment,
@@ -125,6 +126,8 @@ def resolve_from_persisted_state(session: Session, contribution_id: uuid.UUID) -
         raise ValueError(f"no such contribution {contribution_id}")
     existing = session.get(EligibilityDecision, contribution_id)
     if existing is not None:
+        enqueue_contribution_resolved(session, contribution_id, existing.contribution_id)
+        session.commit()
         return existing
 
     completed = session.scalars(
@@ -159,6 +162,8 @@ def resolve_from_persisted_state(session: Session, contribution_id: uuid.UUID) -
             reward_amount_cents=rule.contribution_reward_cents,
             campaign_id=rule.campaign_id,
         )
+        if decision is not None:
+            enqueue_contribution_resolved(session, contribution.id, decision.contribution_id)
         session.commit()
         return decision
     except Exception:
@@ -278,6 +283,8 @@ def resolve_contribution(
         raise ValueError(f"no such contribution {contribution_id}")
     existing = session.get(EligibilityDecision, contribution_id)
     if existing is not None:
+        enqueue_contribution_resolved(session, contribution_id, existing.contribution_id)
+        session.commit()
         return existing
 
     proficient_answers = session.execute(
@@ -299,6 +306,8 @@ def resolve_contribution(
             reward_amount_cents=reward_amount_cents,
             campaign_id=campaign_id,
         )
+        if decision is not None:
+            enqueue_contribution_resolved(session, contribution.id, decision.contribution_id)
         session.commit()
     except Exception:
         session.rollback()

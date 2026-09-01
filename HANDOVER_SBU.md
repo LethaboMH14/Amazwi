@@ -6,6 +6,21 @@
 
 ## ✅ CURRENT — 01 Sep · implementation programme approved; autonomous execution starting
 
+### Implementation update — 01 Sep
+
+Sbu's lane has now shipped the first executable frontend contribution slice and
+the first Council data-plane slice. `ae606d4` adds the typed API client and
+scoped consent UI; `e18f1cc` adds memory-only recording, SHA-256 upload
+integrity and peer-verification UI; `5e7c245` adds PostgreSQL outbox/Council
+models and migration `c8d9e0f1a2b3`. The resolver now enqueues a deduplicated
+`ContributionResolved` event in the same transaction as the eligibility and
+reward decision, including recovery for previously-resolved rows.
+
+The next review gate is real PostgreSQL migration/concurrency verification,
+then an outbox worker with `FOR UPDATE SKIP LOCKED`. The frontend still needs a
+dedicated result route and browser-level MediaRecorder tests. No Council output
+may alter peer truth, consent, audio retention, rewards or model aliases.
+
 Lethabo has now approved moving from the written design into an executable plan
 and instructed continuous autonomous implementation with frequent commits and
 pushes. The master execution contract is
