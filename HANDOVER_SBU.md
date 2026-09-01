@@ -55,6 +55,12 @@ tasks, and a local 60-GPU-hour/30-hours-per-account reservation guard. These
 are controls only: no dataset, model or Kaggle GPU run has been downloaded,
 started or claimed.
 
+`6f9505c` adds deterministic ranking and promotion gates (with no model-alias
+write path), evidence-index/model-card generators that suppress improvement
+claims after failed promotion, and completion tracking for the same local GPU
+budget ledger. The remaining ML work is test fixtures/reports, tabular
+challengers and safe no-download training/evaluation packaging scripts.
+
 The recoverable worker and read-only Council status API are now implemented in
 `1d96339`. `run_council_worker.py --once` claims leased events, runs the four
 deterministic specialists, completes successful events and retries failures;
