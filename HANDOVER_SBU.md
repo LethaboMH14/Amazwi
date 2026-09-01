@@ -4,6 +4,33 @@
 
 ---
 
+## ⚠️ NEW — 01 Sep ~04:00 · approved maximum-scope design, implementation not started
+
+Lethabo approved a substantial expansion design in
+`05_amazwi/plan/16_GOVERNED_INTELLIGENCE_DESIGN.md`. This is an approved plan,
+not a claim that the features are built and not a claim that you signed off.
+
+**The required implementation order:**
+1. Gate C server-derived scoped consent and revocation;
+2. Gate D private object storage with PostgreSQL metadata;
+3. Gate E real two-device peer flow;
+4. recoverable post-resolution AI Council;
+5. governed data refinery and external-dataset manifests;
+6. Kaggle isiZulu/Setswana model campaign plus justified LightGBM/XGBoost uses;
+7. Figma-first Signal Flow UI, Impact and MTN Language Ops.
+
+**Authority boundaries retained:** two proficient peers remain authoritative;
+AI runs afterward and cannot change eligibility or money; model-development
+retention is a separate opt-in that does not alter the configured contribution
+reward; Swivuriso is ASR-only and its TTS/cloning/synthesis prohibition is
+preserved; provider, production reward and deployment selections remain gated.
+
+**Ask:** review the consent, private-storage, outbox, export/provenance and
+money/deployment boundaries before implementation is treated as final in your
+lane. The paused Vercel deployment remains paused.
+
+---
+
 ## ⚠️ NEW — 01 Sep ~02:20 · resolver transaction correction, pending your review
 
 While continuing the §5 work, a regression test found that the earlier

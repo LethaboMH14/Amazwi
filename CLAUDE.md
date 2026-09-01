@@ -16,6 +16,15 @@ Lethabo decided (31 Aug) to start real competition application code before the e
 4. [`05_amazwi/README.md`](05_amazwi/README.md) — product contract, settled decisions, file map for the full plan corpus (`05_amazwi/plan/00_MASTER_PLAN.md` onward).
 5. [`HANDOVER_SBU.md`](HANDOVER_SBU.md) / [`HANDOVER_LETHABO.md`](HANDOVER_LETHABO.md) — the two teammates' reciprocal handover notes. Check both for anything addressed to you that hasn't been actioned yet.
 
+**New approved design, implementation not started:**
+[`05_amazwi/plan/16_GOVERNED_INTELLIGENCE_DESIGN.md`](05_amazwi/plan/16_GOVERNED_INTELLIGENCE_DESIGN.md)
+records Lethabo's approved maximum-scope expansion: Gate C consent, Gate D
+private audio, Gate E real peers, then an advisory AI Council, governed data
+refinery, external-dataset/Kaggle model campaign, MTN Language Ops and the
+Figma-first Signal Flow UI. It does not claim those stages are built. The
+paused Vercel deployment remains paused, peer truth remains authoritative, and
+cross-lane implementation remains pending Sbu's review.
+
 Do not re-derive product decisions from scratch — they are settled in the files above. Do not re-litigate a decision recorded in `BUILD_LOG.md`'s append-only decisions table without a new dated row.
 
 ## The lane rule — UPDATED 31 Aug 2026 ~23:40

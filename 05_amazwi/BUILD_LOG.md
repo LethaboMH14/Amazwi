@@ -140,6 +140,32 @@ The canonical source for scope is `00_MASTER_PLAN.md` and `05_BUILD.md`. These o
 
 # LOG
 
+### [01 Sep ~04:00] — Lethabo (planning, TOP) · maximum-scope Governed Intelligence design approved; no implementation claimed
+
+**DID**
+- Decomposed Lethabo's requested expansion into a governed product/data/model system rather than bolting an opaque “AI judge” onto the resolver. Lethabo selected the **maximum** scope, the combined MTN business ladder, a separate model-development opt-in, external datasets from the start, and the **Governed Intelligence Flywheel** architecture.
+- Wrote the approved specification at `plan/16_GOVERNED_INTELLIGENCE_DESIGN.md`: Gate C consent, Gate D private audio, Gate E real peers, transactional-outbox AI Council, provenance firewall/data refinery, Kaggle speech/tabular model campaign, MTN Language Ops, Figma-first UI, motion, failure isolation and verification gates.
+- Verified current primary data sources rather than relying only on the earlier repository notes: Swivuriso's Hugging Face card and paper confirm ~3,000 hours/seven SA languages, gated CC BY 4.0 and an explicit prohibition on TTS/voice cloning/synthesis; AfriSwitch confirms a 61.36-hour CC BY 4.0 natural code-switch benchmark including Zulu and Tswana; Common Voice 26 Setswana reports 4.93 hours/18 speakers under CC0, useful but not representative alone.
+- Visually opened the five actual screenshot references in `04_assets/reference/`, after first stating honestly that the earlier discussion had relied on their written critique rather than direct image inspection. The final motion system takes waveform identity, quest progress, restrained depth, map-pin impact and a one-shot confirmed-reward celebration while rejecting fantasy 3D and the spin mechanic.
+- Lethabo selected **Signal Flow**: modern rounded layered material, Midnight Shweshwe plus equal first-class Signal Daylight, subtle texture, coral/pink/aqua/marigold signals, reference-derived causal motion and Figma as the visual source of truth (`JPZuFmbhRh9fhkgBLxRymq`).
+- Added `.superpowers/` to `.gitignore`; the interactive brainstorming companion is local planning state, not a product artefact.
+
+**WHY**
+- The original plan intentionally excluded ASR fine-tuning and orchestration from P0. Lethabo explicitly requested and approved a pivot, so the expansion needed one new canonical design with staged exit gates and honest authority boundaries instead of silently changing old “not built” statements or claiming the full vision already exists.
+- Consent, private storage and real peer truth must precede training. Reversing that order would produce an impressive notebook without a governed product or trustworthy data lineage.
+
+**CHANGED**
+- New: `plan/16_GOVERNED_INTELLIGENCE_DESIGN.md`.
+- `P0.md`, `CLAUDE.md`, `HANDOVER_SBU.md` — approved-plan pointer, implementation-not-started status, paused-deploy and pending-Sbu-review boundaries.
+- `.gitignore` — local visual-companion artefacts excluded.
+
+**NEXT**
+- User reviews the committed specification. After approval, create the detailed implementation plan; only then begin Stage 1 Gate C consent with tests first.
+
+**BLOCKED / PING**
+- **PING Sbu:** the design crosses platform, consent, data integrity, money and deployment boundaries. It is approved by Lethabo but remains pending your review and is not represented as your sign-off.
+- Vercel deployment remains explicitly paused.
+
 ### [01 Sep ~02:25] — Lethabo (Sonnet, BUILD) · §5 zero-value reward guard regression-covered
 
 **DID**
