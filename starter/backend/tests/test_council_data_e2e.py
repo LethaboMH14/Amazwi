@@ -2,9 +2,10 @@ from datetime import datetime, timezone
 import uuid
 
 from app.datasets import approve_export, create_export, revoke_export
+from app.council import DataStewardRulesV1, ExplainerRulesV1, LanguageScoutRulesV1, SoundSentinelRulesV1, run_council_event
 from app.models import (
     AudioObject, AudioObjectState, Card, Campaign, ConsentGrant, ConsentScope,
-    Contribution, ContributionState, User,
+    Contribution, ContributionState, User, OutboxEvent,
 )
 
 
@@ -28,6 +29,12 @@ def test_resolved_opted_in_contribution_can_be_approved_and_revoked(db_session):
     db_session.flush()
     db_session.add(audio)
     db_session.flush()
+
+    event = OutboxEvent(event_type="ContributionResolved", aggregate_type="Contribution", aggregate_id=contribution.id, dedupe_key=f"e2e:{contribution.id}", payload_json={"contribution_id": str(contribution.id), "language": "tn", "peer_understood": True, "audio_quality_passed": True, "model_consent_active": True})
+    db_session.add(event)
+    db_session.flush()
+    council = run_council_event(db_session, event, [DataStewardRulesV1(), SoundSentinelRulesV1(), LanguageScoutRulesV1(), ExplainerRulesV1()], now)
+    assert council[0].output_json["code"] == "TRAINING_READY"
 
     export = create_export(db_session, purpose="ASR training", requested_by=speaker.id, rows=[{"source_class": "AMAZWI_OPTED_IN", "source_record_id": "record-1", "contribution_id": contribution.id, "object_sha256": "a" * 64}])
     approved = approve_export(db_session, export_id=export.id, actor_id=speaker.id, manifest_id="manifest-1", manifest_sha256="b" * 64)
