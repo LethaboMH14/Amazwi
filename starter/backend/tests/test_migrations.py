@@ -60,6 +60,7 @@ def test_upgrade_creates_all_expected_tables(clean_db_uri, db_engine):
         "users", "consent_grants", "campaigns", "cards", "contributions",
         "assignments", "eligibility_decisions", "reward_events",
         "payment_attempts", "receipts", "audit_events", "alembic_version",
+        "audio_objects", "verifier_qualifications", "campaign_reward_rules",
     }
     assert expected.issubset(tables), tables
 

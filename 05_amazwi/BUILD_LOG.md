@@ -5,6 +5,30 @@
 
 ---
 
+### [01 Sep ~11:03] — Jcode · implementation · Stage 1 schema slice
+
+**DID**
+- Added the locked consent scopes, private audio metadata, verifier qualifications, campaign reward rules, and contribution reward-rule snapshot field.
+- Added the Alembic migration from the legacy consent scope string to PostgreSQL enum storage, including active-record partial indexes and downgrade cleanup.
+- Added a focused governance model test and expanded migration expectations to include the new tables.
+
+**HOW**
+- Wrote the focused test first and confirmed the expected import failure before adding production models.
+- Ran the migration against real PostgreSQL 16, fixed a duplicate enum creation issue found by that test, then ran the complete backend suite in one process.
+
+**CHANGED**
+- `starter/backend/app/models.py` — consent/audio/qualification/reward-rule records and constraints.
+- `starter/backend/alembic/versions/b7c8d9e0f1a2_consent_audio.py` — upgrade and downgrade migration.
+- `starter/backend/tests/test_governance_schema.py`, `starter/backend/tests/test_migrations.py` — focused coverage and table assertions.
+
+**NEXT**
+- Add the consent grant/revocation service and private local object-storage adapter, then wire their focused API tests.
+
+**BLOCKED / PING**
+- Reward-rule immutability triggers and API wiring remain open in the next task. Vercel remains paused.
+
+---
+
 ### [01 Sep ~04:35] — Lethabo (planning, TOP) · implementation programme approved; autonomous execution authorised
 
 **DID**

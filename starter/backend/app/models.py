@@ -7,11 +7,10 @@ squarely his territory ("data integrity" is his final call per
 `05_BUILD.md` §2). This is an implementation of the already-written spec,
 not a new design decision.
 
-Only the records and constraints actually needed to enforce §8's ledger
-invariants and §4's state machines are modelled here. Consent scopes
-(§10), audio storage (§7) and the MoMo provider adapter (§9) are deferred
-to when the corresponding gate needs them -- do not model more than the
-spec asks for.
+The records and constraints needed to enforce §8's ledger invariants, §4's
+state machines, and the first governance/audio implementation slice are
+modelled here. The MoMo provider adapter (§9), consent service, and storage
+service remain deferred to their respective implementation tasks.
 """
 from __future__ import annotations
 
@@ -25,6 +24,7 @@ from sqlalchemy import (
     Enum as SAEnum,
     ForeignKey,
     Integer,
+    Index,
     String,
     Text,
     UniqueConstraint,
@@ -83,6 +83,20 @@ class AssignmentMode(str, enum.Enum):
     PROFICIENT_VERIFIER = "PROFICIENT_VERIFIER"
 
 
+class ConsentScope(str, enum.Enum):
+    RECORD_PROCESS_ROUND = "RECORD_PROCESS_ROUND"
+    ASSIGNED_VERIFIER_PLAYBACK = "ASSIGNED_VERIFIER_PLAYBACK"
+    RETAIN_MODEL_DEVELOPMENT = "RETAIN_MODEL_DEVELOPMENT"
+    PUBLIC_AUDIO_ATTRIBUTION = "PUBLIC_AUDIO_ATTRIBUTION"
+
+
+class AudioObjectState(str, enum.Enum):
+    PENDING = "PENDING"
+    AVAILABLE = "AVAILABLE"
+    QUARANTINED = "QUARANTINED"
+    DELETED = "DELETED"
+
+
 # --- §3 core records -----------------------------------------------------
 
 
@@ -102,9 +116,21 @@ class ConsentGrant(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
     version: Mapped[str] = mapped_column(String, nullable=False)
-    scope: Mapped[str] = mapped_column(String, nullable=False)
+    scope: Mapped[ConsentScope] = mapped_column(
+        SAEnum(ConsentScope, name="consentscope"), nullable=False
+    )
     granted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, nullable=False)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    __table_args__ = (
+        Index(
+            "uq_consent_active_user_scope",
+            "user_id",
+            "scope",
+            unique=True,
+            postgresql_where=revoked_at.is_(None),
+        ),
+    )
 
 
 class Campaign(Base):
@@ -166,6 +192,82 @@ class Contribution(Base):
     quality_json: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, nullable=False)
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    reward_rule_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("campaign_reward_rules.id"), nullable=True
+    )
+
+
+class AudioObject(Base):
+    __tablename__ = "audio_objects"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    contribution_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("contributions.id"), unique=True, nullable=False
+    )
+    object_key: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    sha256: Mapped[str | None] = mapped_column(String(64), index=True)
+    mime_type: Mapped[str | None] = mapped_column(String)
+    codec: Mapped[str | None] = mapped_column(String)
+    duration_ms: Mapped[int | None] = mapped_column(Integer)
+    byte_length: Mapped[int | None] = mapped_column(Integer)
+    state: Mapped[AudioObjectState] = mapped_column(
+        SAEnum(AudioObjectState, name="audioobjectstate"),
+        nullable=False,
+        default=AudioObjectState.PENDING,
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, nullable=False)
+    finalised_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    quarantined_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class VerifierQualification(Base):
+    __tablename__ = "verifier_qualifications"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    language: Mapped[str] = mapped_column(String, nullable=False)
+    qualified_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    reviewed_by: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    __table_args__ = (
+        CheckConstraint(
+            "reviewed_by <> user_id",
+            name="ck_verifier_qualification_independent_reviewer",
+        ),
+        Index(
+            "uq_verifier_active_user_language",
+            "user_id",
+            "language",
+            unique=True,
+            postgresql_where=revoked_at.is_(None),
+        ),
+    )
+
+
+class CampaignRewardRule(Base):
+    __tablename__ = "campaign_reward_rules"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    campaign_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("campaigns.id"), nullable=False)
+    version: Mapped[str] = mapped_column(String, nullable=False)
+    contribution_reward_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    effective_from: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    retired_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    __table_args__ = (
+        CheckConstraint(
+            "contribution_reward_cents > 0",
+            name="ck_campaign_reward_positive",
+        ),
+        UniqueConstraint("campaign_id", "version", name="uq_campaign_reward_rule_version"),
+        Index(
+            "uq_campaign_active_reward_rule",
+            "campaign_id",
+            unique=True,
+            postgresql_where=retired_at.is_(None),
+        ),
+    )
 
 
 class Assignment(Base):
