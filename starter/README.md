@@ -30,6 +30,9 @@ cd backend && pip install -r requirements.txt && uvicorn app.main:app --reload
 
 # frontend
 cd frontend && npm install && npm run dev
+
+# If the backend is elsewhere during local development:
+# API_PROXY_TARGET=http://127.0.0.1:8000 npm run dev
 ```
 
 ## Verified (31 Aug, this session)
