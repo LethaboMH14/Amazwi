@@ -5,6 +5,30 @@
 
 ---
 
+### [01 Sep ~11:13] — Jcode · implementation · reward-rule trigger hardening
+
+**DID**
+- Added PostgreSQL enforcement preventing reward-rule campaign, version, amount, or effective-time edits.
+- Added one-way retirement enforcement and delete rejection.
+- Added migration tests that first failed without the trigger, then passed after implementation.
+
+**HOW**
+- The focused trigger tests produced the expected `DID NOT RAISE` failures against the prior migration.
+- After the trigger function and `BEFORE UPDATE OR DELETE` trigger were added, both focused tests passed and the full backend suite passed **66/66**.
+- Verified trigger and function cleanup remains part of downgrade through the migration roundtrip suite.
+
+**CHANGED**
+- `starter/backend/alembic/versions/b7c8d9e0f1a2_consent_audio.py` — trigger function, trigger installation, and downgrade cleanup.
+- `starter/backend/tests/test_migrations.py` — financial-term, delete, and one-way-retirement tests.
+
+**NEXT**
+- Begin Plan 01 Task 2: consent grant/revocation service and fail-closed API identity boundary.
+
+**BLOCKED / PING**
+- No blocker for the next task. Vercel remains paused.
+
+---
+
 ### [01 Sep ~11:08] — Jcode · verification · Stage 1 schema slice
 
 **DID**
