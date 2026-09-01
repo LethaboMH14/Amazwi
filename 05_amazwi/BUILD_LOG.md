@@ -5,6 +5,27 @@
 
 ---
 
+### [01 Sep] — Sbu (Claude, direct) · Plan 02 · tournament + evidence fixture tests
+
+**DID**
+- `starter/ml/tests/test_tournament.py` — 21 tests for `rank_candidates`, `evaluate_asr_promotion` and `evaluate_tabular_promotion`. This is the actual promotion gate the ML programme's acceptance criterion depends on ("model promotion is blocked when a challenger fails its predeclared threshold") and it had zero coverage. Covers: sufficient-improvement pass, manifest mismatch, missing/invalid evidence, insufficient WER/Brier/NDCG improvement, CER/embedded-span/AUCPR/MAP regression, ECE-too-high, slice regression gated on sample size (≥30), and multi-reason accumulation.
+- `starter/ml/tests/test_evidence.py` — 9 tests for `generate_model_card` and `write_evidence_index`. Confirms: promoted cards never carry the "no improvement claim" disclaimer, not-promoted cards always do, prohibited-use text is never dropped, metrics are deterministically ordered in the card body, and the evidence index hash is stable regardless of input file order (an unordered write here would silently break "identical canonical hash" reproducibility).
+- Full `starter/ml` suite: **52 passed** (22 prior + 30 new).
+
+**Caught one real bug — in my own test, not the implementation.** First draft of `test_tabular_promotion_blocks_on_invalid_evidence` passed `artefacts={}` through a helper using `artefacts or COMPLETE_ARTEFACTS` — Python falsy-empty-dict silently substituted the valid artefacts back in, so the test exercised the wrong input and passed for the wrong reason until I actually ran it and got a failure that didn't match my hand-trace of `_valid()`. Fixed the helper to use an explicit default instead of `or`. Logging this because it's the same "verify, don't assume" discipline this file asks for, just caught in test code instead of product code.
+
+**WHY**
+- Task 14 (model cards, evidence hashes, Stage 4-6 acceptance) explicitly requires cards to be "generated evidence, never hand-written winner claims," and a failed challenger must produce "no improvement language anywhere in the output." Neither guarantee had a test proving it before this.
+
+**BLOCKED / PING**
+- Still can't run the real-Postgres export-trigger migration test from this machine (no Postgres/Docker/pgserver here) — unchanged from the last entry.
+- No GPU, external dataset download, Kaggle execution, payment or deployment action taken.
+
+**NEXT**
+- Task 14 write-up (model card generation wired to real tournament output) and Stage 4-6 acceptance evidence, then Plan 03. Will keep working non-DB-dependent slices; DB-dependent work stays with whichever environment has Postgres.
+
+---
+
 ### [01 Sep] — Sbu (Claude, direct) · Plan 02 · ML metrics fixture tests
 
 **DID**
