@@ -1,0 +1,56 @@
+registry_version: "1"
+datasets:
+  swivuriso:
+    name: Swivuriso / ZA African Next Voices Compressed
+    url: https://huggingface.co/datasets/dsfsi-anv/za-african-next-voices-compressed
+    state: APPROVED_METADATA
+    licence: CC-BY-4.0
+    restrictions:
+      - ASR_ONLY
+      - NO_TTS
+      - NO_VOICE_CLONING
+      - NO_SPEECH_SYNTHESIS
+      - NO_HUMAN_VOICE_REPLICATION
+    allowed_tasks: [ASR_TRAINING, ASR_EVALUATION]
+    exact_revision_required: true
+  afriswitch:
+    name: AfriSwitch
+    url: https://arxiv.org/abs/2608.26434
+    state: BLOCKED_ACQUISITION
+    licence: CC-BY-4.0
+    restrictions: [EXACT_DATASET_CARD_AND_REVISION_REQUIRED]
+    allowed_tasks: [ASR_EVALUATION]
+    exact_revision_required: true
+  common-voice-26-setswana:
+    name: Common Voice 26 Setswana
+    url: https://datacollective.mozilla.org/datasets/cmqi705f100gemf07q1khput8
+    state: APPROVED_METADATA
+    licence: CC0-1.0
+    restrictions: [SPEAKER_SAFE_SPLIT_REQUIRED]
+    allowed_tasks: [ASR_TRAINING, ASR_EVALUATION]
+    exact_revision_required: true
+    release: "26.0"
+  nchlt:
+    name: NCHLT
+    url: ""
+    state: BLOCKED_METADATA_REVIEW
+    licence: UNKNOWN
+    restrictions: [Exact hosted version and licence not approved.]
+    allowed_tasks: []
+    exact_revision_required: true
+  lwazi:
+    name: Lwazi
+    url: ""
+    state: BLOCKED_METADATA_REVIEW
+    licence: UNKNOWN
+    restrictions: [Exact hosted version and licence not approved.]
+    allowed_tasks: []
+    exact_revision_required: true
+  fleurs:
+    name: FLEURS
+    url: ""
+    state: BLOCKED_METADATA_REVIEW
+    licence: UNKNOWN
+    restrictions: [Exact hosted version and licence not approved.]
+    allowed_tasks: []
+    exact_revision_required: true
