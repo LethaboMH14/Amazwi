@@ -45,11 +45,23 @@ def main() -> int:
     try:
         try:
             client._token("collection")
-            client._token("disbursement")
+            print("MoMo OAuth: collection token obtained (value withheld).")
         except MomoApiError as exc:
             print(f"MoMo smoke failed: {exc}")
             return 1
-        print("MoMo OAuth: collection and disbursement tokens obtained (values withheld).")
+        # Disbursement is reported separately and is NOT fatal. MTN issues the
+        # two subscriptions independently, and a Collections-only credential
+        # set is a legitimate configuration -- it still satisfies the
+        # money-IN leg. Treating its absence as a failure previously hid a
+        # working collection token behind a red result.
+        if config.disbursement_subscription_key:
+            try:
+                client._token("disbursement")
+                print("MoMo OAuth: disbursement token obtained (value withheld).")
+            except MomoApiError as exc:
+                print(f"MoMo disbursement token failed (collection is unaffected): {exc}")
+        else:
+            print("MoMo disbursement: no subscription key configured — skipped, not failed.")
         if not args.confirm_test_transfer:
             print("No transfer sent. Use --confirm-test-transfer only for an approved sandbox test.")
             return 0

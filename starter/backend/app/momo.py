@@ -31,7 +31,13 @@ class MomoConfig:
     api_user: str
     api_key: str
     collection_subscription_key: str
-    disbursement_subscription_key: str
+    # Optional: MTN issues Collections and Disbursement subscriptions
+    # separately, and a team may hold only one. Requiring both meant a
+    # Collections-only credential set could not construct a config at all --
+    # so the money-IN leg (a sponsor funding a campaign) was unreachable
+    # purely because the money-OUT credential was absent. `_token()` still
+    # raises if a disbursement call is attempted without this key.
+    disbursement_subscription_key: str | None = None
     test_currency: str | None = None
     test_payer_msisdn: str | None = None
     test_payee_msisdn: str | None = None
@@ -64,7 +70,7 @@ class MomoConfig:
             api_user=required("MOMO_API_USER"),
             api_key=required("MOMO_API_KEY"),
             collection_subscription_key=required("MOMO_COLLECTION_SUBSCRIPTION_KEY"),
-            disbursement_subscription_key=required("MOMO_DISBURSEMENT_SUBSCRIPTION_KEY"),
+            disbursement_subscription_key=(os.environ.get("MOMO_DISBURSEMENT_SUBSCRIPTION_KEY") or "").strip() or None,
             test_currency=(os.environ.get("MOMO_TEST_CURRENCY") or "").strip() or None,
             test_payer_msisdn=(os.environ.get("MOMO_TEST_PAYER_MSISDN") or "").strip() or None,
             test_payee_msisdn=(os.environ.get("MOMO_TEST_PAYEE_MSISDN") or "").strip() or None,
@@ -93,6 +99,13 @@ class MomoClient:
             return cached[0]
         if product not in {"collection", "disbursement"}:
             raise MomoConfigurationError("unknown MoMo product")
+        if not getattr(self.config, f"{product}_subscription_key"):
+            # Explicit and specific, rather than sending `None` as a header and
+            # then reading the resulting 401 as a credential problem.
+            raise MomoConfigurationError(
+                f"MOMO_{product.upper()}_SUBSCRIPTION_KEY is not set; "
+                f"{product} calls are unavailable with this credential set"
+            )
         response = self.client.post(
             f"{self.config.base_url}/{product}/token/",
             auth=(self.config.api_user, self.config.api_key),
@@ -100,7 +113,13 @@ class MomoClient:
                 "Ocp-Apim-Subscription-Key": getattr(self.config, f"{product}_subscription_key"),
                 "X-Target-Environment": self.config.target_environment,
             },
-            data={"grant_type": "client_credentials"},
+            # NO request body. MTN's edge/WAF REJECTS a form body on this
+            # endpoint: sending `grant_type=client_credentials` comes back as
+            # HTTP *200* carrying an HTML "Request Rejected" page rather than
+            # JSON, which then surfaced here as the misleading "token response
+            # was invalid". The organiser's Collections doc posts an empty
+            # body, and that returns a real token. Verified against the live
+            # endpoint both ways -- do not add a body back.
         )
         if response.status_code >= 400:
             raise MomoApiError(f"MoMo {product} token failed (HTTP {response.status_code})")

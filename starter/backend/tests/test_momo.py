@@ -31,7 +31,13 @@ def test_token_is_cached_and_credentials_are_not_sent_in_request_body():
     def handler(request: httpx.Request) -> httpx.Response:
         calls.append(request)
         assert request.url.path == "/collection/token/"
-        assert request.content == b"grant_type=client_credentials"
+        # The token request must carry NO body. Verified against the live
+        # endpoint 2 Sep 2026: posting `grant_type=client_credentials` is
+        # rejected by MTN's edge/WAF, which replies HTTP *200* with an HTML
+        # "Request Rejected" page instead of JSON -- surfacing here as the
+        # misleading "token response was invalid". An empty body returns a
+        # real token. The organiser's Collections doc posts nothing too.
+        assert request.content == b""
         auth = request.headers["Authorization"]
         expected = base64.b64encode(b"api-user:api-key").decode()
         assert auth == f"Basic {expected}"
