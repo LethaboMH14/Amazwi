@@ -5,6 +5,23 @@
 
 ---
 
+### [03 Sep] — Sbu (Claude, direct) · finalised all remaining deck-fix text from Codex's checklist
+
+**DID**
+- Wrote exact, final paste-ready text for the two remaining card fixes Codex flagged: card 2 (market gap) and the MoMo evidence card (now explicitly "sandbox Collections funding request," with the 202/200-does-not-mean-paid distinction stated on the card itself, not only spoken).
+- Wrote a new pilot-outcomes card (repeat MoMo opens, funded mission participation, cost per eligible contribution, verifier liquidity, settlement feasibility, usefulness of intent-labelled speech) — Codex's point that this was under-expressed in the deck relative to the script was correct; the deck without it reads as a language game, not a business pilot.
+- Turned the banned-phrase item into a concrete search checklist (exact fragments to grep for on each card) rather than leaving it as a vague reminder.
+- Left the cover-slide item as verification-only, correctly: there is nothing to write, only to check the logo band hasn't been silently replaced with a fabricated logo.
+- Could not apply any of this to the live Gamma pixels directly — no per-card edit tool exists for an existing Gamma, and credits are nearly exhausted. All six items in `PITCH_SCRIPT.md`'s checklist now have either exact final text or a precise, bounded check; none are open-ended anymore.
+
+**NEXT**
+- Human pass in the Gamma editor against the finalised checklist.
+- Rehearse the six-beat script end to end against a stopwatch once the deck matches.
+
+**BLOCKED-PING:** none — this was the last piece of prep work reachable from inside this environment; everything left is manual editor work + rehearsal.
+
+---
+
 ### [03 Sep] — Sbu (Claude, direct) · applied Codex's external review of the pitch (84/100, ceiling ~88-90)
 
 **DID**

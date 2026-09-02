@@ -109,12 +109,47 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 ---
 
 ## Deck fixes still needed in the live Gamma (manual, not yet verified from this environment)
-1. **Cover slide:** confirm the logo band is still empty (real MTN/MoMo logos not yet pasted in) or deliberately neutral, not a fabricated logo.
-2. **Card 2:** replace with the sourced market-gap text above (shorter version, two stats not seven).
+
+All six items below now have final, exact text or a precise check to perform. None of this can be applied programmatically (no per-card edit tool for a live Gamma, and Gamma credits are nearly exhausted) — each needs a human pass in the editor.
+
+1. **Cover slide — verification only, no text change.** Open card 1 and confirm the logo band still reads as empty/placeholder ("[LOGO ZONE...]" or similar), not a fabricated MTN/MoMo logo. If real logo files are available, paste them into that band now; if not, leave the placeholder text exactly as-is — an honest empty band beats a fake logo every time.
+
+2. **Card 2 — paste this exact text, replacing whatever is currently there:**
+
+   > **African languages are structurally missing from speech AI. This is a data gap, not a demand gap.**
+   >
+   > Foundation ASR models exceed 100% word-error-rate zero-shot on Southern Bantu languages. For a real person, that means South African languages are effectively unusable with today's voice AI.
+   >
+   > MTN already has the daily-use surface this data needs to come from: MoMo. A funded, verified mini-app mission turns that surface into a source of governed, consented language data MTN doesn't have today.
+
 3. ~~**Em dashes:** sweep every remaining card for "—" and replace with comma, period, or colon.~~ **Done (3 Sep, Sbu, manual pass in Gamma editor).**
-4. **MoMo card:** must say "sandbox Collections funding request", not simply "real transaction." A 202 request and 200 status do not mean a speaker was paid; make that distinction visible on the card itself, not only in the spoken line.
-5. **Banned phrases, confirm none of these appear anywhere in the deck:** "your MoMo wallet is credited", "cash-out is live", "money crossed MoMo twice", "k-anonymised", "the dataset nobody else has built", any guaranteed MTN revenue or savings percentage.
-6. **Add or preserve a visible line (not just spoken) on what the pilot measures:** repeat MoMo opens, funded mission participation, cost per eligible contribution, verifier liquidity, settlement feasibility, usefulness of intent-labelled speech. This is currently under-expressed in the deck relative to the script; without it the deck can still read as a governed language game rather than a business product for MTN.
+
+4. **MoMo evidence card — paste this exact text, replacing whatever is currently there:**
+
+   > **Sandbox Collections funding request**
+   >
+   > OAuth token issued. requesttopay accepted, status 202. Status confirmed, status 200.
+   >
+   > A 202 request and a 200 status confirm the funding call reached MTN's sandbox. They do not mean a speaker was paid. This funds the mission, via the AMAZWI ledger. Speaker cash-out is a separate, not-yet-built settlement leg.
+
+5. **Banned-phrase sweep — verification checklist, search every card for these exact fragments and rewrite any hit:**
+   - "your MoMo wallet is credited"
+   - "cash-out is live"
+   - "money crossed MoMo twice"
+   - "k-anonymised" / "k-anonymity" (not implemented in this build)
+   - "the dataset nobody else has built"
+   - any percentage or number attached to MTN revenue, savings, or margin
+   - "only" / "first" used as a competitive superlative
+
+6. **Pilot-outcomes card — paste this exact text as a new card (or append to the existing Proven/Pilot/Not Built card if there's room), so this is visible, not only spoken:**
+
+   > **What the pilot measures**
+   >
+   > Repeat MoMo opens. Funded mission participation. Cost per eligible contribution. Verifier liquidity. Settlement feasibility. Usefulness of intent-labelled speech for MTN's own voice products.
+   >
+   > None of these numbers exist yet. Each is a commitment to measure and report back, not a claim.
+
+   This card matters more than its size suggests: without a visible commercial-outcomes line, the deck reads as a governed language game. With it, it reads as a proposed MoMo engagement and voice-intent pilot — which is what it actually is.
 
 ---
 
