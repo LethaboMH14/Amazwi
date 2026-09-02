@@ -210,23 +210,60 @@
 .route {
   position: relative;
   isolation: isolate;
+  /* Ambient glow now lives in this stack rather than on ::before, which is
+     freed up for the shweshwe print below. Gradients cannot contribute to
+     scrollWidth, so this stays safe for the 200%-zoom reflow gate. */
   background:
+    radial-gradient(circle 340px at 8% 22%, var(--glow), transparent 70%),
     radial-gradient(ellipse 130% 55% at 12% -8%, var(--ground-2, #1E2547) 0%, transparent 60%),
     radial-gradient(ellipse 100% 45% at 96% 30%, rgba(232, 38, 127, 0.13) 0%, transparent 62%),
     linear-gradient(174deg, var(--ground) 0%, var(--ground-deep) 100%);
 }
 
-/* Ambient glow behind the focal element — the single biggest craft
-   win per the v2 README. Kept as an inset-0 background so it can
-   never contribute to scrollWidth. */
+/* ---- THE SHWESHWE PRINT.
+
+   tokens.css has defined --texture (a real shweshwe motif: concentric
+   circles with four-point diamonds) and --texture-opacity since the
+   design system was written, along with a .texture::before primitive to
+   apply it. NOTHING in the React app ever used either one.
+
+   That is the actual reason the UI read generic. The default theme is
+   named "Midnight Shweshwe" and carried no shweshwe at all; strip the
+   cultural layer out and what remains -- dark ground, soft glow,
+   gradient display type -- is the exact interchangeable signature
+   04_assets/reference/REFERENCE.md warns about by name.
+
+   The token already carries the per-theme intent: 0.30 on Midnight,
+   0.22 on Red Earth, 0 on Dusk/Ndebele/Ink. Honouring it here means the
+   print appears exactly where the design system says it should and
+   nowhere else, with no per-theme code. ---- */
 .route::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background: radial-gradient(circle 340px at 8% 22%, var(--glow), transparent 70%);
-  opacity: 0.75;
+  background-image: var(--texture);
+  /* Scaled, not overridden. --texture-opacity encodes per-theme INTENT
+     (0.30 Midnight, 0.22 Red Earth, 0 elsewhere) and was calibrated for a
+     card-sized surface; at full-bleed the same value reads as busy
+     wallpaper. Multiplying keeps every theme's relative weight and keeps
+     the zeroes at zero, so no per-theme special-casing is needed here. */
+  opacity: calc(var(--texture-opacity, 0) * 0.4);
+  /* Masked deliberately. 04_assets/reference/REFERENCE.md's own conclusion
+     from the Figma Community search -- where a search for textile-pattern
+     app UI returned ZERO results -- was that the direction is genuinely
+     differentiated but carries real execution risk, and the mitigation is
+     restraint: "pattern belongs in a border, a divider, a low-opacity
+     watermark -- never a bold full-bleed background wash behind body text.
+     Pattern-as-accent, not pattern-as-wallpaper."
+
+     Rendering it unmasked at the token's full 0.30 broke exactly that rule
+     and competed with the copy. This mask clears the centre-left column
+     where text and controls sit and lets the print show at the periphery,
+     so the cultural signature is present without fighting legibility. */
+  -webkit-mask-image: radial-gradient(ellipse 78% 52% at 26% 34%, transparent 30%, #000 78%);
+  mask-image: radial-gradient(ellipse 78% 52% at 26% 34%, transparent 30%, #000 78%);
 }
 
 /* Film grain: ~400 bytes, no asset request. Turns flat fill into
