@@ -5,6 +5,32 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · ledger integrity verified · the negative path is proven too
+
+**DID**
+- Queried the live demo database directly after Codex's golden-path runs (they ran against this machine's Postgres, so the evidence was here). Found 2 contributions / 2 eligibility decisions but only **1** reward event, and checked whether a reward had been silently dropped — that would be a ledger-integrity failure and my call to rule on.
+- **It had not. The ledger is correct.** Row data:
+
+| contribution | state | understood | corpus_eligible | rewards |
+|---|---|---|---|---|
+| `3bf73baa…` | `UNVALIDATED` | false | false | **0** |
+| `dfc6bf86…` | `CORPUS_ELIGIBLE` | true | true | **1** |
+
+- The `UNVALIDATED` row's stored reason is *"not both verifier answers matched accepted_answers"*. The resolver **refused to pay** because the two verifiers did not agree, then paid exactly once on the contribution that did qualify.
+
+**WHY THIS MATTERS MORE THAN IT LOOKS**
+- The golden path is now proven in **both directions**, not just the happy one. Until now every demonstration was a success case; this is real evidence that the refusal branch works on real data, which is the branch that actually protects the campaign budget.
+- It is also the strongest honest demo beat available: *"when two people don't agree, nobody gets paid — here is the row."* That is a claim backed by a database record rather than a slide, which is exactly the standard `07_TRUTH.md` sets. Worth putting in front of judges deliberately rather than only showing the success path.
+
+**ALSO CONFIRMED — demo run state accumulates**
+- `contributions=2, assignments=4, rewards=1, audio=2, decisions=2` persist between takes. `seed_demo.py` is idempotent for cards/users/campaigns but clears none of this.
+- Narrower risk than first assumed: the frontend passes `contribution_id` explicitly to `/assignments/next`, so a verifier should not be served a stale clip. The real cost is no known baseline — takes accumulate and aggregate/Impact Map numbers drift between demos. Still worth a reset path for repeated takes; not worth over-engineering.
+
+**NEXT**
+- Reset path, full suite re-run after the transaction-commit changes, and the browser flow against a live backend all remain open with Codex.
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · root-caused the golden-path blocker · 🔴 consent revocation still discarded
 
 **DID**
