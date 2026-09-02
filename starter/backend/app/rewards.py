@@ -163,3 +163,99 @@ def build_catalogue(
         provider_connected=connected,
         rows=rows,
     )
+
+
+# --- redemption -------------------------------------------------------
+
+
+class RedemptionRefused(Exception):
+    """The catalogue would not allow this redemption right now."""
+
+    def __init__(self, code: str, message: str):
+        super().__init__(message)
+        self.code = code
+
+
+def item_for(key: str) -> CatalogueItem | None:
+    for item in CATALOGUE:
+        if item.key == key:
+            return item
+    return None
+
+
+def redeem(
+    session: Session,
+    *,
+    user_id: uuid.UUID,
+    key: str,
+    provider_mode: str,
+    provider,
+    idempotency_key: str,
+):
+    """Turn ledger credit into a real provider payment attempt.
+
+    This is the leg that was missing: before this, the resolver credited
+    `reward_events` and the money stopped there -- `PaymentAttempt` was
+    never written and the provider adapter was never called by anything
+    except its own unit tests.
+
+    The order matters and is deliberate:
+
+      1. Re-derive availability server-side. The client cannot ask to
+         redeem something the catalogue refuses, whatever it rendered.
+      2. `request_cash_out` reserves against the ledger. It is
+         idempotent on `idempotency_key` and refuses to reserve beyond
+         the available balance, in the same transaction as the insert.
+      3. Only then call the provider adapter, and record the reference
+         it returns.
+
+    Under `DemoProvider` this is a labelled simulation and must never be
+    described as settlement. The state it returns is the provider's own.
+
+    CROSS-LANE, PENDING SBU'S REVIEW -- this moves value out of the
+    ledger, which is his call per 05_BUILD.md section 2.
+    """
+    from app.ledger import InsufficientBalanceError, request_cash_out
+
+    item = item_for(key)
+    if item is None:
+        raise RedemptionRefused("UNKNOWN_REWARD", f"no reward named {key!r}")
+
+    view = build_catalogue(session, user_id=user_id, provider_mode=provider_mode)
+    row = next(r for r in view.rows if r.item.key == key)
+
+    if row.availability is Availability.PROVIDER_NOT_CONNECTED:
+        raise RedemptionRefused(
+            "PROVIDER_NOT_CONNECTED",
+            "no live MoMo provider is connected, so nothing can be redeemed",
+        )
+    if row.availability is Availability.INSUFFICIENT_CREDIT:
+        raise RedemptionRefused(
+            "INSUFFICIENT_CREDIT",
+            f"{row.shortfall_cents}c more credit is needed for {item.title}",
+        )
+
+    try:
+        attempt = request_cash_out(
+            session,
+            user_id=user_id,
+            amount_cents=item.threshold_cents,
+            provider_mode=provider_mode,
+            idempotency_key=idempotency_key,
+        )
+    except InsufficientBalanceError as exc:
+        # The ledger is the authority, not the catalogue view above.
+        raise RedemptionRefused("INSUFFICIENT_CREDIT", str(exc)) from exc
+
+    # Already submitted under this key: return it rather than paying twice.
+    if attempt.provider_reference is None:
+        submitted = provider.submit(
+            user_ref=str(user_id),
+            amount_cents=item.threshold_cents,
+            idempotency_key=idempotency_key,
+        )
+        attempt.provider_reference = submitted.provider_reference
+        attempt.state = submitted.state
+        session.commit()
+
+    return attempt

@@ -217,3 +217,118 @@ def test_availability_for_is_pure_and_total():
         )
         is Availability.REDEEMABLE
     )
+
+
+# --- redemption: the payment leg that was missing ---------------------
+
+
+class _RecordingProvider:
+    """Stands in for DemoProvider, and records what it was asked to do."""
+
+    def __init__(self, mode="live"):
+        self.mode = mode
+        self.calls = []
+
+    def submit(self, user_ref, amount_cents, idempotency_key):
+        from app.provider import PaymentAttempt as ProviderAttempt, PaymentState
+        from datetime import datetime, timezone
+
+        self.calls.append((user_ref, amount_cents, idempotency_key))
+        return ProviderAttempt(
+            id=f"prov-{len(self.calls)}",
+            user_ref=user_ref,
+            amount_cents=amount_cents,
+            provider_mode=self.mode,
+            provider_reference=f"ref-{len(self.calls)}",
+            state=PaymentState.SUBMITTED,
+            requested_at=datetime.now(timezone.utc),
+        )
+
+
+def test_redeem_creates_a_payment_attempt_and_calls_the_provider(db_session):
+    """The leg that did not exist before: credit -> provider call."""
+    from app.models import PaymentAttempt
+    from app.rewards import redeem
+    from sqlalchemy import select
+
+    user = _user(db_session, "sub-redeem", "Redeemer")
+    _credit(db_session, user, 5000)
+    provider = _RecordingProvider()
+
+    attempt = redeem(
+        db_session,
+        user_id=user.id,
+        key="airtime",
+        provider_mode="live",
+        provider=provider,
+        idempotency_key="redeem-1",
+    )
+
+    assert provider.calls == [(str(user.id), 500, "redeem-1")]
+    assert attempt.provider_reference == "ref-1"
+    rows = db_session.execute(select(PaymentAttempt)).scalars().all()
+    assert len(rows) == 1
+    assert rows[0].amount_cents == 500
+
+
+def test_redeem_is_idempotent_on_the_key(db_session):
+    """A double-tapped Redeem reserves once and pays once."""
+    from app.models import PaymentAttempt
+    from app.rewards import redeem
+    from sqlalchemy import select
+
+    user = _user(db_session, "sub-idem", "Double Tapper")
+    _credit(db_session, user, 5000)
+    provider = _RecordingProvider()
+
+    first = redeem(db_session, user_id=user.id, key="airtime",
+                   provider_mode="live", provider=provider, idempotency_key="same")
+    second = redeem(db_session, user_id=user.id, key="airtime",
+                    provider_mode="live", provider=provider, idempotency_key="same")
+
+    assert first.id == second.id
+    assert len(provider.calls) == 1, "provider must not be called twice"
+    assert len(db_session.execute(select(PaymentAttempt)).scalars().all()) == 1
+
+
+def test_demo_provider_redemption_is_refused_at_the_service_layer(db_session):
+    """Not just hidden in the UI -- the service refuses it outright."""
+    from app.rewards import RedemptionRefused, redeem
+
+    user = _user(db_session, "sub-demo-redeem", "Demo User")
+    _credit(db_session, user, 100_000)
+    provider = _RecordingProvider(mode="demo")
+
+    with pytest.raises(RedemptionRefused) as exc:
+        redeem(db_session, user_id=user.id, key="airtime",
+               provider_mode="demo", provider=provider, idempotency_key="d1")
+    assert exc.value.code == "PROVIDER_NOT_CONNECTED"
+    assert provider.calls == [], "the provider must never be called in demo mode"
+
+
+def test_redeem_refuses_beyond_the_ledger_balance(db_session):
+    from app.rewards import RedemptionRefused, redeem
+
+    user = _user(db_session, "sub-poor", "Low Balance")
+    _credit(db_session, user, 100)  # below the R5 airtime threshold
+    provider = _RecordingProvider()
+
+    with pytest.raises(RedemptionRefused) as exc:
+        redeem(db_session, user_id=user.id, key="airtime",
+               provider_mode="live", provider=provider, idempotency_key="p1")
+    assert exc.value.code == "INSUFFICIENT_CREDIT"
+    assert provider.calls == []
+
+
+def test_redeem_refuses_an_unknown_reward(db_session):
+    from app.rewards import RedemptionRefused, redeem
+
+    user = _user(db_session, "sub-unknown", "Curious")
+    _credit(db_session, user, 100_000)
+    provider = _RecordingProvider()
+
+    with pytest.raises(RedemptionRefused) as exc:
+        redeem(db_session, user_id=user.id, key="free_iphone",
+               provider_mode="live", provider=provider, idempotency_key="u1")
+    assert exc.value.code == "UNKNOWN_REWARD"
+    assert provider.calls == []

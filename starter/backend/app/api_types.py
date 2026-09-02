@@ -246,3 +246,20 @@ class RewardsResponse(BaseModel):
     """Redemption thresholds are placeholders pending Sbu's money review."""
     items: list[CatalogueRowResponse]
     generated_at: datetime
+
+
+class RedemptionResponse(BaseModel):
+    """A provider payment attempt created from ledger credit.
+
+    `provider_mode` is always present so no reader can mistake a demo
+    simulation for settlement.
+    """
+
+    attempt_id: str
+    reward_key: str
+    amount_cents: int = Field(gt=0)
+    provider_mode: str
+    provider_reference: str | None
+    state: str
+    is_real_settlement: bool = False
+    """False under any non-live provider. Never hide this."""

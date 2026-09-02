@@ -19,9 +19,13 @@ in seed_demo.py. This must never be reachable from a production process.
 """
 from __future__ import annotations
 
+import hashlib
+import math
 import os
+import struct
 import uuid
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
@@ -92,6 +96,33 @@ SCRIPT: tuple[tuple[str, int, int, bool], ...] = (
     ("tn", 1, 5, True),
     ("tn", 0, 6, True),
 )
+
+
+def _wav_bytes(seed: int, *, seconds: float = 1.2, rate: int = 8000) -> bytes:
+    """A short, real, playable mono WAV.
+
+    Written because the first version of this seeder inserted AudioObject
+    rows with a zeroed sha256 and never wrote any file. Every seeded clip
+    was therefore a database record asserting audio that did not exist,
+    and a verifier pressing play got silence with no error -- the exact
+    "row claims something is there when it isn't" failure this project
+    forbids. The tone is deterministic per contribution so re-seeding is
+    still idempotent, and it is obviously synthetic so nobody can mistake
+    it for a real recording.
+    """
+    frames = int(rate * seconds)
+    freq = 220.0 + (seed % 7) * 55.0
+    body = bytearray()
+    for i in range(frames):
+        # Fade in/out so it does not click, and stays clearly a test tone.
+        envelope = min(1.0, i / 400, (frames - i) / 400)
+        sample = int(12000 * envelope * math.sin(2 * math.pi * freq * i / rate))
+        body += struct.pack("<h", sample)
+    data = bytes(body)
+    header = b"RIFF" + struct.pack("<I", 36 + len(data)) + b"WAVEfmt "
+    header += struct.pack("<IHHIIHH", 16, 1, 1, rate, rate * 2, 2, 16)
+    header += b"data" + struct.pack("<I", len(data))
+    return header + data
 
 
 def _uid(*parts: str) -> uuid.UUID:
@@ -180,6 +211,7 @@ def _active_reward_rule(session: Session, language: str) -> CampaignRewardRule |
 
 def seed_activity(session: Session, *, now: datetime | None = None) -> dict[str, int]:
     now = now or datetime.now(timezone.utc)
+    audio_root = Path(os.environ.get("AMAZWI_PRIVATE_AUDIO_ROOT") or ".private_audio")
     created = {"contributions": 0, "resolved": 0, "unresolved": 0, "skipped": 0}
     contributors = _ensure_contributors(session, now)
 
@@ -233,17 +265,25 @@ def seed_activity(session: Session, *, now: datetime | None = None) -> dict[str,
         )
         session.flush()
 
+        # Write the real bytes first, then record what was actually
+        # written -- hash and length are measured, never asserted.
+        object_key = f"demo/{contribution_id}"
+        payload = _wav_bytes(step)
+        audio_path = audio_root / f"{object_key}.bin"
+        audio_path.parent.mkdir(parents=True, exist_ok=True)
+        audio_path.write_bytes(payload)
+
         session.add(
             AudioObject(
                 id=_uid("audio", str(contribution_id)),
                 contribution_id=contribution_id,
-                object_key=f"demo/{contribution_id}",
+                object_key=object_key,
                 state=AudioObjectState.AVAILABLE,
-                sha256="0" * 64,
-                byte_length=8_000,
-                mime_type="audio/webm",
-                codec="opus",
-                duration_ms=8_000,
+                sha256=hashlib.sha256(payload).hexdigest(),
+                byte_length=len(payload),
+                mime_type="audio/wav",
+                codec="pcm_s16le",
+                duration_ms=1_200,
             )
         )
 

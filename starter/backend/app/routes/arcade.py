@@ -15,12 +15,13 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.api_types import (
     ArcadeDashboardResponse,
     CatalogueRowResponse,
+    RedemptionResponse,
     RewardsResponse,
     DeckSummaryResponse,
     InvitationRowResponse,
@@ -40,7 +41,7 @@ from app.arcade import (
     progression_for_user,
     speaker_outcomes,
 )
-from app.rewards import build_catalogue
+from app.rewards import RedemptionRefused, build_catalogue, is_live_provider, redeem
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
 
@@ -201,4 +202,52 @@ def rewards(
             for row in view.rows
         ],
         generated_at=datetime.now(timezone.utc),
+    )
+
+
+@router.post("/rewards/{key}/redeem", response_model=RedemptionResponse)
+@router.post(
+    "/api/rewards/{key}/redeem",
+    response_model=RedemptionResponse,
+    include_in_schema=False,
+)
+def redeem_reward(
+    key: str,
+    idempotency_key: str = Header(alias="Idempotency-Key"),
+    session: Session = Depends(get_session),
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+) -> RedemptionResponse:
+    """Spend ledger credit through the payment provider.
+
+    This is the leg the golden path was missing: peers agree -> resolver
+    credits `reward_events` -> (previously nothing) -> now a real
+    `PaymentAttempt` and a real provider adapter call.
+
+    `Idempotency-Key` is required, not optional: a double-tapped Redeem
+    must reserve once, and the ledger enforces that on the key.
+    """
+    from app.main import provider
+
+    user = require_identity_user(session, identity)
+    try:
+        attempt = redeem(
+            session,
+            user_id=user.id,
+            key=key,
+            provider_mode=provider.mode,
+            provider=provider,
+            idempotency_key=idempotency_key,
+        )
+    except RedemptionRefused as exc:
+        # 409, not 400: the request is well-formed, the state refuses it.
+        raise HTTPException(status_code=409, detail={"code": exc.code, "detail": str(exc)})
+
+    return RedemptionResponse(
+        attempt_id=str(attempt.id),
+        reward_key=key,
+        amount_cents=attempt.amount_cents,
+        provider_mode=attempt.provider_mode,
+        provider_reference=attempt.provider_reference,
+        state=attempt.state.value if hasattr(attempt.state, "value") else str(attempt.state),
+        is_real_settlement=is_live_provider(attempt.provider_mode),
     )
