@@ -2072,3 +2072,9 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **DID:** Verified exact seeded speaker/verifier header pairs, then ran contribution creation, audio upload/finalisation, two independent verifier answers, resolver and result receipt over HTTP.
 - **HOW:** Used card `zu-001` (`467e6241-cb06-5395-aaa8-d63832bcc538`) and accepted answer `indiza`.
 - **RESULT:** `AVAILABLE` audio; resolver `CORPUS_ELIGIBLE`; `understood=true`; reward receipt `200` minor units (R2.00 ZAR); reason confirms both verifiers, audio quality and active consent. `AUDIO_NOT_AUTHORISED` did not recur.
+
+### [02 Sep] — Sibusiso · deterministic demo reset
+
+- **DID:** Added a guarded CLI-only `python -m app.seed_demo --reset` path that clears transient take state and local audio while preserving seeded cards, users, consents, qualifications, campaigns and reward rules.
+- **SAFETY:** Requires `AMAZWI_ALLOW_DEMO_RESET=true`, refuses non-demo campaigns and contribution-linked export rows, and exposes no HTTP reset route.
+- **VERIFY:** Two complete HTTP takes separated by reset both returned `AVAILABLE`, `CORPUS_ELIGIBLE`, and R2.00; final baseline counts were contributions=0, assignments=0, rewards=0, audio=0, decisions=0; reset tests 3/3 passed.

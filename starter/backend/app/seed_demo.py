@@ -4,22 +4,27 @@ deterministic-reset requirement in 05_BUILD.md).
 
 Usage:
     python -m app.seed_demo
+    AMAZWI_ALLOW_DEMO_RESET=true python -m app.seed_demo --reset
 
 Loads 05_amazwi/content/cards_isizulu.json and cards_setswana.json (repo
 root, three levels up from this file) into real Card rows against
 whatever AMAZWI_DATABASE_URL / AMAZWI_TEST_DATABASE_URL points at.
 
 Not wired into any HTTP route on purpose -- run it explicitly before a
-demo, not as an app-boot side effect. A real reset endpoint (delete +
-re-seed over HTTP) is a separate, smaller follow-up if time allows.
+demo, not as an app-boot side effect. Reset is guarded, refuses databases
+containing non-demo campaigns or exported contribution rows, and remains
+structurally unavailable over HTTP.
 """
 from __future__ import annotations
 
+import argparse
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import NAMESPACE_URL, uuid5
 
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.orm import Session
 
 from app.db import get_engine
@@ -27,8 +32,19 @@ from app.models import (
     Campaign,
     CampaignRewardRule,
     Card,
+    Assignment,
+    AudioObject,
+    AuditEvent,
+    Contribution,
     ConsentGrant,
     ConsentScope,
+    CouncilOutput,
+    DatasetExportRow,
+    EligibilityDecision,
+    OutboxEvent,
+    PaymentAttempt,
+    Receipt,
+    RewardEvent,
     User,
     VerifierQualification,
 )
@@ -52,6 +68,7 @@ LANGUAGES = {
 }
 
 REWARD_CENTS = 200  # R2.00 per contribution, matches the published rate in the plan
+RESET_GUARD_ENV = "AMAZWI_ALLOW_DEMO_RESET"
 
 
 def _now():
@@ -146,9 +163,58 @@ def _upsert_card(session: Session, campaign: Campaign, raw: dict) -> None:
     )
 
 
-def seed() -> None:
+def _reset_demo_state(session: Session) -> None:
+    """Return a demo-only database to its seeded, pre-take baseline.
+
+    This is deliberately CLI-only and requires an explicit environment guard.
+    It refuses mixed/non-demo campaign databases and preserves seeded content,
+    identities, consents, qualifications, campaigns and reward rules.
+    """
+    if os.environ.get(RESET_GUARD_ENV, "").lower() != "true":
+        raise RuntimeError(f"demo reset requires {RESET_GUARD_ENV}=true")
+
+    non_demo_campaigns = session.scalar(
+        select(func.count()).select_from(Campaign).where(Campaign.provider_mode != "DEMO_PROVIDER")
+    )
+    if non_demo_campaigns:
+        raise RuntimeError("demo reset refused: non-demo campaigns are present")
+
+    exported_rows = session.scalar(
+        select(func.count()).select_from(DatasetExportRow).where(DatasetExportRow.contribution_id.is_not(None))
+    )
+    if exported_rows:
+        raise RuntimeError("demo reset refused: dataset export rows reference run state")
+
+    audio_keys = session.scalars(select(AudioObject.object_key)).all()
+    audio_root = Path(os.environ.get("AMAZWI_PRIVATE_AUDIO_ROOT") or ".private_audio")
+    for object_key in audio_keys:
+        audio_path = audio_root / object_key
+        if audio_path.is_file():
+            audio_path.unlink()
+
+    # Delete dependants before their parent contribution. Generic outbox/audit
+    # rows are transient demo evidence and must not drift between judge takes.
+    for model in (
+        CouncilOutput,
+        OutboxEvent,
+        Receipt,
+        RewardEvent,
+        EligibilityDecision,
+        Assignment,
+        AudioObject,
+        PaymentAttempt,
+        AuditEvent,
+        Contribution,
+    ):
+        session.execute(delete(model))
+    session.execute(update(Campaign).values(committed_cents=0))
+
+
+def seed(*, reset: bool = False) -> None:
     engine = get_engine()
     with Session(engine) as session:
+        if reset:
+            _reset_demo_state(session)
         for lang_code, meta in LANGUAGES.items():
             campaign = _get_or_create_campaign(session, f"campaign:{lang_code}", name=meta["campaign_name"], language=lang_code)
 
@@ -197,4 +263,10 @@ def seed() -> None:
 
 
 if __name__ == "__main__":
-    seed()
+    parser = argparse.ArgumentParser(description="Seed the local AMAZWI demo database")
+    parser.add_argument(
+        "--reset",
+        action="store_true",
+        help=f"clear transient demo run state first (requires {RESET_GUARD_ENV}=true)",
+    )
+    seed(reset=parser.parse_args().reset)

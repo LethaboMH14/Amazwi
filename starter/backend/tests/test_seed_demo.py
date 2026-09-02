@@ -1,5 +1,6 @@
 from sqlalchemy import func, select
-from app.models import Card, Campaign, CampaignRewardRule, ConsentGrant, User, VerifierQualification
+from sqlalchemy.orm import Session
+from app.models import Card, Campaign, CampaignRewardRule, ConsentGrant, Contribution, User, VerifierQualification
 from app import seed_demo
 
 
@@ -73,3 +74,51 @@ def test_seed_demo_is_idempotent(db_engine, monkeypatch):
             )
         ).scalar_one()
         assert bad == 0
+
+
+def test_reset_returns_demo_to_known_baseline(db_engine, monkeypatch):
+    monkeypatch.setenv("AMAZWI_DATABASE_URL", str(db_engine.url))
+    monkeypatch.setenv(seed_demo.RESET_GUARD_ENV, "true")
+    seed_demo.get_engine.cache_clear()
+    seed_demo.seed(reset=True)
+
+    campaign_id = seed_demo._id("campaign:zu")
+    speaker_id = seed_demo._id("speaker:zu")
+    card_id = seed_demo._id("card:zu-001")
+    with Session(seed_demo.get_engine()) as session:
+        rule = session.scalar(
+            select(CampaignRewardRule).where(CampaignRewardRule.campaign_id == campaign_id)
+        )
+        contribution = Contribution(
+            speaker_id=speaker_id,
+            card_id=card_id,
+            declared_language="zu",
+            reward_rule_id=rule.id,
+        )
+        session.add(contribution)
+        session.get(Campaign, campaign_id).committed_cents = 200
+        session.commit()
+        contribution_id = contribution.id
+
+    seed_demo.seed(reset=True)
+
+    # A separate connection proves reset state was committed, while seeded
+    # identities/content/campaigns remain available for the next take.
+    with seed_demo.get_engine().connect() as conn:
+        assert conn.scalar(
+            select(func.count()).select_from(Contribution).where(Contribution.id == contribution_id)
+        ) == 0
+        assert conn.scalar(select(Campaign.committed_cents).where(Campaign.id == campaign_id)) == 0
+        assert conn.scalar(select(func.count()).select_from(Card).where(Card.id == card_id)) == 1
+        assert conn.scalar(select(func.count()).select_from(User).where(User.id == speaker_id)) == 1
+
+
+def test_reset_requires_explicit_guard(db_engine, monkeypatch):
+    monkeypatch.setenv("AMAZWI_DATABASE_URL", str(db_engine.url))
+    monkeypatch.delenv(seed_demo.RESET_GUARD_ENV, raising=False)
+    seed_demo.get_engine.cache_clear()
+
+    import pytest
+
+    with pytest.raises(RuntimeError, match=seed_demo.RESET_GUARD_ENV):
+        seed_demo.seed(reset=True)
