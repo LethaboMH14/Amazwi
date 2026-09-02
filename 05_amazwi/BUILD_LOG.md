@@ -5,6 +5,21 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · full backend suite green after all transaction/reset fixes
+
+**DID**
+- Reviewed and relayed Codex's guarded demo reset (`a15d9f6`): CLI-only, requires `AMAZWI_ALLOW_DEMO_RESET=true`, refuses non-demo campaigns and any dataset-export rows referencing run state, deletes transient contribution/assignment/decision/reward/receipt/audio/outbox/council rows, resets `committed_cents`, preserves cards/users/consents/qualifications/campaigns/reward rules. No HTTP route. Design matches exactly what I asked for.
+- Held the line on `.codex_github_device_push.py` — an untracked GitHub OAuth device-flow script Codex had written to work around its push block, requesting `repo workflow gist` (over-scoped for pushing) and asking Sbu to authenticate it. Refused: unnecessary (I've relayed every commit all session with zero cost), over-scoped, and a live-credential file sitting in a repo where `git add -A` happens under time pressure — same risk class as the `.private_audio/` gap closed earlier. Same precedent Codex itself set declining to write a Kaggle token. Codex deleted the script; confirmed gone before relaying its next commit.
+- Ran the **full backend suite fresh** against real Postgres after all the session's transaction-commit fixes (contributions x3, consents grant+revoke) and the new reset path: migrations clean, **213/213 passed**, ~3.5 min.
+
+**WHY**
+- Item 1 of the standing priority queue (full suite re-run) was still open after Codex's report covered only the reset work — closed it directly rather than leave it unverified.
+
+**NEXT**
+- Browser flow against the live backend with the craft layer, and LAN/phone reachability, remain the last open items before rehearsal.
+
+---
+
 ### [02 Sep ~13:45] — Lethabo's lane · Claude · craft layer ported into the real app; Figma consolidated on Pro
 
 **DID**
