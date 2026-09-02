@@ -21,7 +21,7 @@ from app.consent import ConsentRequiredError
 from app.consent import require_active_scope
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
-from app.models import AudioObject, ConsentScope, Contribution
+from app.models import Assignment, AudioObject, ConsentScope, Contribution
 from app.storage import AudioUnavailable, InvalidAudioToken, LocalAudioObjectStore
 
 
@@ -163,10 +163,29 @@ def play_audio(
         payload = store.token_payload(token)
         audio = session.scalar(select(AudioObject).where(AudioObject.object_key == payload.get("key")))
         contribution = session.get(Contribution, audio.contribution_id) if audio else None
-        if contribution is None or contribution.speaker_id != identity.user_id:
+        if contribution is None:
             raise InvalidAudioToken("audio token is not authorised for this user")
-        require_active_scope(session, identity.user_id, ConsentScope.RECORD_PROCESS_ROUND)
-        body = store.open_private(token, audience=str(identity.user_id), now=now, purpose="REPLAY").read()
+        if payload.get("purpose") == "REPLAY":
+            if contribution.speaker_id != identity.user_id:
+                raise InvalidAudioToken("audio token is not authorised for this user")
+            require_active_scope(session, identity.user_id, ConsentScope.RECORD_PROCESS_ROUND)
+        elif payload.get("purpose") == "VERIFY":
+            assignment = session.scalar(select(Assignment).where(
+                Assignment.contribution_id == contribution.id,
+                Assignment.verifier_id == identity.user_id,
+            ))
+            if assignment is None:
+                raise InvalidAudioToken("audio token is not authorised for this user")
+            require_active_scope(session, contribution.speaker_id, ConsentScope.ASSIGNED_VERIFIER_PLAYBACK)
+            require_active_scope(session, identity.user_id, ConsentScope.ASSIGNED_VERIFIER_PLAYBACK)
+        else:
+            raise InvalidAudioToken("audio token has an invalid purpose")
+        body = store.open_private(
+            token,
+            audience=str(identity.user_id),
+            now=now,
+            purpose=payload.get("purpose"),
+        ).read()
     except (InvalidAudioToken, AudioUnavailable, ConsentRequiredError) as exc:
         raise HTTPException(status_code=403, detail={"code": "AUDIO_NOT_AUTHORISED"}) from exc
-    return Response(content=body, media_type="application/octet-stream")
+    return Response(content=body, media_type=audio.mime_type or "application/octet-stream")

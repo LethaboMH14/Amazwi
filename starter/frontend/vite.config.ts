@@ -1,6 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+const identityHeaders = {
+  ...(process.env.VITE_USER_ID ? { "X-User-ID": process.env.VITE_USER_ID } : {}),
+  ...(process.env.VITE_PROVIDER_SUBJECT ? { "X-Provider-Subject": process.env.VITE_PROVIDER_SUBJECT } : {}),
+};
+
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -11,6 +16,9 @@ export default defineConfig({
       "/api": {
         target: process.env.API_PROXY_TARGET || "http://127.0.0.1:8000",
         changeOrigin: true,
+        // Browser media elements cannot attach headers. Each demo device
+        // runs its own proxy process with its own seeded identity.
+        headers: identityHeaders,
       },
     },
   },

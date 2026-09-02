@@ -73,6 +73,14 @@ def test_governed_peer_flow_through_public_api(db_session, tmp_path):
             ConsentGrant(user_id=speaker.id, version="consent-v1", scope=ConsentScope.RECORD_PROCESS_ROUND),
             ConsentGrant(user_id=speaker.id, version="consent-v1", scope=ConsentScope.ASSIGNED_VERIFIER_PLAYBACK),
             *[
+                ConsentGrant(
+                    user_id=verifier.id,
+                    version="consent-v1",
+                    scope=ConsentScope.ASSIGNED_VERIFIER_PLAYBACK,
+                )
+                for verifier in verifiers
+            ],
+            *[
                 VerifierQualification(
                     user_id=verifier.id,
                     language="tn",
@@ -128,7 +136,14 @@ def test_governed_peer_flow_through_public_api(db_session, tmp_path):
                     f"/assignments/next?contribution_id={contribution_id}&language=tn"
                 )
                 assert assignment.status_code == 200, assignment.text
-                assignment_ids.append(assignment.json()["id"])
+                assignment_payload = assignment.json()
+                assert assignment_payload["language"] == "tn"
+                assert assignment_payload["prompt_text"] == "Listen once, then type the word you heard."
+                assignment_ids.append(assignment_payload["id"])
+                verifier_playback = client.post(f"/assignments/{assignment_ids[-1]}/playback")
+                assert verifier_playback.status_code == 200, verifier_playback.text
+                # The URL is audience-bound: the assigned verifier may play it.
+                assert client.get(verifier_playback.json()["url"]).status_code == 200
                 answer = client.post(
                     f"/assignments/{assignment_ids[-1]}/answer",
                     json={"answer_text": " KGOMO ", "violation_vote": False},

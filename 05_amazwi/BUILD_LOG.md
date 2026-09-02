@@ -5,6 +5,15 @@
 
 ---
 
+### [02 Sep ~14:22] — Sibusiso · live-browser contract hardening (pending interactive proof)
+
+- **DID:** Reconciled the real API and frontend contracts found while preparing the browser run: governed consent enum names, seeded `zu-001` UUID, speaker-to-verifier hand-off, verifier audio and response fields. Added `POST /assignments/{id}/playback` — an audience-bound, consent-gated `VERIFY`-purpose token so a verifier can actually listen to the speaker's clip (previously only the speaker's own `REPLAY` path existed).
+- **HOW:** Each LAN device's Vite proxy can supply only its own seeded identity headers (including for `<audio>`, which cannot set custom headers itself); verifier playback is a five-minute, audience-bound `VERIFY` token that re-checks both speaker and verifier playback consent before issuing.
+- **WHY:** The prior UI could render against mocks but could not complete the governed real-data journey: it created a contribution with placeholder `"greeting"`, then attempted verification as the speaker.
+- **VERIFY:** Frontend `npm run build` passed; frontend `npm test` passed **82/82**; focused real-Postgres peer API tests passed **3/3**, including a test that fetches the verifier's own playback URL and confirms 200. **Interactive Chrome validation is still pending because this Codex machine's Chrome-control service is missing; no browser success is claimed.**
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · full backend suite green after all transaction/reset fixes
 
 **DID**
