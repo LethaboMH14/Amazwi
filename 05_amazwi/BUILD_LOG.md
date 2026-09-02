@@ -73,6 +73,24 @@
 - Real-device golden path (phone mic + two laptops over LAN) is still the one thing no laptop-only session can close.
 - Gate G still has **no "Fund a mission" screen** — `OpsRoute` authorises a mission and says in copy that payment is a separate step. Building the funding leg touches disbursement and is Sbu's lane.
 - The `/dashboard` route is not yet linked from `HomeRoute`; it is reachable directly. Worth deciding whether the dashboard or the current home screen is the demo's first screen.
+### [02 Sep] — Codex · live refusal smoke + spend-guarded MoMo adapter
+
+**DID**
+- Restarted the only listener on port 8000 with the seeded `amazwi_test` database and restarted the three demo Vite instances on `0.0.0.0` ports 5173/5175/5176. LAN health and HTML checks pass on `192.168.42.56`.
+- Ran a fresh seeded contribution through upload/finalise, two independent verifier identities, one correct answer and one different answer. The live result is `UNVALIDATED`, reward `0`, stored mismatch reason, and `DEMO_PROVIDER` / `NOT_SUBMITTED` disclosure.
+- Added `app/momo.py` and `scripts/momo_smoke.py`: OAuth token caching, Collection Request-to-Pay and Disbursement Transfer request shapes, status polling, sanitized errors, and UUID references. Transfers are sandbox-only, opt-in, and capped by `MOMO_MAX_TEST_CENTS` (default 1 cent); the default smoke command performs auth only.
+- Opened the gitignored `starter/backend/.env` template for the MTN values. No credentials were written to source, logs, or commits.
+
+**WHY**
+- The refusal branch is the required fallback evidence, while the MoMo adapter must not turn a demo credential into an accidental paid call. MTN's sandbox APIs are asynchronous (`202` then status/callback), so the app keeps internal ledger credit separate from provider settlement.
+
+**VERIFY**
+- Live HTTP refusal receipt: `UNVALIDATED`, `reward_minor=0`, reason `not both verifier answers matched accepted_answers`, `settlement_state=NOT_SUBMITTED`.
+- Offline adapter tests: **5/5 passed**. Physical browser screenshot still requires a human on the phone because this environment has no browser-control service.
+
+**NEXT**
+- Paste the MTN sandbox values (including base URL, target environment, currency and test MSISDNs) into `.env`, then run `python scripts/momo_smoke.py` for token-only verification. Do not enable a transfer without Sbu's explicit test approval. Capture the refusal receipt on the real phone for the evidence pack.
+
 ---
 
 ### [02 Sep] — Codex · Gate F receipt settlement disclosure
