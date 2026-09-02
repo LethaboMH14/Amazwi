@@ -12,3 +12,4 @@ dist/
 .vite/
 .superpowers/
 .worktrees/
+.claude/worktrees/
