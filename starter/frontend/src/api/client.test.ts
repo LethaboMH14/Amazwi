@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ApiError, api, userMessage } from "./client";
+import { ApiError, api, codecFor, userMessage } from "./client";
 
 function mockFetchOnce(response: { ok: boolean; status: number; json?: () => Promise<unknown>; jsonRejects?: boolean }) {
   const jsonImpl = response.jsonRejects
@@ -119,5 +119,39 @@ describe("userMessage", () => {
 
   it("falls back to a generic message for a non-Error thrown value", () => {
     expect(userMessage("some string")).toBe("Something went wrong. Please try again.");
+  });
+});
+
+describe("finaliseAudio duration — regression for the stranded-upload bug", () => {
+  // This is the test that was missing. duration_ms was hardcoded to 0
+  // in the request body while the recorder computed the real value and
+  // discarded it. The backend rejects anything outside 500..20000ms, so
+  // EVERY finalise failed with AUDIO_DURATION_INVALID and every upload
+  // was left as an orphaned .pending file no verifier could ever play.
+  it("sends the real recorded duration, never a hardcoded zero", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ audio_object_id: "a1", state: "AVAILABLE" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const blob = new Blob([new Uint8Array(64)], { type: "audio/webm" });
+    await api.finaliseAudio("c1", "a".repeat(64), blob, 8123);
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body as string);
+    expect(body.duration_ms).toBe(8123);
+    expect(body.duration_ms).not.toBe(0);
+    // The backend's accepted window. A value outside it strands the upload.
+    expect(body.duration_ms).toBeGreaterThanOrEqual(500);
+    expect(body.duration_ms).toBeLessThanOrEqual(20_000);
+    vi.unstubAllGlobals();
+  });
+
+  it("derives the codec from the blob type instead of assuming webm", () => {
+    expect(codecFor("audio/ogg;codecs=opus")).toBe("opus");
+    expect(codecFor("audio/wav")).toBe("pcm");
+    expect(codecFor("audio/webm")).toBe("webm");
   });
 });

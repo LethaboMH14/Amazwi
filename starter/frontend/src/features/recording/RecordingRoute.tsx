@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api, userMessage } from "../../api/client";
 import type { ChangeEvent } from "react";
 import type { Card } from "../../api/contracts";
+import { clampDuration, probeDurationMs } from "./digest";
 
 // `zu-001`, deterministically created by `python -m app.seed_demo`.
 const DEMO_CARD_ID = "467e6241-cb06-5395-aaa8-d63832bcc538";
@@ -52,7 +53,7 @@ export function RecordingRoute() {
       const uploadTarget = await api.beginUpload(contribution.id);
       const hash = await digest(blob);
       await api.uploadAudio(uploadTarget.audio_object_id, blob);
-      await api.finaliseAudio(contribution.id, hash, blob);
+      await api.finaliseAudio(contribution.id, hash, blob, durationMs);
       navigate(`/result/${contribution.id}`);
     } catch (err) {
       setError(userMessage(err));
@@ -82,7 +83,7 @@ export function RecordingRoute() {
         setRecording(false);
         stream.getTracks().forEach((track) => track.stop());
         const blob = new Blob(chunks.current, { type: supportedMime(activeRecorder.mimeType) });
-        await upload(blob, Math.max(500, Math.min(20_000, Date.now() - startedAt.current)));
+        await upload(blob, clampDuration(Date.now() - startedAt.current));
       };
       activeRecorder.start();
       setRecording(true);
@@ -104,7 +105,8 @@ export function RecordingRoute() {
     const file = event.target.files?.[0];
     if (!file) return;
     const blob = new Blob([await file.arrayBuffer()], { type: supportedMime(file.type) });
-    await upload(blob, 1000);
+    // Measure the real length rather than asserting 1000ms.
+    await upload(blob, await probeDurationMs(blob));
     event.target.value = "";
   }
 
