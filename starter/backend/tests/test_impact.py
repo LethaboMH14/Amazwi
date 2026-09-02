@@ -146,8 +146,35 @@ def test_totals_languages_and_coverage_share(db_session):
     assert response.languages_active == 2
     bands = {node.language: node.verified_count_band for node in response.nodes}
     assert bands == {"zu": "20-49", "tn": "5-19"}
+    # Shares come from band midpoints (34 for "20-49", 12 for "5-19"),
+    # normalised across published cells -- deliberately NOT 75/25, which
+    # would be the exact-count share and would leak the counts back out.
     shares = {node.language: node.coverage_percent for node in response.nodes}
-    assert shares == {"zu": 75, "tn": 25}
+    assert shares == {"zu": 74, "tn": 26}
+
+
+def test_coverage_share_does_not_leak_the_exact_count(db_session):
+    """Two different exact counts inside the same band must be indistinguishable.
+
+    The share used to be `round(100 * exact_count / verified_total)`. Because
+    `verified_total` is published exactly, that let a reader solve backwards
+    for the exact count and collapse the band -- defeating the k>=5
+    suppression. Deriving the share from the band closes that.
+    """
+    _verified(db_session, language="zu", campaign_name="support", count=6)
+    _verified(db_session, language="tn", campaign_name="support", count=10)
+    low = {n.language: (n.verified_count_band, n.coverage_percent) for n in build_coverage(db_session, NOW).nodes}
+
+    # Same bands, different exact counts within them.
+    _verified(db_session, language="zu", campaign_name="support", count=7)
+    _verified(db_session, language="tn", campaign_name="support", count=3)
+    high = {n.language: (n.verified_count_band, n.coverage_percent) for n in build_coverage(db_session, NOW).nodes}
+
+    assert low["zu"][0] == high["zu"][0] == "5-19"
+    assert low["tn"][0] == high["tn"][0] == "5-19"
+    # Counts moved (6->13, 10->13) but the published share must not move,
+    # because it carries no information the band does not already carry.
+    assert low == high
 
 
 def test_nodes_are_deterministically_ordered(db_session):

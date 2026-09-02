@@ -1,5 +1,16 @@
 # AMAZWI Stage 4–6 evidence
 
+> **⚠️ Correction, 2 Sep, later the same day — this document's "No Kaggle GPU run
+> performed" line below is now stale.** It was true when written. Real Kaggle
+> kernel pushes were made on `lethabomh14`'s account (v1–v9, roughly
+> 00:15–12:00) — see `starter/ml/runs/README.md` for the honest current
+> status: **attempted, reached `RUNNING` at least once (v9), completion not
+> yet independently verified.** Not "no run performed", and not "completed"
+> either — genuinely unconfirmed. Do not cite the line below as current
+> evidence that no external GPU resource was ever touched; it is historical,
+> from before those attempts. `runs/README.md` is the current source of truth
+> on this specific point.
+
 ## Current state
 
 - Implemented and CPU-verified: Council data primitives, immutable manifests, speaker-safe splits, ASR metrics, external preflight, deterministic tournament gates, budget controls, and tabular challenger scaffolding.

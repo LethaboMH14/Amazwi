@@ -64,6 +64,14 @@ def count_band(count: int) -> str:
     return "5-19"
 
 
+#: Representative count for each published band, used to derive display
+#: shares. Deriving the share from the *band* rather than the exact count is
+#: what stops the share from leaking a precise count back out: the band is
+#: already published, so a value computed only from bands adds no new
+#: information. "100+" is unbounded above, so its lower bound stands in.
+_BAND_MIDPOINT = {"5-19": 12, "20-49": 34, "50-99": 74, "100+": 100}
+
+
 def _slug(value: str) -> str:
     return "".join(ch if ch.isalnum() else "_" for ch in value.strip().lower()).strip("_") or "unnamed"
 
@@ -101,6 +109,25 @@ def build_coverage(session: Session, now: datetime) -> ImpactResponse:
     published = [row for row in rows if row.verified_count >= MIN_CELL_SIZE]
     suppressed_cell_count = len(rows) - len(published)
 
+    # Shares are computed from band midpoints, normalised across the published
+    # cells only.
+    #
+    # The previous version was `round(100 * exact_count / verified_total)`, and
+    # that leaked: `verified_total` is published exactly, so given both values
+    # you can solve backwards for the exact count. At demo-scale totals one
+    # percentage point is only two or three clips, which collapses a "5-19"
+    # band to a near-exact number and defeats the k>=5 suppression the band
+    # exists to provide.
+    #
+    # Deriving from the band instead means the share is a pure function of
+    # already-published values, so it cannot narrow a count further than the
+    # band already does. Normalising over published cells (rather than
+    # `verified_total`, which also counts suppressed rows) removes the exact
+    # total from the calculation entirely, so it is no longer a lever at all.
+    # Shares are therefore approximate and proportional, not exact.
+    banded = [(row, count_band(row.verified_count)) for row in published]
+    midpoint_total = sum(_BAND_MIDPOINT[band] for _, band in banded)
+
     nodes = [
         CoverageNodeResponse(
             # `NATIONAL` is the honest placeholder for the province slot
@@ -110,16 +137,16 @@ def build_coverage(session: Session, now: datetime) -> ImpactResponse:
             language=row.language,
             province_code=None,
             campaign=row.campaign,
-            verified_count_band=count_band(row.verified_count),
+            verified_count_band=band,
             coverage_percent=(
-                round(100 * row.verified_count / verified_total) if verified_total else 0
+                round(100 * _BAND_MIDPOINT[band] / midpoint_total) if midpoint_total else 0
             ),
             # No signed, active model-evaluation record exists in this
             # database. Never inferred from contribution volume.
             model_gap_percent=None,
             updated_at=row.updated_at or now,
         )
-        for row in published
+        for row, band in banded
     ]
     nodes.sort(key=lambda node: node.id)
 
