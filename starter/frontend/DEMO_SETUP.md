@@ -56,3 +56,23 @@ python -m app.seed_demo
 Port `54730` is whatever the running pgserver instance is on — check the backend process's own `AMAZWI_DATABASE_URL`, do not assume this number.
 
 **Verified 2 Sep 2026:** running it twice leaves counts unchanged (16 cards / 2 campaigns / 6 users) — genuinely idempotent, not just intended to be. All 16 cards satisfy the CHECK constraints (`blocked_words` = 4, `accepted_answers` ≥ 2, `distractors` = 3), including `ntlo` with its three native-reviewed accepted forms.
+
+## MoMo sandbox (opt-in, no accidental spend)
+
+The backend includes a small MTN MoMo Open API adapter in
+`starter/backend/app/momo.py`. The normal demo remains `DEMO_PROVIDER` and
+does not call MoMo. Paste the organiser's values into the gitignored
+`starter/backend/.env` (a template is provided), then run from
+`starter/backend`:
+
+```bash
+python scripts/momo_smoke.py
+```
+
+This obtains and caches OAuth tokens only; it does not move money. A transfer
+requires `MOMO_ENABLE_TEST_TRANSFERS=true`, an explicitly approved sandbox
+run, a configured test payee/currency, and is capped by
+`MOMO_MAX_TEST_CENTS` (default 1). The adapter records only UUID references
+and status metadata; credentials and provider response bodies are never
+logged. MTN's sandbox transfer/request-to-pay operations are asynchronous, so
+an accepted `202` is not displayed as settled money.
