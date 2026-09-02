@@ -5,6 +5,23 @@
 
 ---
 
+### [02 Sep] — Codex · Gate F receipt settlement disclosure
+
+**DID**
+- Closed the receipt's remaining money-truth gap. The result API now returns the campaign's provider mode plus distinct `ledger_state` and `settlement_state` fields. For the seeded `DEMO_PROVIDER` campaign, an eligible speaker receives `CREDITED` / `NOT_SUBMITTED`, while a disagreement receives `NOT_CREDITED` / `NOT_SUBMITTED`.
+- The receipt visibly says `DEMO_PROVIDER` and: *“Demo provider — not a real MoMo transfer or cash-out.”* The home flow no longer says a reward is “credited through MoMo”; it truthfully says this demo credits the AMAZWI ledger.
+
+**WHY**
+- The live resolver writes an internal `RewardEvent`; it creates no `PaymentAttempt` or provider payout. Calling an R2 ledger credit “through MoMo” would overstate both the build and the demo.
+
+**VERIFY**
+- Real PostgreSQL on the dedicated `amazwi_pytest` database: peer API plus governed peer E2E **7/7 passed**, covering `CORPUS_ELIGIBLE` / R2-style credit and `UNVALIDATED` / R0 refusal disclosures. Frontend: **92/92 passed**. Production frontend build passed.
+
+**NEXT**
+- Claude's physical refusal-path walk remains required: two real verifier answers must disagree, then the speaker must visibly receive `UNVALIDATED`, R0.00 and this disclosure. This code/test result is not substituted for that device proof.
+
+---
+
 ### [02 Sep] — Codex · refusal-receipt regression coverage
 
 **DID**

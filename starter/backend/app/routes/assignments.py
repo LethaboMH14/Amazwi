@@ -12,7 +12,7 @@ from app.cohorts import select_next_verifier
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
 from app.matching import is_correct, normalise_answer
-from app.models import Assignment, AssignmentMode, Card, Contribution, EligibilityDecision, RewardEvent
+from app.models import Assignment, AssignmentMode, Campaign, Card, Contribution, EligibilityDecision, RewardEvent
 from app.contributions import issue_verifier_playback_token
 from app.audio import get_audio_store
 from app.storage import LocalAudioObjectStore
@@ -182,10 +182,31 @@ def contribution_result(
     decision = session.get(EligibilityDecision, contribution_id)
     if decision is None:
         return ContributionResult(status="PENDING")
+    card = session.get(Card, contribution.card_id)
+    campaign = session.get(Campaign, card.campaign_id) if card is not None else None
+    reward_minor = session.scalar(
+        select(RewardEvent.amount_cents)
+        .where(RewardEvent.contribution_id == contribution_id)
+        .limit(1)
+    ) or 0
+    provider_mode = campaign.provider_mode if campaign is not None else None
+    if provider_mode == "DEMO_PROVIDER":
+        settlement_state = "NOT_SUBMITTED"
+        disclosure = "Demo provider — not a real MoMo transfer or cash-out."
+    else:
+        # Future provider integrations must return a specific payment attempt
+        # and settled state. Until then unknown modes remain explicitly
+        # unverified rather than inheriting the word "paid" from a ledger row.
+        settlement_state = "UNVERIFIED"
+        disclosure = "Provider settlement is unverified."
     return ContributionResult(
         status="RESOLVED",
         outcome="CORPUS_ELIGIBLE" if decision.corpus_eligible else "UNVALIDATED",
-        reward_minor=session.scalar(select(RewardEvent.amount_cents).where(RewardEvent.contribution_id == contribution_id).limit(1)) or 0,
+        reward_minor=reward_minor,
+        provider_mode=provider_mode,
+        ledger_state="CREDITED" if reward_minor else "NOT_CREDITED",
+        settlement_state=settlement_state,
+        currency_disclosure_text=disclosure,
         understood=decision.understood,
         corpus_eligible=decision.corpus_eligible,
         reason=decision.reason,

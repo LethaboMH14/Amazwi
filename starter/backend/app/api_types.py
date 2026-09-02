@@ -93,6 +93,17 @@ class ContributionResult(BaseModel):
     outcome: str | None = None
     reward_minor: int = 0
     currency: str = "ZAR"
+    # A ledger credit is not proof that a real provider cash-out occurred.
+    # Return the campaign's declared mode so the receipt can make that
+    # distinction visible instead of presenting an internal credit as settled
+    # MoMo money.
+    provider_mode: str | None = None
+    # These are intentionally separate. A resolver can credit the internal
+    # ledger without creating a PaymentAttempt, so `CREDITED` must never be
+    # rendered as provider settlement.
+    ledger_state: str | None = None
+    settlement_state: str | None = None
+    currency_disclosure_text: str | None = None
     understood: bool | None = None
     corpus_eligible: bool | None = None
     reason: str | None = None

@@ -9,7 +9,7 @@ export interface Assignment { id: string; contribution_id: string; language: str
 // `reward_minor` is MINOR units (cents), not rand -- 200 means R2.00. It was
 // rendered raw as "200 ZAR" on the receipt, i.e. 100x the real published rate,
 // on the one screen whose entire job is being financially truthful.
-export interface Result { contribution_id: string; status?: string; outcome: string; reward_minor: number; currency: string; understood?: boolean; corpus_eligible?: boolean; reason?: string; }
+export interface Result { contribution_id: string; status?: string; outcome: string; reward_minor: number; currency: string; provider_mode?: string | null; ledger_state?: string | null; settlement_state?: string | null; currency_disclosure_text?: string | null; understood?: boolean; corpus_eligible?: boolean; reason?: string; }
 export type CoverageBand = "5-19" | "20-49" | "50-99" | "100+";
 /** Aggregate coverage cell. Deliberately carries no identifier, coordinate, audio key or transcript. */
 export interface CoverageNodeDTO { id: string; language: string; province_code: string | null; campaign: string; verified_count_band: CoverageBand; coverage_percent: number; model_gap_percent: number | null; updated_at: string; }

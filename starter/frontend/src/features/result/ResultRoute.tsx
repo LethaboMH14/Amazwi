@@ -17,7 +17,7 @@ export function ResultRoute() {
     return () => { cancelled = true; };
   }, [contributionId]);
 
-  const paid = result ? result.reward_minor > 0 : false;
+  const hasReward = result ? result.reward_minor > 0 : false;
 
   return (
     <main className="route" aria-labelledby="result-title">
@@ -30,10 +30,16 @@ export function ResultRoute() {
               reward until 2 Sep 2026 -- 100x the published rate, on the
               screen the whole pitch leans on to be financially honest. */}
           <p className="receipt-amount">{formatMinor(result.reward_minor, result.currency)}</p>
+          {result.ledger_state === "CREDITED" && <p>Credited to your AMAZWI ledger.</p>}
+          {(result.provider_mode || result.currency_disclosure_text) && (
+            <p className="receipt-provider">
+              <strong>{result.provider_mode ?? "UNVERIFIED_PROVIDER"}</strong> · {result.currency_disclosure_text ?? "Provider settlement is unverified."}
+            </p>
+          )}
           {/* The receipt's actual job is explaining WHY, not just how much.
               The API has always returned this reason; the screen dropped it. */}
           {result.reason && <p className="receipt-reason">{result.reason}</p>}
-          {!paid && (
+          {!hasReward && (
             <p className="receipt-refusal">
               No reward was released for this contribution.
             </p>

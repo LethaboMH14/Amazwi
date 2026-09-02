@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity
 from app.main import app
-from app.models import Campaign, CampaignRewardRule, Card, ConsentGrant, ConsentScope, Contribution, ContributionState, User, VerifierQualification
+from app.models import Campaign, CampaignRewardRule, Card, ConsentGrant, ConsentScope, Contribution, ContributionState, EligibilityDecision, User, VerifierQualification
 
 
 @pytest.fixture
@@ -100,3 +100,45 @@ def test_peer_result_is_pending_until_authoritative_decision(peer_context, db_se
     app.dependency_overrides.clear()
     assert response.status_code == 200
     assert response.json()["status"] == "PENDING"
+
+
+def test_peer_result_marks_verifier_disagreement_as_unvalidated_not_settled(peer_context, db_session):
+    """A demo receipt may explain a R0 decision, never imply a payout.
+
+    The resolver creates no PaymentAttempt on the golden path.  The speaker's
+    receipt must therefore distinguish an internal ledger outcome from a
+    submitted or paid provider transfer, especially on the refusal branch.
+    """
+    speaker, _, contribution = peer_context
+    db_session.add(
+        EligibilityDecision(
+            contribution_id=contribution.id,
+            understood=False,
+            corpus_eligible=False,
+            reason="not both verifier answers matched accepted_answers",
+            consent_version="v1",
+        )
+    )
+    db_session.commit()
+    app.dependency_overrides[get_session] = lambda: db_session
+    app.dependency_overrides[get_current_identity] = lambda: AuthenticatedIdentity(
+        speaker.id, speaker.provider_subject
+    )
+    with TestClient(app) as client:
+        response = client.get(f"/contributions/{contribution.id}/result")
+    app.dependency_overrides.clear()
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "status": "RESOLVED",
+        "outcome": "UNVALIDATED",
+        "reward_minor": 0,
+        "currency": "ZAR",
+        "provider_mode": "DEMO_PROVIDER",
+        "ledger_state": "NOT_CREDITED",
+        "settlement_state": "NOT_SUBMITTED",
+        "currency_disclosure_text": "Demo provider — not a real MoMo transfer or cash-out.",
+        "understood": False,
+        "corpus_eligible": False,
+        "reason": "not both verifier answers matched accepted_answers",
+    }

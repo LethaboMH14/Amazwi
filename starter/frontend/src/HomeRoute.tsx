@@ -108,7 +108,7 @@ export function HomeRoute() {
           <li>
             <span className="step-index" aria-hidden="true">03</span>
             <span>
-              <b>Both agree, you earn.</b> Your reward is credited through MoMo.
+              <b>Both agree, you earn.</b> This demo credits your AMAZWI ledger.
             </span>
           </li>
         </ol>
