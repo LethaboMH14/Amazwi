@@ -111,7 +111,7 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 ## Deck fixes still needed in the live Gamma (manual, not yet verified from this environment)
 1. **Cover slide:** confirm the logo band is still empty (real MTN/MoMo logos not yet pasted in) or deliberately neutral, not a fabricated logo.
 2. **Card 2:** replace with the sourced market-gap text above (shorter version, two stats not seven).
-3. **Em dashes:** sweep every remaining card for "—" and replace with comma, period, or colon.
+3. ~~**Em dashes:** sweep every remaining card for "—" and replace with comma, period, or colon.~~ **Done (3 Sep, Sbu, manual pass in Gamma editor).**
 4. **MoMo card:** must say "sandbox Collections funding request", not simply "real transaction." A 202 request and 200 status do not mean a speaker was paid; make that distinction visible on the card itself, not only in the spoken line.
 5. **Banned phrases, confirm none of these appear anywhere in the deck:** "your MoMo wallet is credited", "cash-out is live", "money crossed MoMo twice", "k-anonymised", "the dataset nobody else has built", any guaranteed MTN revenue or savings percentage.
 6. **Add or preserve a visible line (not just spoken) on what the pilot measures:** repeat MoMo opens, funded mission participation, cost per eligible contribution, verifier liquidity, settlement feasibility, usefulness of intent-labelled speech. This is currently under-expressed in the deck relative to the script; without it the deck can still read as a governed language game rather than a business product for MTN.
