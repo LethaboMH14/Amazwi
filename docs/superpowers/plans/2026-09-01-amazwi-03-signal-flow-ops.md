@@ -876,6 +876,16 @@ git commit -m "UI: render peer truth before advisory insight"
 
 ### Task 7: Add aggregate Coverage Constellation backend contracts
 
+> **BUILT 02 Sep 2026 — with two documented deviations. CROSS-LANE, PENDING SBU REVIEW.**
+> The real schema in `app/models.py` has **no geographic column and no domain
+> vocabulary**, so the `(language, province, domain)` cell key below cannot be
+> built today. `build_coverage` aggregates **declared language × funding
+> campaign** instead; `province_code` is `None`, `geography_available` is
+> `False`, and `model_gap_percent` is `None` (no signed, active model-evaluation
+> record exists in this database). Nothing is fabricated to fill those slots.
+> `GET /impact` is deliberately unauthenticated — a data-exposure call in Sbu's
+> lane that needs his confirmation. See `05_amazwi/BUILD_LOG.md` [02 Sep ~05:40].
+
 **Files:**
 - Create: `starter/backend/app/impact.py`
 - Create: `starter/backend/app/routes/impact.py`
@@ -948,6 +958,13 @@ git commit -m "Ops: add privacy-thresholded coverage API"
 ---
 
 ### Task 8: Render the flat South Africa Coverage Constellation
+
+> **BUILT 02 Sep 2026.** Styles went into the existing `starter/frontend/src/signal-flow.css`
+> — the `starter/frontend/src/styles/materials.css` named below **does not exist**.
+> Because Task 7 cannot produce province-level cells, the map renders the flat
+> outline with an explicit "national totals only" state rather than placing
+> invented pins; the province pin path is implemented and tested so it works
+> unchanged once consented province data exists.
 
 **Files:**
 - Create: `starter/frontend/src/components/SouthAfricaCoverageMap.tsx`

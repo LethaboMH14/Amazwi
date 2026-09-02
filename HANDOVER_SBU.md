@@ -10,9 +10,10 @@ Cross-lane backend/ML work, **pending your review**. Plan 02's Final Acceptance
 Checklist has been verified item-by-item against the tests that actually exist
 (not the filenames the plan prescribes — substitutions are documented inline in
 the plan doc). 15 of 16 items are ticked with named proving tests. Backend 168
-passed against real embedded PostgreSQL 16 before merging `main`, and 196 passed
-after (the extra 28 are your Tasks 9+10 missions/ops tests arriving in the merge,
-not mine). ML 40 passed both before and after.
+passed against real embedded PostgreSQL 16 before merging `main`, and 210 passed
+after two merges — the growth is the parallel agents' Tasks 7–10 tests arriving,
+**not** coverage I wrote (mine is three tests: one backend, two ML). ML 40 passed
+before and after.
 
 Four real bugs were found and fixed in the process, all detailed in
 `05_amazwi/BUILD_LOG.md`'s newest entry: a `None + 1` crash that made the
@@ -28,6 +29,31 @@ sees (`STAGE_4_6_EVIDENCE.md`, the model cards, `BUILD_LOG.md`) against the real
 Kaggle runs in `a792049`/`6f03710`/`d3bc55a`. No test can discharge it, so it is
 deliberately left unticked rather than ticked optimistically. Nothing touching
 Kaggle, Vercel, money or campaigns was changed.
+
+---
+
+## ⚠️ NEEDS YOUR CALL — 02 Sep · Impact Map backend (`GET /impact`), cross-lane
+
+Plan 03 Tasks 7–8 (aggregate Coverage Constellation) are built and green: backend
+121 passed against real PostgreSQL, frontend 74 passed + clean typecheck. Full
+detail in `05_amazwi/BUILD_LOG.md` [02 Sep ~05:40]. Two things in your lane that
+I built to spec but should not be the one to finalise:
+
+1. **`GET /impact` is unauthenticated.** Rationale: every field has already passed
+   a ≥5-contribution minimum-cell-size suppression in `app/impact.py`, counts are
+   published as bands not exact values, and no user id, contribution id,
+   coordinate, audio key or transcript is present (asserted against the raw
+   response text in `tests/test_impact_api.py`). That is still a data-exposure
+   judgement — confirm or overrule it.
+2. **The cell key deviates from the plan.** The plan specifies
+   `(language, province, domain)`. `app/models.py` has no geographic column and no
+   domain vocabulary anywhere, so rather than fabricate a location field I
+   aggregate **declared language × funding campaign**, leave `province_code` null,
+   set `geography_available: false`, and have the UI say "province-level coverage
+   is not collected yet". `model_gap_percent` is null ("Model evidence
+   unavailable") and `missions_completed` is 0 — neither is inferred. If you want
+   real geography, that needs a consented, coarse province column and a migration,
+   which is your decision, not mine.
 
 ---
 

@@ -51,22 +51,37 @@
 
 ---
 
-### [02 Sep ~05:00] — Lethabo's session · Claude · v6 failed on a Kaggle-side transient error, v7 pushed; 4 agents recovered after rate-limit interruption
+### [02 Sep ~05:40] — Lethabo's session · Claude · Plan 03 Tasks 7–8 (Coverage Constellation) finished — CROSS-LANE, PENDING SBU REVIEW
 
 **DID**
-- v6 failed almost immediately — not a bug in the fix from the prior entry. The real log showed `ConnectionError: Connection error trying to communicate with service` from inside Kaggle's own `kaggle_secrets.py` client, trying to reach Kaggle's internal secrets microservice — a transient platform-side issue, not something in this repo's code. Confirmed from the actual traceback, not assumed.
-- Re-push itself then hit a second transient failure, this time client-side: `SSLError(SSLEOFError(...))` talking to `api.kaggle.com`. Retried once more — succeeded, pushed as v7, confirmed `RUNNING` via `kaggle kernels status`.
-- Separately: all 4 agents dispatched earlier (Plan 02 acceptance verification, Coverage Constellation, Mission proposals/MTN Language Ops, real-app accessibility gates) were interrupted mid-task by a session-wide rate limit. Attempted to resume them via `SendMessage` once the limit reset; all 4 came back `stopped` with "no completion record found" — the resume did not actually reattach to a live process.
-- **Checked each agent's worktree before assuming anything was lost.** All 4 had real, substantial uncommitted work sitting in their working trees (e.g. the accessibility agent had genuinely run Playwright+axe and left real captured violation reports under `test-results/`; the Coverage Constellation agent had a working backend `impact.py`/`routes/impact.py` and a `SouthAfricaCoverageMap.tsx` component; the Mission-Ops agent had `missions.py`, `routes/ops.py`, and an Alembic migration; the Plan 02 agent had touched `council.py`/`outbox.py`/`run_council_worker.py` plus three new test files). None of it was committed.
-- Committed each worktree's state as an explicit `WIP checkpoint` commit and pushed each to its own branch (`worktree-agent-<id>`) rather than losing it or guessing what was safe to discard.
-- Dispatched 4 fresh continuation agents, each instructed to first `git fetch`/`merge` its predecessor's preserved branch, verify what's actually there by reading and running tests (not trusting the WIP commit message), then finish the original brief, run the real suites, and push a clean commit to `origin main`.
+- Recovered a predecessor agent's rate-limit-interrupted work from `origin/worktree-agent-a0372965fcf719c7d` (merged clean, no conflicts) and finished Plan 03 Tasks 7 and 8: the aggregate Impact Map / Coverage Constellation.
+- Backend (**cross-lane, Sbu's area — flagged for his review, not treated as final**): `app/impact.py` (`build_coverage`), `app/routes/impact.py` (`GET /impact`, also `/api/impact`), `CoverageNodeResponse`/`ImpactResponse` in `app/api_types.py`, router registered in `main.py`.
+- Frontend: `components/SouthAfricaCoverageMap.tsx` (flat SVG, `viewBox 0 0 320 300`, the plan's exact nine province centroids and exact band→radius map 6/8/10/12), `features/impact/ImpactRoute.tsx`, the `/impact` route in `App.tsx`, `api/contracts.ts` + `api/client.ts` (`getImpact`), and the Coverage Constellation CSS.
 
-**WHY**
-- Losing genuinely-run Playwright/axe accessibility results (or any of the other three agents' real backend work) to an interrupted session would have thrown away real, hard-won evidence for no reason — the checkpoint-and-branch step cost a few minutes and eliminated that risk entirely.
+**HOW / VERIFIED, not assumed**
+- Backend suite: `python -m pytest -q` → **121 passed** (22m41s, real PostgreSQL 16 per `conftest.py`), including the 10 tests in `tests/test_impact.py` and the API-shape tests in `tests/test_impact_api.py`.
+- Frontend: `npx tsc -b --noEmit` clean; `npm test` → **74 passed / 13 files**, including `SouthAfricaCoverageMap.test.tsx` (10) and `ImpactRoute.test.tsx` (7). Note the frontend `node_modules` was absent in this worktree and had to be `npm ci`'d first — the earlier "typecheck passes" state was not reproducible until then.
+- Every CSS custom property used (`--voice-1/2`, `--ground-deep`, `--text-dim`, `--border`, `--surface`, `--fs-h1`, `--fs-label`, `--fs-sm`, `--tracking-label`, `--r-md`, `--sp-1..5`) was grepped against `tokens.css` and exists — no invented tokens, no new colours.
+- Checked `models.py` directly for `province|region|latitude|longitude|location|geo` before accepting the "no geography" claim: **there is genuinely no geographic column anywhere** in the schema.
+
+**WHY — two honest deviations from the plan text, both deliberate**
+1. The plan keys cells by `(language, province, domain)`. The real schema has **neither a geographic column nor a domain vocabulary**. Rather than fabricate a location field, `build_coverage` aggregates over what the database actually holds — **declared language × funding campaign**. `province_code` is `None` on every node, `geography_available` is `False`, and the map renders an explicit "province-level coverage is not collected yet, showing national totals" state instead of scattering invented pins. The province pin path is real and tested so it works unchanged the day consented province data exists. `model_gap_percent` is likewise always `None` ("Model evidence unavailable") because no signed, active model-evaluation record exists in this database — ML metrics live unlinked in `starter/ml`. `missions_completed` is `0`, not approximated, because Task 9's `mission_proposals` table is not built.
+2. The plan says modify `starter/frontend/src/styles/materials.css`. **That file does not exist**; the styles went into the existing `signal-flow.css` instead.
+- Privacy is enforced in the backend, not the UI: a cell publishes only at ≥5 committed, peer-verified, corpus-eligible contributions, and published counts are bands (`5-19`/`20-49`/`50-99`/`100+`), never exact. `test_impact_api.py` asserts the absence of personal/geographic/audio fields against the **raw response text**, not just the parsed top level. Consistent with the standing "no public raw-audio archive" commitment.
+
+**CHANGED**
+- New: `starter/backend/app/impact.py`, `starter/backend/app/routes/impact.py`, `starter/backend/tests/test_impact.py`, `starter/backend/tests/test_impact_api.py`, `starter/frontend/src/components/SouthAfricaCoverageMap.tsx` (+test), `starter/frontend/src/features/impact/ImpactRoute.tsx` (+test).
+- Modified: `starter/backend/app/api_types.py`, `starter/backend/app/main.py`, `starter/frontend/src/App.tsx`, `starter/frontend/src/api/client.ts`, `starter/frontend/src/api/contracts.ts`, `starter/frontend/src/signal-flow.css`.
 
 **NEXT / BLOCKED-PING**
-- 4 continuation agents running in the background; report on each as it lands, same as before.
-- v7 running on Kaggle; check its outcome the same way as v5/v6 — pull `kernels_logs()` after it finishes, read the tail, don't assume success from `status` alone.
+- **Sbu:** `GET /impact` is deliberately **unauthenticated** — every field has already passed minimum-cell-size suppression and no personal field is present. That is a data-exposure judgement in your lane; please confirm or overrule it rather than inheriting it silently. Same for the language × campaign aggregation standing in for the plan's province × domain cell.
+- Not verified in a real browser this session (no dev server run) — only jsdom tests and typecheck. The 320–480px / zoom / screen-reader gates are Plan 03 Task 11 and remain open.
+- Plan 03 still open: Task 0, finishing Tasks 1/2/5, Task 9 (missions/MTN authorisation), Task 10, 11, 12, 13.
+- The CI portability bug flagged in `CLAUDE.md` (`test_object_key_cannot_escape_storage_root`, `Path(...).is_absolute()` on POSIX) was **not** touched by this session — it passes on Windows here, so it is untested against Linux CI from this worktree.
+
+**MERGE NOTE — reconciled with the sibling Tasks 9+10 agent**
+- `origin/main` moved twice during this work; the second move brought the parallel Tasks 9+10 (missions / MTN Language Ops) agent's commit, which touched five of the same files. Conflicts in `main.py`, `App.tsx`, `api/client.ts`, `api/contracts.ts`, `HANDOVER_SBU.md` and `BUILD_LOG.md` were all **pure additions on both sides** and were resolved by keeping both — the one real edit needed was collapsing two duplicated `import type { ... } from "./contracts"` lines in `client.ts` into a single import.
+- Both suites were **re-run after the merge, not assumed to still pass**: frontend `npx tsc -b --noEmit` clean and `npm test` → **82 passed / 14 files** (this session's 74 plus the sibling's 8), backend re-run to completion against real PostgreSQL.
 
 ---
 
@@ -87,9 +102,11 @@
 - Also added `test_worker_main_is_a_no_op_when_the_council_is_disabled` — the disabled check sits *before* the `AMAZWI_DATABASE_URL` lookup, and reordering those two lines would make a disabled deployment crash on startup while nothing else in the suite noticed.
 
 **HOW / VERIFIED**
-- `cd starter/backend && python -m pytest -q` — real embedded PostgreSQL 16, not SQLite. Full suite run three times: **167 passed** pre-change, **168 passed** after my changes, and **196 passed** again after merging `origin/main` (the jump to 196 is the other agent's Plan 03 Tasks 9+10 missions/ops tests arriving in the merge, not anything of mine). First run took 25 minutes on a cold embedded server; later runs ~4 minutes warm.
+- `cd starter/backend && python -m pytest -q` — real embedded PostgreSQL 16, not SQLite. Full suite run four times, once after every change of tree state rather than once at the end: **167 passed** pre-change → **168 passed** after my changes (the +1 is my disabled-worker test) → **196 passed** after the first `origin/main` merge → **210 passed** after the second. The growth from 168 to 210 is entirely the sibling agents' Plan 03 Tasks 7–10 (Coverage Constellation, missions/Language Ops, Impact Map) arriving in those merges — **not** coverage this session wrote. My own additions to the count are three tests: one backend, two ML. First run took 25 minutes on a cold embedded server; later runs 3–4 minutes warm.
 - `cd starter/ml && python -m pytest -q` — 38 passed pre-change, 40 passed after, and 40 passed again post-merge.
-- The merge with `origin/main` hit real conflicts in `BUILD_LOG.md` and `HANDOVER_SBU.md` (two agents writing new top-of-file entries at once). Both sides' content was kept in full — the other agent's 06:00 entry sits above this 05:30 one, preserving newest-at-top ordering. Nothing was dropped, and no conflict markers remain (`grep` verified).
+- `origin/main` moved **twice** during this work (three sibling agents pushing in parallel), so the merge was done twice. Both rounds conflicted only in `BUILD_LOG.md` and `HANDOVER_SBU.md` — two agents each writing a new entry at the top of the same file — and both sides' content was kept in full every time. No source file conflicted, so no test behaviour was touched by any resolution.
+- **Two real mistakes of my own, caught by sweeping instead of assuming the resolution was clean:** (1) the first resolution left a stray `<<<<<<< HEAD` line in `HANDOVER_SBU.md` — the closing markers had been removed but not the opening one, and it would have been pushed as a visible artefact; (2) after the second merge my 05:30 entry had been auto-placed *below* the 05:00 one, breaking this file's newest-at-top rule. Both fixed, then re-verified by grepping the whole tree for markers and re-listing the entry headers in order.
+- **Test counts corrected rather than left stale.** An earlier draft of this entry and of `HANDOVER_SBU.md` both said "168 passed", which was true before merging and false after. The merged tree runs more, and the extra tests are the sibling agents' Tasks 7–10 work, not mine — both files now say so explicitly so the number cannot be read as this session having added more coverage than it did.
 - Confirmed `app/routes/council.py` really reads the literal `COUNCIL_ATTEMPTS_EXHAUSTED` (line 62) rather than taking the predecessor's comment on trust.
 
 **LIMITATIONS, stated plainly**
@@ -100,6 +117,25 @@
 **NEXT / BLOCKED-PING**
 - **Sbu:** item 16's honesty pass is the one open acceptance item, and it is genuinely yours — it is a claim-calibration judgement over the evidence docs, not something a test settles.
 - The four plan files' inline checkboxes remain unreliable elsewhere; only Plan 02's Final Acceptance Checklist has been reconciled against reality.
+
+---
+
+### [02 Sep ~05:00] — Lethabo's session · Claude · v6 failed on a Kaggle-side transient error, v7 pushed; 4 agents recovered after rate-limit interruption
+
+**DID**
+- v6 failed almost immediately — not a bug in the fix from the prior entry. The real log showed `ConnectionError: Connection error trying to communicate with service` from inside Kaggle's own `kaggle_secrets.py` client, trying to reach Kaggle's internal secrets microservice — a transient platform-side issue, not something in this repo's code. Confirmed from the actual traceback, not assumed.
+- Re-push itself then hit a second transient failure, this time client-side: `SSLError(SSLEOFError(...))` talking to `api.kaggle.com`. Retried once more — succeeded, pushed as v7, confirmed `RUNNING` via `kaggle kernels status`.
+- Separately: all 4 agents dispatched earlier (Plan 02 acceptance verification, Coverage Constellation, Mission proposals/MTN Language Ops, real-app accessibility gates) were interrupted mid-task by a session-wide rate limit. Attempted to resume them via `SendMessage` once the limit reset; all 4 came back `stopped` with "no completion record found" — the resume did not actually reattach to a live process.
+- **Checked each agent's worktree before assuming anything was lost.** All 4 had real, substantial uncommitted work sitting in their working trees (e.g. the accessibility agent had genuinely run Playwright+axe and left real captured violation reports under `test-results/`; the Coverage Constellation agent had a working backend `impact.py`/`routes/impact.py` and a `SouthAfricaCoverageMap.tsx` component; the Mission-Ops agent had `missions.py`, `routes/ops.py`, and an Alembic migration; the Plan 02 agent had touched `council.py`/`outbox.py`/`run_council_worker.py` plus three new test files). None of it was committed.
+- Committed each worktree's state as an explicit `WIP checkpoint` commit and pushed each to its own branch (`worktree-agent-<id>`) rather than losing it or guessing what was safe to discard.
+- Dispatched 4 fresh continuation agents, each instructed to first `git fetch`/`merge` its predecessor's preserved branch, verify what's actually there by reading and running tests (not trusting the WIP commit message), then finish the original brief, run the real suites, and push a clean commit to `origin main`.
+
+**WHY**
+- Losing genuinely-run Playwright/axe accessibility results (or any of the other three agents' real backend work) to an interrupted session would have thrown away real, hard-won evidence for no reason — the checkpoint-and-branch step cost a few minutes and eliminated that risk entirely.
+
+**NEXT / BLOCKED-PING**
+- 4 continuation agents running in the background; report on each as it lands, same as before.
+- v7 running on Kaggle; check its outcome the same way as v5/v6 — pull `kernels_logs()` after it finishes, read the tail, don't assume success from `status` alone.
 
 ---
 
