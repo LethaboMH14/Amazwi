@@ -1952,3 +1952,9 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **DID:** Terminated listeners on ports 8000–8002 and started uvicorn fresh with both `AMAZWI_DATABASE_URL` and `AMAZWI_AUDIO_TOKEN_SECRET` set before import.
 - **RESULT:** `/contributions` returned 201, but `/audio/uploads` still returned `AUDIO_NOT_AUTHORISED`; the contribution was not visible from a separate direct connection to `amazwi_test`, indicating the running process is reaching a different PostgreSQL database/cluster despite the shell URL. This needs Sbu to identify the active Postgres service/connection target before another retry.
 - **PUSH:** GitHub HTTPS is unreachable (`curl` and `git ls-remote` fail to connect); local commit remains unpushed.
+
+### [02 Sep] — Sibusiso · consent persistence hardening
+
+- **DID:** Added the missing commit after `POST /consents/{scope}/revoke` and a regression assertion from a separate SQLAlchemy connection.
+- **WHY:** Revocation must survive request teardown and enforce the POPIA playback/export guarantee.
+- **CHANGED:** `starter/backend/app/routes/consents.py`, `starter/backend/tests/test_consent_api.py`.
