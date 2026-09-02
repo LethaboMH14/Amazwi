@@ -37,19 +37,14 @@ export function HomeRoute() {
   }, []);
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        boxSizing: "border-box",
-        padding: "var(--sp-5)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--sp-4)",
-      }}
-    >
+    // `.route` carries the shared 320–480px / 200%-zoom / 44px-target
+    // rules from signal-flow.css. The landmark is labelled by its own
+    // <h1>: the Task 11 gate asserts every route's <main> is named, and
+    // this one was the single route that failed that check.
+    <main className="route" aria-labelledby="home-title">
       <ModeLabel mode={mode} />
       <ThemeControl />
-      <h1 className="display" style={{ fontSize: "var(--fs-h1)" }}>
+      <h1 className="display" id="home-title" style={{ fontSize: "var(--fs-h1)" }}>
         AMAZWI
       </h1>
       <p style={{ color: "var(--text-dim)" }}>backend: {backendStatus}</p>

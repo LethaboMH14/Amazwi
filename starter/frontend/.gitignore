@@ -1,0 +1,11 @@
+# Playwright run artefacts. Never commit these.
+#
+# On 2 Sep 2026 a committed test-results/ tree turned out to contain page
+# snapshots of an entirely different project, captured when the suite
+# silently attached to a stray dev server on a shared port. Committed
+# artefacts read as evidence long after the run that made them is
+# forgotten, and stale ones are worse than none.
+test-results/
+playwright-report/
+blob-report/
+.playwright/

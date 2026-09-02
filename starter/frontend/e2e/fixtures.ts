@@ -6,8 +6,21 @@ import type { Page } from "@playwright/test";
  * Postgres-backed API would make them flaky for reasons unrelated to what
  * they measure.
  */
+/**
+ * Match ONLY real backend calls: pathname starting with `/api/`.
+ *
+ * The obvious glob `**\/api/**` is wrong and was a real, silent harness bug:
+ * it also matches the app's own module `/src/api/client.ts`, so Vite's
+ * JavaScript was answered with `application/json`, the module graph failed
+ * ("Expected a JavaScript-or-Wasm module script"), React never mounted, and
+ * every route rendered an empty <div id="root">. The reflow, touch-target and
+ * axe gates then "passed" vacuously against a blank page while the landmark
+ * and keyboard gates failed for a reason that had nothing to do with the UI.
+ */
 export async function stubApi(page: Page) {
-  await page.route("**/api/**", async (route) => {
+  await page.route(
+    (url) => url.pathname.startsWith("/api/"),
+    async (route) => {
     const path = new URL(route.request().url()).pathname;
     const json = (body: unknown) =>
       route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
@@ -23,8 +36,9 @@ export async function stubApi(page: Page) {
     if (path.includes("/result")) {
       return json({ outcome: "Understood by peers", reward_minor: 250, currency: "ZAR" });
     }
-    return json({ ok: true });
-  });
+      return json({ ok: true });
+    },
+  );
 }
 
 export const ROUTES = [

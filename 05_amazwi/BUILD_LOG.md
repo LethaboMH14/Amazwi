@@ -5,6 +5,41 @@
 
 ---
 
+### [02 Sep ~09:30] — Lethabo's lane · Claude · Plan 03 Task 11 accessibility gates, on the real React app
+
+**DID**
+- Recovered a rate-limited predecessor's uncommitted Playwright+axe harness (`e2e/`, `playwright.config.ts`) from `origin/worktree-agent-a36bf52727aec1911`.
+- **Two harness bugs found before any real measurement was possible. Both had been producing false evidence, and the recovered `test-results/` was entirely worthless because of the first:**
+  1. `playwright.config.ts` had `reuseExistingServer: true` on port 5174. A stray dev server for **an unrelated project (BobSwarm)** was listening there, so Playwright silently attached to it. Every one of the 15 recovered `error-context.md` snapshots is a page from that other app — not AMAZWI. The handover described them as "real captured output"; they were real, but of the wrong program. Fixed: dedicated port 5199, `reuseExistingServer: false`, reason recorded in a comment.
+  2. `e2e/fixtures.ts` stubbed the glob `**/api/**`, which also matches the app's own module `/src/api/client.ts`. Vite's JS was answered with `application/json`, the browser refused the module (`Expected a JavaScript-or-Wasm module script...`), React never mounted, and **the reflow, touch-target and axe gates were all passing vacuously against a blank page.** Fixed with a `url.pathname.startsWith("/api/")` predicate.
+- Only then did the suite measure anything. **Real violations found and fixed, all quoted in `starter/frontend/ACCESSIBILITY_EVIDENCE.md`:**
+  - **Touch targets: every control on all five routes at 19–21px** (e.g. consent "Continue" `69 × 21`, home theme select `141 × 19`). Cause: the `.route` class every route already used **had no CSS rule defined anywhere**. Note the mockups' `all:unset` div→button pattern did **not** apply — these were already real `<button>`/`<a>`/`<select>`; size and colour were missing, not semantics.
+  - **Reflow at 200% zoom: `/result` overflowed, `scrollWidth` 377 vs `clientWidth` 320.** The other four routes passed unchanged — confirming the real frontend did **not** inherit the fixed-390px-canvas defect that `04_assets/mockups_v2/ACCESSIBILITY_EVIDENCE.md` §3 warned about.
+  - **axe `color-contrast: a` on home and result, both themes** — unstyled `<a>` in UA link blue `#0000EE` on the dark `--ground`.
+  - **`/verify` exposed no `aria-live` region at all.** `StatusAnnouncer` already existed in `SignalPrimitives.tsx` and had never been wired into any route; four status transitions were announced to nobody.
+  - **`/` had an unlabelled `<main>`** while the other four routes were labelled.
+- **Separate real bug found while checking the axe results were not suspiciously identical across themes:** `theme.tsx` writes `data-theme="midnight"/"daylight"`, but canonical `tokens.css` defines `shweshwe`/`dusk`/`earth`/`ndebele`/`ink`. Neither name matched a selector. `midnight` fell through to `:root` and looked right by accident; **`daylight` rendered the dark palette, so the light theme never worked**, and the two-theme axe sweep was really testing one palette twice. Aliased in `signal-flow.css`, **not** `tokens.css` (byte-synced by `tokens.sync.test.ts`, must never be hand-edited).
+- Deleted the committed `test-results/` tree and added `starter/frontend/.gitignore` — stale run artefacts of the wrong app read as evidence long after the run is forgotten.
+- Scoped `vitest.config.ts` to `src/**` — it was collecting the Playwright specs and erroring.
+
+**HOW / VERIFIED**
+- `npx playwright test` — **195/195 passing** across Chromium at 320/360/390/430/480px, both themes. Real `Tab` presses (not `.focus()`, which never sets `:focus-visible`), `getBoundingClientRect()` for sizes, live `scrollWidth`/`clientWidth` for reflow.
+- Rendered in a real browser and looked, per the standing rule: screenshots at 320px in both themes. Confirmed by computed style that `--ground` under `daylight` went `#0C1123` → `#FBF2E6`, with the `--voice-*` brand gradient unchanged as the token file's invariant requires.
+- `npx vitest run` 57/57 · `npx tsc -b --noEmit` clean · `vite build` succeeds.
+
+**WHY**
+- A green gate on an unmounted page is worse than no gate, because it looks like evidence. Both harness bugs had to be fixed before any number here could be honest — and the predecessor's captured artefacts had to be called what they were rather than inherited as findings.
+
+**CHANGED**
+- `starter/frontend/`: `signal-flow.css` (new `.route` + control + focus + daylight-alias block), `HomeRoute.tsx`, `features/verification/VerificationRoute.tsx`, `e2e/fixtures.ts`, `playwright.config.ts`, `vitest.config.ts`, new `ACCESSIBILITY_EVIDENCE.md`, new `.gitignore`; removed `test-results/`.
+
+**NEXT / BLOCKED-PING**
+- ⚠️ **Lethabo's call needed:** mapping "Signal Daylight" → the `earth` palette is the only reading `tokens.css` supports (sole light palette), but which canonical theme each product-facing name means is a design decision, not a mechanical one. The cleaner long-term fix is renaming the themes in `theme.tsx` to canonical names, which changes `theme.test.tsx` and the persisted `localStorage` value. Flagged, not settled.
+- Not covered, listed in full in §"What this does NOT cover": Chromium only, no real screen reader, no physical device, `prefers-reduced-motion` read but not observed firing. **Not a WCAG conformance claim.**
+- When Coverage Constellation / missions / MTN Language Ops routes land, add them to `ROUTES` in `e2e/fixtures.ts` — the gates iterate that list, so a new route is otherwise silently ungated.
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · review · cross-lane review closed; one governance-ledger contradiction found
 
 **DID**

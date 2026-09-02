@@ -19,7 +19,7 @@ export default defineConfig({
   reporter: [["list"]],
   timeout: 30_000,
   use: {
-    baseURL: "http://127.0.0.1:5174",
+    baseURL: "http://127.0.0.1:5199",
     trace: "off",
   },
   projects: widths.map((width) => ({
@@ -30,9 +30,18 @@ export default defineConfig({
     },
   })),
   webServer: {
-    command: "npm run dev -- --port 5174 --strictPort",
-    url: "http://127.0.0.1:5174",
-    reuseExistingServer: true,
+    // Invoke Vite's bin through node directly: on Windows the `npm run dev`
+    // shim fails to spawn under Playwright ("The system cannot execute the
+    // specified program"). `--host 127.0.0.1` is required because Vite's
+    // default bind is IPv6 `::1` only, so a 127.0.0.1 readiness probe never
+    // resolves and the webServer wait times out at 120s.
+    command: "node node_modules/vite/bin/vite.js --port 5199 --strictPort --host 127.0.0.1",
+    url: "http://127.0.0.1:5199",
+    // MUST stay false. With `true` and a stray dev server on the port, Playwright
+    // silently attaches to whatever is listening and the whole suite measures the
+    // wrong application. That is exactly what happened on 2026-09-02: 15 gate
+    // failures were captured against an unrelated project's page, not AMAZWI.
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });
