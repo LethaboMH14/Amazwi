@@ -1946,3 +1946,9 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **DID:** Started a fresh uvicorn instance on port 8002 with real PostgreSQL and exercised contribution creation plus audio-upload initiation.
 - **RESULT:** Contribution creation returned 201, but audio initiation returned `AUDIO_NOT_AUTHORISED`; the server process was not using the same visible database state as the direct SQL session, and the original LAN process also lacked `AMAZWI_AUDIO_TOKEN_SECRET`.
 - **NEXT:** Restart the event backend once with the confirmed database URL and a non-empty local audio token secret, then rerun the seeded flow. This is an operational configuration checkpoint, not a product decision.
+
+### [02 Sep] — Sibusiso · clean-server recheck
+
+- **DID:** Terminated listeners on ports 8000–8002 and started uvicorn fresh with both `AMAZWI_DATABASE_URL` and `AMAZWI_AUDIO_TOKEN_SECRET` set before import.
+- **RESULT:** `/contributions` returned 201, but `/audio/uploads` still returned `AUDIO_NOT_AUTHORISED`; the contribution was not visible from a separate direct connection to `amazwi_test`, indicating the running process is reaching a different PostgreSQL database/cluster despite the shell URL. This needs Sbu to identify the active Postgres service/connection target before another retry.
+- **PUSH:** GitHub HTTPS is unreachable (`curl` and `git ls-remote` fail to connect); local commit remains unpushed.
