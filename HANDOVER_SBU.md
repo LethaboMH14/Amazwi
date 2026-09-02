@@ -4,6 +4,7 @@
 
 ---
 
+<<<<<<< HEAD
 ## ⚠️ FOR YOUR REVIEW — 02 Sep · Plan 02 acceptance checklist verified; one item is yours
 
 Cross-lane backend/ML work, **pending your review**. Plan 02's Final Acceptance
@@ -26,6 +27,18 @@ sees (`STAGE_4_6_EVIDENCE.md`, the model cards, `BUILD_LOG.md`) against the real
 Kaggle runs in `a792049`/`6f03710`/`d3bc55a`. No test can discharge it, so it is
 deliberately left unticked rather than ticked optimistically. Nothing touching
 Kaggle, Vercel, money or campaigns was changed.
+
+---
+
+## ⚠️ NEW — 02 Sep ~06:00 · mission authorisation (money-adjacent) — needs your review
+
+Plan 03 Tasks 9+10 are built and green: mission proposals plus a **human-only** MTN Language Ops authorisation gate (`app/missions.py`, `app/routes/ops.py`, migration `e0f1a2b3c4d5`). Full detail in `05_amazwi/BUILD_LOG.md`'s newest entry.
+
+**What I did NOT decide, because it is yours:**
+- Authorisation records human intent only. It moves **no money** — no `funded_cents`/`committed_cents` write, no payment adapter call. Disbursing against an authorised mission is unbuilt and left to you.
+- `mission_proposals.campaign_id` is a **nullable** FK to the existing `campaigns` table (reusing your model rather than inventing a parallel budget concept). Whether a mission must always be attached to a funded campaign is a money decision I deliberately did not make.
+
+**What to attack when reviewing:** the gate is four layers — persisted `users.principal_kind` (CHECK-constrained), the `MTN_LANGUAGE_OPS` role, a keyword-only no-default exact confirmation echo, and a source-tree scan test asserting `authorise_mission` has exactly one caller (`routes/ops.py`). The test that matters most is `test_automated_actor_cannot_authorise_without_the_human_step`, which gives an automated actor the role *and* the correct confirmation text and still refuses it. Backend 135/135, frontend 65/65, typecheck clean.
 
 ---
 

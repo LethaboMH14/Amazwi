@@ -51,6 +51,39 @@ class AssignmentResponse(BaseModel):
     mode: str
 
 
+class MissionProposalDTO(BaseModel):
+    """Persisted mission terms. The API never accepts these as input on the
+    authorisation call -- they are copied from the stored proposal."""
+
+    id: str
+    language: str
+    province_code: str
+    domain: str
+    rationale: str
+    target_verified_clips: int
+    fixed_reward_cents: int
+    budget_cents: int
+    state: str
+    authorised_by: str | None = None
+
+
+class OpsReadinessRow(BaseModel):
+    label: str
+    value: str | None = None
+    detail: str
+    available: bool
+
+
+class OpsView(BaseModel):
+    principal_kind: str
+    roles: list[str]
+    display_name: str
+    confirmation_text: str
+    readiness: list[OpsReadinessRow]
+    gaps: list[dict]
+    proposals: list[MissionProposalDTO]
+
+
 class ContributionResult(BaseModel):
     status: str
     outcome: str | None = None
