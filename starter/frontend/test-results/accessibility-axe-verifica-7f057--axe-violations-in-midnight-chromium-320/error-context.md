@@ -1,0 +1,70 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e6]:
+      - link "BobSwarm logo BobSwarm" [ref=e7] [cursor=pointer]:
+        - /url: "#top"
+        - img "BobSwarm logo" [ref=e8] [cursor=pointer]
+        - generic [ref=e9] [cursor=pointer]: BobSwarm
+      - link "View source" [ref=e10] [cursor=pointer]:
+        - /url: https://github.com/Sibusiso-K/Sonar-BobSwarm-
+  - main [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e14]:
+        - paragraph [ref=e15]: five specialists · one report
+        - heading "Five specialists read your code. Every finding, a literal quote." [level=1] [ref=e16]:
+          - text: Five specialists read your code.
+          - text: Every finding,
+          - generic [ref=e17]: a literal quote.
+        - paragraph [ref=e18]: Describe an engineering task in plain language. Four independent specialists start together; the Refactorer follows the Debugger with its findings. They hand back one unified report—every finding backed by quoted source, not a paraphrased guess.
+      - generic [ref=e19]:
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - text: Describe
+            - img [ref=e26]
+          - generic [ref=e28]:
+            - generic [ref=e29]:
+              - img [ref=e30]
+              - text: Parallel first wave
+            - img [ref=e35]
+          - generic [ref=e38]:
+            - img [ref=e39]
+            - text: Unified report
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - img [ref=e49]
+              - text: Describe the task
+            - button "Load sample audit" [ref=e51]:
+              - img [ref=e52]
+              - text: Load sample audit
+          - textbox "Describe the task" [ref=e55]
+          - generic [ref=e56]:
+            - generic [ref=e57]:
+              - generic [ref=e58]:
+                - img [ref=e59]
+                - text: Repository
+              - textbox "Repository" [ref=e64]
+            - button "Dispatch the swarm" [disabled] [ref=e65]:
+              - text: Dispatch the swarm
+              - img [ref=e66]
+          - generic [ref=e68]:
+            - button "Full audit" [ref=e69]
+            - button "Debug" [ref=e70]
+            - button "Document" [ref=e71]
+            - button "Refactor" [ref=e72]
+            - button "Onboarding" [ref=e73]
+            - button "Data lineage" [ref=e74]
+    - generic [ref=e76]:
+      - paragraph [ref=e77]: Stage 2 & 3
+      - paragraph [ref=e78]: The swarm and the unified report appear here the moment you dispatch a task above.
+    - generic [ref=e80]:
+      - paragraph [ref=e81]: History
+      - heading "Every run so far" [level=2] [ref=e82]
+      - generic [ref=e83]: Run history is temporarily offline. Start the BobSwarm events server to restore it.
+  - contentinfo [ref=e84]: BobSwarm — five specialists, one report.
+```
