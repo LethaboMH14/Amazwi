@@ -6,6 +6,18 @@
 
 ---
 
+## 3 SEP (evening) — PITCH_SCRIPT.md is ready, you're up for the demo beat
+
+Pitch is frozen to a five-beat structure to fit the real Round 1 slot (2–3 min pitch + 1 min demo, no 10-minute slot exists): **[`PITCH_SCRIPT.md`](05_amazwi/PITCH_SCRIPT.md)**.
+
+- **You deliver Beat 3 — the live demo, 60 seconds.** Script has a narration skeleton in it; fill in the actual phrase and rehearse it standalone against a stopwatch until it reliably lands under 60s — that's the beat most likely to overrun.
+- I deliver the intro/problem/product beats and the close/ask.
+- Deck to match: **https://gamma.app/docs/i1kl0ftsc184hbx** — card 1 has an empty band reserved for the real MTN/MoMo logos, drop them in before we present.
+- **Important correction baked into both the script and the deck:** the live MoMo Collections call funds the *campaign*, it does not pay a speaker's wallet directly — the AMAZWI ledger records the reward, and speaker cash-out is a separate, not-yet-built settlement leg. Say "the AMAZWI ledger is credited," never "your wallet is credited," in the demo narration. This was a real overclaim in an earlier draft, caught and fixed — don't reintroduce it under pressure to sound more finished than the build is.
+- Please confirm the isiZulu/Setswana phrase staged for the demo matches what the script currently has as a placeholder.
+
+---
+
 ## 2 SEP — SBU'S REVIEW OF THE CROSS-LANE WORK
 
 I reviewed the items filed "pending Sbu's review" by reading the code and tracing the actual paths, not by reading the log entries describing them. Verdicts below are binding for money, data-integrity and deployment-safety per `05_BUILD.md` §2.
