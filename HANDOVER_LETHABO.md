@@ -1,8 +1,66 @@
 # HANDOVER → LETHABO
 
 **From:** Sbu
-**Date:** Monday 31 August 2026
-**Based on:** repository work through `66becea`, plus the 31 August governance/status reconciliation
+**Date:** Wednesday 2 September 2026 (latest section); earlier sections dated inline
+**Based on:** repository work through `96e2fae` (CI green, both jobs, real Postgres service container)
+
+---
+
+## 2 SEP — SBU'S REVIEW OF THE CROSS-LANE WORK
+
+I reviewed the items filed "pending Sbu's review" by reading the code and tracing the actual paths, not by reading the log entries describing them. Verdicts below are binding for money, data-integrity and deployment-safety per `05_BUILD.md` §2.
+
+### ✅ ACCEPTED — mission authorisation gate (Plan 03 Tasks 9+10)
+
+I traced the whole path before accepting it, and the gate holds:
+
+- `OperatorPrincipal` is only ever built by `principal_for_user()` from a persisted `users` row. There is no constructor path, and no request field, that sets `principal_kind` or `roles`. I checked `routes/ops.py` specifically for a header-injection route in — there isn't one; the route reads `principal.kind` for output only.
+- The gate is in the service layer (`authorise_mission`), not just the UI, which is the conservative reading and the right one. A UI-only gate would have left the API auto-approvable.
+- `confirmation_text` being keyword-only with no default is a genuinely good structural choice — it makes "authorise without naming what you're authorising" un-callable rather than merely discouraged.
+- The strongest test is `test_automated_actor_cannot_authorise_without_the_human_step`: it hands an automated actor *both* the role and the correct confirmation string and still refuses. That's testing the actual threat model, not the happy path.
+- The source-tree scan asserting `authorise_mission` has exactly one caller is the thing that keeps this true six commits from now, when someone adds a worker.
+
+**Ruling on the `campaign_id` nullable FK — this was correctly left to me, so here is the decision:** a mission may be *proposed* without a funded campaign (nullable is right — proposal is cheap and should not be blocked on budget). A mission must **not** be *disbursed* against without a campaign with sufficient uncommitted budget. Put that check in the disbursement path when it's built, not in the authorisation path. Authorisation records human intent; funding is a separate assertion. Don't retrofit a NOT NULL onto the proposal table.
+
+**One correction, and it matters for the pitch:** this gate rests on `app/identity.py`, which is `X-User-ID` + `X-Provider-Subject` headers with **no signature or secret**. Pairing the UUID against the persisted provider subject stops one user casually presenting as another, but it is not authentication — anyone who knows a valid pair can present as a human MTN operator. Plan 04 Task 2 (injectable auth, no production impersonation path) is still open.
+
+> **So: never describe this in the pitch as a security control.** It is a *governance* and *correctness* control, and an excellent one. Say "human-in-the-loop by design — an automated actor structurally cannot authorise a mission." Do not say "only an authorised MTN operator can." The second sentence is not true until Plan 04 Task 2 lands, and it is exactly the kind of overclaim `07_TRUTH.md` exists to stop.
+
+### 🔴 NEEDS RECONCILING BEFORE ANY EVIDENCE PACK — the governance ledger contradicts reality
+
+This is the one real problem I found, and it is a documentation-integrity problem, not a code problem.
+
+Real GPU hours were spent on `lethabomh14` across kernel versions v3/v5/v6/v7. Meanwhile, in the repository:
+
+- `starter/ml/runs/README.md` still records **both** runs as `status: BLOCKED`, with `reservation ID: pending budget reservation`.
+- `starter/ml/kaggle/budget.json` contains only caps and an account list — **no reservations array, no consumed hours, no record that any run ever happened.**
+
+Both canonical governance artefacts state in writing that no run occurred. The `00:15` log entry flags this honestly as provisional — but that flag lives in a log entry, and these two files are what a reviewer, a model card generator, or a judge would actually read. This is precisely the failure `08_REDTEAM.md`'s standard names: *a document that contradicts another document means one of them is wrong.*
+
+**Ruling:** reconcile both files against the run's actual output before anything generates an evidence pack, model card or acceptance write-up from this run. A model card built on top of a ledger that says `BLOCKED` inherits a false provenance chain, and provenance is the entire product claim. Until reconciled, this run produces **no promotable candidate**.
+
+Related, and worth saying plainly: the preflight evidence itself is clean and I have no issue with it — `preflight_swivuriso.json` pins an exact revision (`3f988acc…`), an allowed task (`ASR_TRAINING`), accepted terms, a named reviewer and the registry hash. The gate did its job. It's the *ledger* that's behind, not the approval.
+
+### ⚠️ Kaggle run outcome is still unverified
+
+v7 was `RUNNING` as of the ~05:00 entry and no later entry confirms completion. Nothing in the repo yet proves a checkpoint or metric report exists, or what the real GPU-hour spend was (the reservation was a 10-hour *request*, which is not evidence of consumption). Pull `kaggle kernels output`, verify the artefacts are non-trivial rather than a silent no-op success, then record actual hours.
+
+The promotion gate correctly requires artefact hashes, so an unfinished run **cannot** leak into a promotion by accident — that design is holding, and it's why this is a "verify it" note and not an alarm.
+
+### ✅ ACCEPTED — removal of my `test_external.py`
+
+No objection. It was written against the simpler `external.py` that got discarded in favour of the fuller gated implementation, and its coverage is superseded by `test_external_preflight.py`. Verified: `starter/ml` 38/38 green on current `main`. Don't re-add it.
+
+### What was done well, specifically
+
+- **The `BUILD_LOG.md` merge catch.** Resolving 23 add/add conflicts with `--ours` and then noticing this file needed the *opposite* resolution — because jcode's local copy was 63 lines against origin's 1517 — is the best process decision in this whole log. Applying one blanket rule would have silently deleted every earlier session's history on push. Checking each conflict's actual content before picking a strategy is the habit that caught it.
+- **Declining to write a Kaggle API token** even when asked directly. Correct. Hold that line permanently.
+- **Bounding the run scope** to dev splits (~683MB, ~8k clips) instead of the full ~3,000-hour corpus, on a real non-renewable overnight resource, after actually inspecting the dataset structure rather than trusting the design doc's figure.
+- **Finding three real bugs before spending quota** by running the failing cases locally — particularly the `sys.path[0]` one that the existing test suite structurally could not catch, because `test_kaggle_scripts.py` only invokes `--help`, which exits before the import runs. That's a genuine test-coverage blind spot worth remembering.
+
+### Housekeeping
+
+Four `worktree-agent-*` branches are still on `origin`. They were WIP-checkpoint rescues and their work has landed on `main`. Merge-or-delete them before the event so nobody branches off a stale one by accident.
 
 ---
 

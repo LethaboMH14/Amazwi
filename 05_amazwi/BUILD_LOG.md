@@ -5,6 +5,40 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · review · cross-lane review closed; one governance-ledger contradiction found
+
+**DID**
+- Reviewed the money-adjacent work filed "pending Sbu's review" by tracing the code paths, not by reading the entries describing them. Verdicts recorded in `HANDOVER_LETHABO.md`; the open item in `HANDOVER_SBU.md` is stamped so it stops dangling.
+- **Mission authorisation gate: ACCEPTED.** Traced `OperatorPrincipal` end to end looking specifically for a header-injection path that could set `principal_kind` or `roles` — there isn't one; it is built only by `principal_for_user()` from a persisted row, and `routes/ops.py` reads `principal.kind` for output only. Gate sits in the service layer, not just the UI. Keyword-only `confirmation_text` with no default is the right structural choice.
+- **Ruling issued on `mission_proposals.campaign_id`** (correctly left to me): nullable is right — propose without a funded campaign, never *disburse* without one. Budget check belongs in the disbursement path when built; do not retrofit `NOT NULL`.
+- **Verified CI rather than trusting the claim:** `96e2fae` green on both jobs, backend included, against the real Postgres service container. Locally re-ran what I can: `starter/ml` 38/38, frontend 65/65.
+
+**FOUND — the one real problem**
+- `starter/ml/runs/README.md` still records both runs as `status: BLOCKED` / `reservation ID: pending budget reservation`, and `starter/ml/kaggle/budget.json` holds only caps and an account list — no reservations, no consumed hours. Meanwhile real GPU hours were spent across kernel v3/v5/v6/v7. **Both canonical governance artefacts state in writing that no run happened.**
+- The `00:15` entry flags this honestly as provisional, but that flag is in a log entry while these two files are what a reviewer, a model-card generator or a judge actually reads. This is the `08_REDTEAM.md` standard's own failure mode: one document contradicting another means one of them is wrong.
+- **Ruling:** reconcile both files against the run's real output before anything generates an evidence pack, model card or acceptance write-up. A model card built on a ledger reading `BLOCKED` inherits a false provenance chain, and provenance *is* the product claim. Until reconciled, this run yields no promotable candidate.
+- The preflight evidence itself is clean and not at issue — `preflight_swivuriso.json` pins an exact revision, an allowed task, accepted terms, a named reviewer and the registry hash. The gate worked; the ledger is what's behind.
+
+**CORRECTION THAT AFFECTS THE PITCH**
+- The mission gate rests on `app/identity.py` — `X-User-ID` + `X-Provider-Subject` headers, **no signature**. Pairing the UUID to the persisted subject stops casual cross-user access but is not authentication. Plan 04 Task 2 is still open. So the gate is a governance/correctness control, not a security control: say *"human-in-the-loop by design — an automated actor structurally cannot authorise a mission,"* never *"only an authorised MTN operator can."* The second is an overclaim of exactly the kind `07_TRUTH.md` exists to catch.
+
+**ALSO**
+- Accepted the removal of my earlier `test_external.py` (superseded by `test_external_preflight.py` against the fuller gated `external.py`). Don't re-add it.
+- v7's outcome is still unverified in-repo — no artefact or real GPU-hour figure recorded. The promotion gate's artefact-hash requirement means an unfinished run cannot leak into a promotion, so this is a verify-it note, not an alarm.
+- Four `worktree-agent-*` branches remain on `origin`; their work has landed. Merge-or-delete before the event.
+
+**ALSO RULED — Impact Map (`GET /impact`), the second cross-lane item**
+- **Unauthenticated: approved for the competition build.** Read `impact.py` directly: `MIN_CELL_SIZE = 5` filters before banding, counts publish as bands, `model_gap_percent` is null rather than inferred from volume, `missions_completed` is 0 rather than approximated. Good instincts throughout.
+- **But the real exposure is commercial, not personal, and wasn't the thing asked about.** Each node publishes `campaign`, so a public endpoint discloses which funding campaigns exist and roughly their volume. Fine for seeded demo data; before a real sponsor's campaign is in there, drop `campaign` from the public projection or put the route behind identity.
+- 🔴 **New finding — the bands are partially defeatable.** `verified_total` is published exactly and `coverage_percent = round(100 * verified_count / verified_total)`. With both, `verified_count` solves backwards to a narrow range; at demo-scale totals one percentage point is ~2–3 clips, so a "5–9" band collapses to near-exact and the k≥5 protection stops protecting. Fix by banding or hard-rounding `coverage_percent`, or dropping it and deriving share client-side.
+- **Cell-key deviation: approved, and correct.** Refusing to fabricate a province field that isn't collected is right. Do **not** add a province column for the competition — a coarse geographic field on voice contributions is a POPIA consent question and a new consent surface, and it is not P0. Ship it null with `geography_available: false`.
+
+**NEXT**
+- Reconciling the two governance files needs the run's real output, which is on Lethabo's Kaggle account — hers to pull, not mine.
+- The `coverage_percent` fix is small and in her lane; flagged rather than patched so she isn't surprised mid-task.
+
+---
+
 ### [02 Sep ~06:00] — Lethabo's session · Claude · Plan 03 Tasks 9+10: missions + human-only MTN authorisation — CROSS-LANE, PENDING SBU'S REVIEW
 
 **DID**
@@ -116,6 +150,7 @@
 
 **NEXT / BLOCKED-PING**
 - **Sbu:** item 16's honesty pass is the one open acceptance item, and it is genuinely yours — it is a claim-calibration judgement over the evidence docs, not something a test settles.
+- **Vindicated within the hour, and worth recording.** A third `origin/main` merge (Sbu's own review commit `911f9c3`) landed while this entry was being written, and it names the concrete instance independently: `runs/README.md` and `kaggle/budget.json` both still state no run happened, while real GPU hours were spent. That is precisely item 16's failure mode — a false claim sitting in prose that every mechanical test passes straight over. It is the argument for having left the box unticked rather than ticking it on the strength of the green suite. Still open: reconcile both files before any evidence pack or model card is generated.
 - The four plan files' inline checkboxes remain unreliable elsewhere; only Plan 02's Final Acceptance Checklist has been reconciled against reality.
 
 ---
