@@ -5,6 +5,30 @@
 
 ---
 
+### [02 Sep ~14:22] — Sibusiso · live-browser contract hardening (pending interactive proof)
+
+- **DID:** Reconciled the real API and frontend contracts found while preparing the browser run: governed consent enum names, seeded `zu-001` UUID, speaker-to-verifier hand-off, verifier audio and response fields. Added `POST /assignments/{id}/playback` — an audience-bound, consent-gated `VERIFY`-purpose token so a verifier can actually listen to the speaker's clip (previously only the speaker's own `REPLAY` path existed).
+- **HOW:** Each LAN device's Vite proxy can supply only its own seeded identity headers (including for `<audio>`, which cannot set custom headers itself); verifier playback is a five-minute, audience-bound `VERIFY` token that re-checks both speaker and verifier playback consent before issuing.
+- **WHY:** The prior UI could render against mocks but could not complete the governed real-data journey: it created a contribution with placeholder `"greeting"`, then attempted verification as the speaker.
+- **VERIFY:** Frontend `npm run build` passed; frontend `npm test` passed **82/82**; focused real-Postgres peer API tests passed **3/3**, including a test that fetches the verifier's own playback URL and confirms 200. **Interactive Chrome validation is still pending because this Codex machine's Chrome-control service is missing; no browser success is claimed.**
+
+---
+
+### [02 Sep] — Sbu (Claude, direct) · full backend suite green after all transaction/reset fixes
+
+**DID**
+- Reviewed and relayed Codex's guarded demo reset (`a15d9f6`): CLI-only, requires `AMAZWI_ALLOW_DEMO_RESET=true`, refuses non-demo campaigns and any dataset-export rows referencing run state, deletes transient contribution/assignment/decision/reward/receipt/audio/outbox/council rows, resets `committed_cents`, preserves cards/users/consents/qualifications/campaigns/reward rules. No HTTP route. Design matches exactly what I asked for.
+- Held the line on `.codex_github_device_push.py` — an untracked GitHub OAuth device-flow script Codex had written to work around its push block, requesting `repo workflow gist` (over-scoped for pushing) and asking Sbu to authenticate it. Refused: unnecessary (I've relayed every commit all session with zero cost), over-scoped, and a live-credential file sitting in a repo where `git add -A` happens under time pressure — same risk class as the `.private_audio/` gap closed earlier. Same precedent Codex itself set declining to write a Kaggle token. Codex deleted the script; confirmed gone before relaying its next commit.
+- Ran the **full backend suite fresh** against real Postgres after all the session's transaction-commit fixes (contributions x3, consents grant+revoke) and the new reset path: migrations clean, **213/213 passed**, ~3.5 min.
+
+**WHY**
+- Item 1 of the standing priority queue (full suite re-run) was still open after Codex's report covered only the reset work — closed it directly rather than leave it unverified.
+
+**NEXT**
+- Browser flow against the live backend with the craft layer, and LAN/phone reachability, remain the last open items before rehearsal.
+
+---
+
 ### [02 Sep ~13:45] — Lethabo's lane · Claude · craft layer ported into the real app; Figma consolidated on Pro
 
 **DID**
@@ -2078,3 +2102,9 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **DID:** Added a guarded CLI-only `python -m app.seed_demo --reset` path that clears transient take state and local audio while preserving seeded cards, users, consents, qualifications, campaigns and reward rules.
 - **SAFETY:** Requires `AMAZWI_ALLOW_DEMO_RESET=true`, refuses non-demo campaigns and contribution-linked export rows, and exposes no HTTP reset route.
 - **VERIFY:** Two complete HTTP takes separated by reset both returned `AVAILABLE`, `CORPUS_ELIGIBLE`, and R2.00; final baseline counts were contributions=0, assignments=0, rewards=0, audio=0, decisions=0; reset tests 3/3 passed.
+
+### [02 Sep] — Lethabo · Setswana native-review closure (relayed by Sbu)
+
+- **DID:** Confirmed `moraka`, `jusi`, `ting` and `diphaphatha` aloud in their `sw-004`, `sw-005` and `sw-007` card contexts.
+- **DECISION:** Keep all four as natural, clearly incorrect distractors; no replacement is required.
+- **CHANGED:** Set the Setswana hero deck to `REVIEWED` with no pending items; updated the canonical P0 and Lethabo work status.

@@ -13,7 +13,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomeRoute />} />
         <Route path="/consent" element={<ConsentRoute />} />
-        <Route path="/record/:contributionId" element={<RecordingRoute />} />
+        <Route path="/record" element={<RecordingRoute />} />
         <Route path="/verify" element={<VerificationRoute />} />
         <Route path="/result/:contributionId" element={<ResultRoute />} />
         <Route path="/impact" element={<ImpactRoute />} />

@@ -13,17 +13,22 @@ from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
 from app.matching import is_correct, normalise_answer
 from app.models import Assignment, AssignmentMode, Card, Contribution, EligibilityDecision, RewardEvent
+from app.contributions import issue_verifier_playback_token
+from app.audio import get_audio_store
+from app.storage import LocalAudioObjectStore
 from app.resolver import ResolutionNotReadyError, create_assignment, resolve_from_persisted_state
 
 
 router = APIRouter(tags=["assignments"])
 
 
-def _assignment_response(assignment: Assignment) -> AssignmentResponse:
+def _assignment_response(assignment: Assignment, language: str) -> AssignmentResponse:
     return AssignmentResponse(
         id=str(assignment.id),
         contribution_id=str(assignment.contribution_id),
         mode=assignment.mode.value,
+        language=language,
+        prompt_text="Listen once, then type the word you heard.",
     )
 
 
@@ -47,7 +52,22 @@ def next_assignment(
         )
     except Exception as exc:
         raise HTTPException(status_code=409, detail={"code": "NO_ASSIGNMENT"}) from exc
-    return _assignment_response(assignment)
+    return _assignment_response(assignment, language)
+
+
+@router.post("/assignments/{assignment_id}/playback")
+def assignment_playback(
+    assignment_id: uuid.UUID,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+    store: LocalAudioObjectStore = Depends(get_audio_store),
+):
+    require_identity_user(session, identity)
+    try:
+        token = issue_verifier_playback_token(session, store, assignment_id, identity)
+    except Exception as exc:
+        raise HTTPException(status_code=403, detail={"code": "AUDIO_NOT_AUTHORISED"}) from exc
+    return {"url": f"/private-audio/play/{token}"}
 
 
 @router.post("/assignments/{assignment_id}/answer", response_model=AssignmentResponse)
@@ -80,7 +100,7 @@ def answer_assignment(
         resolve_from_persisted_state(session, assignment.contribution_id)
     except ResolutionNotReadyError:
         pass
-    return _assignment_response(assignment)
+    return _assignment_response(assignment, contribution.declared_language)
 
 
 @router.post("/assignments/{assignment_id}/referee", response_model=AssignmentResponse)
@@ -115,7 +135,7 @@ def referee_assignment(
         resolve_from_persisted_state(session, assignment.contribution_id)
     except ResolutionNotReadyError:
         pass
-    return _assignment_response(assignment)
+    return _assignment_response(assignment, contribution.declared_language)
 
 
 @router.get("/contributions/{contribution_id}/result", response_model=ContributionResult)
