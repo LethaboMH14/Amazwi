@@ -43,6 +43,7 @@ from app.arcade import (
 )
 from app.rewards import RedemptionRefused, build_catalogue, is_live_provider, redeem
 from app.db import get_session
+from app.providers import get_provider
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
 
 router = APIRouter(tags=["arcade"])
@@ -181,8 +182,7 @@ def rewards(
     live. With the DemoProvider every row comes back
     PROVIDER_NOT_CONNECTED and the UI renders no redeem action.
     """
-    from app.main import provider  # local import: avoids a circular import
-
+    provider = get_provider()
     user = require_identity_user(session, identity)
     view = build_catalogue(session, user_id=user.id, provider_mode=provider.mode)
     return RewardsResponse(
@@ -226,8 +226,7 @@ def redeem_reward(
     `Idempotency-Key` is required, not optional: a double-tapped Redeem
     must reserve once, and the ledger enforces that on the key.
     """
-    from app.main import provider
-
+    provider = get_provider()
     user = require_identity_user(session, identity)
     try:
         attempt = redeem(

@@ -1,5 +1,53 @@
 # HANDOVER → SBU
 
+## 🔴 PING — 03 Sep ~01:30 · RECORDING HAD NEVER WORKED · and one money trap that needs your call
+
+**Read the money trap first.**
+
+### 🔴 DO NOT wire MoMo Collections to the redeem path
+
+You landed live Collections (`app/momo.py`, `5ac45cf`) — good work, and the WAF/empty-body diagnosis is a genuinely nice catch. It is currently called from nowhere.
+
+I built `POST /rewards/{key}/redeem` in the same window: it reserves against the ledger, then calls the payment provider adapter. Pointing that at your `MomoClient` would take five minutes. **I deliberately did not, and neither should you:**
+
+> **Collections takes money IN. Redeeming a contributor's credit pays money OUT — that is Disbursement.** Wiring `request_to_pay` into the redeem path would *charge the person you meant to pay*.
+
+Where Collections genuinely belongs is **Gate G — funding a mission**, where a sponsor pays in. That is your call per `05_BUILD.md` §2, so I flagged it rather than guessed.
+
+### ✅ FIXED — recording had never worked, for anyone
+
+`api/client.ts` sent `duration_ms: 0` on finalise while the recorder computed the real elapsed time and threw it away. `app/contributions.py` rejects anything outside `500..20000ms`, so **every recording ever made through the UI failed at the last step**. The upload itself succeeded, so the symptom was a silently orphaned `.pending` file rather than a visible error — bytes on disk, rename to `.bin` never happened, no verifier could ever play the clip.
+
+Proven at the API boundary against the running backend, both directions:
+
+| finalise body | result |
+|---|---|
+| `duration_ms: 0` (what shipped) | **HTTP 422 `AUDIO_DURATION_INVALID`** |
+| real duration | **HTTP 200, state `AVAILABLE`** |
+
+Same commit also fixes the phone path hardcoding 1000ms, and `codec` hardcoded to `"webm"`. The missing test is added — nothing asserted the request body, which is exactly why this shipped.
+
+### 🔴 MY OWN BUG, found and fixed — the seeded audio did not exist
+
+`seed_activity.py` (mine) wrote `AudioObject` rows with `sha256 = "0"*64` and **never wrote a byte**. 27 audio rows, 2 files on disk. A row asserting something exists when it does not — the other half of "the other person cannot hear it". Now writes a real deterministic WAV per clip, with hash and length measured from what was actually written. 25/25 verified.
+
+### ⚠️ The test suite wipes the demo database
+
+`tests/conftest.py` drops the public schema **per test**. If the demo backend points at `AMAZWI_TEST_DATABASE_URL`, running `pytest` destroys every seeded card, user and reward — surfacing as a confusing `401` from every authenticated route. Split into `postgres` (tests) and `amazwi_demo` (demo). Steps in `starter/backend/DEMO_RUNBOOK.md`.
+
+### Architecture check is now runnable
+
+`uvx archy score .` on the backend: **0.686**, acyclicity **1.000**, 80 modules / 182 edges. It found a real import cycle (`app.main` ↔ `app.routes.arcade`) that was mine; fixed with the `app/providers.py` leaf module. Worth keeping in CI.
+
+### For your review — new, cross-lane
+
+- **`/arcade`** publishes contributor display names on a leaderboard. Privacy posture; scoped to the caller's own language cohort, never a provider subject. Your call.
+- **`/rewards` thresholds** (R5 / R10 / R20) are placeholders chosen to be obviously round rather than researched. API returns `thresholds_are_proposed: true`; the screen says so on the page.
+- **`app/llm.py`** — Featherless/AIML client for the advisory Council. Three switches must all be on before a byte leaves the machine. Featherless serves text, TTS and private HF models but **not ASR**, so nothing routed through it can listen to a contribution.
+
+---
+
+
 > **Sbu response incorporated 2026-08-31.** The role split was reversed and the product decisions were accepted/reconciled. Read [`HANDOVER_LETHABO.md`](HANDOVER_LETHABO.md) and [`05_amazwi/plan/00_MASTER_PLAN.md`](05_amazwi/plan/00_MASTER_PLAN.md) before acting on older instructions below. This file remains Lethabo's incoming context and historical reasoning; where it conflicts with the canonical plan, the canonical plan wins.
 
 ---

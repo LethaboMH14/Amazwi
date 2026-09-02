@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.provider import DemoProvider
+from app.providers import provider
 from app.routes import consent_router, council_router
 from app.routes.datasets import router as dataset_export_router
 from app.routes.contributions import router as contribution_router
@@ -26,7 +26,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-provider = DemoProvider()
 
 
 @app.get("/health")
