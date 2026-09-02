@@ -1913,3 +1913,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** `d9e0f1a2b3c4_dataset_exports.py`.
 - **NEXT:** Run real PostgreSQL migration tests and generate Stage 4–6 acceptance evidence.
 - **BLOCKED-PING:** Migration execution is pending the PostgreSQL 16 environment; no export was approved or downloaded.
+
+### [02 Sep] — Sibusiso · live seed verification blocked
+
+- **DID:** Pulled `d885821` and attempted the real seed/idempotency/content-check path.
+- **HOW:** Added `test_seed_demo.py` to run `seed()` twice and query campaign, card, user, consent and verifier counts plus the Card constraint shape.
+- **WHY:** The live demo seed had never been executed against a real database.
+- **CHANGED:** Seed verification test retained for CI/local Postgres.
+- **NEXT:** Run with `AMAZWI_TEST_DATABASE_URL` pointing at the event laptop's real Postgres, then start LAN services and execute the golden path.
+- **BLOCKED-PING:** Local Windows embedded PostgreSQL cannot start (`pg_ctl: could not create restricted token: error code 87`); no seed SQL ran and no success is claimed.
