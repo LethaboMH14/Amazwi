@@ -108,6 +108,16 @@ class User(Base):
     provider_subject: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     declared_languages: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=False, default=list)
     age_confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Stage 8: persisted principal kind + operator roles. See PrincipalKind
+    # below -- these are the database facts the human-only MTN authorisation
+    # gate reads. A caller cannot assert either one over the wire.
+    principal_kind: Mapped[str] = mapped_column(
+        String(16), nullable=False, server_default="HUMAN", default="HUMAN"
+    )
+    roles: Mapped[list[str]] = mapped_column(
+        ARRAY(String), nullable=False, server_default="{}", default=list
+    )
+    display_name: Mapped[str | None] = mapped_column(String(120), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, nullable=False)
 
 
@@ -472,3 +482,108 @@ class DatasetExportRow(Base):
     included: Mapped[bool] = mapped_column(Boolean, nullable=False)
     exclusion_reason: Mapped[str | None] = mapped_column(String, nullable=True)
     __table_args__ = (CheckConstraint("(source_class = 'AMAZWI_OPTED_IN' AND contribution_id IS NOT NULL) OR (source_class <> 'AMAZWI_OPTED_IN' AND contribution_id IS NULL)", name="ck_dataset_row_source_link"), UniqueConstraint("export_id", "source_class", "source_record_id", name="uq_dataset_export_source_record"))
+
+
+# --- Stage 8: mission proposals and human-only MTN authorisation ---------
+#
+# Cross-lane note, PENDING SBU'S REVIEW: this is money-adjacent territory
+# (`05_BUILD.md` §2 gives Sbu final say on money). Nothing here moves funds.
+# A MissionAuthorisation records that a named human operator accepted the
+# persisted mission terms; it deliberately does NOT touch
+# `campaigns.funded_cents` / `campaigns.committed_cents`. Actually funding a
+# mission from a campaign stays a separate, explicit, Sbu-owned decision.
+
+
+class PrincipalKind(str, enum.Enum):
+    """Whether a `users` row is a real person or an automated actor.
+
+    This exists so "a human authorised it" is a persisted database fact and
+    not something a caller can assert in a request header. An automated
+    actor is stored as AUTOMATED and can therefore never satisfy the human
+    gate, however many roles it is granted.
+    """
+
+    HUMAN = "HUMAN"
+    AUTOMATED = "AUTOMATED"
+
+
+class MissionProposalState(str, enum.Enum):
+    PROPOSED = "PROPOSED"
+    AUTHORISED = "AUTHORISED"
+    REJECTED = "REJECTED"
+
+
+MISSION_LANGUAGES = ("zu", "tn")
+MISSION_PROVINCES = ("EC", "FS", "GP", "KZN", "LP", "MP", "NC", "NW", "WC")
+MISSION_DOMAINS = ("support", "health", "banking", "transport", "retail", "education")
+MTN_LANGUAGE_OPS_ROLE = "MTN_LANGUAGE_OPS"
+
+
+class MissionProposal(Base):
+    """A *proposal* only. It commits nothing until a human authorises it."""
+
+    __tablename__ = "mission_proposals"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    # The plan text names `advisory_job_id -> advisory_jobs.id`; this codebase's
+    # advisory job record is `council_outputs` (there is no `advisory_jobs`
+    # table). Kept unique so one advisory output yields at most one proposal.
+    advisory_output_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("council_outputs.id"), unique=True, nullable=False
+    )
+    campaign_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("campaigns.id"), nullable=True
+    )
+    language: Mapped[str] = mapped_column(String(2), nullable=False)
+    province_code: Mapped[str] = mapped_column(String(3), nullable=False)
+    domain: Mapped[str] = mapped_column(String(32), nullable=False)
+    rationale: Mapped[str] = mapped_column(String(1000), nullable=False)
+    target_verified_clips: Mapped[int] = mapped_column(Integer, nullable=False)
+    fixed_reward_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    budget_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    state: Mapped[MissionProposalState] = mapped_column(
+        SAEnum(MissionProposalState, name="missionproposalstate"),
+        nullable=False,
+        default=MissionProposalState.PROPOSED,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=_now
+    )
+
+    __table_args__ = (
+        CheckConstraint("target_verified_clips > 0", name="ck_mission_target_positive"),
+        CheckConstraint("fixed_reward_cents > 0", name="ck_mission_reward_positive"),
+        CheckConstraint(
+            "budget_cents >= target_verified_clips * fixed_reward_cents",
+            name="ck_mission_budget_covers_target",
+        ),
+        CheckConstraint("language IN ('zu','tn')", name="ck_mission_language_vocab"),
+        CheckConstraint(
+            "province_code IN ('EC','FS','GP','KZN','LP','MP','NC','NW','WC')",
+            name="ck_mission_province_vocab",
+        ),
+        CheckConstraint(
+            "domain IN ('support','health','banking','transport','retail','education')",
+            name="ck_mission_domain_vocab",
+        ),
+    )
+
+
+class MissionAuthorisation(Base):
+    """One row per authorised mission. Written only by a human operator.
+
+    `confirmation_text` stores the exact sentence the operator confirmed, so
+    the audit record shows what was agreed to, not merely that a request
+    arrived.
+    """
+
+    __tablename__ = "mission_authorisations"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    proposal_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("mission_proposals.id"), unique=True, nullable=False
+    )
+    operator_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    idempotency_key: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
+    confirmation_text: Mapped[str] = mapped_column(String(500), nullable=False)
+    authorised_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
