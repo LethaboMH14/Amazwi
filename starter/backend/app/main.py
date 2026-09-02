@@ -7,6 +7,7 @@ from app.routes.datasets import router as dataset_export_router
 from app.routes.contributions import router as contribution_router
 from app.routes.assignments import router as assignment_router
 from app.routes.impact import router as impact_router
+from app.routes.ops import router as ops_router
 
 app = FastAPI(title="starter")
 app.include_router(consent_router)
@@ -15,6 +16,7 @@ app.include_router(assignment_router)
 app.include_router(council_router)
 app.include_router(dataset_export_router)
 app.include_router(impact_router)
+app.include_router(ops_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
