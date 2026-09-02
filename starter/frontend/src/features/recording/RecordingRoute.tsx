@@ -4,5 +4,19 @@ import { api, userMessage } from "../../api/client";
 const DEMO_CARD_ID = "467e6241-cb06-5395-aaa8-d63832bcc538";
 export async function digest(blob: Blob) { const hash = await crypto.subtle.digest("SHA-256", await blob.arrayBuffer()); return Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join(""); }
 export function RecordingRoute() { const navigate=useNavigate(); const recorder=useRef<MediaRecorder>(); const chunks=useRef<Blob[]>([]); const [recording,setRecording]=useState(false); const [error,setError]=useState(""); const [busy,setBusy]=useState(false);
- async function start(){try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks.current=[];const r=new MediaRecorder(stream);recorder.current=r;r.ondataavailable=e=>e.data.size&&chunks.current.push(e.data);r.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());const blob=new Blob(chunks.current,{type:r.mimeType||"audio/webm"});setBusy(true);try{const c=await api.createContribution(DEMO_CARD_ID);const u=await api.beginUpload(c.id);const hash=await digest(blob);await api.uploadAudio(u.audio_object_id,blob);await api.finaliseAudio(c.id,hash,blob);navigate(`/result/${c.id}`);}catch(e){setError(userMessage(e));}finally{setBusy(false);}};r.start();setRecording(true);}catch(e){setError(userMessage(e));}}
- return <main className="route" aria-labelledby="record-title"><p className="eyebrow">isiZulu contribution</p><h1 id="record-title">Say the card aloud</h1><p>Record one clear take. Your audio stays private until approved peers verify it.</p>{error&&<p role="alert">{error}</p>}<button onClick={()=>recording?recorder.current?.stop():start()} disabled={busy}>{busy?"Uploading securely…":recording?"Stop recording":"Start recording"}</button></main>; }
+ async function start(){try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks.current=[];const r=new MediaRecorder(stream);recorder.current=r;r.ondataavailable=e=>e.data.size&&chunks.current.push(e.data);r.onstop=async()=>{
+   // `recording` must flip back here, and before anything async, or a
+   // second tap after this fires calls .stop() on an already-stopped
+   // MediaRecorder -- that throws synchronously and uncaught outside this
+   // handler, so the button silently does nothing on the next tap. This is
+   // what "won't stop recording" actually was: not a stuck recorder, a
+   // stuck button state.
+   setRecording(false);
+   stream.getTracks().forEach(t=>t.stop());const blob=new Blob(chunks.current,{type:r.mimeType||"audio/webm"});setBusy(true);try{const c=await api.createContribution(DEMO_CARD_ID);const u=await api.beginUpload(c.id);const hash=await digest(blob);await api.uploadAudio(u.audio_object_id,blob);await api.finaliseAudio(c.id,hash,blob);navigate(`/result/${c.id}`);}catch(e){setError(userMessage(e));}finally{setBusy(false);}};r.start();setRecording(true);}catch(e){setError(userMessage(e));}}
+ function stop(){
+   // Guard against a stale/duplicate tap trying to stop a recorder that
+   // is not actually in the "recording" state (already stopped, or never
+   // started) -- MediaRecorder.stop() throws InvalidStateError otherwise.
+   if(recorder.current?.state==="recording"){recorder.current.stop();}
+ }
+ return <main className="route" aria-labelledby="record-title"><p className="eyebrow">isiZulu contribution</p><h1 id="record-title">Say the card aloud</h1><p>Record one clear take. Your audio stays private until approved peers verify it.</p>{error&&<p role="alert">{error}</p>}<button onClick={()=>recording?stop():start()} disabled={busy}>{busy?"Uploading securely…":recording?"Stop recording":"Start recording"}</button></main>; }
