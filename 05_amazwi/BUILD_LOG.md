@@ -5,6 +5,14 @@
 
 ---
 
+### [02 Sep] — Sibusiso · verifier-playback regression sweep
+
+- **DID:** Ran the complete backend suite after the browser-flow and verifier-playback API changes.
+- **VERIFY:** Real PostgreSQL: **213 passed** in 123 seconds. The only two warnings are the known FastAPI TestClient deprecation and sandbox pytest-cache access warning; neither is a test failure.
+- **STATUS:** No further backend/API defect is currently known on the event-demo critical path. Interactive browser/device validation remains the sole rehearsal blocker.
+
+---
+
 ### [02 Sep] — Sibusiso · live-browser contract hardening (pending interactive proof)
 
 - **DID:** Reconciled the real API and frontend contracts found while preparing the browser run: governed consent enum names, seeded `zu-001` UUID, speaker-to-verifier hand-off, verifier audio and response fields.
