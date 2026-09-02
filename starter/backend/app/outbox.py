@@ -5,6 +5,11 @@ from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
 from .models import OutboxEvent
 
+# Terminal marker written when a Council event has burned its retry budget.
+# app/routes/council.py reads this exact string to report a FAILED Council
+# state, so the constant is shared rather than duplicated as a literal.
+COUNCIL_ATTEMPTS_EXHAUSTED = "COUNCIL_ATTEMPTS_EXHAUSTED"
+
 def enqueue_contribution_resolved(session: Session, contribution_id: uuid.UUID, decision_id: uuid.UUID) -> OutboxEvent:
     event = session.scalar(select(OutboxEvent).where(OutboxEvent.dedupe_key == f"contribution-resolved:{contribution_id}"))
     if event is not None:
@@ -49,10 +54,36 @@ def retry_event(session: Session, event_id: uuid.UUID, worker_id: str, now: date
     session.commit()
     return event.available_at
 
+def exhaust_event(session: Session, event_id: uuid.UUID, worker_id: str, now: datetime) -> None:
+    """Terminally give up on an event whose retry budget is spent.
+
+    completed_at is set so claim_events stops handing the row out -- without
+    this the worker retried a permanently failing event forever, and the
+    FAILED Council state in app/routes/council.py was unreachable because
+    nothing ever wrote COUNCIL_ATTEMPTS_EXHAUSTED.
+    """
+    event = session.scalar(select(OutboxEvent).where(OutboxEvent.id == event_id).with_for_update())
+    if event is None or event.claimed_by != worker_id:
+        raise ValueError("OUTBOX_WORKER_NOT_OWNER")
+    event.last_error = COUNCIL_ATTEMPTS_EXHAUSTED
+    event.completed_at = now
+    event.claimed_at = None
+    event.claimed_by = None
+    session.commit()
+
+
 def release_event_for_admin_retry(session: Session, event_id: uuid.UUID, actor_id: uuid.UUID, reason: str, now: datetime) -> None:
     event = session.scalar(select(OutboxEvent).where(OutboxEvent.id == event_id).with_for_update())
     if event is None:
         raise ValueError("OUTBOX_EVENT_NOT_FOUND")
+    if event.completed_at is not None:
+        # An exhausted event is the one completed state an admin may reopen.
+        # Genuinely processed events stay closed so a mistyped id cannot
+        # cause a second delivery.
+        if event.last_error != COUNCIL_ATTEMPTS_EXHAUSTED:
+            raise ValueError("OUTBOX_EVENT_ALREADY_COMPLETED")
+        event.completed_at = None
+        event.attempt_count = 0
     event.available_at = now
     event.claimed_at = None
     event.claimed_by = None
