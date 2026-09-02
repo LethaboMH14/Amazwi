@@ -43,3 +43,53 @@ export interface OpsView {
   gaps: OpsGap[];
   proposals: MissionProposal[];
 }
+
+// --- Engagement layer (arcade) -------------------------------------------
+// Mirrors app/api_types.py's ArcadeDashboardResponse. Note what is NOT here:
+// no skill/personality scores and no "players online" count. AMAZWI measures
+// neither, so the backend publishes neither, and the UI has nothing to render
+// them from even by accident.
+export interface Progression {
+  xp: number; level: number; tier: string;
+  xp_into_level: number; xp_for_next_level: number; percent_into_level: number;
+  verified_contributions: number; completed_verifications: number;
+}
+/** The real replacement for a fabricated skill radar. */
+export interface SpeakerOutcomes {
+  understood: number; not_understood: number; awaiting_peers: number;
+  closed: number; total: number;
+}
+export interface LeaderboardRow {
+  rank: number; user_id: string; display_name: string;
+  verified_contributions: number; xp: number; tier: string; is_current_user: boolean;
+}
+export interface PeerRow {
+  user_id: string; display_name: string; language: string;
+  tier: string; verified_contributions: number;
+}
+/** A pending peer-verification request -- a real assignment, not a synthetic invite. */
+export interface InvitationRow {
+  assignment_id: string; contribution_id: string;
+  language: string; speaker_name: string; created_at: string;
+}
+export interface DeckSummary {
+  language: string; card_count: number;
+  contributors: number; verified_contributions: number;
+}
+export interface QuestRow {
+  key: string; label: string; detail: string;
+  progress: number; target: number; reward_xp: number; complete: boolean;
+}
+export interface ArcadeDashboard {
+  display_name: string;
+  earned_cents: number;
+  progression: Progression;
+  outcomes: SpeakerOutcomes;
+  decks: DeckSummary[];
+  quests: QuestRow[];
+  invitations: InvitationRow[];
+  peers: PeerRow[];
+  leaderboard: LeaderboardRow[];
+  leaderboard_language: string | null;
+  generated_at: string;
+}
