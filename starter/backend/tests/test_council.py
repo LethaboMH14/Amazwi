@@ -494,3 +494,25 @@ def test_council_module_exposes_the_four_governed_specialists():
     assert names == ["DATA_STEWARD", "SOUND_SENTINEL", "LANGUAGE_SCOUT", "EXPLAINER"]
     assert all(cls.version == "rules-1" for cls in ALL_SPECIALISTS)
     assert council_module.canonical_sha256({}) == canonical_sha256({})
+
+
+def test_worker_main_is_a_no_op_when_the_council_is_disabled(monkeypatch):
+    """AI-disabled isolation, checklist item 4: with the flag off the worker
+    entrypoint must exit cleanly *without* requiring a database URL or
+    opening an engine at all. Guarding this matters because the disabled
+    check sits before the AMAZWI_DATABASE_URL lookup -- reordering those
+    two lines would make a disabled deployment crash on startup instead of
+    quietly doing nothing, and nothing else in the suite would notice.
+    """
+    import scripts.run_council_worker as worker
+
+    monkeypatch.setattr(worker, "AI_COUNCIL_ENABLED", False)
+    monkeypatch.delenv("AMAZWI_DATABASE_URL", raising=False)
+
+    def _fail(*args, **kwargs):  # pragma: no cover - must never be reached
+        raise AssertionError("disabled mode must not create a database engine")
+
+    monkeypatch.setattr(worker, "create_engine", _fail)
+    monkeypatch.setattr("sys.argv", ["run_council_worker.py", "--once"])
+
+    assert worker.main() == 0

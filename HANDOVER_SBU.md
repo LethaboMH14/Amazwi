@@ -4,6 +4,31 @@
 
 ---
 
+## ⚠️ FOR YOUR REVIEW — 02 Sep · Plan 02 acceptance checklist verified; one item is yours
+
+Cross-lane backend/ML work, **pending your review**. Plan 02's Final Acceptance
+Checklist has been verified item-by-item against the tests that actually exist
+(not the filenames the plan prescribes — substitutions are documented inline in
+the plan doc). 15 of 16 items are ticked with named proving tests. Backend 168
+passed against real embedded PostgreSQL 16, ML 40 passed.
+
+Four real bugs were found and fixed in the process, all detailed in
+`05_amazwi/BUILD_LOG.md`'s newest entry: a `None + 1` crash that made the
+Council's `PARTIAL` state unreachable, `AI_COUNCIL_MAX_ATTEMPTS` being dead
+config that left the API's `FAILED` branch unreachable, rollback tests that
+never asserted the outbox event was gone, and untested calibration/attribution
+evidence in the tabular challengers.
+
+**The one open item is genuinely yours:** checklist item 16 — no external
+download, GPU run, alias change, deployment, payment or campaign launch claimed
+without exact evidence. It is a claim-calibration judgement over prose a reader
+sees (`STAGE_4_6_EVIDENCE.md`, the model cards, `BUILD_LOG.md`) against the real
+Kaggle runs in `a792049`/`6f03710`/`d3bc55a`. No test can discharge it, so it is
+deliberately left unticked rather than ticked optimistically. Nothing touching
+Kaggle, Vercel, money or campaigns was changed.
+
+---
+
 ## ✅ CURRENT — 01 Sep · implementation programme approved; autonomous execution starting
 
 ### Implementation update — 01 Sep

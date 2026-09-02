@@ -5,6 +5,38 @@
 
 ---
 
+### [02 Sep ~05:30] — Lethabo's session · Claude · Plan 02 acceptance checklist verified against real tests; four real bugs closed
+
+**Cross-lane exception — backend/ML work, pending Sbu's review.** Not a stopper-driven exception: the lane rule was loosened 31 Aug, and this is verification of already-shipped Stage 4–6 work rather than new product surface. Flagging it as provisional anyway, per the rule.
+
+**DID**
+- Recovered an interrupted predecessor session's uncommitted work from `origin/worktree-agent-ad6e008f586960d8e` by merge (clean, no conflicts): changes to `app/council.py`, `app/outbox.py`, `scripts/run_council_worker.py`, `tests/test_resolver.py`, and three new backend test files (`test_council.py`, `test_datasets.py`, `test_outbox.py`, 1,146 new lines). Its commit message said only "WIP checkpoint", so I read every changed file and ran the suites rather than trusting that label — the work turned out to be substantially complete, and the worker refactor its author said was still "in progress" was in fact already written.
+- Verified all 16 items of Plan 02's **Final Acceptance Checklist** against the tests that actually exist, and ticked 15 of them in `docs/superpowers/plans/2026-09-01-amazwi-02-council-data-models.md` with the specific test names that prove each. Several prescribed filenames (`test_resolver_outbox.py`, `test_ai_disabled_e2e.py`, `test_outbox_concurrency.py`, `test_council_worker.py`) do not exist; the behaviour is genuinely covered under other filenames, and each such substitution is written into the doc rather than quietly ticked.
+- **Item 16 left deliberately unticked** — "no external download / GPU run / alias change claimed without exact evidence" is a claim-review item about prose a human reads. Its mechanical half is tested, but no test can discharge it. It needs an honesty pass over the evidence docs and model cards against the real Kaggle runs in `a792049`/`6f03710`/`d3bc55a`. Sbu's call.
+
+**Real bugs closed (three from the predecessor, one found in this session)**
+1. `council.py`: `row.retry_count += 1` raised `TypeError` on the *first* failure of any specialist, because SQLAlchemy's `default=0` is only applied at INSERT-flush time and the not-yet-flushed row still held `None`. This crashed the whole Council run instead of recording one FAILED row, making the `PARTIAL` status state unreachable in practice.
+2. `outbox.py`: `AI_COUNCIL_MAX_ATTEMPTS` was dead config — a permanently failing event was retried forever and nothing ever wrote `COUNCIL_ATTEMPTS_EXHAUSTED`, so the `FAILED` branch already sitting in `app/routes/council.py:62` was unreachable code. Added `exhaust_event`, a shared `COUNCIL_ATTEMPTS_EXHAUSTED` constant, and admin recovery that reopens an exhausted event but still refuses to resurrect a genuinely completed one.
+3. `test_resolver.py`: the three rollback tests asserted no decision and no reward row survived, but never that no *outbox event* survived — exactly the leak Stage 4's Stop Rule names, since a stray `ContributionResolved` row would let the Council publish an outcome for a resolution that never committed.
+4. **Found this session:** `ml/tests/test_tabular.py` asserted determinism and the prediction hash but never touched calibration (`brier`/`ece`/`aucpr`) or `feature_attribution`, both of which checklist item 14 explicitly requires and both of which `amazwi_ml/tabular.py` really computes. A regression silently dropping them would have passed the suite. Added two tests covering calibration bounds, per-language protected-gap slices, attribution key set, and determinism of both.
+- Also added `test_worker_main_is_a_no_op_when_the_council_is_disabled` — the disabled check sits *before* the `AMAZWI_DATABASE_URL` lookup, and reordering those two lines would make a disabled deployment crash on startup while nothing else in the suite noticed.
+
+**HOW / VERIFIED**
+- `cd starter/backend && python -m pytest -q` — real embedded PostgreSQL 16, not SQLite, ~25 minutes per run. Full suite run twice: 167 passed pre-change, 168 passed after.
+- `cd starter/ml && python -m pytest -q` — 38 passed pre-change, 40 passed after.
+- Confirmed `app/routes/council.py` really reads the literal `COUNCIL_ATTEMPTS_EXHAUSTED` (line 62) rather than taking the predecessor's comment on trust.
+
+**LIMITATIONS, stated plainly**
+- Ticks record that behaviour is *tested*, not that Stage 4–6 is signed off. Nothing here was run against a production Postgres, a real Kaggle GPU run, or a deployment.
+- The `SKIP LOCKED` concurrency test runs two sessions against the embedded server; it is a genuine two-connection test, but not a load test.
+- Untouched by design: Kaggle/GPU, Vercel, and anything money- or campaign-related.
+
+**NEXT / BLOCKED-PING**
+- **Sbu:** item 16's honesty pass is the one open acceptance item, and it is genuinely yours — it is a claim-calibration judgement over the evidence docs, not something a test settles.
+- The four plan files' inline checkboxes remain unreliable elsewhere; only Plan 02's Final Acceptance Checklist has been reconciled against reality.
+
+---
+
 ### [02 Sep ~04:10] — Lethabo's session · Claude · v5 real failure diagnosed and fixed, v6 pushed
 
 **DID**
