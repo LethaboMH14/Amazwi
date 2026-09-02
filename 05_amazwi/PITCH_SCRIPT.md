@@ -4,7 +4,7 @@ Deck: https://gamma.app/docs/1dhqhqj19mgd758
 The link `i1kl0ftsc184hbx` is stale and must not be presented; `1dhqhqj19mgd758` is current and correct. `p6yb4zccmjy3sbi` and `ws921eo2ozpw8bp` are also stale.
 Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility & Scalability 20% · Technical Execution 20% · Presentation & Pitch 15%
 
-**Revised again against Codex's external review (provisional score 84/100, ceiling ~88-90 if these land and rehearsal is real).** Codex reviewed the repo, the handover notes and this file, but could not open the live Gamma pixels from its environment — the fixes below are applied to the script text and to the paste-ready card text; the actual Gamma cards still need the same manual pass described further down.
+**Revised again against Codex's external review (provisional score 84/100, ceiling ~88-90 if these land and rehearsal is real).** Codex reviewed the repo, the handover notes and this file, but could not open the live Gamma pixels from its environment - the fixes below are applied to the script text and to the paste-ready card text; the actual Gamma cards still need the same manual pass described further down.
 
 **What changed this pass:**
 1. Cut ~70 words from the opening and closing. Word counts were measured at normal speaking pace (roughly 2.2 words/second), not guessed.
@@ -42,11 +42,13 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 >
 > Foundation ASR models exceed 100% word-error-rate zero-shot on Southern Bantu languages. For a real person, that means South African languages are effectively unusable with today's voice AI.
 >
-> MTN already has the daily-use surface this data needs to come from: MoMo. A funded, verified mini-app mission turns that surface into a source of governed, consented language data MTN doesn't have today.
+> MTN already has the daily-use surface this data needs to come from: MoMo. A funded, verified mini-app mission gives MTN a governed, consented source of local-language voice-intent data tailored to MoMo use cases.
 
 **Spoken (0:18):**
 
 > "Foundation speech models exceed 100% word-error-rate on South Africa's Bantu languages, zero-shot. In practice, that means these languages don't work with today's voice AI. MTN already owns the daily-use surface this data needs to come from: MoMo."
+
+**If a judge asks "which model, which dataset, which languages" - the backup answer:** "Whisper large-v3-turbo, zero-shot, scores 146.30% WER across the tested Southern Bantu set and 223% on Setswana, in a named published benchmark (arXiv 2606.31642). Separately, foundation ASR models broadly exceed 100% WER zero-shot across all six Southern Bantu languages per Marivate et al. (arXiv). These are specific, named benchmarks, not a claim that every ASR system fails this way." Do not put this level of detail on the slide; have it ready verbatim for Q&A only.
 
 ---
 
@@ -82,6 +84,8 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 >
 > The pilot will measure whether funded missions increase repeat MoMo engagement, while producing useful, consented voice-intent labels. That's the commercial question, and it's the one we're asking MTN to help us answer."
 
+**If a judge asks "how does MTN make money" - the exact answer:** "We are not claiming revenue before measuring it. The pilot tests whether funded mini-app missions increase repeat MoMo use and produce useful, consented voice-intent data, at a cost MTN can support." Never answer this question with a margin, savings percentage, or revenue projection.
+
 ---
 
 ## 5 - Proven / Pilot / Not built, then the ask (0:30) - SBU
@@ -110,21 +114,21 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 
 ## Deck fixes still needed in the live Gamma (manual, not yet verified from this environment)
 
-All six items below now have final, exact text or a precise check to perform. None of this can be applied programmatically (no per-card edit tool for a live Gamma, and Gamma credits are nearly exhausted) — each needs a human pass in the editor.
+All six items below now have final, exact text or a precise check to perform. None of this can be applied programmatically (no per-card edit tool for a live Gamma, and Gamma credits are nearly exhausted) - each needs a human pass in the editor.
 
-1. **Cover slide — verification only, no text change.** Open card 1 and confirm the logo band still reads as empty/placeholder ("[LOGO ZONE...]" or similar), not a fabricated MTN/MoMo logo. If real logo files are available, paste them into that band now; if not, leave the placeholder text exactly as-is — an honest empty band beats a fake logo every time.
+1. **Cover slide - verification only, no text change.** Open card 1 and confirm the logo band still reads as empty/placeholder ("[LOGO ZONE...]" or similar), not a fabricated MTN/MoMo logo. If real logo files are available, paste them into that band now; if not, leave the placeholder text exactly as-is - an honest empty band beats a fake logo every time.
 
-2. **Card 2 — paste this exact text, replacing whatever is currently there:**
+2. **Card 2 - paste this exact text, replacing whatever is currently there:**
 
    > **African languages are structurally missing from speech AI. This is a data gap, not a demand gap.**
    >
    > Foundation ASR models exceed 100% word-error-rate zero-shot on Southern Bantu languages. For a real person, that means South African languages are effectively unusable with today's voice AI.
    >
-   > MTN already has the daily-use surface this data needs to come from: MoMo. A funded, verified mini-app mission turns that surface into a source of governed, consented language data MTN doesn't have today.
+   > MTN already has the daily-use surface this data needs to come from: MoMo. A funded, verified mini-app mission gives MTN a governed, consented source of local-language voice-intent data tailored to MoMo use cases.
 
-3. ~~**Em dashes:** sweep every remaining card for "—" and replace with comma, period, or colon.~~ **Done (3 Sep, Sbu, manual pass in Gamma editor).**
+3. ~~**Em dashes:** sweep every remaining card for "-" and replace with comma, period, or colon.~~ **Done (3 Sep, Sbu, manual pass in Gamma editor).**
 
-4. **MoMo evidence card — paste this exact text, replacing whatever is currently there:**
+4. **MoMo evidence card - paste this exact text, replacing whatever is currently there:**
 
    > **Sandbox Collections funding request**
    >
@@ -132,7 +136,7 @@ All six items below now have final, exact text or a precise check to perform. No
    >
    > A 202 request and a 200 status confirm the funding call reached MTN's sandbox. They do not mean a speaker was paid. This funds the mission, via the AMAZWI ledger. Speaker cash-out is a separate, not-yet-built settlement leg.
 
-5. **Banned-phrase sweep — verification checklist, search every card for these exact fragments and rewrite any hit:**
+5. **Banned-phrase sweep - verification checklist, search every card for these exact fragments and rewrite any hit:**
    - "your MoMo wallet is credited"
    - "cash-out is live"
    - "money crossed MoMo twice"
@@ -141,7 +145,7 @@ All six items below now have final, exact text or a precise check to perform. No
    - any percentage or number attached to MTN revenue, savings, or margin
    - "only" / "first" used as a competitive superlative
 
-6. **Pilot-outcomes card — paste this exact text as a new card (or append to the existing Proven/Pilot/Not Built card if there's room), so this is visible, not only spoken:**
+6. **Pilot-outcomes card - paste this exact text as a new card (or append to the existing Proven/Pilot/Not Built card if there's room), so this is visible, not only spoken:**
 
    > **What the pilot measures**
    >
@@ -149,7 +153,19 @@ All six items below now have final, exact text or a precise check to perform. No
    >
    > None of these numbers exist yet. Each is a commitment to measure and report back, not a claim.
 
-   This card matters more than its size suggests: without a visible commercial-outcomes line, the deck reads as a governed language game. With it, it reads as a proposed MoMo engagement and voice-intent pilot — which is what it actually is.
+   This card matters more than its size suggests: without a visible commercial-outcomes line, the deck reads as a governed language game. With it, it reads as a proposed MoMo engagement and voice-intent pilot, which is what it actually is.
+
+---
+
+## Final go/no-go - confirm all seven before presenting
+
+1. The team uses `https://gamma.app/docs/1dhqhqj19mgd758`, not the stale `i1kl0ftsc184hbx`.
+2. Card 2 uses the corrected market-gap wording (item 2 above - "gives MTN a governed, consented source," not "MTN doesn't have today").
+3. The MoMo card says "sandbox Collections funding request" (item 4 above), not "real transaction."
+4. Pilot metrics are visible on a slide (item 6 above), not only spoken.
+5. No banned claims remain anywhere in the deck (item 5's checklist).
+6. Lethabo rehearses the agreement and refusal paths as one continuous demo, not two separate pieces.
+7. Both teammates say "AMAZWI ledger credit," never "MoMo wallet payout," in every beat and in Q&A.
 
 ---
 
