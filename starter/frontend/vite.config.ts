@@ -16,6 +16,9 @@ export default defineConfig({
       "/api": {
         target: process.env.API_PROXY_TARGET || "http://127.0.0.1:8000",
         changeOrigin: true,
+        // FastAPI mounts API routers at /consents, /contributions, etc.;
+        // strip the frontend-only /api prefix before forwarding.
+        rewrite: (path) => path.replace(/^\/api/, ""),
         // Browser media elements cannot attach headers. Each demo device
         // runs its own proxy process with its own seeded identity.
         headers: identityHeaders,
