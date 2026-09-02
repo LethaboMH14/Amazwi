@@ -32,6 +32,24 @@
 - Not verified in a real browser this session (no dev server run) — only jsdom tests and typecheck. The 320–480px / zoom / screen-reader gates are Plan 03 Task 11 and remain open.
 - Plan 03 still open: Task 0, finishing Tasks 1/2/5, Task 9 (missions/MTN authorisation), Task 10, 11, 12, 13.
 - The CI portability bug flagged in `CLAUDE.md` (`test_object_key_cannot_escape_storage_root`, `Path(...).is_absolute()` on POSIX) was **not** touched by this session — it passes on Windows here, so it is untested against Linux CI from this worktree.
+---
+
+### [02 Sep ~05:00] — Lethabo's session · Claude · v6 failed on a Kaggle-side transient error, v7 pushed; 4 agents recovered after rate-limit interruption
+
+**DID**
+- v6 failed almost immediately — not a bug in the fix from the prior entry. The real log showed `ConnectionError: Connection error trying to communicate with service` from inside Kaggle's own `kaggle_secrets.py` client, trying to reach Kaggle's internal secrets microservice — a transient platform-side issue, not something in this repo's code. Confirmed from the actual traceback, not assumed.
+- Re-push itself then hit a second transient failure, this time client-side: `SSLError(SSLEOFError(...))` talking to `api.kaggle.com`. Retried once more — succeeded, pushed as v7, confirmed `RUNNING` via `kaggle kernels status`.
+- Separately: all 4 agents dispatched earlier (Plan 02 acceptance verification, Coverage Constellation, Mission proposals/MTN Language Ops, real-app accessibility gates) were interrupted mid-task by a session-wide rate limit. Attempted to resume them via `SendMessage` once the limit reset; all 4 came back `stopped` with "no completion record found" — the resume did not actually reattach to a live process.
+- **Checked each agent's worktree before assuming anything was lost.** All 4 had real, substantial uncommitted work sitting in their working trees (e.g. the accessibility agent had genuinely run Playwright+axe and left real captured violation reports under `test-results/`; the Coverage Constellation agent had a working backend `impact.py`/`routes/impact.py` and a `SouthAfricaCoverageMap.tsx` component; the Mission-Ops agent had `missions.py`, `routes/ops.py`, and an Alembic migration; the Plan 02 agent had touched `council.py`/`outbox.py`/`run_council_worker.py` plus three new test files). None of it was committed.
+- Committed each worktree's state as an explicit `WIP checkpoint` commit and pushed each to its own branch (`worktree-agent-<id>`) rather than losing it or guessing what was safe to discard.
+- Dispatched 4 fresh continuation agents, each instructed to first `git fetch`/`merge` its predecessor's preserved branch, verify what's actually there by reading and running tests (not trusting the WIP commit message), then finish the original brief, run the real suites, and push a clean commit to `origin main`.
+
+**WHY**
+- Losing genuinely-run Playwright/axe accessibility results (or any of the other three agents' real backend work) to an interrupted session would have thrown away real, hard-won evidence for no reason — the checkpoint-and-branch step cost a few minutes and eliminated that risk entirely.
+
+**NEXT / BLOCKED-PING**
+- 4 continuation agents running in the background; report on each as it lands, same as before.
+- v7 running on Kaggle; check its outcome the same way as v5/v6 — pull `kernels_logs()` after it finishes, read the tail, don't assume success from `status` alone.
 
 ---
 
