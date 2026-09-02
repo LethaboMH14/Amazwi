@@ -22,6 +22,14 @@
 
 ---
 
+### [02 Sep] — Sibusiso · LAN phone recording fallback
+
+- **DID:** Fixed the phone’s `Cannot read properties of undefined (reading 'getUserMedia')` failure on the plain HTTP LAN demo origin.
+- **HOW:** Detect unavailable `navigator.mediaDevices`, invoke the phone-native audio capture file input, normalize recorder MIME values to the backend’s accepted types, and send a bounded nonzero duration.
+- **VERIFY:** Frontend build passed and frontend suite remains green (**82 tests**). The phone now gets an actionable capture path instead of a raw JavaScript exception.
+
+---
+
 ### [02 Sep] — Sibusiso · verifier-playback regression sweep
 
 - **DID:** Ran the complete backend suite after the browser-flow and verifier-playback API changes.
