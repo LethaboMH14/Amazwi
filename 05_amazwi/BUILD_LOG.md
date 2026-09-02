@@ -5,6 +5,36 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · ✅ TWO-VERIFIER WALK COMPLETE IN REAL BROWSERS · receipt showed 100× the real reward
+
+**THE WALK IS DONE.** Both verifiers answered through the actual UI, on separate frontend instances with separate seeded identities, and the system resolved end to end. Not curl, not pytest — real browser clicks.
+
+| Step | Evidence |
+|---|---|
+| Verifier 1 answers `indiza` in the UI | `matched = true`, `answered_at` set |
+| Verifier 2 answers `indiza` in the UI | `matched = true` |
+| Resolver decides | `CORPUS_ELIGIBLE`, `understood = true` |
+| Stored reason | *"understood by both verifiers, audio quality passed, consent active"* |
+| Reward | **200 cents `SPEAKER_HONORARIUM`, credited exactly once** |
+| Receipt renders for the speaker | `CORPUS_ELIGIBLE` · **R 2,00** · the reason |
+
+Verifier playback served real audio under an audience-bound `VERIFY` token, and the verifier's own instance was correctly **refused** the speaker's receipt (`AUDIO_NOT_AUTHORISED`) — the speaker/verifier asymmetry holding in practice, not just in the test suite.
+
+**🔴 FOUND — the receipt displayed 100× the real reward, on the money screen**
+- It rendered `{reward_minor} {currency}` raw: **"200 ZAR"** for a reward the plan publishes as **R2.00**. `reward_minor` is minor units. A judge reading "200 ZAR per clip" would reject the unit economics on the spot, and would be right to — that single line contradicts every economics figure in the pitch.
+- Fixed with `src/money.ts` (`formatMinor`), Intl-based, with a non-throwing fallback so an unexpected currency code degrades to readable text instead of blowing up the receipt. Four tests.
+- **My first three assertions were wrong, not the code:** en-ZA correctly formats as **`R 2,00`** — comma decimal separator — and I had asserted a US-style dot. Corrected to be separator-agnostic rather than forcing the product to display a format South Africa does not use.
+
+**ALSO — the receipt was not doing its job.** The API has always returned `reason`, `understood` and `corpus_eligible`; the screen dropped all three and showed only an outcome code and a number. `06_PITCH.md` §6 says this screen must prove *why* it qualified. It now shows the reason, and says plainly when no reward was released.
+
+**VERIFIED**
+- Frontend **89/89**, `tsc -b --noEmit` clean. Receipt confirmed by screenshot after the fix.
+
+**NEXT**
+- The refusal path through the same UI (two verifiers disagreeing → `UNVALIDATED`, R0.00). That is the demo's strongest beat and the receipt now has copy for it.
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · first real verifier-route browser walk · four bugs, one of them demo-fatal
 
 **DID — set up the two-verifier rig that has never existed**
