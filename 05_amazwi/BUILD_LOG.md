@@ -1931,3 +1931,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** Added `05_amazwi/LAN_DEMO_RUNBOOK.md` with exact backend/frontend commands and LAN URLs.
 - **NEXT:** Start Vite on the event laptop, then run seed and golden path against the real cloud Postgres URL.
 - **BLOCKED-PING:** Vite could not start in this sandbox because esbuild was denied parent-directory traversal; backend database routes remain unverified until Sbu supplies the URL.
+
+### [02 Sep] — Sibusiso · real PostgreSQL seed checkpoint
+
+- **DID:** Ran `python -m app.seed_demo` twice against PostgreSQL 16.10 and validated the seeded rows directly.
+- **HOW:** Confirmed deterministic UUIDs are unchanged on rerun; queried campaigns, reward rules, cards, users, qualifications and consents; validated Card array shapes.
+- **WHY:** Establish a trustworthy database state before the live demo flow.
+- **RESULT:** 2 campaigns, 2 reward rules, 16 cards, 4 qualifications, 8 demo consents, and 0 Card constraint violations. Seven total users are present because one unrelated fixture user already exists; the verification test now scopes to the six deterministic demo IDs.
+- **CHANGED:** `starter/backend/tests/test_seed_demo.py`.
+- **VERIFY:** `pytest tests/test_seed_demo.py -q` → 1 passed; LAN `/health` via `192.168.0.169:8000` → HTTP 200.
