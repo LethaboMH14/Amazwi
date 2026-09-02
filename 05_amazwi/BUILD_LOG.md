@@ -5,6 +5,31 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · found and fixed the real interactive-flow blocker; verified live in a browser
+
+**DID**
+- Drove the actual running app in a real browser (192.168.0.169:5173) to check Codex's report that only "Chrome control tooling" was blocking interactive verification. It was not the real blocker: consent submit produced a genuine "Not Found" page. Network log showed `POST /api/consents → 404`.
+- **Root cause: every backend router mounts at its bare path** (`/consents`, `/contributions`, ...) with **no `/api` prefix** — confirmed against every backend test, which all call routes that way. Only `/health` happens to be dual-registered under both `/health` and `/api/health`, which is exactly why the health check always looked fine while every real call silently failed. `vite.config.ts`'s proxy had no path rewrite, so `/api/*` forwarded literally instead of stripping the prefix.
+- Fixed with a one-line rewrite (`path.replace(/^\/api/, "")`). **Verified independently before trusting it**: started a separate Vite instance with the fix, drove it through an actual browser click (not curl, not pytest) — `POST /api/consents → 201 Created`, consent screen correctly advanced to the recording screen. First time any part of this flow was proven through a real browser interaction.
+- Codex found and fixed the identical bug independently within minutes (`ddfcaec`) — merged cleanly, kept the more detailed comment, same diagnosis both sides.
+- Diagnosed a separate `git-remote-https.exe` crash Codex hit (Windows access violation) as almost certainly AV interference on a otherwise-intact git install, not a network problem — confirmed the binary itself runs fine directly. Told Codex to stop retrying pushes itself and keep relying on the relay, which has worked all session.
+
+**WHY**
+- Codex's honesty about not being able to run Chrome was the right instinct and the right thing to report — it's what prompted going to verify directly instead of trusting API-only test coverage. The diagnosis just turned out to be a real code bug sitting underneath, not a tooling gap. A `background` shorthand bug earlier this session (in the craft-layer work) already proved this exact class of failure exists — something that only shows up by actually looking, not by reading API test output.
+
+**NEXT**
+- Backend/API/proxy chain is now proven correct end to end, including through a real browser. What remains needs physical hands on physical devices: real microphone, real phone Wi-Fi, real LAN walk — not something further verifiable from any laptop-only session.
+
+---
+
+### [02 Sep] — Sibusiso · verifier-playback regression sweep
+
+- **DID:** Ran the complete backend suite after the browser-flow and verifier-playback API changes.
+- **VERIFY:** Real PostgreSQL: **213 passed** in 123 seconds. The only two warnings are the known FastAPI TestClient deprecation and sandbox pytest-cache access warning; neither is a test failure.
+- **STATUS:** No further backend/API defect is currently known on the event-demo critical path. Interactive browser/device validation remains the sole rehearsal blocker.
+
+---
+
 ### [02 Sep ~14:22] — Sibusiso · live-browser contract hardening (pending interactive proof)
 
 - **DID:** Reconciled the real API and frontend contracts found while preparing the browser run: governed consent enum names, seeded `zu-001` UUID, speaker-to-verifier hand-off, verifier audio and response fields. Added `POST /assignments/{id}/playback` — an audience-bound, consent-gated `VERIFY`-purpose token so a verifier can actually listen to the speaker's clip (previously only the speaker's own `REPLAY` path existed).

@@ -22,6 +22,8 @@ export default defineConfig({
         // registered under both. Without this rewrite, every real API
         // call the client makes 404s; only /api/health happened to work,
         // which is why this was invisible until an actual browser walk.
+        // (Found and fixed independently on both Sbu's and Codex's side
+        // within minutes of each other -- same bug, same diagnosis.)
         rewrite: (path) => path.replace(/^\/api/, ""),
         // Browser media elements cannot attach headers. Each demo device
         // runs its own proxy process with its own seeded identity.
