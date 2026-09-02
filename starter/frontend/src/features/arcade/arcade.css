@@ -537,3 +537,171 @@
   .btn-primary, .btn-ghost, .btn-pill, .desk-nav a { transition: none; }
   .btn-primary:active, .btn-ghost:active, .btn-pill:active { transform: none; }
 }
+
+/* ========================================================================
+   MOTION & CELEBRATION LAYER
+   ------------------------------------------------------------------------
+   Every animation here is decoration on data that is already real. A star
+   marks a tier that was earned by verified clips; a burst fires when a
+   quest the database says is complete becomes complete. Nothing here
+   invents a number, and nothing here is the only place a value appears --
+   strip the motion and the screen still reads correctly.
+
+   Only `transform` and `opacity` are animated, so this stays on the
+   compositor and does not cause layout work on a mid-range phone.
+
+   The whole layer is off under `prefers-reduced-motion: reduce` -- see
+   the block at the end. That is not a nicety: vestibular-triggered
+   nausea is a real accessibility failure, and drifting bubbles are
+   exactly the kind of large slow motion that causes it.
+   ======================================================================== */
+
+/* --- bubbles ------------------------------------------------------- */
+
+.bubbles {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.bubble {
+  position: absolute;
+  bottom: -140px;
+  border-radius: 50%;
+  /* Soft, not solid: a filled disc reads as a UI object, a gradient
+     edge reads as atmosphere. */
+  background: radial-gradient(circle at 32% 28%, var(--hi), transparent 68%),
+              var(--voice-grad, linear-gradient(96deg, #FF5A36, #FF9B3F));
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: bubble-rise var(--bubble-duration, 26s) linear infinite;
+  animation-delay: var(--bubble-delay, 0s);
+}
+@keyframes bubble-rise {
+  0%   { transform: translate3d(0, 0, 0) scale(0.7); opacity: 0; }
+  12%  { opacity: var(--bubble-opacity, 0.10); }
+  50%  { transform: translate3d(var(--bubble-drift, 20px), -52vh, 0) scale(1); }
+  88%  { opacity: var(--bubble-opacity, 0.10); }
+  100% { transform: translate3d(0, -108vh, 0) scale(0.86); opacity: 0; }
+}
+/* Content sits above the bubble field. */
+.desk-nav, .desk-main, .desk-rail { position: relative; z-index: 1; }
+
+/* --- entrance ------------------------------------------------------ */
+
+.rise-in {
+  animation: rise-in 460ms var(--ease, cubic-bezier(0.2, 0, 0, 1)) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* --- progress bars fill on mount ----------------------------------- */
+
+.xp-bar > span, .quest-bar > span, .outcome-bar > span {
+  transform-origin: left center;
+  animation: bar-fill 900ms var(--ease, cubic-bezier(0.2, 0, 0, 1)) both;
+  animation-delay: 180ms;
+}
+@keyframes bar-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* --- tier stars ----------------------------------------------------- */
+/* Drawn as inline SVG rather than an emoji glyph: emoji render
+   differently on every platform and cannot inherit a theme colour, and
+   these sit next to text where that inconsistency is obvious. The
+   celebratory burst below does use emoji, where the platform's own
+   rendering is part of the charm and nothing aligns to it. */
+
+.tier-stars { display: inline-flex; gap: 2px; vertical-align: middle; }
+.tier-stars svg { display: block; }
+.tier-star-filled { color: var(--rand, #FFCB05); }
+.tier-star-empty  { color: var(--border); }
+
+/* One gentle shimmer on the highest earned star, so the eye lands on
+   what changed. Runs three times, then stops -- a permanent loop is
+   noise, not feedback. */
+.tier-star-lead { animation: star-pop 900ms var(--ease) 3; transform-origin: center; }
+@keyframes star-pop {
+  0%, 70%, 100% { transform: scale(1); }
+  82%           { transform: scale(1.28) rotate(-8deg); }
+}
+
+/* --- podium --------------------------------------------------------- */
+
+.podium-slot { animation: rise-in 520ms var(--ease) both; }
+.podium-2 { animation-delay: 60ms; }
+.podium-1 { animation-delay: 160ms; }
+.podium-3 { animation-delay: 260ms; }
+
+/* First place lifts slightly and keeps a slow breathing glow. */
+.podium-1 .avatar { animation: crown-float 3.6s ease-in-out infinite; }
+@keyframes crown-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.podium-crown { display: block; margin: 0 auto -4px; color: var(--rand, #FFCB05); }
+
+/* --- quest completion ------------------------------------------------ */
+
+.quest.is-complete { animation: quest-settle 620ms var(--ease) both; }
+@keyframes quest-settle {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.burst span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 15px;
+  opacity: 0;
+  animation: burst-out 1100ms var(--ease) both;
+  animation-delay: var(--burst-delay, 0ms);
+}
+@keyframes burst-out {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  25%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--burst-x, 0), var(--burst-y, -60px)) scale(1.1); }
+}
+
+/* --- press feedback -------------------------------------------------- */
+
+.btn-primary, .btn-pill, .btn-ghost { will-change: transform; }
+.btn-primary:active, .btn-pill:active, .btn-ghost:active { transform: scale(0.97); }
+
+/* --- the off switch -------------------------------------------------- */
+/* Everything above is decoration. Under reduced motion the screen must
+   still be complete and correct, so these rules remove movement without
+   removing anything the user needs to read: bars sit at full width, the
+   bubble field is gone entirely, and every entrance resolves instantly. */
+
+@media (prefers-reduced-motion: reduce) {
+  .bubbles { display: none; }
+  .rise-in,
+  .podium-slot,
+  .quest.is-complete,
+  .tier-star-lead,
+  .podium-1 .avatar,
+  .burst span,
+  .xp-bar > span,
+  .quest-bar > span,
+  .outcome-bar > span {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .btn-primary:active, .btn-pill:active, .btn-ghost:active { transform: none; }
+}

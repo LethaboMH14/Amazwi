@@ -61,6 +61,131 @@ const NAV_PRIMARY = [
   { to: "/impact", label: "Impact map", icon: "◈" },
 ];
 
+
+/** Tier ladder, lowest to highest. Mirrors TIER_THRESHOLDS in
+ *  app/arcade.py -- the tier itself is earned from verified clips, so
+ *  the stars decorate a real achievement rather than invent a score. */
+export const TIER_LADDER = [
+  "Beginner",
+  "Amateur",
+  "Veteran",
+  "Expert",
+  "Master",
+  "Grand Master",
+] as const;
+
+export function tierIndex(tier: string): number {
+  const i = TIER_LADDER.indexOf(tier as (typeof TIER_LADDER)[number]);
+  return i < 0 ? 0 : i;
+}
+
+function StarIcon({ filled, lead }: { filled: boolean; lead?: boolean }) {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={`${filled ? "tier-star-filled" : "tier-star-empty"}${lead ? " tier-star-lead" : ""}`}
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth={filled ? 0 : 1.6}
+      strokeLinejoin="round"
+    >
+      <path d="M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.05 1.1-6.5-4.7-4.6 6.5-.95z" />
+    </svg>
+  );
+}
+
+/** Stars for a tier. The text label always stays beside them, so the
+ *  stars are never the only way to read a rank. */
+export function TierStars({ tier }: { tier: string }) {
+  const earned = tierIndex(tier) + 1;
+  return (
+    <span
+      className="tier-stars"
+      role="img"
+      aria-label={`${tier}, ${earned} of ${TIER_LADDER.length}`}
+    >
+      {TIER_LADDER.map((_, i) => (
+        <StarIcon key={i} filled={i < earned} lead={i === earned - 1} />
+      ))}
+    </span>
+  );
+}
+
+/**
+ * The bubble field.
+ *
+ * Not decoration pulled from nowhere: `count` is the real number of
+ * peer-verified contributions across the decks, so every bubble on
+ * screen is a voice two people actually understood. It is capped so a
+ * healthy corpus does not become a blizzard.
+ */
+export function BubbleField({ count }: { count: number }) {
+  const shown = Math.min(Math.max(count, 0), 18);
+  const bubbles = Array.from({ length: shown }, (_, i) => {
+    // Deterministic from the index, so the field does not reshuffle on
+    // every re-render and flicker.
+    const seed = (i * 2654435761) % 1000;
+    return {
+      size: 26 + (seed % 58),
+      left: (seed * 7) % 96,
+      duration: 22 + (seed % 18),
+      delay: -((seed * 3) % 30),
+      drift: ((seed % 60) - 30) * 1.6,
+      opacity: 0.05 + (seed % 7) / 100,
+    };
+  });
+
+  return (
+    <div className="bubbles" aria-hidden="true">
+      {bubbles.map((b, i) => (
+        <span
+          key={i}
+          className="bubble"
+          style={
+            {
+              width: `${b.size}px`,
+              height: `${b.size}px`,
+              left: `${b.left}%`,
+              "--bubble-duration": `${b.duration}s`,
+              "--bubble-delay": `${b.delay}s`,
+              "--bubble-drift": `${b.drift}px`,
+              "--bubble-opacity": b.opacity,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
+/** A short celebratory burst. Emoji here on purpose -- the platform's
+ *  own rendering is part of the charm and nothing aligns to it, unlike
+ *  the tier stars which sit inline with text. */
+export function Burst() {
+  const marks = ["\u2728", "\u2B50", "\uD83C\uDF89", "\u2728", "\u2B50"];
+  return (
+    <span className="burst" aria-hidden="true">
+      {marks.map((m, i) => (
+        <span
+          key={i}
+          style={
+            {
+              "--burst-x": `${(i - 2) * 26 - 8}px`,
+              "--burst-y": `${-38 - (i % 3) * 16}px`,
+              "--burst-delay": `${i * 70}ms`,
+            } as React.CSSProperties
+          }
+        >
+          {m}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export function ArcadeRoute() {
   const [data, setData] = useState<ArcadeDashboard>();
   const [error, setError] = useState("");
@@ -88,8 +213,15 @@ export function ArcadeRoute() {
     p.display_name.toLowerCase().includes(peerFilter.trim().toLowerCase()),
   );
 
+  // Real total across decks -- the field is the corpus, not confetti.
+  const verifiedTotal = (data?.decks ?? []).reduce(
+    (sum, deck) => sum + deck.verified_contributions,
+    0,
+  );
+
   return (
     <div className="desk">
+      {data && <BubbleField count={verifiedTotal} />}
       <a className="skip-link" href="#desk-main">
         Skip to dashboard
       </a>
@@ -198,7 +330,7 @@ export function ArcadeRoute() {
             {/* --- overview strip ------------------------------------- */}
             <h2 className="desk-section-title">Overview</h2>
             <div className="desk-overview">
-              <article className="panel panel-profile">
+              <article className="panel panel-profile rise-in">
                 <div className="avatar avatar-lg" aria-hidden="true">
                   {initials(data.display_name)}
                 </div>
@@ -206,6 +338,7 @@ export function ArcadeRoute() {
                 <p className="panel-sub">
                   Level {data.progression.level} · {data.progression.tier}
                 </p>
+                <TierStars tier={data.progression.tier} />
                 <div
                   className="xp-bar"
                   role="progressbar"
@@ -222,7 +355,7 @@ export function ArcadeRoute() {
                 </p>
               </article>
 
-              <article className="panel panel-earnings">
+              <article className="panel panel-earnings rise-in" style={{ "--rise-delay": "70ms" } as React.CSSProperties}>
                 <p className="eyebrow">Credited to you</p>
                 <p className="money">{formatRand(data.earned_cents)}</p>
                 {/* Never "balance", never "paid" -- this is ledger credit. */}
@@ -243,7 +376,7 @@ export function ArcadeRoute() {
               </article>
 
               {/* The reference's radar slot, carrying real outcomes. */}
-              <article className="panel panel-outcomes">
+              <article className="panel panel-outcomes rise-in" style={{ "--rise-delay": "140ms" } as React.CSSProperties}>
                 <p className="eyebrow">Your clips</p>
                 {data.outcomes.total === 0 ? (
                   <p className="panel-empty">
@@ -456,6 +589,11 @@ export function Leaderboard({ rows }: { rows: LeaderboardRow[] }) {
                 row.is_current_user ? " is-you" : ""
               }`}
             >
+              {row.rank === 1 && (
+                <svg className="podium-crown" width="20" height="14" viewBox="0 0 24 16" fill="currentColor" aria-hidden="true">
+                  <path d="M2 14h20l-1.6-9.4-5 3.6L12 1.4 8.6 8.2l-5-3.6z" />
+                </svg>
+              )}
               <div className="avatar avatar-lg" aria-hidden="true">
                 {initials(row.display_name)}
               </div>
@@ -479,7 +617,7 @@ export function Leaderboard({ rows }: { rows: LeaderboardRow[] }) {
                 {row.display_name}
                 {row.is_current_user && <span className="lb-you"> (you)</span>}
               </span>
-              <span className="lb-tier">{row.tier}</span>
+              <span className="lb-tier"><TierStars tier={row.tier} /></span>
               <span className="lb-score">{row.verified_contributions}</span>
             </li>
           ))}
@@ -492,7 +630,8 @@ export function Leaderboard({ rows }: { rows: LeaderboardRow[] }) {
 export function QuestItem({ quest }: { quest: QuestRow }) {
   const percent = Math.round((100 * quest.progress) / quest.target);
   return (
-    <li className={`quest${quest.complete ? " is-complete" : ""}`}>
+    <li className={`quest${quest.complete ? " is-complete" : ""}`} style={{ position: "relative" }}>
+      {quest.complete && <Burst />}
       <div className="quest-head">
         <p className="quest-label">{quest.label}</p>
         <p className="quest-xp">+{quest.reward_xp} XP</p>
