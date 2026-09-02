@@ -5,6 +5,17 @@
 
 ---
 
+### [02 Sep ~12:00] — Lethabo's session · Claude · v9 pushed after Lethabo confirmed HF_TOKEN secret is genuinely attached
+
+**DID**
+- Lethabo checked the Kaggle kernel editor directly: `HF_TOKEN` is confirmed enabled/attached. Since the previous 3 identical failures could no longer be a detached-secret theory, retried the push — v9, confirmed `RUNNING` via `kaggle kernels status`.
+- Also gave a direct, split answer on ML pipeline vs. training status when asked: the pipeline code (governance gates, manifest/budget/tournament/metrics) is done and verified (40/40 ML tests, 15/16 of Plan 02's checklist); an actual trained checkpoint does not exist yet — zero successful training runs so far, v3 is the only attempt that got deep into real training before failing on a data-quality edge case (since fixed).
+
+**NEXT / BLOCKED-PING**
+- If v9 fails with the same identical `ConnectionError` traceback as v6/v7/v8 *despite* the secret being confirmed attached, that's real evidence of a genuine Kaggle-platform-side outage on their secrets service, not anything fixable from this repo or this session — say so plainly rather than keep guessing at a local cause.
+
+---
+
 ### [02 Sep ~09:05–11:31] — Lethabo's session · Claude · v7/v8 identical Kaggle-secret failure, no longer treated as transient; all 4 agents landed clean
 
 **DID**
