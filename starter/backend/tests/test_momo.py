@@ -35,6 +35,7 @@ def test_token_is_cached_and_credentials_are_not_sent_in_request_body():
         auth = request.headers["Authorization"]
         expected = base64.b64encode(b"api-user:api-key").decode()
         assert auth == f"Basic {expected}"
+        assert request.headers["X-Target-Environment"] == "sandbox"
         return httpx.Response(200, json={"access_token": "token", "expires_in": 3600})
 
     client = MomoClient(config(), client=httpx.Client(transport=httpx.MockTransport(handler)))

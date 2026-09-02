@@ -96,7 +96,10 @@ class MomoClient:
         response = self.client.post(
             f"{self.config.base_url}/{product}/token/",
             auth=(self.config.api_user, self.config.api_key),
-            headers={"Ocp-Apim-Subscription-Key": getattr(self.config, f"{product}_subscription_key")},
+            headers={
+                "Ocp-Apim-Subscription-Key": getattr(self.config, f"{product}_subscription_key"),
+                "X-Target-Environment": self.config.target_environment,
+            },
             data={"grant_type": "client_credentials"},
         )
         if response.status_code >= 400:
@@ -111,13 +114,16 @@ class MomoClient:
         return token
 
     def _headers(self, product: str, reference: str, token: str) -> dict[str, str]:
-        return {
+        headers = {
             "Authorization": f"Bearer {token}",
             "Ocp-Apim-Subscription-Key": getattr(self.config, f"{product}_subscription_key"),
             "X-Target-Environment": self.config.target_environment,
             "X-Reference-Id": reference,
             "Content-Type": "application/json",
         }
+        if self.config.callback_url:
+            headers["X-Callback-Url"] = self.config.callback_url
+        return headers
 
     def _guard_amount(self, amount_cents: int) -> None:
         if amount_cents < 1:
@@ -160,8 +166,6 @@ class MomoClient:
             "payeeNote": payee_note,
             "transferType": transfer_type,
         }
-        if self.config.callback_url:
-            body["callbackUrl"] = self.config.callback_url
         response = self.client.post(
             f"{self.config.base_url}/collection/v1_0/requesttopay",
             headers=self._headers("collection", reference, self._token("collection")),
@@ -195,8 +199,6 @@ class MomoClient:
             "payeeNote": payee_note,
             "transferType": transfer_type,
         }
-        if self.config.callback_url:
-            body["callbackUrl"] = self.config.callback_url
         response = self.client.post(
             f"{self.config.base_url}/disbursement/v1_0/transfer",
             headers=self._headers("disbursement", reference, self._token("disbursement")),
