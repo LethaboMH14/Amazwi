@@ -1,1 +1,15 @@
 .signal-card{border-radius:28px;overflow:clip;background:radial-gradient(circle at 10% 0%,rgba(255,90,54,.18),transparent 45%),linear-gradient(145deg,var(--surface),var(--ground-deep));box-shadow:0 24px 70px var(--shadow,rgba(0,0,0,.42));padding:var(--sp-5);position:relative}.signal-card::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:var(--texture-opacity,.2)}.signal-stack>*+*{margin-block-start:-.5rem}.wave-spine{height:3px;background:linear-gradient(90deg,var(--voice-1),var(--voice-2),#39d6c5)}.textile-mask{max-block-size:2.5rem;pointer-events:none}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.map-ripple,.reward-confetti{display:none!important}}
+/* Coverage Constellation -- flat map only. Existing theme tokens, no new colours. */
+.coverage-constellation{display:flex;flex-direction:column;gap:var(--sp-4)}
+.coverage-map-svg{inline-size:100%;max-inline-size:420px;block-size:auto}
+.coverage-map-outline{fill:var(--surface);stroke:var(--border);stroke-width:1.5}
+.coverage-map-hole{fill:var(--ground-deep);stroke:var(--border);stroke-width:1}
+.coverage-province-label{fill:var(--text-dim);font-family:var(--font);font-size:9px;letter-spacing:var(--tracking-label);text-anchor:middle}
+.coverage-pin{fill:var(--voice-1);stroke:var(--voice-2);stroke-width:1.5;opacity:.9}
+.coverage-note{color:var(--text-dim);font-size:var(--fs-sm)}
+.coverage-list{display:flex;flex-direction:column;gap:var(--sp-2);padding-inline-start:var(--sp-4);color:var(--text);font-size:var(--fs-sm)}
+.impact-metrics{display:flex;flex-wrap:wrap;gap:var(--sp-5)}
+.impact-metrics dt{color:var(--text-dim);font-size:var(--fs-label);letter-spacing:var(--tracking-label);text-transform:uppercase}
+.impact-metrics dd{margin:0;font-size:var(--fs-h1)}
+.impact-gap-cards{display:flex;flex-direction:column;gap:var(--sp-3);list-style:none;padding:0}
+.impact-gap-card{display:flex;flex-direction:column;gap:var(--sp-1);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);background:var(--surface)}
