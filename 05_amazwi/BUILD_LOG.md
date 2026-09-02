@@ -5,6 +5,22 @@
 
 ---
 
+### [02 Sep] — Codex · refusal-receipt regression coverage
+
+**DID**
+- Added a real route-level regression test for the speaker receipt's two decisive states: accepted contribution (`CORPUS_ELIGIBLE`, 200 minor units rendered as R2.00) and verifier disagreement (`UNVALIDATED`, R0.00, stored reason and explicit no-reward copy).
+
+**WHY**
+- The browser walk found that the money screen had previously hidden the decision reason and displayed minor units as if they were rand. The next physical refusal-path walkthrough needs durable UI coverage, not a manual observation that can silently regress.
+
+**VERIFY**
+- Focused route test: 2/2 passed. Full frontend suite: 91/91 passed. `npm run build` passed.
+
+**NEXT**
+- Complete the two-verifier disagreement through the real UI and capture the `UNVALIDATED` / R0.00 receipt. Do not call this browser-proven from this test alone.
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · ✅ TWO-VERIFIER WALK COMPLETE IN REAL BROWSERS · receipt showed 100× the real reward
 
 **THE WALK IS DONE.** Both verifiers answered through the actual UI, on separate frontend instances with separate seeded identities, and the system resolved end to end. Not curl, not pytest — real browser clicks.
