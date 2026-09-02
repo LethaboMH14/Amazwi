@@ -5,6 +5,25 @@
 
 ---
 
+### [02 Sep ~04:10] — Lethabo's session · Claude · v5 real failure diagnosed and fixed, v6 pushed
+
+**DID**
+- v5 (the run confirmed genuinely training at ~23 minutes, GPU P100, via Lethabo's own screenshot) ran for roughly 3 hours before landing in `ERROR`. This session's `KaggleApi.kernels_logs()` API call — unreliable mid-run, as noted in the prior entry — was reliable again once the run had actually finished, and returned the real 91-entry log.
+- **Real finding, not something to gloss over**: `load_dataset(DATASET_REPO, lang, split="dev", ...)` triggered `datasets` to generate ALL of that config's splits (`dev`, `dev_test`, AND `train` — ~50K zul + ~84K tsn train rows, ~146K rows total) even though only `dev` was requested. This is `datasets`' own parquet-conversion behaviour for this dataset, not a bug in the request. Cost: roughly 30 seconds of extra preprocessing, not hours — it did **not** silently expand the actual training scope. Confirmed the trainer manifest still only contained the intended 8,017 dev-split records (3,068 zul + 4,949 tsn), matching exactly.
+- **The real failure**: `train_asr.py` correctly rejected the manifest — `ValueError: every train record requires text and audio_path` — because at least one of the 8,017 real Swivuriso rows has an empty transcript. This is a genuine data-quality edge case in the real dataset, not a bug in the trainer's validation (which did exactly its job: refuse to train on a record missing its target text).
+- **Fixed** in `kernel_entrypoint.py`: strip and check each row's transcript; any row with an empty transcript is now marked `excluded: true` (and given `exclusion_reason: "empty transcript"` in the governance manifest) instead of being fed to the trainer. Prints the count skipped. Verified the fix's logic against `train_asr.py`'s own filter (`excluded` rows are dropped before the text/audio_path check even runs) by re-reading that function, not just assuming.
+- **Checked before re-pushing, not assumed**: re-running with the same deterministic `run_id` (derived from the unchanged dataset revision) will NOT hit `budget.py`'s `DuplicateRun` guard, because every fresh Kaggle run stages a clean copy of the *static* `budget.json` snapshot from the uploaded dataset — the previous run's reservation lived only in that run's now-discarded ephemeral working copy, never written back. Confirmed by reading `reserve_gpu_run`'s actual duplicate-check logic before relying on this, not by hoping.
+- Pushed as v6, confirmed `RUNNING` via `kaggle kernels status`.
+
+**WHY**
+- Read the actual failure from the real log rather than assuming the "reservation" step or the token fix were the remaining risk — they were both fine; the failure was downstream, in real data hitting a real validation gate exactly as it should.
+
+**NEXT / BLOCKED-PING**
+- v6 is running; check its outcome the same way — pull `kernels_logs()` after it finishes (not mid-run), read the tail, don't assume success from `status` alone.
+- The dangling v5 reservation (10 hours, `ISIZULU_ADAPTATION` phase, status `RESERVED`, never completed) exists only in that run's own discarded working copy, not in this repo's tracked `budget.json` or the uploaded dataset's snapshot — nothing to reconcile from it, but worth remembering it happened when eventually doing the real ledger reconciliation this whole pipeline still needs.
+
+---
+
 ### [02 Sep ~00:45] — Lethabo's session · Claude · v1-v4 pushes, real bugs at every stage, one manual step left
 
 **DID — the actual sequence, not the sanitised version:**

@@ -107,6 +107,7 @@ def main() -> int:
 
     trainer_records: list[dict] = []
     governance_records: list[ManifestRecord] = []
+    skipped_empty = 0
     for lang in LANGUAGES:
         ds = load_dataset(DATASET_REPO, lang, split=SPLIT, revision=exact_revision, token=hf_token)
         for i, row in enumerate(ds):
@@ -115,13 +116,23 @@ def main() -> int:
             sf.write(str(out_path), audio["array"], audio["sampling_rate"])
             audio_sha = hashlib.sha256(out_path.read_bytes()).hexdigest()
             record_id = f"{lang}-{SPLIT}-{i:06d}"
+            transcript = (row.get("transcript") or "").strip()
+            # Real data-quality edge case found on the first live run: some
+            # Swivuriso rows have an empty transcript, which train_asr.py's
+            # own validation correctly rejects ("every train record requires
+            # text and audio_path") -- exclude those explicitly rather than
+            # feeding the trainer a row it will reject, or silently training
+            # on an empty target string if the check were ever loosened.
+            is_empty = not transcript
+            if is_empty:
+                skipped_empty += 1
             trainer_records.append(
                 {
                     "record_id": record_id,
-                    "text": row["transcript"],
+                    "text": transcript,
                     "audio_path": str(out_path),
                     "split": "train",  # dev split used as the bounded overnight fine-tune set
-                    "excluded": False,
+                    "excluded": is_empty,
                 }
             )
             governance_records.append(
@@ -129,15 +140,18 @@ def main() -> int:
                     record_id=record_id,
                     source_id=str(row.get("audio_id", i)),
                     speaker_id=row.get("recorder_uuid"),
-                    text=row["transcript"],
+                    text=transcript,
                     language=lang,
                     source_class="SWIVURISO_DEV_SPLIT",
                     split="train",
                     domain=row.get("domain"),
                     audio_sha256=audio_sha,
+                    excluded=is_empty,
+                    exclusion_reason="empty transcript" if is_empty else None,
                     consent_version="swivuriso-cc-by-4.0",
                 )
             )
+    print(f"Skipped {skipped_empty} record(s) with an empty transcript (marked excluded, not fed to the trainer)", flush=True)
 
     # Governance/audit artifact -- the immutable, hash-verified record of
     # exactly what data this run touched. Not read by train_asr.py directly.
