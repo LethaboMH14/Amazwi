@@ -2053,3 +2053,9 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **DID:** Added a guarded CLI-only `python -m app.seed_demo --reset` path that clears transient take state and local audio while preserving seeded cards, users, consents, qualifications, campaigns and reward rules.
 - **SAFETY:** Requires `AMAZWI_ALLOW_DEMO_RESET=true`, refuses non-demo campaigns and contribution-linked export rows, and exposes no HTTP reset route.
 - **VERIFY:** Two complete HTTP takes separated by reset both returned `AVAILABLE`, `CORPUS_ELIGIBLE`, and R2.00; final baseline counts were contributions=0, assignments=0, rewards=0, audio=0, decisions=0; reset tests 3/3 passed.
+
+### [02 Sep] — Lethabo · Setswana native-review closure (relayed by Sbu)
+
+- **DID:** Confirmed `moraka`, `jusi`, `ting` and `diphaphatha` aloud in their `sw-004`, `sw-005` and `sw-007` card contexts.
+- **DECISION:** Keep all four as natural, clearly incorrect distractors; no replacement is required.
+- **CHANGED:** Set the Setswana hero deck to `REVIEWED` with no pending items; updated the canonical P0 and Lethabo work status.
