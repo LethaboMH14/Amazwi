@@ -10,13 +10,13 @@ Total speaking budget ≈ 200–220 words for the intro half, ≈ 100–120 for 
 
 ## SBU — Intro (Cards 1–3, ~60–70 seconds)
 
-> "AMAZWI is a MoMo Mini App that pays South Africans — in their own MoMo wallet — for speaking their own languages.
+> "AMAZWI is a MoMo Mini App where South Africans speak their own languages and receive a transparent reward credit in an auditable wallet ledger.
 >
-> Three things it does at once: it gives MoMo a reason to be opened every day that isn't 'send money to someone.' It turns the reward into MTN inventory, not outbound cash. And it produces the South African speech data AI doesn't have.
+> Three things it is designed to do at once: create a repeatable reason to open MoMo beyond sending money, turn participation into a governed value loop, and produce intent-labelled South African speech for future voice services.
 >
-> This isn't a concept. Right now it makes a real MTN MoMo Collections call, verified by real people, recorded in a real ledger.
+> This isn't only a concept. Right now the campaign funding leg makes a real MTN MoMo Collections sandbox call, the contribution is verified by real people, and the result is recorded in a real ledger. Speaker cash-out is a separate, explicitly labelled settlement step.
 >
-> Why now: Africa's languages are missing from AI — isiZulu has twelve million speakers and almost no open speech data. Ayoba shuts down in March, taking about thirty-five million users' worth of engagement with it. And MTN's own numbers show it: transactions up seventeen percent, value up thirty-four percent, but revenue barely moved. Engagement isn't converting.
+> Why now: African languages remain underrepresented in public voice resources, while MoMo already has the distribution and transaction habit. MTN's own numbers show the opportunity: transactions and value are growing faster than revenue. Engagement still needs to convert into durable value.
 >
 > Here's how it works." *(→ hand to Lethabo, advance to demo card)*
 
@@ -30,7 +30,7 @@ Total speaking budget ≈ 200–220 words for the intro half, ≈ 100–120 for 
 >
 > A peer verifier — a real person, on a separate device — hears it and confirms it matches. Our AI never makes this call; it's advisory only.
 >
-> They agree — the wallet is credited, once, right now. [show receipt]
+> They agree — the AMAZWI ledger is credited once, right now. [show receipt]
 >
 > If they'd disagreed, the receipt would say exactly why, and pay nothing. Refusal is a first-class result here, not a hidden failure."
 
@@ -40,15 +40,15 @@ Total speaking budget ≈ 200–220 words for the intro half, ≈ 100–120 for 
 
 ## SBU — Close (Cards 6–10, ~50–60 seconds)
 
-> "That MoMo call you just saw is real — OAuth token issued, requesttopay accepted, status confirmed, transaction ID seven-four-five-two-double-oh-eight-seven-seven-two. Every credit is idempotent by construction — paid once, never twice.
+> "That MoMo Collections call you just saw is real — OAuth token issued, requesttopay accepted, status confirmed, transaction ID seven-four-five-two-double-oh-eight-seven-seven-two. It proves the campaign funding leg; it is not a disguised speaker payout. Every ledger credit is idempotent by construction — recorded once, never twice.
 >
-> And it's closed-loop: that credit only spends on MTN's own airtime and data, so the cost to MTN is a fraction of the face value. We're not putting a percentage on that tonight — we haven't measured redemption mix yet, and we'd rather tell you that honestly than invent a number.
+> The next settlement step is MoMo Disbursement or an approved redemption catalogue. That provider leg is not provisioned in this demo, so we label it instead of pretending the ledger credit is cash-out. We will measure redemption mix, fees and repeat play in the pilot before making an economic claim.
 >
-> Trust is enforced in code: two-verifier peer truth, four separate consent scopes, audience-bound audio tokens, k-anonymised reporting. That's the only kind of African-language data a global AI lab can lawfully buy.
+> Trust is enforced in code: two-verifier peer truth, four separate consent scopes, audience-bound audio tokens and aggregate reporting with minimum-cell suppression. That is the governance foundation for a future licensed corpus; it is not a claim that every downstream legal or language-quality step is finished.
 >
-> Two hundred and sixty-four backend tests pass, CI is green, and scaling to all eleven official languages is a data row, not a rewrite.
+> Two hundred and sixty-four backend tests pass, CI is green, and the backend is language-parameterized: adding another language is a governed content pack and verifier cohort, not a rewrite of the state machine.
 >
-> The ask: a MoMo sandbox partnership and one language pilot. Give us that, and we give MTN a daily-use engagement engine, a dormant-wallet rescue, and ownership of the language dataset nobody else has built.
+> The ask: a MoMo sandbox partnership and one language pilot. Give us that, and we give MTN a testable path to more frequent MoMo engagement, dormant-wallet reactivation and a governed voice-intent corpus MTN can grow.
 >
 > Izwi lakho linenani — your voice has value, and MoMo is how it gets paid."
 

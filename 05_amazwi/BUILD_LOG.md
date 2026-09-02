@@ -5,6 +5,20 @@
 
 ---
 
+### [03 Sep] — Sbu · pitch claim calibration after live MoMo Collections proof
+
+**DID**
+- Reworked PITCH_SCRIPT.md so the pitch distinguishes the verified live MoMo Collections funding leg from the internal AMAZWI reward ledger and the unprovisioned Disbursement/cash-out leg.
+- Removed or softened unsupported claims about MTN inventory redemption, k-anonymity, universal language scale, and a dataset “nobody else has built”.
+
+**WHY**
+- The live proof is strong, but the demo does not yet execute speaker cash-out or catalogue redemption. The pitch must never turn a sandbox funding transaction into a claim of completed payout.
+
+**NEXT**
+- Rehearse the revised script against the actual Gamma deck and use only on-site screenshots as product evidence.
+
+---
+
 ### [03 Sep] — Sbu (Claude, direct) · MoMo Collections goes live + Round-1 deck/script built to the judging PDFs
 
 **DID — verified, not assumed**
