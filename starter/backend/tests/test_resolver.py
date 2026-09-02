@@ -34,6 +34,7 @@ from app.models import (
     Contribution,
     ContributionState,
     EligibilityDecision,
+    OutboxEvent,
     RewardEvent,
     User,
 )
@@ -294,6 +295,10 @@ def test_resolve_rolls_back_state_and_decision_when_reward_cannot_be_committed(d
     assert contribution.state == ContributionState.OPEN
     assert db_session.get(EligibilityDecision, contribution.id) is None
     assert db_session.query(RewardEvent).filter_by(contribution_id=contribution.id).count() == 0
+    # Plan 02's Stop Rule for Stage 4 is explicit that a rollback must not
+    # leave an event behind: a surviving ContributionResolved row would let
+    # the Council publish an outcome for a resolution that never committed.
+    assert db_session.query(OutboxEvent).filter_by(aggregate_id=contribution.id).count() == 0
 
 
 def test_resolve_eligible_requires_a_positive_explicit_reward_amount(db_session):
@@ -316,6 +321,10 @@ def test_resolve_eligible_requires_a_positive_explicit_reward_amount(db_session)
     assert contribution.state == ContributionState.OPEN
     assert db_session.get(EligibilityDecision, contribution.id) is None
     assert db_session.query(RewardEvent).filter_by(contribution_id=contribution.id).count() == 0
+    # Plan 02's Stop Rule for Stage 4 is explicit that a rollback must not
+    # leave an event behind: a surviving ContributionResolved row would let
+    # the Council publish an outcome for a resolution that never committed.
+    assert db_session.query(OutboxEvent).filter_by(aggregate_id=contribution.id).count() == 0
 
 
 def test_resolve_both_matched_but_quality_failed_unvalidated_no_reward(db_session):
@@ -446,3 +455,4 @@ def test_persisted_resolution_rejects_missing_reward_rule_without_decision(db_se
     with pytest.raises(CampaignRewardNotConfiguredError):
         resolve_from_persisted_state(db_session, contribution.id)
     assert db_session.get(EligibilityDecision, contribution.id) is None
+    assert db_session.query(OutboxEvent).filter_by(aggregate_id=contribution.id).count() == 0

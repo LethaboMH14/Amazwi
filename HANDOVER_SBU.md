@@ -4,6 +4,99 @@
 
 ---
 
+## ⚠️ FOR YOUR REVIEW — 02 Sep · Plan 02 acceptance checklist verified; one item is yours
+
+Cross-lane backend/ML work, **pending your review**. Plan 02's Final Acceptance
+Checklist has been verified item-by-item against the tests that actually exist
+(not the filenames the plan prescribes — substitutions are documented inline in
+the plan doc). 15 of 16 items are ticked with named proving tests. Backend 168
+passed against real embedded PostgreSQL 16 before merging `main`, and 210 passed
+after two merges — the growth is the parallel agents' Tasks 7–10 tests arriving,
+**not** coverage I wrote (mine is three tests: one backend, two ML). ML 40 passed
+before and after.
+
+Four real bugs were found and fixed in the process, all detailed in
+`05_amazwi/BUILD_LOG.md`'s newest entry: a `None + 1` crash that made the
+Council's `PARTIAL` state unreachable, `AI_COUNCIL_MAX_ATTEMPTS` being dead
+config that left the API's `FAILED` branch unreachable, rollback tests that
+never asserted the outbox event was gone, and untested calibration/attribution
+evidence in the tabular challengers.
+
+**The one open item is genuinely yours:** checklist item 16 — no external
+download, GPU run, alias change, deployment, payment or campaign launch claimed
+without exact evidence. It is a claim-calibration judgement over prose a reader
+sees (`STAGE_4_6_EVIDENCE.md`, the model cards, `BUILD_LOG.md`) against the real
+Kaggle runs in `a792049`/`6f03710`/`d3bc55a`. No test can discharge it, so it is
+deliberately left unticked rather than ticked optimistically. Nothing touching
+Kaggle, Vercel, money or campaigns was changed.
+
+> **Update after merging Sbu's review (same day).** Sbu's review below
+> independently found the concrete instance of exactly this: `runs/README.md`
+> and `kaggle/budget.json` both still say no run happened while real GPU hours
+> were spent. That is item 16's failure mode, found by a human reading the prose
+> — which is the argument for having left it unticked rather than ticking it on
+> the strength of the passing mechanical tests. It still needs reconciling
+> before any evidence pack or model card is generated.
+
+---
+
+## ✅ REVIEWED 2 Sep by Sbu — mission authorisation (money-adjacent)
+
+> **Verdict: ACCEPTED**, with one ruling and one pitch-wording correction. Full review in [`HANDOVER_LETHABO.md`](HANDOVER_LETHABO.md) § "2 SEP — SBU'S REVIEW OF THE CROSS-LANE WORK".
+>
+> - **Ruling on `campaign_id`:** nullable is correct. Propose without a funded campaign; **never disburse** without one. Put the budget check in the disbursement path when it's built — do not retrofit `NOT NULL` onto the proposal table.
+> - **Pitch wording:** this gate rests on header-only identity (`app/identity.py`, no signature) until Plan 04 Task 2 lands. Say *"human-in-the-loop by design — an automated actor structurally cannot authorise a mission."* Do **not** say *"only an authorised MTN operator can."*
+> - Separately flagged, unrelated to this item: `runs/README.md` and `kaggle/budget.json` both still say no run happened, while real GPU hours were spent. Reconcile before any evidence pack or model card is generated. See the review section for the reasoning.
+
+### Original request (kept for history) — 02 Sep ~06:00
+
+Plan 03 Tasks 9+10 are built and green: mission proposals plus a **human-only** MTN Language Ops authorisation gate (`app/missions.py`, `app/routes/ops.py`, migration `e0f1a2b3c4d5`). Full detail in `05_amazwi/BUILD_LOG.md`'s newest entry.
+
+**What I did NOT decide, because it is yours:**
+- Authorisation records human intent only. It moves **no money** — no `funded_cents`/`committed_cents` write, no payment adapter call. Disbursing against an authorised mission is unbuilt and left to you.
+- `mission_proposals.campaign_id` is a **nullable** FK to the existing `campaigns` table (reusing your model rather than inventing a parallel budget concept). Whether a mission must always be attached to a funded campaign is a money decision I deliberately did not make.
+
+**What to attack when reviewing:** the gate is four layers — persisted `users.principal_kind` (CHECK-constrained), the `MTN_LANGUAGE_OPS` role, a keyword-only no-default exact confirmation echo, and a source-tree scan test asserting `authorise_mission` has exactly one caller (`routes/ops.py`). The test that matters most is `test_automated_actor_cannot_authorise_without_the_human_step`, which gives an automated actor the role *and* the correct confirmation text and still refuses it. Backend 135/135, frontend 65/65, typecheck clean.
+
+---
+
+## ✅ RULED ON 2 Sep by Sbu — Impact Map backend (`GET /impact`)
+
+> **Both questions answered, plus one thing you didn't ask about that I think is a real leak.**
+>
+> **1. Unauthenticated: APPROVED for the competition build.** The privacy work is genuinely sound — I read `impact.py` rather than the summary: `MIN_CELL_SIZE = 5` filters before banding, counts publish as bands, `model_gap_percent` is null rather than inferred from volume, `missions_completed` is 0 rather than approximated. That's the right instinct on all three.
+>
+> **But the exposure you should actually be worried about isn't personal data — it's commercial.** Each node publishes `campaign`. A public, unauthenticated endpoint therefore discloses which funding campaigns exist and roughly how much volume each has. That's sponsor-relations information, and no sponsor has agreed to it being public. For the demo with seeded data this is fine. Before any real sponsor's campaign is in there, either drop `campaign` from the public projection or put the endpoint behind identity.
+>
+> **2. 🔴 NEW — the bands are partially defeatable, and this one I'd fix.** `verified_total` is published **exactly**, and `coverage_percent` is `round(100 * verified_count / verified_total)`. Given both, you can solve backwards for `verified_count` within a narrow range. At demo-scale totals (a few hundred), one percentage point ≈ 2–3 clips, so a "5–9" band collapses to an almost-exact number — which defeats the point of banding, and by extension the k≥5 protection it's there to provide. Fix: band `coverage_percent` too, or round it hard (nearest 5%), or drop it and let the client derive a rough share from the band. Cheap fix, and it closes the hole properly.
+>
+> **3. Cell key deviation: APPROVED, and it was the right call.** Refusing to fabricate a province field you don't collect is exactly correct — `geography_available: false` plus "province-level coverage is not collected yet" is honest and costs nothing. **Do not add a province column for the competition.** A coarse geographic field on voice contributions is a POPIA consent question and a fresh consent-surface design, and it is not P0. Ship it null.
+
+### Original request (kept for history) — 02 Sep
+
+Plan 03 Tasks 7–8 (aggregate Coverage Constellation) are built and green: backend
+121 passed against real PostgreSQL, frontend 74 passed + clean typecheck. Full
+detail in `05_amazwi/BUILD_LOG.md` [02 Sep ~05:40]. Two things in your lane that
+I built to spec but should not be the one to finalise:
+
+1. **`GET /impact` is unauthenticated.** Rationale: every field has already passed
+   a ≥5-contribution minimum-cell-size suppression in `app/impact.py`, counts are
+   published as bands not exact values, and no user id, contribution id,
+   coordinate, audio key or transcript is present (asserted against the raw
+   response text in `tests/test_impact_api.py`). That is still a data-exposure
+   judgement — confirm or overrule it.
+2. **The cell key deviates from the plan.** The plan specifies
+   `(language, province, domain)`. `app/models.py` has no geographic column and no
+   domain vocabulary anywhere, so rather than fabricate a location field I
+   aggregate **declared language × funding campaign**, leave `province_code` null,
+   set `geography_available: false`, and have the UI say "province-level coverage
+   is not collected yet". `model_gap_percent` is null ("Model evidence
+   unavailable") and `missions_completed` is 0 — neither is inferred. If you want
+   real geography, that needs a consented, coarse province column and a migration,
+   which is your decision, not mine.
+
+---
+
 ## ✅ CURRENT — 01 Sep · implementation programme approved; autonomous execution starting
 
 ### Implementation update — 01 Sep

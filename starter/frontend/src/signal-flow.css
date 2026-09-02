@@ -1,1 +1,188 @@
 .signal-card{border-radius:28px;overflow:clip;background:radial-gradient(circle at 10% 0%,rgba(255,90,54,.18),transparent 45%),linear-gradient(145deg,var(--surface),var(--ground-deep));box-shadow:0 24px 70px var(--shadow,rgba(0,0,0,.42));padding:var(--sp-5);position:relative}.signal-card::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:var(--texture-opacity,.2)}.signal-stack>*+*{margin-block-start:-.5rem}.wave-spine{height:3px;background:linear-gradient(90deg,var(--voice-1),var(--voice-2),#39d6c5)}.textile-mask{max-block-size:2.5rem;pointer-events:none}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.map-ripple,.reward-confetti{display:none!important}}
+/* Coverage Constellation -- flat map only. Existing theme tokens, no new colours. */
+.coverage-constellation{display:flex;flex-direction:column;gap:var(--sp-4)}
+.coverage-map-svg{inline-size:100%;max-inline-size:420px;block-size:auto}
+.coverage-map-outline{fill:var(--surface);stroke:var(--border);stroke-width:1.5}
+.coverage-map-hole{fill:var(--ground-deep);stroke:var(--border);stroke-width:1}
+.coverage-province-label{fill:var(--text-dim);font-family:var(--font);font-size:9px;letter-spacing:var(--tracking-label);text-anchor:middle}
+.coverage-pin{fill:var(--voice-1);stroke:var(--voice-2);stroke-width:1.5;opacity:.9}
+.coverage-note{color:var(--text-dim);font-size:var(--fs-sm)}
+.coverage-list{display:flex;flex-direction:column;gap:var(--sp-2);padding-inline-start:var(--sp-4);color:var(--text);font-size:var(--fs-sm)}
+.impact-metrics{display:flex;flex-wrap:wrap;gap:var(--sp-5)}
+.impact-metrics dt{color:var(--text-dim);font-size:var(--fs-label);letter-spacing:var(--tracking-label);text-transform:uppercase}
+.impact-metrics dd{margin:0;font-size:var(--fs-h1)}
+.impact-gap-cards{display:flex;flex-direction:column;gap:var(--sp-3);list-style:none;padding:0}
+.impact-gap-card{display:flex;flex-direction:column;gap:var(--sp-1);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);background:var(--surface)}
+
+/* ============================================================
+   Plan 03 Task 11 — 320–480px / 200% zoom / keyboard gates.
+
+   Added 2 Sep 2026 after the real Playwright+axe suite measured the
+   shipping React app at 320px CSS width. Before this block `.route`
+   carried NO styling at all: every control rendered at the Chromium
+   UA default of ~19–21px tall, which is a real WCAG 2.5.5 failure on
+   every route, and the unstyled <a> rendered in UA link blue against
+   the dark --ground, which axe reported as a serious `color-contrast`
+   violation on home and result.
+
+   Everything here is expressed in relative units and %/max-width so
+   the layout reflows at 200% text zoom. Do NOT reintroduce a fixed
+   pixel width — 04_assets/mockups_v2/ACCESSIBILITY_EVIDENCE.md §3
+   records that the fixed 390px mockup canvases structurally cannot
+   pass WCAG 1.4.10, and the whole point of the real frontend is not
+   to inherit that defect.
+   ============================================================ */
+
+/* ---- Theme-name bridge · FOUND 2 Sep 2026, NEEDS LETHABO'S CONFIRMATION ----
+
+   theme.tsx writes data-theme="midnight" | "daylight" | "ndebele", but the
+   canonical tokens.css only defines shweshwe (:root) · dusk · earth ·
+   ndebele · ink. "midnight" therefore matched nothing and fell through to
+   :root — which happens to be the intended dark palette, so it looked
+   correct by accident. "daylight" also matched nothing, so selecting the
+   LIGHT theme rendered the DARK palette. That is a real user-visible bug,
+   and it also meant the axe gate's "midnight vs daylight" sweep was
+   really testing the same palette twice.
+
+   tokens.css is byte-for-byte synced against 04_assets/themes/tokens.css
+   (see tokens.sync.test.ts) and must never be hand-edited, so the alias
+   lives here instead. Mapping "Signal Daylight" onto the `earth` palette
+   is the only reading the token file supports — it is the sole light
+   palette — but the NAME mapping is a design call, so it is flagged for
+   Lethabo rather than treated as settled. */
+[data-theme="daylight"] {
+  --ground:      #FBF2E6;
+  --ground-deep: #EAD7C0;
+  --surface:     #FFFFFF;
+  --text:        #241408;
+  --text-dim:    #6B5238;
+  --border:      #E0CDB2;
+  --hi:          rgba(255,255,255,0.70);
+  --glow:        rgba(224,178,128,0.45);
+  --texture-opacity: 0.22;
+  --shadow-blend: multiply;
+}
+
+.route {
+  box-sizing: border-box;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  padding: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  /* Long unbroken tokens (ids, hashes, URLs) must wrap rather than
+     push the document wider than the viewport at 200% zoom. */
+  overflow-wrap: anywhere;
+}
+
+.route > * {
+  max-width: 100%;
+  margin: 0;
+}
+
+.route h1 {
+  font-size: var(--fs-h1);
+  line-height: 1.15;
+}
+
+.route .eyebrow {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ---- Controls: real 44px targets, real focus, real contrast ----
+   These are already genuine <button>/<a>/<select> elements, so the
+   div-to-button conversion the mockup pass had to do does not apply
+   here. What was missing was size and colour, not semantics. */
+
+.route button,
+.route a[href],
+.route select {
+  min-height: 44px;
+  min-width: 44px;
+  box-sizing: border-box;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route button {
+  padding: var(--sp-3) var(--sp-5);
+  border: 1px solid transparent;
+  border-radius: var(--r-lg);
+  background: var(--voice-grad);
+  color: #FFFFFF;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.route button:disabled {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text-dim);
+  cursor: not-allowed;
+}
+
+/* UA link blue on --ground is the serious axe `color-contrast`
+   violation this replaces. --text is the theme's own body colour,
+   so it inherits whatever contrast the palette already guarantees. */
+.route a[href] {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: var(--sp-2) 0;
+}
+
+.route select {
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.route label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 44px;
+  max-width: 100%;
+}
+
+.route input[type="checkbox"] {
+  inline-size: 24px;
+  block-size: 24px;
+  flex: none;
+}
+
+.route input[type="text"],
+.route input:not([type]) {
+  min-height: 44px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--sp-2) var(--sp-3);
+  font: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.route audio {
+  max-width: 100%;
+}
+
+/* Keyboard visibility. The gate presses a real Tab and asserts both
+   :focus-visible and a non-zero computed outline-width, so this must
+   be an outline — a box-shadow ring would silently fail that check. */
+.route :focus-visible {
+  outline: 3px solid var(--voice-1);
+  outline-offset: 2px;
+}

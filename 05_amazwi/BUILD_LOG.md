@@ -24,6 +24,193 @@
 
 ---
 
+### [02 Sep ~09:30] — Lethabo's lane · Claude · Plan 03 Task 11 accessibility gates, on the real React app
+
+**DID**
+- Recovered a rate-limited predecessor's uncommitted Playwright+axe harness (`e2e/`, `playwright.config.ts`) from `origin/worktree-agent-a36bf52727aec1911`.
+- **Two harness bugs found before any real measurement was possible. Both had been producing false evidence, and the recovered `test-results/` was entirely worthless because of the first:**
+  1. `playwright.config.ts` had `reuseExistingServer: true` on port 5174. A stray dev server for **an unrelated project (BobSwarm)** was listening there, so Playwright silently attached to it. Every one of the 15 recovered `error-context.md` snapshots is a page from that other app — not AMAZWI. The handover described them as "real captured output"; they were real, but of the wrong program. Fixed: dedicated port 5199, `reuseExistingServer: false`, reason recorded in a comment.
+  2. `e2e/fixtures.ts` stubbed the glob `**/api/**`, which also matches the app's own module `/src/api/client.ts`. Vite's JS was answered with `application/json`, the browser refused the module (`Expected a JavaScript-or-Wasm module script...`), React never mounted, and **the reflow, touch-target and axe gates were all passing vacuously against a blank page.** Fixed with a `url.pathname.startsWith("/api/")` predicate.
+- Only then did the suite measure anything. **Real violations found and fixed, all quoted in `starter/frontend/ACCESSIBILITY_EVIDENCE.md`:**
+  - **Touch targets: every control on all five routes at 19–21px** (e.g. consent "Continue" `69 × 21`, home theme select `141 × 19`). Cause: the `.route` class every route already used **had no CSS rule defined anywhere**. Note the mockups' `all:unset` div→button pattern did **not** apply — these were already real `<button>`/`<a>`/`<select>`; size and colour were missing, not semantics.
+  - **Reflow at 200% zoom: `/result` overflowed, `scrollWidth` 377 vs `clientWidth` 320.** The other four routes passed unchanged — confirming the real frontend did **not** inherit the fixed-390px-canvas defect that `04_assets/mockups_v2/ACCESSIBILITY_EVIDENCE.md` §3 warned about.
+  - **axe `color-contrast: a` on home and result, both themes** — unstyled `<a>` in UA link blue `#0000EE` on the dark `--ground`.
+  - **`/verify` exposed no `aria-live` region at all.** `StatusAnnouncer` already existed in `SignalPrimitives.tsx` and had never been wired into any route; four status transitions were announced to nobody.
+  - **`/` had an unlabelled `<main>`** while the other four routes were labelled.
+- **Separate real bug found while checking the axe results were not suspiciously identical across themes:** `theme.tsx` writes `data-theme="midnight"/"daylight"`, but canonical `tokens.css` defines `shweshwe`/`dusk`/`earth`/`ndebele`/`ink`. Neither name matched a selector. `midnight` fell through to `:root` and looked right by accident; **`daylight` rendered the dark palette, so the light theme never worked**, and the two-theme axe sweep was really testing one palette twice. Aliased in `signal-flow.css`, **not** `tokens.css` (byte-synced by `tokens.sync.test.ts`, must never be hand-edited).
+- Deleted the committed `test-results/` tree and added `starter/frontend/.gitignore` — stale run artefacts of the wrong app read as evidence long after the run is forgotten.
+- Scoped `vitest.config.ts` to `src/**` — it was collecting the Playwright specs and erroring.
+
+- **After rebasing onto Sbu's merged main**, `/impact` and `/ops` had landed. Added both to `ROUTES` and gated them too — an ungated route is silently ungated, and no test fails to tell you. That surfaced a stubbing hazard worth recording: both map over arrays from their API response, so a wrongly-shaped stub throws during render, React unmounts, and the gate reports "0 `<main>`" — indistinguishable from a real landmark failure. `/ops` also renders a zero-control no-access state unless `roles` contains exactly `MTN_LANGUAGE_OPS`. Both stubs are now contract-shaped and commented. **No accessibility defect was found in either new route** once stubbed correctly.
+
+**HOW / VERIFIED**
+- `npx playwright test` — **265/265 passing** (7 routes × 5 widths) across Chromium at 320/360/390/430/480px, both themes. The pre-rebase five-route run was 195/195. Real `Tab` presses (not `.focus()`, which never sets `:focus-visible`), `getBoundingClientRect()` for sizes, live `scrollWidth`/`clientWidth` for reflow.
+- Rendered in a real browser and looked, per the standing rule: screenshots at 320px in both themes. Confirmed by computed style that `--ground` under `daylight` went `#0C1123` → `#FBF2E6`, with the `--voice-*` brand gradient unchanged as the token file's invariant requires.
+- `npx vitest run` 82/82 · `npx tsc -b --noEmit` clean · `vite build` succeeds.
+
+**WHY**
+- A green gate on an unmounted page is worse than no gate, because it looks like evidence. Both harness bugs had to be fixed before any number here could be honest — and the predecessor's captured artefacts had to be called what they were rather than inherited as findings.
+
+**CHANGED**
+- `starter/frontend/`: `signal-flow.css` (new `.route` + control + focus + daylight-alias block), `HomeRoute.tsx`, `features/verification/VerificationRoute.tsx`, `e2e/fixtures.ts`, `playwright.config.ts`, `vitest.config.ts`, new `ACCESSIBILITY_EVIDENCE.md`, new `.gitignore`; removed `test-results/`.
+
+**NEXT / BLOCKED-PING**
+- ⚠️ **Lethabo's call needed:** mapping "Signal Daylight" → the `earth` palette is the only reading `tokens.css` supports (sole light palette), but which canonical theme each product-facing name means is a design decision, not a mechanical one. The cleaner long-term fix is renaming the themes in `theme.tsx` to canonical names, which changes `theme.test.tsx` and the persisted `localStorage` value. Flagged, not settled.
+- Not covered, listed in full in §"What this does NOT cover": Chromium only, no real screen reader, no physical device, `prefers-reduced-motion` read but not observed firing. **Not a WCAG conformance claim.**
+- Any future route must be added to `ROUTES` in `e2e/fixtures.ts` — the gates iterate that list, so a new route is otherwise silently ungated. `/impact` and `/ops` are now covered.
+
+---
+
+### [02 Sep] — Sbu (Claude, direct) · review · cross-lane review closed; one governance-ledger contradiction found
+
+**DID**
+- Reviewed the money-adjacent work filed "pending Sbu's review" by tracing the code paths, not by reading the entries describing them. Verdicts recorded in `HANDOVER_LETHABO.md`; the open item in `HANDOVER_SBU.md` is stamped so it stops dangling.
+- **Mission authorisation gate: ACCEPTED.** Traced `OperatorPrincipal` end to end looking specifically for a header-injection path that could set `principal_kind` or `roles` — there isn't one; it is built only by `principal_for_user()` from a persisted row, and `routes/ops.py` reads `principal.kind` for output only. Gate sits in the service layer, not just the UI. Keyword-only `confirmation_text` with no default is the right structural choice.
+- **Ruling issued on `mission_proposals.campaign_id`** (correctly left to me): nullable is right — propose without a funded campaign, never *disburse* without one. Budget check belongs in the disbursement path when built; do not retrofit `NOT NULL`.
+- **Verified CI rather than trusting the claim:** `96e2fae` green on both jobs, backend included, against the real Postgres service container. Locally re-ran what I can: `starter/ml` 38/38, frontend 65/65.
+
+**FOUND — the one real problem**
+- `starter/ml/runs/README.md` still records both runs as `status: BLOCKED` / `reservation ID: pending budget reservation`, and `starter/ml/kaggle/budget.json` holds only caps and an account list — no reservations, no consumed hours. Meanwhile real GPU hours were spent across kernel v3/v5/v6/v7. **Both canonical governance artefacts state in writing that no run happened.**
+- The `00:15` entry flags this honestly as provisional, but that flag is in a log entry while these two files are what a reviewer, a model-card generator or a judge actually reads. This is the `08_REDTEAM.md` standard's own failure mode: one document contradicting another means one of them is wrong.
+- **Ruling:** reconcile both files against the run's real output before anything generates an evidence pack, model card or acceptance write-up. A model card built on a ledger reading `BLOCKED` inherits a false provenance chain, and provenance *is* the product claim. Until reconciled, this run yields no promotable candidate.
+- The preflight evidence itself is clean and not at issue — `preflight_swivuriso.json` pins an exact revision, an allowed task, accepted terms, a named reviewer and the registry hash. The gate worked; the ledger is what's behind.
+
+**CORRECTION THAT AFFECTS THE PITCH**
+- The mission gate rests on `app/identity.py` — `X-User-ID` + `X-Provider-Subject` headers, **no signature**. Pairing the UUID to the persisted subject stops casual cross-user access but is not authentication. Plan 04 Task 2 is still open. So the gate is a governance/correctness control, not a security control: say *"human-in-the-loop by design — an automated actor structurally cannot authorise a mission,"* never *"only an authorised MTN operator can."* The second is an overclaim of exactly the kind `07_TRUTH.md` exists to catch.
+
+**ALSO**
+- Accepted the removal of my earlier `test_external.py` (superseded by `test_external_preflight.py` against the fuller gated `external.py`). Don't re-add it.
+- v7's outcome is still unverified in-repo — no artefact or real GPU-hour figure recorded. The promotion gate's artefact-hash requirement means an unfinished run cannot leak into a promotion, so this is a verify-it note, not an alarm.
+- Four `worktree-agent-*` branches remain on `origin`; their work has landed. Merge-or-delete before the event.
+
+**ALSO RULED — Impact Map (`GET /impact`), the second cross-lane item**
+- **Unauthenticated: approved for the competition build.** Read `impact.py` directly: `MIN_CELL_SIZE = 5` filters before banding, counts publish as bands, `model_gap_percent` is null rather than inferred from volume, `missions_completed` is 0 rather than approximated. Good instincts throughout.
+- **But the real exposure is commercial, not personal, and wasn't the thing asked about.** Each node publishes `campaign`, so a public endpoint discloses which funding campaigns exist and roughly their volume. Fine for seeded demo data; before a real sponsor's campaign is in there, drop `campaign` from the public projection or put the route behind identity.
+- 🔴 **New finding — the bands are partially defeatable.** `verified_total` is published exactly and `coverage_percent = round(100 * verified_count / verified_total)`. With both, `verified_count` solves backwards to a narrow range; at demo-scale totals one percentage point is ~2–3 clips, so a "5–9" band collapses to near-exact and the k≥5 protection stops protecting. Fix by banding or hard-rounding `coverage_percent`, or dropping it and deriving share client-side.
+- **Cell-key deviation: approved, and correct.** Refusing to fabricate a province field that isn't collected is right. Do **not** add a province column for the competition — a coarse geographic field on voice contributions is a POPIA consent question and a new consent surface, and it is not P0. Ship it null with `geography_available: false`.
+
+**NEXT**
+- Reconciling the two governance files needs the run's real output, which is on Lethabo's Kaggle account — hers to pull, not mine.
+- The `coverage_percent` fix is small and in her lane; flagged rather than patched so she isn't surprised mid-task.
+
+---
+
+### [02 Sep ~06:00] — Lethabo's session · Claude · Plan 03 Tasks 9+10: missions + human-only MTN authorisation — CROSS-LANE, PENDING SBU'S REVIEW
+
+**DID**
+- Recovered a rate-limited predecessor agent's uncommitted work from `origin/worktree-agent-a9ac1d6b3fdc7bff6` by merge (not by re-implementing), then read every changed file and re-ran everything rather than trusting the "WIP checkpoint" label. **Finding: the work was actually complete, not partial** — including the `test_migrations.py` expectations the predecessor said were still to be written. Nothing was found broken.
+- Shipped Plan 03 Task 9 (`app/missions.py`, `app/models.py`, migration `e0f1a2b3c4d5_language_ops`) and Task 10 (`app/routes/ops.py`, `src/features/ops/OpsRoute.tsx`).
+
+**HOW the human-only authorisation gate is enforced — four independent layers, each with a test**
+1. **Persisted principal kind.** `users.principal_kind` is a DB column with a `ck_user_principal_kind` CHECK constraint. An automated worker is stored `AUTOMATED` and can never satisfy the gate. There is no request field, header or body key that sets it — `OperatorPrincipal` is constructible only from a persisted `users` row via `principal_for_user`.
+2. **Role check.** `MTN_LANGUAGE_OPS` must be in the persisted `users.roles` array.
+3. **Exact confirmation echo.** `authorise_mission(..., *, confirmation_text)` is keyword-only with **no default**, and must be byte-equal to `CONFIRMATION_TEXT`. A scheduled job cannot silently agree to a sentence it must reproduce. The echoed text is persisted on the authorisation row.
+4. **No automated caller can exist.** `test_no_module_outside_the_ops_route_can_call_authorise_mission` scans the whole `app/` tree with a regex and asserts the caller set is exactly `["routes/ops.py"]`. If a future outbox worker or scheduler imports it, the suite goes red.
+
+**The tests that prove it (all passing):**
+- `test_automated_actor_cannot_authorise_without_the_human_step` — the key one. The automated actor is deliberately granted the `MTN_LANGUAGE_OPS` role *and* supplies the correct confirmation text (everything a machine could possibly supply) and is still refused; then asserts zero `mission_authorisations` rows, proposal still `PROPOSED`, and zero `MISSION_AUTHORISED` audit events — i.e. no partial side effects.
+- `test_human_without_the_operator_role_cannot_authorise`, `test_operator_without_explicit_confirmation_cannot_authorise` (empty / "yes" / lower-cased / trailing-space variants all refused).
+- HTTP-boundary equivalents in `test_ops_api.py`: `test_automated_principal_is_refused_at_the_http_boundary` (403), `test_missing_confirmation_is_refused`, `test_wrong_confirmation_text_is_refused`, `test_missing_idempotency_key_is_refused`, and `test_authorise_route_accepts_no_mission_terms_from_the_request`.
+- DB-level: `test_mission_authorisation_evidence_cannot_be_edited_or_deleted` (triggers make authorisation rows immutable and undeletable) and `test_mission_proposal_budget_check_is_enforced_by_the_database`.
+- Frontend: `OpsRoute.test.tsx` — no controls without the role, a second explicit human confirmation required, no mutable mission terms sent, and the UI never says "launched" before `AUTHORISED` comes back.
+
+**WHY / money boundary — read this, Sbu**
+- Mission terms (language, province, domain, target, fixed reward, budget) are read **only from the persisted proposal**, never from the request body. `MissionAuthorisationRequest` has exactly one field: the confirmation string.
+- Authorisation **records human intent and moves no money**. It does not touch `campaigns.funded_cents` / `campaigns.committed_cents` and calls no payment adapter — `test_authorisation_writes_an_audit_event_and_moves_no_money` asserts this. `MissionProposal` carries a nullable FK to the existing `campaigns` table rather than inventing a parallel budget concept; actually funding a mission from a campaign remains a separate, unbuilt, **Sbu-owned** decision. No money/legal decision was invented here.
+- Where the plan's wording was ambiguous about *where* the human gate sits, the conservative reading was taken: the gate is in the service layer on the authorisation call itself, not only in the UI. A UI-only gate would have left the API auto-approvable.
+- `Model evidence` on the Ops readiness panel is returned as an explicit `available: false` marker with an "no evaluation run is recorded" message, not a fabricated number — no evaluation-run table exists in this repo yet.
+
+**VERIFIED, not assumed**
+- Backend: `python -m pytest -q` — **135 passed, 0 failed** (31m43s; embedded PostgreSQL 16 via `pgserver`, real Postgres not SQLite).
+- Frontend: `npm ci` then `npm test` — **65 passed across 12 files**; `node ./node_modules/typescript/bin/tsc -b --noEmit` — clean, no output. (`npx tsc` misfires on this machine — "This is not the tsc command you are looking for" / "Could not determine Node.js install directory"; the local binary was invoked directly instead. Noting it so the next person doesn't read it as a real type error.)
+- Alembic chain checked for a split head: exactly one migration declares `down_revision = "d9e0f1a2b3c4"`, so `e0f1a2b3c4d5` is a single head.
+- `starter/frontend/node_modules` was absent in this worktree and had to be installed; `npm ci` warns that `esbuild@0.21.5`'s postinstall was not run under the allow-scripts policy. It did not block the test run, but flagging it rather than staying silent.
+
+**LIMITATION, stated plainly**
+- The Ops route was **not** rendered in a real browser this session — it is verified by jsdom component tests and typecheck only. The 320–480px / zoom / keyboard / screen-reader gates (Plan 03 Task 11) remain open and were not attempted.
+- `routes/ops.py` ends with a defensive `assert proposal.state is AUTHORISED` post-condition. That would be stripped under `python -O`. It is a sanity check, **not** the gate — every actual refusal path raises a real exception — but it should become an explicit raise during Stage 9 hardening.
+
+**CHANGED**
+- New: `app/missions.py`, `app/routes/ops.py`, `alembic/versions/e0f1a2b3c4d5_language_ops.py`, `tests/test_missions.py`, `tests/test_ops_api.py`, `src/features/ops/OpsRoute.tsx` + test.
+- Modified: `app/models.py` (`PrincipalKind`, `MissionProposal`, `MissionAuthorisation`, `users.principal_kind`/`roles`/`display_name`), `app/api_types.py`, `app/main.py`, `tests/test_migrations.py`, `src/App.tsx`, `src/api/client.ts`, `src/api/contracts.ts`.
+
+**NEXT / BLOCKED-PING**
+- **Sbu**: this is money/authorisation territory and needs your review before it is treated as final — specifically the campaign FK being nullable and disbursement being deliberately left unbuilt.
+- Plan 03 still open: Task 0 (tooling lock), Tasks 1/2/5 finishing, Coverage Constellation (7–8), a11y gates (11), visual regression vs Figma (12), engagement-to-operations loop (13).
+- Did not touch Kaggle/GPU/Vercel this session, by instruction.
+
+---
+
+### [02 Sep ~05:40] — Lethabo's session · Claude · Plan 03 Tasks 7–8 (Coverage Constellation) finished — CROSS-LANE, PENDING SBU REVIEW
+
+**DID**
+- Recovered a predecessor agent's rate-limit-interrupted work from `origin/worktree-agent-a0372965fcf719c7d` (merged clean, no conflicts) and finished Plan 03 Tasks 7 and 8: the aggregate Impact Map / Coverage Constellation.
+- Backend (**cross-lane, Sbu's area — flagged for his review, not treated as final**): `app/impact.py` (`build_coverage`), `app/routes/impact.py` (`GET /impact`, also `/api/impact`), `CoverageNodeResponse`/`ImpactResponse` in `app/api_types.py`, router registered in `main.py`.
+- Frontend: `components/SouthAfricaCoverageMap.tsx` (flat SVG, `viewBox 0 0 320 300`, the plan's exact nine province centroids and exact band→radius map 6/8/10/12), `features/impact/ImpactRoute.tsx`, the `/impact` route in `App.tsx`, `api/contracts.ts` + `api/client.ts` (`getImpact`), and the Coverage Constellation CSS.
+
+**HOW / VERIFIED, not assumed**
+- Backend suite: `python -m pytest -q` → **121 passed** (22m41s, real PostgreSQL 16 per `conftest.py`), including the 10 tests in `tests/test_impact.py` and the API-shape tests in `tests/test_impact_api.py`.
+- Frontend: `npx tsc -b --noEmit` clean; `npm test` → **74 passed / 13 files**, including `SouthAfricaCoverageMap.test.tsx` (10) and `ImpactRoute.test.tsx` (7). Note the frontend `node_modules` was absent in this worktree and had to be `npm ci`'d first — the earlier "typecheck passes" state was not reproducible until then.
+- Every CSS custom property used (`--voice-1/2`, `--ground-deep`, `--text-dim`, `--border`, `--surface`, `--fs-h1`, `--fs-label`, `--fs-sm`, `--tracking-label`, `--r-md`, `--sp-1..5`) was grepped against `tokens.css` and exists — no invented tokens, no new colours.
+- Checked `models.py` directly for `province|region|latitude|longitude|location|geo` before accepting the "no geography" claim: **there is genuinely no geographic column anywhere** in the schema.
+
+**WHY — two honest deviations from the plan text, both deliberate**
+1. The plan keys cells by `(language, province, domain)`. The real schema has **neither a geographic column nor a domain vocabulary**. Rather than fabricate a location field, `build_coverage` aggregates over what the database actually holds — **declared language × funding campaign**. `province_code` is `None` on every node, `geography_available` is `False`, and the map renders an explicit "province-level coverage is not collected yet, showing national totals" state instead of scattering invented pins. The province pin path is real and tested so it works unchanged the day consented province data exists. `model_gap_percent` is likewise always `None` ("Model evidence unavailable") because no signed, active model-evaluation record exists in this database — ML metrics live unlinked in `starter/ml`. `missions_completed` is `0`, not approximated, because Task 9's `mission_proposals` table is not built.
+2. The plan says modify `starter/frontend/src/styles/materials.css`. **That file does not exist**; the styles went into the existing `signal-flow.css` instead.
+- Privacy is enforced in the backend, not the UI: a cell publishes only at ≥5 committed, peer-verified, corpus-eligible contributions, and published counts are bands (`5-19`/`20-49`/`50-99`/`100+`), never exact. `test_impact_api.py` asserts the absence of personal/geographic/audio fields against the **raw response text**, not just the parsed top level. Consistent with the standing "no public raw-audio archive" commitment.
+
+**CHANGED**
+- New: `starter/backend/app/impact.py`, `starter/backend/app/routes/impact.py`, `starter/backend/tests/test_impact.py`, `starter/backend/tests/test_impact_api.py`, `starter/frontend/src/components/SouthAfricaCoverageMap.tsx` (+test), `starter/frontend/src/features/impact/ImpactRoute.tsx` (+test).
+- Modified: `starter/backend/app/api_types.py`, `starter/backend/app/main.py`, `starter/frontend/src/App.tsx`, `starter/frontend/src/api/client.ts`, `starter/frontend/src/api/contracts.ts`, `starter/frontend/src/signal-flow.css`.
+
+**NEXT / BLOCKED-PING**
+- **Sbu:** `GET /impact` is deliberately **unauthenticated** — every field has already passed minimum-cell-size suppression and no personal field is present. That is a data-exposure judgement in your lane; please confirm or overrule it rather than inheriting it silently. Same for the language × campaign aggregation standing in for the plan's province × domain cell.
+- Not verified in a real browser this session (no dev server run) — only jsdom tests and typecheck. The 320–480px / zoom / screen-reader gates are Plan 03 Task 11 and remain open.
+- Plan 03 still open: Task 0, finishing Tasks 1/2/5, Task 9 (missions/MTN authorisation), Task 10, 11, 12, 13.
+- The CI portability bug flagged in `CLAUDE.md` (`test_object_key_cannot_escape_storage_root`, `Path(...).is_absolute()` on POSIX) was **not** touched by this session — it passes on Windows here, so it is untested against Linux CI from this worktree.
+
+**MERGE NOTE — reconciled with the sibling Tasks 9+10 agent**
+- `origin/main` moved twice during this work; the second move brought the parallel Tasks 9+10 (missions / MTN Language Ops) agent's commit, which touched five of the same files. Conflicts in `main.py`, `App.tsx`, `api/client.ts`, `api/contracts.ts`, `HANDOVER_SBU.md` and `BUILD_LOG.md` were all **pure additions on both sides** and were resolved by keeping both — the one real edit needed was collapsing two duplicated `import type { ... } from "./contracts"` lines in `client.ts` into a single import.
+- Both suites were **re-run after the merge, not assumed to still pass**: frontend `npx tsc -b --noEmit` clean and `npm test` → **82 passed / 14 files** (this session's 74 plus the sibling's 8), backend re-run to completion against real PostgreSQL.
+
+---
+
+### [02 Sep ~05:30] — Lethabo's session · Claude · Plan 02 acceptance checklist verified against real tests; four real bugs closed
+
+**Cross-lane exception — backend/ML work, pending Sbu's review.** Not a stopper-driven exception: the lane rule was loosened 31 Aug, and this is verification of already-shipped Stage 4–6 work rather than new product surface. Flagging it as provisional anyway, per the rule.
+
+**DID**
+- Recovered an interrupted predecessor session's uncommitted work from `origin/worktree-agent-ad6e008f586960d8e` by merge (clean, no conflicts): changes to `app/council.py`, `app/outbox.py`, `scripts/run_council_worker.py`, `tests/test_resolver.py`, and three new backend test files (`test_council.py`, `test_datasets.py`, `test_outbox.py`, 1,146 new lines). Its commit message said only "WIP checkpoint", so I read every changed file and ran the suites rather than trusting that label — the work turned out to be substantially complete, and the worker refactor its author said was still "in progress" was in fact already written.
+- Verified all 16 items of Plan 02's **Final Acceptance Checklist** against the tests that actually exist, and ticked 15 of them in `docs/superpowers/plans/2026-09-01-amazwi-02-council-data-models.md` with the specific test names that prove each. Several prescribed filenames (`test_resolver_outbox.py`, `test_ai_disabled_e2e.py`, `test_outbox_concurrency.py`, `test_council_worker.py`) do not exist; the behaviour is genuinely covered under other filenames, and each such substitution is written into the doc rather than quietly ticked.
+- **Item 16 left deliberately unticked** — "no external download / GPU run / alias change claimed without exact evidence" is a claim-review item about prose a human reads. Its mechanical half is tested, but no test can discharge it. It needs an honesty pass over the evidence docs and model cards against the real Kaggle runs in `a792049`/`6f03710`/`d3bc55a`. Sbu's call.
+
+**Real bugs closed (three from the predecessor, one found in this session)**
+1. `council.py`: `row.retry_count += 1` raised `TypeError` on the *first* failure of any specialist, because SQLAlchemy's `default=0` is only applied at INSERT-flush time and the not-yet-flushed row still held `None`. This crashed the whole Council run instead of recording one FAILED row, making the `PARTIAL` status state unreachable in practice.
+2. `outbox.py`: `AI_COUNCIL_MAX_ATTEMPTS` was dead config — a permanently failing event was retried forever and nothing ever wrote `COUNCIL_ATTEMPTS_EXHAUSTED`, so the `FAILED` branch already sitting in `app/routes/council.py:62` was unreachable code. Added `exhaust_event`, a shared `COUNCIL_ATTEMPTS_EXHAUSTED` constant, and admin recovery that reopens an exhausted event but still refuses to resurrect a genuinely completed one.
+3. `test_resolver.py`: the three rollback tests asserted no decision and no reward row survived, but never that no *outbox event* survived — exactly the leak Stage 4's Stop Rule names, since a stray `ContributionResolved` row would let the Council publish an outcome for a resolution that never committed.
+4. **Found this session:** `ml/tests/test_tabular.py` asserted determinism and the prediction hash but never touched calibration (`brier`/`ece`/`aucpr`) or `feature_attribution`, both of which checklist item 14 explicitly requires and both of which `amazwi_ml/tabular.py` really computes. A regression silently dropping them would have passed the suite. Added two tests covering calibration bounds, per-language protected-gap slices, attribution key set, and determinism of both.
+- Also added `test_worker_main_is_a_no_op_when_the_council_is_disabled` — the disabled check sits *before* the `AMAZWI_DATABASE_URL` lookup, and reordering those two lines would make a disabled deployment crash on startup while nothing else in the suite noticed.
+
+**HOW / VERIFIED**
+- `cd starter/backend && python -m pytest -q` — real embedded PostgreSQL 16, not SQLite. Full suite run four times, once after every change of tree state rather than once at the end: **167 passed** pre-change → **168 passed** after my changes (the +1 is my disabled-worker test) → **196 passed** after the first `origin/main` merge → **210 passed** after the second. The growth from 168 to 210 is entirely the sibling agents' Plan 03 Tasks 7–10 (Coverage Constellation, missions/Language Ops, Impact Map) arriving in those merges — **not** coverage this session wrote. My own additions to the count are three tests: one backend, two ML. First run took 25 minutes on a cold embedded server; later runs 3–4 minutes warm.
+- `cd starter/ml && python -m pytest -q` — 38 passed pre-change, 40 passed after, and 40 passed again post-merge.
+- `origin/main` moved **twice** during this work (three sibling agents pushing in parallel), so the merge was done twice. Both rounds conflicted only in `BUILD_LOG.md` and `HANDOVER_SBU.md` — two agents each writing a new entry at the top of the same file — and both sides' content was kept in full every time. No source file conflicted, so no test behaviour was touched by any resolution.
+- **Two real mistakes of my own, caught by sweeping instead of assuming the resolution was clean:** (1) the first resolution left a stray `<<<<<<< HEAD` line in `HANDOVER_SBU.md` — the closing markers had been removed but not the opening one, and it would have been pushed as a visible artefact; (2) after the second merge my 05:30 entry had been auto-placed *below* the 05:00 one, breaking this file's newest-at-top rule. Both fixed, then re-verified by grepping the whole tree for markers and re-listing the entry headers in order.
+- **Test counts corrected rather than left stale.** An earlier draft of this entry and of `HANDOVER_SBU.md` both said "168 passed", which was true before merging and false after. The merged tree runs more, and the extra tests are the sibling agents' Tasks 7–10 work, not mine — both files now say so explicitly so the number cannot be read as this session having added more coverage than it did.
+- Confirmed `app/routes/council.py` really reads the literal `COUNCIL_ATTEMPTS_EXHAUSTED` (line 62) rather than taking the predecessor's comment on trust.
+
+**LIMITATIONS, stated plainly**
+- Ticks record that behaviour is *tested*, not that Stage 4–6 is signed off. Nothing here was run against a production Postgres, a real Kaggle GPU run, or a deployment.
+- The `SKIP LOCKED` concurrency test runs two sessions against the embedded server; it is a genuine two-connection test, but not a load test.
+- Untouched by design: Kaggle/GPU, Vercel, and anything money- or campaign-related.
+
+**NEXT / BLOCKED-PING**
+- **Sbu:** item 16's honesty pass is the one open acceptance item, and it is genuinely yours — it is a claim-calibration judgement over the evidence docs, not something a test settles.
+- **Vindicated within the hour, and worth recording.** A third `origin/main` merge (Sbu's own review commit `911f9c3`) landed while this entry was being written, and it names the concrete instance independently: `runs/README.md` and `kaggle/budget.json` both still state no run happened, while real GPU hours were spent. That is precisely item 16's failure mode — a false claim sitting in prose that every mechanical test passes straight over. It is the argument for having left the box unticked rather than ticking it on the strength of the green suite. Still open: reconcile both files before any evidence pack or model card is generated.
+- The four plan files' inline checkboxes remain unreliable elsewhere; only Plan 02's Final Acceptance Checklist has been reconciled against reality.
+
+---
+
 ### [02 Sep ~05:00] — Lethabo's session · Claude · v6 failed on a Kaggle-side transient error, v7 pushed; 4 agents recovered after rate-limit interruption
 
 **DID**

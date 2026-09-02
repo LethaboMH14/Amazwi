@@ -147,7 +147,13 @@ def run_council_event(
         except Exception as exc:
             row.state = CouncilOutputState.FAILED
             row.failure_reason = str(exc)[:2000]
-            row.retry_count += 1
+            # `retry_count`'s default=0 is applied by SQLAlchemy at INSERT
+            # flush time, so a not-yet-flushed row still holds None here.
+            # `+= 1` therefore raised TypeError on the *first* failure of any
+            # specialist, which crashed the whole Council run instead of
+            # recording one FAILED row -- making the PARTIAL status state
+            # unreachable in practice.
+            row.retry_count = (row.retry_count or 0) + 1
         outputs.append(row)
     session.commit()
     return outputs
