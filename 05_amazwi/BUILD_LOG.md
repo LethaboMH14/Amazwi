@@ -5,6 +5,29 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · CRITICAL PATH UNBLOCKED · real Postgres running, seed verified, full suite green
+
+**DID**
+- **Unblocked Codex's `pg_ctl: could not create restricted token: error code 87`** — downloaded the official EnterpriseDB PostgreSQL 16.10 Windows binaries zip directly (no installer GUI, no admin rights needed) to `C:\Users\lovilocal.adm\pgtools\pg16`, ran `initdb`, started `pg_ctl` — no restricted-token error at all in this process context. Real PostgreSQL 16.10 now running on `localhost:5432`, database `amazwi_test`. (First extraction attempt silently stalled on an interactive overwrite prompt in a non-interactive shell — re-extracted with `-o` to a clean directory, which is why this took two tries.)
+- Ran all 5 Alembic migrations clean against it.
+- **Ran `seed_demo.py` for real for the first time — worked on the first try.** Re-ran it a second time: identical UUIDs both times, confirming idempotency directly (not just via a test).
+- Ran Codex's `test_seed_demo.py`: **found and fixed a real bug in the test, not the seed script.** It asserted `ConsentGrant` count == 10; actual correct count is 8 (2 scopes × 2-language speakers = 4, + 1 scope × 4 verifiers = 4). Traced why: `resolver.py` only requires `RECORD_PROCESS_ROUND` for `CORPUS_ELIGIBLE` (checked directly in the code) — `RETAIN_MODEL_DEVELOPMENT` (which would explain a count of 10) only gates dataset export in `app/datasets.py`, a separate feature, not the golden path. The test had never actually run against real Postgres before this (Codex's embedded fixture was broken the whole time), so this bug shipped unverified.
+- Ran the **full backend suite**: 210 passed, 1 failed — `test_seed_demo.py` again, this time `User` count 7 vs expected 6. Recreated a fully clean database and reran: **same failure**, proving it wasn't stale data from my manual runs. Root cause: the test asserted table-wide counts, which is fragile when the full suite runs and some other test leaves a row in the shared database without a rolled-back transaction. Fixed properly (not a shortcut): rewrote every assertion in `test_seed_demo.py` to scope by the seed's own deterministic ids (`Card.id.in_(card_ids)` etc.) instead of counting whole tables — correct regardless of what else exists in the database, not just a fix for today.
+- **Full suite, clean database, one run: 211/211 passed, ~2 min 17 sec.**
+
+**WHY**
+- This was the actual bottleneck for the whole 2-hour window — nothing downstream (LAN wiring, live golden path, rehearsal) can happen without a working Postgres and a verified seed. Getting a real local instance running myself (rather than waiting on a cloud Postgres signup) turned out faster once the zip-binaries approach sidestepped whatever made Codex's embedded fixture hit the restricted-token error.
+
+**PING Codex / Lethabo**
+- **You can stop waiting on a cloud Postgres URL.** If you also want a local instance: download `https://get.enterprisedb.com/postgresql/postgresql-16.10-1-windows-x64-binaries.zip`, `unzip -oq <file> -d pg16` (the `-o` matters — a bare `unzip` will silently stall on overwrite prompts in a non-interactive shell), then `initdb` + `pg_ctl start`. Or just keep using whatever got you unblocked already if you're already running.
+- `test_seed_demo.py` is pushed with the fix — pull before running it again, the old version will spuriously fail under the full suite.
+- **Critical path is now: LAN wiring, then the live golden path.** That's the next thing that needs to happen, and it's untested against real seeded content until it runs.
+
+**NEXT**
+- Handing LAN wiring + live golden path run back to whoever has device access (Codex/Lethabo) — I can verify backend-only logic from here but can't drive an actual phone+laptop session.
+
+---
+
 ## 🔴 EVENT LIVE — 2-hour acceleration window started
 
 ### [02 Sep] — Sbu (Claude, direct) · CRITICAL PATH · demo seed script
