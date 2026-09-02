@@ -9,8 +9,14 @@ from __future__ import annotations
 import argparse
 import os
 from pathlib import Path
+import sys
 
-from app.momo import MomoClient, MomoConfig, MomoConfigurationError
+if __package__ in {None, ""}:
+    # Support the documented `python scripts/momo_smoke.py` invocation when
+    # the current working directory is starter/backend.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from app.momo import MomoApiError, MomoClient, MomoConfig, MomoConfigurationError
 
 
 def load_local_env() -> None:
@@ -37,8 +43,12 @@ def main() -> int:
         return 2
     client = MomoClient(config)
     try:
-        collection = client._token("collection")
-        disbursement = client._token("disbursement")
+        try:
+            client._token("collection")
+            client._token("disbursement")
+        except MomoApiError as exc:
+            print(f"MoMo smoke failed: {exc}")
+            return 1
         print("MoMo OAuth: collection and disbursement tokens obtained (values withheld).")
         if not args.confirm_test_transfer:
             print("No transfer sent. Use --confirm-test-transfer only for an approved sandbox test.")
