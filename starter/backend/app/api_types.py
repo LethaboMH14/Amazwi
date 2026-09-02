@@ -50,6 +50,9 @@ class AssignmentResponse(BaseModel):
     id: str
     contribution_id: str
     mode: str
+    language: str
+    prompt_text: str
+    audio_playback_url: str | None = None
 
 
 class MissionProposalDTO(BaseModel):

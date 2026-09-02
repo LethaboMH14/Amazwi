@@ -5,6 +5,15 @@
 
 ---
 
+### [02 Sep] — Sibusiso · live-browser contract hardening (pending interactive proof)
+
+- **DID:** Reconciled the real API and frontend contracts found while preparing the browser run: governed consent enum names, seeded `zu-001` UUID, speaker-to-verifier hand-off, verifier audio and response fields.
+- **HOW:** Each LAN device's Vite proxy can supply only its own seeded identity headers (including for `<audio>`); verifier playback is a five-minute, audience-bound `VERIFY` token that re-checks both speaker and verifier playback consent.
+- **WHY:** The prior UI could render against mocks but could not complete the governed real-data journey: it created a contribution with placeholder `"greeting"`, then attempted verification as the speaker.
+- **VERIFY:** Frontend `npm run build` passed; frontend `npm test` passed **82/82**; focused real-Postgres peer API tests passed **3/3**. Interactive Chrome validation is still pending because this Codex machine's Chrome-control service is missing; no browser success is claimed.
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · ledger integrity verified · the negative path is proven too
 
 **DID**

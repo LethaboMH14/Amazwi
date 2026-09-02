@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.consent import require_active_scope
 from app.identity import AuthenticatedIdentity
 from app.models import (
+    Assignment,
     AudioObject,
     AudioObjectState,
     Campaign,
@@ -153,6 +154,33 @@ def issue_contributor_playback_token(
         audio.object_key,
         audience=str(principal.user_id),
         purpose="REPLAY",
+        ttl_seconds=300,
+        now=datetime.now(timezone.utc),
+    )
+
+
+def issue_verifier_playback_token(
+    session: Session,
+    store: LocalAudioObjectStore,
+    assignment_id: uuid.UUID,
+    principal: AuthenticatedIdentity,
+) -> str:
+    """Issue a short-lived URL only to the verifier assigned this clip."""
+    assignment = session.get(Assignment, assignment_id)
+    if assignment is None or assignment.verifier_id != principal.user_id:
+        raise AudioNotAuthorised("AUDIO_NOT_AUTHORISED")
+    contribution = session.get(Contribution, assignment.contribution_id)
+    if contribution is None:
+        raise AudioUnavailable("AUDIO_UNAVAILABLE")
+    require_active_scope(session, contribution.speaker_id, ConsentScope.ASSIGNED_VERIFIER_PLAYBACK)
+    require_active_scope(session, principal.user_id, ConsentScope.ASSIGNED_VERIFIER_PLAYBACK)
+    audio = session.scalar(select(AudioObject).where(AudioObject.contribution_id == contribution.id))
+    if audio is None or audio.state != AudioObjectState.AVAILABLE:
+        raise AudioUnavailable("AUDIO_UNAVAILABLE")
+    return store.issue_token(
+        audio.object_key,
+        audience=str(principal.user_id),
+        purpose="VERIFY",
         ttl_seconds=300,
         now=datetime.now(timezone.utc),
     )
