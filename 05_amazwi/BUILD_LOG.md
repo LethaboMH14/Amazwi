@@ -5,6 +5,46 @@
 
 ---
 
+### [02 Sep ~22:45] — Lethabo's session · Claude · engagement layer built end to end; demo DB separated from the test DB
+
+**DID**
+- Built the **arcade/engagement layer** the product was missing — the app had a working governed pipeline and no reason to open it twice. New `app/arcade.py` + `GET /arcade` + a `/dashboard` route: progression, leaderboard with podium, daily quests, peer invitations, language-cohort list, deck grid.
+- **Every element maps to a row that already existed.** A "duel invitation" is an unanswered `Assignment`. A "friend list" is the caller's real `verifier_qualifications` cohort. The leaderboard ranks speakers by resolver-verified clips. Quests count contributions and answers written today. Rank/XP are derived on read, never stored — `test_progression_is_derived_not_stored` proves a level cannot be assigned, only earned.
+- **Refused to build two things the reference layout wanted**, and wrote tests so nobody adds them later:
+  - *No skill radar.* The reference dashboard has a five-axis Teamwork/Creativity/Discipline/Curiosity/Solving chart. AMAZWI measures none of those. The same visual slot renders `speaker_outcomes` — the real understood / not understood / awaiting-peers / closed split. Every `ContributionState` is classified explicitly, and `test_every_contribution_state_is_classified` fails if a new state is added without being filed, so nothing lands silently in the wrong bucket.
+  - *No "N playing now".* Live presence isn't tracked; decks publish a real distinct-contributor count instead.
+  - `test_response_schema_publishes_no_fabricated_metric` inspects the published JSON schema rather than the source text — the first version scanned the source and failed on its own docstring explaining why those fields are absent.
+- **`seed_activity.py` drives the real resolver and real matcher**, never writing an outcome. That is what caught four genuine refusals while building it, each of which was a gate working correctly rather than a bug to route around: the resolver would not pay without a snapshotted `reward_rule_id`; would not resolve without exactly two qualified peers; refused everything because I set `answer_normalised` by hand instead of calling `matching.is_correct` (the resolver reads the persisted `matched` boolean, which I had left null); and refused 18 clips whose speakers had never consented. Each was fixed by satisfying the gate. The fixture keeps **3 real peer disagreements** so the refusal branch is visible on the dashboard, not just the happy path.
+
+**🔴 FOUND AND FIXED — the test suite was destroying the demo database**
+- `tests/conftest.py` runs `DROP SCHEMA public CASCADE` **per test** against `AMAZWI_TEST_DATABASE_URL`. The demo backend pointed at that same database. So running `pytest` — for any reason — wiped every seeded card, user, contribution and reward.
+- It happened live: the dashboard went from populated to empty and the API began returning `401 AUTHENTICATION_REQUIRED`, because the seeded user the frontend authenticates as no longer existed. The 401 was the symptom; the wipe was the cause. I initially misdiagnosed it as a proxy/header problem and chased that first.
+- Fixed by splitting: `postgres` for tests (safe to destroy, that is its job), `amazwi_demo` for the demo. **Proven, not assumed** — ran the full backend suite and then re-checked both databases: `postgres` contributions went to 0, `amazwi_demo` kept all 25, and `/arcade` still returned 200. Written up in the new `starter/backend/DEMO_RUNBOOK.md`.
+
+**ALSO FOUND — a stale backend from a previous session**
+- A `uvicorn` from a dead session was still bound to port 8000 against a *different* (embedded, `:54730`) database. My earlier health check and browser walk hit that one, not the Postgres I was seeding. Worth knowing before the event: two servers fighting over 8000 is its own demo failure mode. I moved to 8010 rather than killing another session's process, then killed the stale one by PID once it was clearly orphaned.
+
+**THREE REAL UI DEFECTS, found by looking rather than by reading markup**
+- Two "Play now" buttons rendered at **40px** against the project's 44px touch-target gate. Caught by a live DOM measurement at 320px; fixed and re-measured to zero undersized targets.
+- The avatar disc rendered **"D("** for "Demo Speaker (zu)" — `initials()` took the last word's first character without stripping punctuation.
+- **My own brand-rule violation:** I used `--rand` for the first-place podium border. `tokens.css` is explicit — *"MONEY ONLY. Nothing decorative is yellow."* Changed to `--voice-1`.
+- Separately: `signal-flow.css`'s light-theme money chip already carried over correctly (measured **11.71:1**). I nearly "fixed" a non-bug after reading only `color` and not `background-color`; `arcade.css` now sets size/spacing only on `.money` so the existing fix is inherited rather than re-implemented.
+
+**VERIFIED, not assumed**
+- Backend **235 passed** against real PostgreSQL; frontend **96 passed**; typecheck and production build clean.
+- Live browser checks at 1440px, 390px and 320px: **no horizontal scroll at any width**, zero undersized targets, all 10 controls keyboard-reachable and labelled, light (`earth`) and dark themes both correct.
+- Audio was already working on **both** sides and was not rebuilt: speaker uses `MediaRecorder` + `getUserMedia` with a phone file-capture fallback and a SHA-256 digest; verifier plays back through a consent-gated, audience-bound `VERIFY` token. Recording itself still cannot be driven from an automated browser (no microphone) — that limit is unchanged and remains a real-device item.
+
+**CROSS-LANE, PENDING SBU'S REVIEW**
+- `GET /arcade` publishes contributor **display names** on a leaderboard. That is a privacy-posture decision, not a mechanical one. Scoped as narrowly as the feature allows — caller's own language cohort, display names only, never a provider subject, ranking derived from `contributions` and never from payment detail, and a test asserts a user with no display name shows "Anonymous contributor" rather than leaking their auth subject. Still Sbu's call per `05_BUILD.md` §2.
+- `seed_activity.py` is guarded by `AMAZWI_ALLOW_DEMO_SEED`, mirroring the existing reset guard, and has no HTTP route.
+
+**NEXT / BLOCKED-PING**
+- Real-device golden path (phone mic + two laptops over LAN) is still the one thing no laptop-only session can close.
+- Gate G still has **no "Fund a mission" screen** — `OpsRoute` authorises a mission and says in copy that payment is a separate step. Building the funding leg touches disbursement and is Sbu's lane.
+- The `/dashboard` route is not yet linked from `HomeRoute`; it is reachable directly. Worth deciding whether the dashboard or the current home screen is the demo's first screen.
+---
+
 ### [02 Sep] — Codex · Gate F receipt settlement disclosure
 
 **DID**
