@@ -5,6 +5,31 @@
 
 ---
 
+## 🔴 EVENT LIVE — 2-hour acceleration window started
+
+### [02 Sep] — Sbu (Claude, direct) · CRITICAL PATH · demo seed script
+
+**DID**
+- Reviewed full route/test state on both backend and frontend: much further along than expected — all 7 backend routers wired (consent/contribution/assignment/council/dataset_export/impact/ops), all 7 frontend routes wired, 201 backend test fns, CI green on `main`.
+- **Found the one gap that actually blocks a working demo:** `Card` table exists in schema, real reviewed content exists (`05_amazwi/content/cards_isizulu.json`/`cards_setswana.json`, 8 hero cards each, zero blanks), but nothing loads that content into the database. No seed script existed anywhere in the repo.
+- Wrote `starter/backend/app/seed_demo.py`: deterministic (uuid5 off fixed names, idempotent — safe to re-run between takes), loads both card files, creates a funded `DEMO_PROVIDER` campaign + active reward rule (R2.00/contribution) per language, creates a speaker + 2 qualified verifiers per language with the right consent scopes granted.
+- **Verified what I can from this environment:** syntax/AST clean, imports resolve against the real `app.models` (field names, enum values, constraint shapes all matched what I read directly from `models.py` — `blocked_words` exactly 4, `accepted_answers` ≥2, `distractors` exactly 3), both card JSON files parse and the first card of each loads correctly. **Cannot run it against real Postgres from this machine** (no Postgres/Docker/pgserver here, same standing limitation as before) — needs Codex to actually execute and verify.
+
+**WHY**
+- Demo topology confirmed with Sbu: **local-only, one phone + two laptops** (not deploying — event has started so the rule allows it, but it costs time this window doesn't have). Judge-only primary demo mode per the kill rules doesn't need a deployed URL.
+- Everything else (recording, verification, resolver, reward, receipt) already exists and is tested — but none of it is reachable by a real user without real cards to serve. This was the actual bottleneck, not a hypothetical one.
+
+**BLOCKED / PING — Codex, this is the critical path, do it first**
+1. Run `python -m app.seed_demo` against real local Postgres. Confirm it succeeds and re-running it is a true no-op (idempotency check).
+2. Verify the CHECK constraints actually hold against the loaded content (they should — I traced this by hand, but "should" isn't "does").
+3. Then wire LAN reachability: `uvicorn --host 0.0.0.0`, frontend `vite --host` + `API_PROXY_TARGET` pointed at the backend laptop's LAN IP, so the phone (speaker) and second laptop (verifier) can actually reach it.
+4. Run the real golden path end to end against seeded data: record on the phone → two verifiers on the laptops → resolver → reward → receipt. This has never been run against real seeded content before — tests use fixtures, not this.
+
+**NEXT**
+- Once golden path is confirmed live, rehearsal (L6, previously deferred) can finally start for real.
+
+---
+
 ### [02 Sep ~12:00] — Lethabo's session · Claude · v9 pushed after Lethabo confirmed HF_TOKEN secret is genuinely attached
 
 **DID**
@@ -13,6 +38,7 @@
 
 **NEXT / BLOCKED-PING**
 - If v9 fails with the same identical `ConnectionError` traceback as v6/v7/v8 *despite* the secret being confirmed attached, that's real evidence of a genuine Kaggle-platform-side outage on their secrets service, not anything fixable from this repo or this session — say so plainly rather than keep guessing at a local cause.
+- **Note for whoever reads this next**: this entry landed in the same merge as Sbu's "EVENT LIVE" entry above. The event being live changes priorities — the seed-script/LAN-reachability critical path he named is now more urgent than anything Kaggle/ML-training related. Training is a background, nice-to-have process; the golden path demo is not.
 
 ---
 
@@ -1899,3 +1925,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** `d9e0f1a2b3c4_dataset_exports.py`.
 - **NEXT:** Run real PostgreSQL migration tests and generate Stage 4–6 acceptance evidence.
 - **BLOCKED-PING:** Migration execution is pending the PostgreSQL 16 environment; no export was approved or downloaded.
+
+### [02 Sep] — Sibusiso · live seed verification blocked
+
+- **DID:** Pulled `d885821` and attempted the real seed/idempotency/content-check path.
+- **HOW:** Added `test_seed_demo.py` to run `seed()` twice and query campaign, card, user, consent and verifier counts plus the Card constraint shape.
+- **WHY:** The live demo seed had never been executed against a real database.
+- **CHANGED:** Seed verification test retained for CI/local Postgres.
+- **NEXT:** Run with `AMAZWI_TEST_DATABASE_URL` pointing at the event laptop's real Postgres, then start LAN services and execute the golden path.
+- **BLOCKED-PING:** Local Windows embedded PostgreSQL cannot start (`pg_ctl: could not create restricted token: error code 87`); no seed SQL ran and no success is claimed.
