@@ -56,6 +56,7 @@ def create_consent(
             request.scopes,
             identity.user_id,
         )
+    session.commit()
     return [_state(grant) for grant in grants]
 
 

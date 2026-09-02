@@ -63,6 +63,7 @@ def create_contribution_route(
             contribution = create_contribution(
                 session, principal=identity, card_id=uuid.UUID(request.card_id)
             )
+        session.commit()
     except Exception as exc:
         if isinstance(exc, HTTPException):
             raise
@@ -81,6 +82,7 @@ def create_audio_upload(
         require_identity_user(session, identity)
         with _transaction(session):
             audio = begin_audio_upload(session, store, contribution_id, identity.user_id)
+        session.commit()
     except Exception as exc:
         raise _error(exc) from exc
     return AudioUploadResponse(audio_object_id=str(audio.id), object_key=audio.object_key)
@@ -127,6 +129,7 @@ def finalise_audio_route(
             if contribution is None or contribution.speaker_id != identity.user_id:
                 raise AudioNotAuthorised("AUDIO_NOT_AUTHORISED")
             audio = finalise_audio(session, store, contribution_id, **request.model_dump())
+        session.commit()
     except Exception as exc:
         raise _error(exc) from exc
     return {"audio_object_id": str(audio.id), "state": audio.state.value}
