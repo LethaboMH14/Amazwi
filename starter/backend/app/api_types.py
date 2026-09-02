@@ -135,3 +135,85 @@ class ImpactResponse(BaseModel):
     suppressed_cell_count: int = Field(ge=0)
     generated_at: datetime
     nodes: list[CoverageNodeResponse]
+
+
+# --- engagement layer (arcade) ---------------------------------------
+# Every field below is derived from real rows by `app.arcade`. There is
+# deliberately no skill-radar payload and no "players online" figure:
+# AMAZWI measures neither, so neither is published.
+
+
+class ProgressionResponse(BaseModel):
+    xp: int = Field(ge=0)
+    level: int = Field(ge=1)
+    tier: str
+    xp_into_level: int = Field(ge=0)
+    xp_for_next_level: int = Field(ge=0)
+    percent_into_level: int = Field(ge=0, le=100)
+    verified_contributions: int = Field(ge=0)
+    completed_verifications: int = Field(ge=0)
+
+
+class SpeakerOutcomesResponse(BaseModel):
+    understood: int = Field(ge=0)
+    not_understood: int = Field(ge=0)
+    awaiting_peers: int = Field(ge=0)
+    closed: int = Field(ge=0)
+    total: int = Field(ge=0)
+
+
+class LeaderboardRowResponse(BaseModel):
+    rank: int = Field(ge=1)
+    user_id: str
+    display_name: str
+    verified_contributions: int = Field(ge=0)
+    xp: int = Field(ge=0)
+    tier: str
+    is_current_user: bool
+
+
+class PeerRowResponse(BaseModel):
+    user_id: str
+    display_name: str
+    language: str
+    tier: str
+    verified_contributions: int = Field(ge=0)
+
+
+class InvitationRowResponse(BaseModel):
+    assignment_id: str
+    contribution_id: str
+    language: str
+    speaker_name: str
+    created_at: datetime
+
+
+class DeckSummaryResponse(BaseModel):
+    language: str
+    card_count: int = Field(ge=0)
+    contributors: int = Field(ge=0)
+    verified_contributions: int = Field(ge=0)
+
+
+class QuestRowResponse(BaseModel):
+    key: str
+    label: str
+    detail: str
+    progress: int = Field(ge=0)
+    target: int = Field(ge=1)
+    reward_xp: int = Field(ge=0)
+    complete: bool
+
+
+class ArcadeDashboardResponse(BaseModel):
+    display_name: str
+    earned_cents: int = Field(ge=0)
+    progression: ProgressionResponse
+    outcomes: SpeakerOutcomesResponse
+    decks: list[DeckSummaryResponse]
+    quests: list[QuestRowResponse]
+    invitations: list[InvitationRowResponse]
+    peers: list[PeerRowResponse]
+    leaderboard: list[LeaderboardRowResponse]
+    leaderboard_language: str | None
+    generated_at: datetime

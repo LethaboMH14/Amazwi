@@ -25,6 +25,8 @@ dist/
 # Embedded/local PostgreSQL data directories from test and demo runs.
 .pgdata_test/
 **/.pgdata_test/
+.pgdata_demo/
+**/.pgdata_demo/
 pgdata/
 **/pgdata/
 
