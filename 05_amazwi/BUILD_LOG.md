@@ -5,6 +5,26 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · Kaggle ledger reconciled from real evidence; new GPU run not attempted
+
+**DID**
+- Reconciled `starter/ml/runs/README.md` against this repo's own history rather than against live Kaggle status, since neither Claude in Chrome nor a local Kaggle API credential was available in this session — `mcp__claude-in-chrome` reported the extension unreachable, and no `kaggle.json` exists on this machine.
+- Traced every BUILD_LOG entry mentioning the Kaggle run (v1 through v9, ~00:15–12:00). Fact: kernel pushed and reached `RUNNING` at least 9 times; v9 was the last confirmed state, pushed after Lethabo verified `HF_TOKEN` was genuinely attached; **no later entry confirms completion, a checkpoint, or failure.** Priority shifted to the live golden-path demo at that point.
+- **Team Sonar A's status changed from the flatly false `BLOCKED` to `ATTEMPTED — completion unverified`** — neither claims success it can't prove, nor denies a real GPU run happened. Team Sonar B (Sbu's own account) genuinely never had a run attempted, so its `BLOCKED` status was already correct and is unchanged.
+- **Did not touch `budget.json`.** `amazwi_ml/budget.py`'s own schema requires real 64-hex-char manifest/config SHA-256 hashes to record a valid reservation, and those only exist inside the Kaggle run's actual output (`kaggle kernels output`), which nobody has pulled. Inventing placeholder hashes to make the ledger "look reconciled" would be strictly worse than the current gap — it would turn an honest absence into a false positive in the one file whose entire job is being trustworthy. Documented this reasoning directly in `runs/README.md` so the next person doesn't try to shortcut it either.
+- Found a **third** document making the same now-stale claim: `STAGE_4_6_EVIDENCE.md` states "No Kaggle GPU run performed" — true when written, false now. Added a correction note at the top rather than rewriting the historical evidence out from under it, pointing to `runs/README.md` as current source of truth on this point.
+
+**WHY**
+- This closes the item both I and Lethabo's own Plan 02 acceptance checklist independently flagged: a document contradicting another document means one of them is wrong, and a model card or evidence pack built on a ledger reading `BLOCKED` while GPU hours were actually spent would inherit a false provenance chain — provenance is the entire product claim.
+
+**NOT DONE, and why**
+- **Did not launch a new Kaggle training run.** Asked to via Claude in Chrome; the extension was not reachable in this session. Separately: Team Sonar B's own preflight/reservation was never completed, so launching a run on that account would have skipped the same gate this whole session has correctly held everyone else to (Codex declined writing a raw API token for the same reason). Checking live kernel status or starting a run needs either a working Claude-in-Chrome connection or a real `kaggle.json` credential, neither available here — flagging for Sbu directly rather than working around it.
+
+**NEXT**
+- To actually close Team Sonar A's status: run `kaggle kernels status lethabomh14/amazwi-overnight-asr` from an environment with real access, then either pull output and complete the ledger entry for real, or record here plainly if it failed.
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · found and fixed the real interactive-flow blocker; verified live in a browser
 
 **DID**
