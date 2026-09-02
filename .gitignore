@@ -35,3 +35,7 @@ pgdata/
 # Playwright run artefacts
 test-results/
 playwright-report/
+
+# Self-signed local-demo TLS certs (throwaway, private keys, never commit)
+.certs/
+**/.certs/
