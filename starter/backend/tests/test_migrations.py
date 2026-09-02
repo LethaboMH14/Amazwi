@@ -77,6 +77,7 @@ def test_upgrade_creates_all_expected_tables(clean_db_uri, db_engine):
         "payment_attempts", "receipts", "audit_events", "alembic_version",
         "audio_objects", "verifier_qualifications", "campaign_reward_rules",
         "outbox_events", "council_outputs",
+        "mission_proposals", "mission_authorisations",
     }
     assert expected.issubset(tables), tables
     contribution_foreign_keys = inspector.get_foreign_keys("contributions")
@@ -239,4 +240,122 @@ def test_reward_rule_retirement_is_one_way(clean_db_uri, db_engine):
             conn.execute(
                 text("UPDATE campaign_reward_rules SET retired_at = NULL WHERE id = :id"),
                 {"id": rule_id},
+            )
+
+
+def _seed_mission_authorisation(db_engine):
+    """Seed a mission proposal + authorisation straight through SQL, so the
+    database-level protection is tested independently of the service layer."""
+    from sqlalchemy import text
+
+    ids = {k: uuid.uuid4() for k in ("user", "event", "output", "proposal", "auth")}
+    with db_engine.begin() as conn:
+        conn.execute(
+            text(
+                "INSERT INTO users (id, provider_subject, declared_languages, "
+                "principal_kind, roles, created_at) VALUES "
+                "(:id, 'mig-operator', ARRAY['tn'], 'HUMAN', "
+                "ARRAY['MTN_LANGUAGE_OPS'], now())"
+            ),
+            {"id": ids["user"]},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO outbox_events (id, event_type, aggregate_type, "
+                "aggregate_id, dedupe_key, payload_json, occurred_at, available_at, "
+                "attempt_count) VALUES (:id, 'ContributionResolved', 'contribution', "
+                ":id, :dedupe, '{}'::jsonb, now(), now(), 0)"
+            ),
+            {"id": ids["event"], "dedupe": str(ids["event"])},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO council_outputs (id, event_id, specialist, model_version, "
+                "state, input_sha256, retry_count, started_at) VALUES "
+                "(:id, :event_id, 'LANGUAGE_SCOUT', 'v1', 'SUCCEEDED', :sha, 0, now())"
+            ),
+            {"id": ids["output"], "event_id": ids["event"], "sha": "c" * 64},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO mission_proposals (id, advisory_output_id, language, "
+                "province_code, domain, rationale, target_verified_clips, "
+                "fixed_reward_cents, budget_cents, state, created_at) VALUES "
+                "(:id, :output_id, 'tn', 'NW', 'support', 'gap', 10, 250, 2500, "
+                "'PROPOSED', now())"
+            ),
+            {"id": ids["proposal"], "output_id": ids["output"]},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO mission_authorisations (id, proposal_id, operator_id, "
+                "idempotency_key, confirmation_text, authorised_at) VALUES "
+                "(:id, :proposal_id, :operator_id, 'mig-key', 'confirmed', now())"
+            ),
+            {
+                "id": ids["auth"],
+                "proposal_id": ids["proposal"],
+                "operator_id": ids["user"],
+            },
+        )
+    return ids
+
+
+def test_mission_authorisation_evidence_cannot_be_edited_or_deleted(
+    clean_db_uri, db_engine
+):
+    """An authorisation is the record of a human act, so it is append-only."""
+    from sqlalchemy import text
+
+    _run_alembic("upgrade", "head", db_uri=clean_db_uri)
+    ids = _seed_mission_authorisation(db_engine)
+
+    with pytest.raises(Exception, match="mission authorisations are immutable"):
+        with db_engine.begin() as conn:
+            conn.execute(
+                text(
+                    "UPDATE mission_authorisations SET confirmation_text = 'nope' "
+                    "WHERE id = :id"
+                ),
+                {"id": ids["auth"]},
+            )
+    with pytest.raises(Exception, match="mission authorisations cannot be deleted"):
+        with db_engine.begin() as conn:
+            conn.execute(
+                text("DELETE FROM mission_authorisations WHERE id = :id"),
+                {"id": ids["auth"]},
+            )
+
+
+def test_mission_proposal_budget_check_is_enforced_by_the_database(
+    clean_db_uri, db_engine
+):
+    from sqlalchemy import text
+
+    _run_alembic("upgrade", "head", db_uri=clean_db_uri)
+    ids = _seed_mission_authorisation(db_engine)
+    with pytest.raises(Exception, match="ck_mission_budget_covers_target"):
+        with db_engine.begin() as conn:
+            conn.execute(
+                text(
+                    "UPDATE mission_proposals SET budget_cents = 1 WHERE id = :id"
+                ),
+                {"id": ids["proposal"]},
+            )
+
+
+def test_users_principal_kind_is_constrained(clean_db_uri, db_engine):
+    """`principal_kind` is the fact the human gate reads; it cannot hold junk."""
+    from sqlalchemy import text
+
+    _run_alembic("upgrade", "head", db_uri=clean_db_uri)
+    with pytest.raises(Exception, match="ck_user_principal_kind"):
+        with db_engine.begin() as conn:
+            conn.execute(
+                text(
+                    "INSERT INTO users (id, provider_subject, declared_languages, "
+                    "principal_kind, roles, created_at) VALUES "
+                    "(:id, 'bad-kind', ARRAY['tn'], 'SUPERHUMAN', ARRAY[]::varchar[], now())"
+                ),
+                {"id": uuid.uuid4()},
             )
