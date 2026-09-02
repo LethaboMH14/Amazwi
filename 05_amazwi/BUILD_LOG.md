@@ -5,6 +5,36 @@
 
 ---
 
+### [02 Sep ~23:45] — Lethabo's session · Claude · rewards/redemption screen from the Figma reference; catalogue that names no partner we don't have
+
+**DID**
+- Pulled Lethabo's second reference — a Figma community frame, *Fintech gamification concept*, node `48:1891` ("My Rewards", 360×804 mobile) — via the Figma MCP, including its real variables (spacing scale 4/8/12/16/20, 12px card radius, `cardish` shadow) rather than eyeballing the screenshot.
+- Built `app/rewards.py` + `GET /rewards` + a `/rewards` route. Balance reads `reward_events` — the ledger of record. Catalogue is airtime, data bundle, and cash-out to MoMo wallet.
+
+**THE HONESTY PROBLEM THIS SCREEN CREATES, AND HOW IT IS HANDLED**
+- The reference lists **"20% off at Nishat"** (a real Pakistani retailer) and an **"iPhone Lucky Draw"** with a green **"Hurry up only 53 slots left!"** countdown. AMAZWI has no retail partners, no prize draw and no inventory to count down. Reproducing any of it would put a fabricated commercial relationship in front of a judge.
+- **Merchants:** every catalogue item maps to a product MTN MoMo genuinely operates. `test_catalogue_names_no_merchant_or_prize_draw` fails on `nishat`, `iphone`, `lucky draw`, `% off`, `voucher code`, `slots left`.
+- **The scarcity badge:** kept as a slot — same position, same visual weight — carrying the honest availability state instead. Same pixel, opposite intent.
+- **Points:** the reference shows "12 points". The ledger is rand cents, so the screen is rand. A parallel points currency would be a second source of truth for money, which is exactly what `05_BUILD.md`'s money rules exist to prevent. A schema test fails on `points`/`coins`/`gems`.
+- **The load-bearing decision: redeemability is derived, never stored.** `CatalogueItem` has no `available` field to set wrongly — a test asserts the dataclass has no such field — and availability is recomputed from the live provider mode every request. Under `DemoProvider` every row returns `PROVIDER_NOT_CONNECTED` and the UI renders **no redeem button at all**, not a disabled one (a disabled control still reads as an offer that exists).
+- `is_live_provider` is an **allowlist** (`live`/`production`), not `!= "demo"` — so a mode added later (sandbox, staging, mock) is not silently treated as live because nobody remembered to exclude it. Parametrised over eight non-live modes.
+
+**VERIFIED, not assumed**
+- Backend **259 passed** (21 new), frontend **119 passed** (13 new), typecheck and production build clean.
+- Live in a browser at 390px and 320px against the real seeded ledger: no horizontal scroll, zero undersized targets, details toggle correctly wired with `aria-expanded`/`aria-controls`, light-theme money chip measured **11.71:1**.
+- Ran the full backend suite and re-checked both databases afterwards: `postgres` contributions 0, `amazwi_demo` 25, `/rewards` still 200. **The demo/test database split from the previous entry is holding.**
+- One process note: an interim frontend run reported 70 tests / 11 files, which looked like a regression. It was a stale partial run — a clean re-run gives 119/18, and 106 + 13 new reconciles exactly. Reported rather than quietly re-run until it looked right.
+
+**CROSS-LANE, PENDING SBU'S REVIEW**
+- Redemption thresholds (R5 airtime / R10 data / R20 cash-out) are **placeholders chosen to be obviously round rather than researched**. What a contributor may redeem for, and at what threshold, is a money decision. The API returns `thresholds_are_proposed: true` and the screen states it on the page.
+- Nothing here moves money. There is no disbursement call, no payment adapter use, and no redeem endpoint — only a read-only catalogue.
+
+**NEXT / BLOCKED-PING**
+- `/rewards` is linked from the dashboard's left menu, but neither is linked from `HomeRoute`. The "which screen opens the demo" decision is still open.
+- A redeem action needs the MoMo Disbursement API, which S1 records as not callable on this account. Until that changes the screen is honest but read-only, and should be demoed that way.
+
+---
+
 ### [02 Sep ~22:45] — Lethabo's session · Claude · engagement layer built end to end; demo DB separated from the test DB
 
 **DID**
