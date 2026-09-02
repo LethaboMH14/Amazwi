@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; }
+    a { color: #0a3706; } a:hover { color: #06aa5b; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+
+<div style="width: 390px; min-height: 844px; background: #FBF8F2; color: #0a3706; padding: 20px 20px 32px; display: flex; flex-direction: column; gap: 20px">
+
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <p style="margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #143612b2">Receipt</p>
+    <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15">Both listeners understood you</h1>
+  </div>
+
+  <!-- The two verdicts, shown as themselves. Peer truth is the product,
+       so the two independent answers are the evidence, not a summary. -->
+  <div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 12px; background: #ffffff; border: 1px solid #073a0329; box-shadow: 0 1px 2px #00000014">
+    <p style="margin: 0 0 2px; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #143612b2">What they each typed</p>
+
+    <div style="display: flex; align-items: center; gap: 12px">
+      <span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #06aa5b; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">DZ</span>
+      <span style="flex: 1; font-size: 16px; font-weight: 700">indiza</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06aa5b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+
+    <div style="height: 1px; background: #073a0329"></div>
+
+    <div style="display: flex; align-items: center; gap: 12px">
+      <span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #4C6FA5; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">TN</span>
+      <span style="flex: 1; font-size: 16px; font-weight: 700">indiza</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06aa5b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+  </div>
+
+  <!-- The money. Stated as a ledger credit, never as settlement. -->
+  <div style="padding: 20px 16px; border-radius: 12px; background: linear-gradient(268deg, #EFF4EB 64%, #F5F7E0 98%); border: 1px solid #073a0329; text-align: center">
+    <p style="margin: 0 0 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #143612b2">Credited to you</p>
+    <p style="margin: 0; font-size: 40px; font-weight: 800; letter-spacing: -0.03em">R2.00</p>
+    <p style="margin: 8px 0 0; font-size: 12px; line-height: 1.45; color: #143612b2">Credited in the AMAZWI reward ledger. This demo does not settle to a MoMo wallet.</p>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 0; border-radius: 12px; background: #ffffff; border: 1px solid #073a0329; overflow: hidden">
+    <div style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px">
+      <span style="font-size: 13px; color: #143612b2">Card</span>
+      <span style="font-size: 13px; font-weight: 600">indiza &middot; isiZulu</span>
+    </div>
+    <div style="height: 1px; background: #073a0329"></div>
+    <div style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px">
+      <span style="font-size: 13px; color: #143612b2">Outcome</span>
+      <span style="font-size: 13px; font-weight: 600">Corpus eligible</span>
+    </div>
+    <div style="height: 1px; background: #073a0329"></div>
+    <div style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px">
+      <span style="font-size: 13px; color: #143612b2">Ledger</span>
+      <span style="font-size: 13px; font-weight: 600">Credited</span>
+    </div>
+    <div style="height: 1px; background: #073a0329"></div>
+    <div style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 16px">
+      <span style="font-size: 13px; color: #143612b2">Settlement</span>
+      <span style="font-size: 13px; font-weight: 600">Not submitted</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px; margin-top: auto">
+    <div style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 26px; background: #06aa5b; color: #ffffff; font-size: 16px; font-weight: 700">
+      Record another card
+    </div>
+    <div style="display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 24px; background: #ffffff; border: 1px solid #073a0329; font-size: 15px; font-weight: 600">
+      View my rewards
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

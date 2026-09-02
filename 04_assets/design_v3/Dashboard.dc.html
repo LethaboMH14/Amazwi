@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Archivo', system-ui, sans-serif; }
+    a { color: #0a3706; } a:hover { color: #06aa5b; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+
+<div style="width: 390px; min-height: 844px; background: #FBF8F2; color: #0a3706; padding: 20px 20px 32px; display: flex; flex-direction: column; gap: 20px">
+
+  <div style="display: flex; align-items: center; gap: 12px">
+    <span style="flex: none; width: 44px; height: 44px; border-radius: 50%; background: #06aa5b; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700">DZ</span>
+    <div style="flex: 1; min-width: 0">
+      <p style="margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.01em">Demo Speaker</p>
+      <p style="margin: 1px 0 0; font-size: 13px; color: #143612b2">Level 1 &middot; Amateur</p>
+    </div>
+    <span style="padding: 5px 11px; border-radius: 999px; background: #fbf2a1; border: 1px solid #f4de1a; font-size: 12px; font-weight: 700">R4.00</span>
+  </div>
+
+  <!-- Progression, derived from verified clips -- never a stored level. -->
+  <div style="padding: 16px; border-radius: 12px; background: #ffffff; border: 1px solid #073a0329; box-shadow: 0 1px 2px #00000014; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #143612b2">Progress</span>
+      <span style="font-size: 13px; font-weight: 600">200 / 300 XP</span>
+    </div>
+    <div style="height: 8px; border-radius: 999px; background: #EFF4EB; overflow: hidden">
+      <span style="display: block; width: 67%; height: 100%; border-radius: 999px; background: #06aa5b"></span>
+    </div>
+    <p style="margin: 0; font-size: 12px; color: #143612b2">100 XP to level 2 &mdash; one more verified clip.</p>
+  </div>
+
+  <!-- The honest replacement for a skill radar: the real outcome split. -->
+  <div style="padding: 16px; border-radius: 12px; background: #ffffff; border: 1px solid #073a0329; display: flex; flex-direction: column; gap: 12px">
+    <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #143612b2">Your clips</span>
+
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) 84px 24px; align-items: center; gap: 10px">
+      <span style="font-size: 13px; color: #143612b2">Understood</span>
+      <span style="height: 8px; border-radius: 999px; background: #EFF4EB; overflow: hidden"><span style="display: block; width: 67%; height: 100%; background: #06aa5b; border-radius: 999px"></span></span>
+      <span style="font-size: 13px; font-weight: 700; text-align: right">2</span>
+    </div>
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) 84px 24px; align-items: center; gap: 10px">
+      <span style="font-size: 13px; color: #143612b2">Not understood</span>
+      <span style="height: 8px; border-radius: 999px; background: #EFF4EB; overflow: hidden"><span style="display: block; width: 33%; height: 100%; background: #C9971F; border-radius: 999px"></span></span>
+      <span style="font-size: 13px; font-weight: 700; text-align: right">1</span>
+    </div>
+  </div>
+
+  <!-- Decks. A real contributor count, never a live "N playing" figure. -->
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #143612b2">Voice decks</span>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+      <div style="padding: 14px; border-radius: 12px; background: #ffffff; border: 1px solid #073a0329">
+        <p style="margin: 0 0 2px; font-size: 16px; font-weight: 700">isiZulu</p>
+        <p style="margin: 0 0 12px; font-size: 12px; color: #143612b2">8 cards &middot; 5 contributors</p>
+        <span style="display: inline-flex; align-items: center; min-height: 36px; padding: 8px 14px; border-radius: 999px; background: #EFF4EB; font-size: 12px; font-weight: 700">Play</span>
+      </div>
+      <div style="padding: 14px; border-radius: 12px; background: #ffffff; border: 1px solid #073a0329">
+        <p style="margin: 0 0 2px; font-size: 16px; font-weight: 700">Setswana</p>
+        <p style="margin: 0 0 12px; font-size: 12px; color: #143612b2">8 cards &middot; 4 contributors</p>
+        <span style="display: inline-flex; align-items: center; min-height: 36px; padding: 8px 14px; border-radius: 999px; background: #EFF4EB; font-size: 12px; font-weight: 700">Play</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboard: ranked by resolver-verified clips. -->
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; align-items: baseline; justify-content: space-between">
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #143612b2">Leaderboard</span>
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #143612b2">isiZulu</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; border-radius: 12px; background: #ffffff; border: 1px solid #073a0329; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px">
+        <span style="width: 18px; font-size: 13px; font-weight: 700; color: #143612b2">1</span>
+        <span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #E8B22A; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">NK</span>
+        <span style="flex: 1; font-size: 14px; font-weight: 600">Nomsa K.</span>
+        <span style="font-size: 12px; color: #143612b2">Veteran</span>
+        <span style="font-size: 14px; font-weight: 700; width: 20px; text-align: right">5</span>
+      </div>
+      <div style="height: 1px; background: #073a0329"></div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px">
+        <span style="width: 18px; font-size: 13px; font-weight: 700; color: #143612b2">2</span>
+        <span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #4C6FA5; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">SM</span>
+        <span style="flex: 1; font-size: 14px; font-weight: 600">Sipho M.</span>
+        <span style="font-size: 12px; color: #143612b2">Amateur</span>
+        <span style="font-size: 14px; font-weight: 700; width: 20px; text-align: right">3</span>
+      </div>
+      <div style="height: 1px; background: #073a0329"></div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #EFF4EB">
+        <span style="width: 18px; font-size: 13px; font-weight: 700; color: #143612b2">4</span>
+        <span style="flex: none; width: 32px; height: 32px; border-radius: 50%; background: #06aa5b; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700">DZ</span>
+        <span style="flex: 1; font-size: 14px; font-weight: 700">You</span>
+        <span style="font-size: 12px; color: #143612b2">Amateur</span>
+        <span style="font-size: 14px; font-weight: 700; width: 20px; text-align: right">2</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; border-radius: 26px; background: #06aa5b; color: #ffffff; font-size: 16px; font-weight: 700; margin-top: auto">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+    Start speaking
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

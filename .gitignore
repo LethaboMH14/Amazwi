@@ -7,6 +7,9 @@ __pycache__/
 *.pyc
 .env
 .env.*
+# ...but the template is meant to be committed. It holds no secrets.
+!.env.example
+!**/.env.example
 *.tsbuildinfo
 dist/
 .vite/

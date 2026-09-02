@@ -1,0 +1,27 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 390, "h": 844, "title": "Home" },
+    { "file": "Record.dc.html", "x": 490, "y": 0, "w": 390, "h": 844, "title": "Record" },
+    { "file": "Verify.dc.html", "x": 980, "y": 0, "w": 390, "h": 844, "title": "Verify" },
+    { "file": "Result.dc.html", "x": 1470, "y": 0, "w": 390, "h": 844, "title": "Receipt" },
+    { "file": "Dashboard.dc.html", "x": 0, "y": 1000, "w": 390, "h": 1080, "title": "Dashboard" },
+    { "file": "Rewards.dc.html", "x": 490, "y": 1000, "w": 390, "h": 1080, "title": "My rewards" }
+  ],
+  "annotations": [
+    {
+      "id": "golden-path",
+      "x": 0,
+      "y": -150,
+      "w": 900,
+      "text": "The golden path, left to right: home, record, verify, receipt.\nThese four are what a judge walks through."
+    },
+    {
+      "id": "engagement",
+      "x": 0,
+      "y": 850,
+      "w": 900,
+      "text": "The engagement layer. Every number here is derived from real rows -\nno skill radar, no 'N playing now', no points currency."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

@@ -38,14 +38,17 @@ describe("ThemeProvider / ThemeControl", () => {
     document.documentElement.removeAttribute("data-theme");
   });
 
-  it("defaults to midnight when nothing is saved", () => {
+  it("defaults to daylight when nothing is saved", () => {
+    // Changed 3 Sep 2026: Signal Daylight is now the Figma light
+    // fintech direction and the product's default face. Midnight is
+    // still selectable and still the dark palette.
     render(
       <ThemeProvider>
         <ThemeProbe />
       </ThemeProvider>,
     );
-    expect(screen.getByTestId("theme-value").textContent).toBe("midnight");
-    expect(document.documentElement.dataset.theme).toBe("midnight");
+    expect(screen.getByTestId("theme-value").textContent).toBe("daylight");
+    expect(document.documentElement.dataset.theme).toBe("daylight");
   });
 
   it("restores a previously saved daylight theme", () => {

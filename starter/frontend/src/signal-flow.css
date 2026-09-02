@@ -51,16 +51,43 @@
    palette — but the NAME mapping is a design call, so it is flagged for
    Lethabo rather than treated as settled. */
 [data-theme="daylight"] {
-  --ground:      #FBF2E6;
-  --ground-deep: #EAD7C0;
+  /* SETTLED 3 Sep 2026 by Lethabo: "the figma one is the way it should
+     really look and feel". Signal Daylight is now the light fintech
+     direction from the Figma reference, not the older cream `earth`
+     palette this used to alias. Values lifted from the Figma variables
+     rather than eyeballed: Text/Default #0a3706, Text/Subdued
+     #143612b2, Surface/Default #ffffff, Border/Default #073a0329.
+
+     The name-mapping question flagged here on 2 Sep is now closed. */
+  --ground:      #FBF8F2;   /* warm white page */
+  --ground-deep: #EFF4EB;   /* soft green wash for recessed areas */
   --surface:     #FFFFFF;
-  --text:        #241408;
-  --text-dim:    #6B5238;
-  --border:      #E0CDB2;
-  --hi:          rgba(255,255,255,0.70);
-  --glow:        rgba(224,178,128,0.45);
-  --texture-opacity: 0.22;
+  --text:        #0A3706;   /* deep forest green, not black */
+  --text-dim:    rgba(20, 54, 18, 0.70);
+  --border:      rgba(7, 58, 3, 0.16);
+  --hi:          rgba(255, 255, 255, 0.70);
+  --glow:        rgba(6, 170, 91, 0.13);
+  --texture-opacity: 0;
+  --texture: none;
   --shadow-blend: multiply;
+
+  /* The Figma's action green replaces ember as the primary voice in
+     this theme only. --rand stays untouched: money is still the one
+     yellow, in every theme. */
+  /* The reference's #06AA5B measured 2.72:1 against white text on the
+     primary button -- a real WCAG AA failure on the one control every
+     user presses, caught by measuring it in the browser rather than
+     trusting the palette. --voice-1 is darkened to #067A43 (5.42:1 with
+     white) and carries the button; #06AA5B survives as --understood for
+     bars, badges and borders, where it is never a text background. */
+  --voice-1: #067A43;
+  --voice-2: #06914E;
+  --voice-grad: linear-gradient(96deg, #067A43, #06914E);
+  --understood: #06AA5B;
+
+  /* 12px card radius is the reference's, and it reads softer than the
+     14px default -- part of why the Figma feels calmer. */
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px;
 }
 
 .route {
