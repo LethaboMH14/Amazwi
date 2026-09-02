@@ -1,6 +1,6 @@
 # AMAZWI — Round 1 Pitch Script (six-beat structure, target ~2:50–3:00)
 
-Deck: https://gamma.app/generations/jeKcuz4Nq5WcAJ8Pxw3mP (regenerating — replace with the finished `/docs/...` URL once it lands)
+Deck: https://gamma.app/docs/1dhqhqj19mgd758
 Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility & Scalability 20% · Technical Execution 20% · Presentation & Pitch 15%
 
 Revised against a "what gets this to 90+" critique. Six changes from the prior version:
@@ -92,6 +92,8 @@ Total ≈ 2:50–3:00. If judges give exactly 2:30, cut 3b to a single sentence 
 ---
 
 ## Deck history
-Two earlier decks are superseded — do not present either:
+Three earlier decks are superseded — do not present any of them:
 - `.../docs/p6yb4zccmjy3sbi` — pre-calibration, overclaimed "wallet credited."
-- `.../docs/i1kl0ftsc184hbx` — five-beat version, calibration correct but missing the Proven/Pilot/Not Built slide, the disagreement-path demo, and unscoped pilot-outcome metrics. Superseded by the deck linked at the top of this file.
+- `.../docs/ws921eo2ozpw8bp` — original 10-card rubric-mapped version, pre-timing-freeze.
+- `.../docs/i1kl0ftsc184hbx` — five-beat version, calibration correct but missing the Proven/Pilot/Not Built slide, the disagreement-path demo, and unscoped pilot-outcome metrics.
+Current deck (`1dhqhqj19mgd758`) supersedes all three.

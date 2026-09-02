@@ -6,6 +6,18 @@
 
 ---
 
+## 3 SEP (later) — deck/script revised again against a "what gets us to 90+" critique — re-read before rehearsing
+
+Superseding the section directly below this one. Deck and script both changed structurally, not just wording:
+
+- **New deck: https://gamma.app/docs/1dhqhqj19mgd758** (the `i1kl0ftsc184hbx` link below is now stale).
+- Added a **PROVEN / PILOT / NOT BUILT** slide — now the deck's centrepiece. Says plainly that speaker cash-out and any margin claim are Not Built.
+- Your demo beat is now split: **agreement path live (0:45) + disagreement path as a quick pre-captured cut (0:15)**, both scripted in `PITCH_SCRIPT.md`. Rehearse them as one continuous 60s unit.
+- Close now ends on pilot KPIs we're *committing to measure* (acceptance rate, cost per eligible contribution, repeat participation, settlement feasibility) — no numbers attached, since none exist yet.
+- Full detail in `05_amazwi/PITCH_SCRIPT.md` — re-read it fully, don't just skim the diff.
+
+---
+
 ## 3 SEP (evening) — PITCH_SCRIPT.md is ready, you're up for the demo beat
 
 Pitch is frozen to a five-beat structure to fit the real Round 1 slot (2–3 min pitch + 1 min demo, no 10-minute slot exists): **[`PITCH_SCRIPT.md`](05_amazwi/PITCH_SCRIPT.md)**.
