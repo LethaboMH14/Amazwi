@@ -27,6 +27,19 @@ The file was previously on a **starter plan (View seat)**, which allows only **o
 - Deleted `Theme A/B/C/D`. Five collections → two.
 - **Verified, not assumed:** screenshotted the Theme Modes page (`16:2`) before *and* after deleting the legacy collections — pixel-identical, so nothing lost a binding.
 
+## Screens page — Home (`19:3`), pushed from code 2 Sep 2026
+
+Built with the `figma-generate-design` skill's workflow (wrapper first, then one section per call, screenshot-validated between each). It mirrors the shipping `HomeRoute.tsx`: eyebrow → display → serif tagline → raised mission card (agreement lens, waiting line, hairline mission terms) → asymmetric circle+type CTA → three-beat "How it works" → footer. Every colour is bound to `AMAZWI Theme` / `AMAZWI Brand`, and the frame carries an explicit Midnight Shweshwe mode.
+
+**Two real defects that only this workflow caught:**
+
+1. **The four components were built in Inter. The product font is Archivo.** The skill's Step 1.4 says in as many words: *"Identify the product's font family from the source. Do not default to Inter."* `tokens.css` has always declared `--font: 'Archivo'`, with Instrument Serif as the editorial accent. Every text node in the original component set used Inter — so the design system did not match the product it documented. **Migrated all 14 text nodes to Archivo** (Bold→Bold, Regular→Regular, Medium→Medium); zero skipped; the Components page now reports `Archivo` as its only family. Re-screenshotted the Theme Modes page afterwards to confirm nothing broke.
+2. **The imported mic SVG carried its own frame fill**, painting a dark square behind the circular CTA dial. `createNodeFromSvg` returns a `FrameNode` that can hold a fill and does not clip — cleared the fill and set the dial to clip.
+
+**Stated limitation, not silently approximated:** Figma cannot express a CSS `background-clip: text` gradient, so the `AMAZWI` display uses a real linear gradient fill across the letterforms. That is very close to, but not identical with, what the browser renders. The running app is the source of truth for that one treatment.
+
+The skill's mandatory font assertion was run as a read-back over every text node in the frame — `familiesUsed: ["Archivo", "Instrument Serif"]`, zero offenders. Loading a font successfully is not evidence it is the *right* font, which is exactly how the Inter defect survived this long.
+
 ### Theme Modes page (`16:2`) — the proof artifact
 
 Every component rendered in all five modes side by side, each column carrying its own `setExplicitVariableModeForCollection`. This page is impossible to build on the starter tier and is the clearest single demonstration that the invariant-brand rule holds: the ember CTA, the MTN-yellow `R 2.50`, the green `UNDERSTOOD` and the ochre chips are **identical across all five grounds**, while everything behind them changes.
