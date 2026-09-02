@@ -81,6 +81,7 @@
 - Added `app/momo.py` and `scripts/momo_smoke.py`: OAuth token caching, Collection Request-to-Pay and Disbursement Transfer request shapes, status polling, sanitized errors, and UUID references. Transfers are sandbox-only, opt-in, and capped by `MOMO_MAX_TEST_CENTS` (default 1 cent); the default smoke command performs auth only.
 - Opened the gitignored `starter/backend/.env` template for the MTN values. No credentials were written to source, logs, or commits.
 - Found the phone's `getUserMedia` failure was plain HTTP: `.certs/` was absent in this checkout. Generated a three-day, LAN-IP self-signed cert (gitignored), restarted speaker Vite over HTTPS, and verified `https://192.168.42.56:5173/api/health` through the proxy.
+- Auth-only MoMo smoke against the populated `MOMO_BASE_URL` returned HTTP 404. The configured host is `momo.mtn.com/api/`, while the repository's verified integration notes and MTN developer material identify `sandbox.momodeveloper.mtn.com` for sandbox endpoints. No alternate host was tried with credentials; exact Postman environment/base URL must be confirmed before retrying.
 
 **WHY**
 - The refusal branch is the required fallback evidence, while the MoMo adapter must not turn a demo credential into an accidental paid call. MTN's sandbox APIs are asynchronous (`202` then status/callback), so the app keeps internal ledger credit separate from provider settlement.
