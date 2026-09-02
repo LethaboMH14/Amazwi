@@ -15,24 +15,38 @@ Revised against a "what gets this to 90+" critique. Six changes from the prior v
 
 | # | Beat | Time | Speaker |
 |---|------|------|---------|
-| 1 | Problem | 0:20 | Sbu |
+| 1 | Problem — market gap (BLUF) | 0:25 | Sbu |
 | 2 | Product explanation | 0:30 | Sbu |
 | 3 | Live demo — agreement path | 0:45 | Lethabo |
 | 3b | Disagreement path (quick cut) | 0:15 | Lethabo |
 | 4 | MoMo evidence (sandbox) | 0:20 | Sbu |
 | 5 | Proven/Pilot/Not built + pilot ask | ~0:40–0:50 | Sbu |
 
-Total ≈ 2:50–3:00. If judges give exactly 2:30, cut 3b to a single sentence over the same screen rather than dropping it — the disagreement path is now load-bearing evidence, not a nice-to-have.
+Total ≈ 2:55–3:05. If judges give exactly 2:30, cut 3b to a single sentence over the same screen rather than dropping it — the disagreement path is now load-bearing evidence, not a nice-to-have. If beat 1 needs to shrink, cut the StatsSA line first, never the two WER numbers — those are the deck's hardest evidence.
+
+**Deck edit needed:** card 2 (Problem) in the live deck (`1dhqhqj19mgd758`) still has the old, thinner problem text. This tool cannot patch a single card in an existing Gamma — regenerating the whole deck isn't worth it for one card and credits are nearly out. **Paste the card text below directly into the Gamma editor** before rehearsing.
 
 **Scope calibration — do not undo:** the live MoMo Collections call funds a **mission**, it does not disburse to a speaker's own wallet. Speaker payout is a separate, not-yet-built settlement step. Say "the AMAZWI ledger is credited," never "your MoMo wallet is credited."
 
 ---
 
-## 1 — Problem (0:20) — SBU
+## 1 — Problem — market gap (0:25) — SBU
 
-> "South African languages beyond English are under-resourced in speech AI. isiZulu alone has over twelve million speakers, yet very little open, high-quality speech data exists for it.
+**Card 2 text — paste this into the Gamma editor, replacing the current card 2:**
+
+> **African languages are structurally missing from speech AI — this is a data gap, not a demand gap.**
 >
-> And MTN needs meaningful daily engagement inside MoMo. Ayoba shuts down in March — its lifestyle layer goes with it. The wallet stays, with nothing pulling people back to open it."
+> Foundation ASR models exceed 100% word-error-rate zero-shot on all six Southern Bantu languages tested. Google Cloud STT scores 56.71% WER on isiXhosa conversational speech, against 9.6% for a human. Google's own WAXAL programme — a real contribution to African speech — has zero South African languages in its released subset.
+>
+> MTN's own Group President has said Africa "cannot afford to be left out of the AI era," pointing to the continent's 2,000+ languages in large language models. English is South Africa's 5th home language, at 8.7% — behind isiZulu, isiXhosa, Afrikaans and Sepedi.
+>
+> *Sources: NAACL CL4Health 2025; Marivate et al., arXiv; Google Research/HuggingFace; TechAfrica News; StatsSA Census 2022.*
+
+**Spoken (0:25):**
+
+> "This isn't a demand gap, it's a data gap. Foundation speech models exceed 100% word-error-rate on Southern Bantu languages zero-shot. Google's own Cloud speech-to-text scores 56.71% WER on isiXhosa, against under 10% for a human — and Google's own African-speech programme has zero South African languages in what it's actually released. MTN's own leadership has said Africa can't afford to be left out of the AI era.
+>
+> And MTN needs somewhere to put that. Ayoba shuts down in March, taking its daily-engagement layer with it. The wallet stays — with nothing pulling people back to open it."
 
 ---
 
