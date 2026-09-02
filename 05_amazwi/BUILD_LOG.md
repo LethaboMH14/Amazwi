@@ -5,6 +5,33 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · first real verifier-route browser walk · four bugs, one of them demo-fatal
+
+**DID — set up the two-verifier rig that has never existed**
+- Staged a contribution with **real audio** through the public API (valid 16KB WAV, hashed and finalised to `AVAILABLE`) to stand in for the phone recording, then started **two separate verifier frontends** on 5175/5176 with their own seeded identities and confirmed each returns only its own consent scopes.
+- **Verifier devices no longer get forced HTTPS.** Added `AMAZWI_NO_HTTPS=true` to `vite.config.ts`. Only the speaker needs a secure context (`getUserMedia`); verifiers play audio and type, which needs none — so the self-signed cert was adding a "connection is not private" click to every verifier laptop mid-demo for nothing.
+
+**FOUND — four real bugs, all invisible to the test suite**
+1. **🔴 `/assignments/next` permanently locked a verifier out of their own assignment.** It always tried to CREATE, hit the `(contribution_id, verifier_id)` unique constraint for anyone who already had one, and reported `NO_ASSIGNMENT`. **React StrictMode double-mounts effects in development — and the demo runs the dev server — so this fires twice on a single page load.** The first call created the assignment, the second failed, and the failure is the state the component kept. A fresh verifier device could land in a dead screen on its first load. Fixed: the route now resumes an existing unanswered assignment (idempotent, which is what "next assignment for me" means) and returns a distinct `ALREADY_ANSWERED` once they have answered. Two regression tests added.
+2. **`client.ts` mis-parsed every API error.** FastAPI wraps errors as `{"detail": {"code": ...}}`; the client read `code`/`detail` at the *top* level, so the code was always `undefined` and the message was an object — React rendered the literal string **`[object Object]`**, which is what a real user saw on the verifier screen. Fixed with a parser handling nested-object, plain-string and absent detail. **One of my own earlier tests had asserted a flat `{code, detail}` body the backend never emits** — it passed while the bug shipped. Corrected against the live API (`{"detail":{"code":"CARD_NOT_FOUND"}}`, verified by curl) and three cases added, including one that fails if `[object Object]` ever reaches a message again.
+3. **A stale losing request could overwrite good state.** `VerificationRoute` had no cancellation guard, so StrictMode's second (404) call left `NO_ASSIGNMENT` sitting under a form that was working correctly. Added the `cancelled` guard and an explicit `setError("")` on success.
+4. **🔴 Two backends were competing on port 8000, and mine was not the one serving.** The live process ran under **system Python**, not this tree's venv — a backend started from a different source copy, pointed at the same database. Every backend fix I made was invisible to the browser because the request never reached this code. Diagnosed by getting a 200 in-process via `TestClient` while the same request over HTTP returned 404, then listing python processes and finding exactly one, from the wrong interpreter. **If a fix does not appear to take effect, check which process is actually bound to the port before doubting the fix.**
+
+**FOUND — an operational hazard worth more than any of the above**
+- **The test suite and the live demo shared a database.** Running `pytest` wiped the demo seed mid-session — the users table came back holding only pytest fixtures (`peer-speaker`, `peer-verifier`). During the event, anyone running the suite while the demo is seeded destroys the demo. Created a dedicated `amazwi_pytest` database, migrated it, and re-seeded the demo. **Run the suite with `AMAZWI_TEST_DATABASE_URL` pointed at `amazwi_pytest`, never at `amazwi_test`.**
+
+**VERIFIED**
+- Backend **216/216** against real PostgreSQL (on the dedicated pytest DB, demo untouched). Frontend **85/85**, `tsc -b --noEmit` clean.
+- In the browser: verifier route renders prompt, answer input and Submit; `POST /assignments/{id}/playback` → 200; `GET /private-audio/play/{token}` → **200 with real audio served under an audience-bound `VERIFY` token**. That path had never been exercised by a browser before.
+
+**NEXT**
+- Both verifiers answering through the UI to a resolved decision — the remaining half of the walk.
+
+**PING Codex/Lethabo**
+- If you have a backend running, **check whether it is yours before restarting mine** — we were shadowing each other on 8000 for an unknown length of time, and it silently invalidated backend testing through the browser.
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · Kaggle ledger reconciled from real evidence; new GPU run not attempted
 
 **DID**

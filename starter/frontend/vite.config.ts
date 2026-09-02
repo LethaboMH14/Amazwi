@@ -18,14 +18,21 @@ const identityHeaders = {
 // 3-day expiry, gitignored -- generate with:
 //   openssl req -x509 -newkey rsa:2048 -keyout .certs/key.pem \
 //     -out .certs/cert.pem -days 3 -nodes -config .certs/san.cnf
+//
+// Only the SPEAKER device needs this. Verifier devices play audio and type an
+// answer -- neither needs a secure context -- so forcing a self-signed cert on
+// them just adds a "connection is not private" click to every verifier laptop
+// mid-demo for no benefit. Set AMAZWI_NO_HTTPS=true on those instances.
 const certDir = path.resolve(__dirname, ".certs");
 const httpsConfig =
-  fs.existsSync(path.join(certDir, "key.pem")) && fs.existsSync(path.join(certDir, "cert.pem"))
-    ? {
-        key: fs.readFileSync(path.join(certDir, "key.pem")),
-        cert: fs.readFileSync(path.join(certDir, "cert.pem")),
-      }
-    : undefined;
+  process.env.AMAZWI_NO_HTTPS === "true"
+    ? undefined
+    : fs.existsSync(path.join(certDir, "key.pem")) && fs.existsSync(path.join(certDir, "cert.pem"))
+      ? {
+          key: fs.readFileSync(path.join(certDir, "key.pem")),
+          cert: fs.readFileSync(path.join(certDir, "cert.pem")),
+        }
+      : undefined;
 
 export default defineConfig({
   plugins: [react()],

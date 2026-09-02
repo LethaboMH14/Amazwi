@@ -1,7 +1,23 @@
 import type { Assignment, Card, ConsentScope, ConsentState, Contribution, Impact, MissionProposal, OpsView, Result } from "./contracts";
 export class ApiError extends Error { constructor(public readonly status:number, public readonly code:string, message:string){super(message);} }
 function headers(): HeadersInit { const env=(import.meta as ImportMeta & {env:Record<string,string|undefined>}).env; const h:Record<string,string>={Accept:"application/json"}; if(env.VITE_USER_ID)h["X-User-ID"]=env.VITE_USER_ID; if(env.VITE_PROVIDER_SUBJECT)h["X-Provider-Subject"]=env.VITE_PROVIDER_SUBJECT; return h; }
-async function request<T>(path:string, init:RequestInit={}):Promise<T>{ const r=await fetch(`/api${path}`,{...init,headers:{...headers(),...(init.headers??{})}}); if(!r.ok){let d:{code?:string;detail?:string}={};try{d=await r.json();}catch{} throw new ApiError(r.status,d.code??"HTTP_ERROR",d.detail??"Request failed. Please try again.");} return r.status===204?undefined as T:r.json(); }
+// FastAPI wraps every error body as {"detail": ...}, and this backend raises
+// HTTPException(detail={"code": "..."}) -- so the code lives at
+// `body.detail.code`, NOT `body.code`, and `body.detail` is an OBJECT.
+// Reading the top level meant the code was always undefined and the message
+// was an object, which React renders as the literal string "[object Object]".
+// That was on screen for a real user on the verifier route, not hypothetical.
+// Handles all three shapes the API can produce: nested object, plain-string
+// detail, and a body with no detail at all.
+type ErrorBody = { detail?: string | { code?: string; message?: string } };
+function parseError(status: number, body: ErrorBody): ApiError {
+  const detail = body?.detail;
+  if (detail && typeof detail === "object") {
+    return new ApiError(status, detail.code ?? "HTTP_ERROR", detail.message ?? detail.code ?? "Request failed. Please try again.");
+  }
+  return new ApiError(status, "HTTP_ERROR", typeof detail === "string" && detail ? detail : "Request failed. Please try again.");
+}
+async function request<T>(path:string, init:RequestInit={}):Promise<T>{ const r=await fetch(`/api${path}`,{...init,headers:{...headers(),...(init.headers??{})}}); if(!r.ok){let d:ErrorBody={};try{d=await r.json();}catch{} throw parseError(r.status,d);} return r.status===204?undefined as T:r.json(); }
 export const api={
  grantConsent:(scopes:ConsentScope[],version="2026-09-01")=>request<ConsentState[]>("/consents",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({version,scopes})}),
  getCard:(cardId:string)=>request<Card>(`/cards/${cardId}`),

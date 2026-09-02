@@ -40,6 +40,36 @@ def next_assignment(
     session: Session = Depends(get_session),
 ) -> AssignmentResponse:
     require_identity_user(session, identity)
+
+    # Resume an assignment this verifier already holds, rather than trying to
+    # create a second one. Assignment has a UniqueConstraint on
+    # (contribution_id, verifier_id), so the create path below raises for any
+    # verifier who already has one -- which the route then reported as
+    # NO_ASSIGNMENT, permanently locking that verifier out of their OWN
+    # assignment.
+    #
+    # This is not a rare edge case: React StrictMode double-mounts effects in
+    # development, so the verifier route fires this endpoint twice on a single
+    # page load. The first call created the assignment, the second failed, and
+    # the failure is the state the component kept -- a fresh verifier device
+    # could land in a dead "NO_ASSIGNMENT" screen on its very first load.
+    # Found by walking the verifier route in a real browser.
+    #
+    # "Next assignment for me" is idempotent by definition: asking twice must
+    # return the same assignment, not an error.
+    existing = session.scalar(
+        select(Assignment).where(
+            Assignment.contribution_id == contribution_id,
+            Assignment.verifier_id == identity.user_id,
+        )
+    )
+    if existing is not None:
+        if existing.answered_at is not None:
+            # They have already done their part. Distinct from "no assignment
+            # available" so the UI can say something true.
+            raise HTTPException(status_code=409, detail={"code": "ALREADY_ANSWERED"})
+        return _assignment_response(existing, language)
+
     verifier = select_next_verifier(session, contribution_id, language, random.SystemRandom(), identity.user_id)
     if verifier is None:
         raise HTTPException(status_code=404, detail={"code": "NO_ASSIGNMENT"})
@@ -50,6 +80,7 @@ def next_assignment(
             verifier_id=identity.user_id,
             mode=AssignmentMode.PROFICIENT_VERIFIER,
         )
+        session.commit()
     except Exception as exc:
         raise HTTPException(status_code=409, detail={"code": "NO_ASSIGNMENT"}) from exc
     return _assignment_response(assignment, language)

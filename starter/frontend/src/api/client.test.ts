@@ -44,17 +44,42 @@ describe("api client request()", () => {
     expect(jsonSpy).not.toHaveBeenCalled();
   });
 
-  it("raises ApiError with the server-provided code and detail on a non-ok response", async () => {
+  // This is the REAL shape the backend produces -- verified against the live
+  // API: `{"detail":{"code":"CARD_NOT_FOUND"}}`. An earlier version of this
+  // test asserted a flat {code, detail} body that the backend never emits,
+  // so it passed while the client mis-parsed every real error and rendered
+  // "[object Object]" to the user on the verifier screen.
+  it("raises ApiError from FastAPI's nested {detail:{code}} error body", async () => {
     mockFetchOnce({
       ok: false,
       status: 409,
-      json: () => Promise.resolve({ code: "ALREADY_RESOLVED", detail: "This round is already closed." }),
+      json: () => Promise.resolve({ detail: { code: "ALREADY_RESOLVED", message: "This round is already closed." } }),
     });
     await expect(api.getResult("c1")).rejects.toMatchObject({
       status: 409,
       code: "ALREADY_RESOLVED",
       message: "This round is already closed.",
     });
+  });
+
+  it("uses the code as the message when the nested detail carries no message", async () => {
+    mockFetchOnce({ ok: false, status: 404, json: () => Promise.resolve({ detail: { code: "CARD_NOT_FOUND" } }) });
+    await expect(api.getResult("c1")).rejects.toMatchObject({ status: 404, code: "CARD_NOT_FOUND", message: "CARD_NOT_FOUND" });
+  });
+
+  it("never surfaces a raw object as the message", async () => {
+    mockFetchOnce({ ok: false, status: 403, json: () => Promise.resolve({ detail: { code: "AUDIO_NOT_AUTHORISED" } }) });
+    expect.assertions(1);
+    try {
+      await api.getResult("c1");
+    } catch (e) {
+      expect(String((e as Error).message)).not.toContain("[object Object]");
+    }
+  });
+
+  it("still handles a plain-string detail body", async () => {
+    mockFetchOnce({ ok: false, status: 400, json: () => Promise.resolve({ detail: "Bad request." }) });
+    await expect(api.getResult("c1")).rejects.toMatchObject({ status: 400, code: "HTTP_ERROR", message: "Bad request." });
   });
 
   it("falls back to HTTP_ERROR and a generic message when the error body is not JSON", async () => {

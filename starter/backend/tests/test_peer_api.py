@@ -53,6 +53,35 @@ def test_peer_api_assigns_only_authenticated_qualified_verifier(peer_client, pee
     assert response.json()["contribution_id"] == str(contribution.id)
 
 
+def test_next_assignment_is_idempotent_and_resumes_the_same_assignment(peer_client, peer_context):
+    """Asking twice must return the same assignment, not lock the verifier out.
+
+    React StrictMode double-mounts effects in development, so the verifier
+    route calls this endpoint twice on a single page load. The route used to
+    always CREATE, hit Assignment's UniqueConstraint on
+    (contribution_id, verifier_id) on the second call, and report
+    NO_ASSIGNMENT -- so the verifier was permanently locked out of their own
+    assignment and the UI kept the error state. Reproduced in a real browser
+    before this test existed.
+    """
+    _, _, contribution = peer_context
+    first = peer_client.get(f"/assignments/next?contribution_id={contribution.id}&language=tn")
+    second = peer_client.get(f"/assignments/next?contribution_id={contribution.id}&language=tn")
+    assert first.status_code == 200, first.text
+    assert second.status_code == 200, second.text
+    assert first.json()["id"] == second.json()["id"]
+
+
+def test_next_assignment_reports_already_answered_rather_than_no_assignment(peer_client, peer_context):
+    """Once answered, re-asking is a distinct state the UI can explain."""
+    _, _, contribution = peer_context
+    assignment = peer_client.get(f"/assignments/next?contribution_id={contribution.id}&language=tn").json()
+    peer_client.post(f"/assignments/{assignment['id']}/answer", json={"answer_text": "kgomo", "violation_vote": False})
+    again = peer_client.get(f"/assignments/next?contribution_id={contribution.id}&language=tn")
+    assert again.status_code == 409
+    assert again.json()["detail"]["code"] == "ALREADY_ANSWERED"
+
+
 def test_peer_api_answer_rejects_duplicate_and_records_exact_match(peer_client, peer_context, db_session):
     _, _, contribution = peer_context
     assignment = peer_client.get(f"/assignments/next?contribution_id={contribution.id}&language=tn").json()
