@@ -1,113 +1,113 @@
-# AMAZWI — Round 1 Pitch Script (six-beat structure, target ~2:50–3:00)
+# AMAZWI - Round 1 Pitch Script (six-beat structure, target ~2:55-3:05)
 
 Deck: https://gamma.app/docs/1dhqhqj19mgd758
 Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility & Scalability 20% · Technical Execution 20% · Presentation & Pitch 15%
 
 Revised against a "what gets this to 90+" critique. Six changes from the prior version:
 1. Every mention of the MoMo call now says "funds the mission," never "pays your wallet."
-2. A dedicated **PROVEN / PILOT / NOT BUILT** slide — the deck's most important card.
+2. A dedicated **PROVEN / PILOT / NOT BUILT** slide, the deck's most important card.
 3. Both the agreement path and the disagreement path are demoed/shown, not just the happy path.
 4. MoMo evidence is on one clean, minimal slide, labelled SANDBOX.
-5. Closes with pilot outcomes we commit to *measure* (acceptance rate, cost per eligible contribution, repeat participation, settlement feasibility) — no numbers attached, since no pilot has run.
+5. Closes with pilot outcomes we commit to *measure* (acceptance rate, cost per eligible contribution, repeat participation, settlement feasibility), no numbers attached, since no pilot has run.
 6. Removed every unsupported absolute ("the dataset nobody else has built", "only" / "first" claims).
 
 **Feature work stays frozen.** Fixed shape, six beats:
 
 | # | Beat | Time | Speaker |
 |---|------|------|---------|
-| 1 | Problem — market gap (BLUF) | 0:25 | Sbu |
+| 1 | Problem: market gap (BLUF) | 0:25 | Sbu |
 | 2 | Product explanation | 0:30 | Sbu |
-| 3 | Live demo — agreement path | 0:45 | Lethabo |
+| 3 | Live demo: agreement path | 0:45 | Lethabo |
 | 3b | Disagreement path (quick cut) | 0:15 | Lethabo |
 | 4 | MoMo evidence (sandbox) | 0:20 | Sbu |
-| 5 | Proven/Pilot/Not built + pilot ask | ~0:40–0:50 | Sbu |
+| 5 | Proven/Pilot/Not built + pilot ask | ~0:40-0:50 | Sbu |
 
-Total ≈ 2:55–3:05. If judges give exactly 2:30, cut 3b to a single sentence over the same screen rather than dropping it — the disagreement path is now load-bearing evidence, not a nice-to-have. If beat 1 needs to shrink, cut the StatsSA line first, never the two WER numbers — those are the deck's hardest evidence.
+Total ≈ 2:55-3:05. If judges give exactly 2:30, cut 3b to a single sentence over the same screen rather than dropping it; the disagreement path is now load-bearing evidence, not a nice-to-have. If beat 1 needs to shrink, cut the StatsSA line first, never the two WER numbers; those are the deck's hardest evidence.
 
-**Deck edit needed:** card 2 (Problem) in the live deck (`1dhqhqj19mgd758`) still has the old, thinner problem text. This tool cannot patch a single card in an existing Gamma — regenerating the whole deck isn't worth it for one card and credits are nearly out. **Paste the card text below directly into the Gamma editor** before rehearsing.
+**Deck edit needed:** the live deck (`1dhqhqj19mgd758`) still has em dashes throughout its generated card text, and card 2's problem text is still the older, thinner version. This tool cannot patch cards in an existing Gamma, and regenerating from scratch isn't reliable right now (credits are nearly exhausted). Both fixes need a manual pass in the Gamma editor: paste the em-dash-free card 2 text below, then do a plain find-and-replace on every other card, swapping each "-" for a period, comma, colon, or the word "and", whichever reads most naturally in that sentence.
 
-**Scope calibration — do not undo:** the live MoMo Collections call funds a **mission**, it does not disburse to a speaker's own wallet. Speaker payout is a separate, not-yet-built settlement step. Say "the AMAZWI ledger is credited," never "your MoMo wallet is credited."
+**Scope calibration, do not undo:** the live MoMo Collections call funds a **mission**; it does not disburse to a speaker's own wallet. Speaker payout is a separate, not-yet-built settlement step. Say "the AMAZWI ledger is credited," never "your MoMo wallet is credited."
 
 ---
 
-## 1 — Problem — market gap (0:25) — SBU
+## 1 - Problem: market gap (0:25) - SBU
 
-**Card 2 text — paste this into the Gamma editor, replacing the current card 2:**
+**Card 2 text, paste this into the Gamma editor, replacing the current card 2:**
 
-> **African languages are structurally missing from speech AI — this is a data gap, not a demand gap.**
+> **African languages are structurally missing from speech AI. This is a data gap, not a demand gap.**
 >
-> Foundation ASR models exceed 100% word-error-rate zero-shot on all six Southern Bantu languages tested. Google Cloud STT scores 56.71% WER on isiXhosa conversational speech, against 9.6% for a human. Google's own WAXAL programme — a real contribution to African speech — has zero South African languages in its released subset.
+> Foundation ASR models exceed 100% word-error-rate zero-shot on all six Southern Bantu languages tested. Google Cloud STT scores 56.71% WER on isiXhosa conversational speech, against 9.6% for a human. Google's own WAXAL programme, a real contribution to African speech, has zero South African languages in its released subset.
 >
-> MTN's own Group President has said Africa "cannot afford to be left out of the AI era," pointing to the continent's 2,000+ languages in large language models. English is South Africa's 5th home language, at 8.7% — behind isiZulu, isiXhosa, Afrikaans and Sepedi.
+> MTN's own Group President has said Africa "cannot afford to be left out of the AI era," pointing to the continent's 2,000+ languages in large language models. English is South Africa's 5th home language, at 8.7%, behind isiZulu, isiXhosa, Afrikaans and Sepedi.
 >
 > *Sources: NAACL CL4Health 2025; Marivate et al., arXiv; Google Research/HuggingFace; TechAfrica News; StatsSA Census 2022.*
 
 **Spoken (0:25):**
 
-> "This isn't a demand gap, it's a data gap. Foundation speech models exceed 100% word-error-rate on Southern Bantu languages zero-shot. Google's own Cloud speech-to-text scores 56.71% WER on isiXhosa, against under 10% for a human — and Google's own African-speech programme has zero South African languages in what it's actually released. MTN's own leadership has said Africa can't afford to be left out of the AI era.
+> "This isn't a demand gap, it's a data gap. Foundation speech models exceed 100% word-error-rate on Southern Bantu languages zero-shot. Google's own Cloud speech-to-text scores 56.71% WER on isiXhosa, against under 10% for a human, and Google's own African-speech programme has zero South African languages in what it's actually released. MTN's own leadership has said Africa can't afford to be left out of the AI era.
 >
-> And MTN needs somewhere to put that. Ayoba shuts down in March, taking its daily-engagement layer with it. The wallet stays — with nothing pulling people back to open it."
+> And MTN needs somewhere to put that. Ayoba shuts down in March, taking its daily-engagement layer with it. The wallet stays, with nothing pulling people back to open it."
 
 ---
 
-## 2 — Product explanation (0:30) — SBU
+## 2 - Product explanation (0:30) - SBU
 
-> "AMAZWI addresses both. Speak → two human verifiers → a deterministic decision → a transparent reward receipt in an auditable ledger.
+> "AMAZWI addresses both. Speak, two human verifiers, a deterministic decision, a transparent reward receipt in an auditable ledger.
 >
-> A speaker records a short phrase in their own language, inside the MoMo Mini App. Two independent peers verify it — people are the authority, our AI is advisory and never overrules them. Agree, and the AMAZWI ledger is credited once, by construction. Disagree, and nothing is paid — the receipt says exactly why, in the speaker's own language."
+> A speaker records a short phrase in their own language, inside the MoMo Mini App. Two independent peers verify it; people are the authority, our AI is advisory and never overrules them. Agree, and the AMAZWI ledger is credited once, by construction. Disagree, and nothing is paid: the receipt says exactly why, in the speaker's own language."
 
 *(→ hand to Lethabo)*
 
 ---
 
-## 3 — Live demo, agreement path (0:45) — LETHABO
+## 3 - Live demo, agreement path (0:45) - LETHABO
 
 *(Drive the phone, narrate live. Fill in the actual phrase before rehearsal.)*
 
-> "Watch the flow. I record a phrase — [isiZulu/Setswana phrase] — seconds, not minutes.
+> "Watch the flow. I record a phrase, [isiZulu/Setswana phrase], seconds, not minutes.
 >
 > A peer verifier, a real person on a separate device, hears it and confirms it matches.
 >
-> They agree — the AMAZWI ledger is credited once, right now. [show receipt]"
+> They agree: the AMAZWI ledger is credited once, right now. [show receipt]"
 
-## 3b — Disagreement path (0:15) — LETHABO
+## 3b - Disagreement path (0:15) - LETHABO
 
-> "Now the other outcome — pre-captured, for time. Two verifiers disagree. The resolver pays nothing, and the receipt shows R0.00 with the real reason. Refusal is a first-class result here, not a hidden failure."
+> "Now the other outcome, pre-captured, for time. Two verifiers disagree. The resolver pays nothing, and the receipt shows R0.00 with the real reason. Refusal is a first-class result here, not a hidden failure."
 
 **Backup if the live demo fails:** fall back to the receipt evidence already in the deck for both paths, say plainly that you're doing so, and move straight to beat 4. Don't stall trying to fix it live.
 
 ---
 
-## 4 — MoMo evidence (0:20) — SBU
+## 4 - MoMo evidence (0:20) - SBU
 
-> "One transaction. Real. Sandbox-labelled. OAuth token issued, requesttopay accepted — 202 — status confirmed — 200. This funds the mission; it is not a payout to a speaker's wallet. Every ledger credit it produces is idempotent — recorded once, never twice, by construction."
+> "One transaction. Real. Sandbox-labelled. OAuth token issued, requesttopay accepted at 202, status confirmed at 200. This funds the mission; it is not a payout to a speaker's wallet. Every ledger credit it produces is idempotent, recorded once, never twice, by construction."
 
 ---
 
-## 5 — Proven / Pilot / Not built, then the ask (~0:40–0:50) — SBU
+## 5 - Proven / Pilot / Not built, then the ask (~0:40-0:50) - SBU
 
-> "Here's exactly where we are. **Proven, running today:** consent-gated recording, two-verifier peer decision, an idempotent reward ledger, that live MoMo Collections call — sandbox — and two hundred sixty-four backend tests passing on CI. **Pilot, designed but not yet run with real users:** funded missions at scale, rollout beyond one language, real acceptance and repeat-participation numbers. **Not built, named honestly:** the speaker cash-out leg, automatic answer-correctness scoring, and any margin or cost-saving claim — because it's unmeasured, we're not claiming it.
+> "Here's exactly where we are. **Proven, running today:** consent-gated recording, two-verifier peer decision, an idempotent reward ledger, that live MoMo Collections call in sandbox, and two hundred sixty-four backend tests passing on CI. **Pilot, designed but not yet run with real users:** funded missions at scale, rollout beyond one language, real acceptance and repeat-participation numbers. **Not built, named honestly:** the speaker cash-out leg, automatic answer-correctness scoring, and any margin or cost-saving claim, because it's unmeasured, we're not claiming it.
 >
-> Which is exactly what the pilot is for. Give us one MTN-supported language and a MoMo partnership to test funded missions and provider settlement, and we'll report back real numbers — acceptance rate, cost per eligible contribution, repeat participation, and what it actually takes to build the settlement leg. Not projections. Measurements.
+> Which is exactly what the pilot is for. Give us one MTN-supported language and a MoMo partnership to test funded missions and provider settlement, and we'll report back real numbers: acceptance rate, cost per eligible contribution, repeat participation, and what it actually takes to build the settlement leg. Not projections. Measurements.
 >
-> Izwi lakho linenani — your voice has value, and MoMo is how it gets paid."
+> Izwi lakho linenani. Your voice has value, and MoMo is how it gets paid."
 
 ---
 
 ## Notes for rehearsal
-- Time each beat separately, then the whole run against a stopwatch. Beat 3+3b together should not exceed 60s combined — Lethabo rehearses this as one continuous unit, not two separate pieces.
+- Time each beat separately, then the whole run against a stopwatch. Beat 3+3b together should not exceed 60s combined; Lethabo rehearses this as one continuous unit, not two separate pieces.
 - If judges interrupt with a question, answer in one sentence and return to the next beat.
-- Say the word **"sandbox"** out loud on beat 4 — never let it sound like a settled live payment.
+- Say the word **"sandbox"** out loud on beat 4; never let it sound like a settled live payment.
 - **Never say the MoMo call pays the speaker directly.** It funds the mission; speaker cash-out is Not Built. This was a real overclaim caught in an earlier draft.
-- Never state a margin, savings percentage, or cost-reduction number — anywhere, including Q&A. It isn't measured.
-- Never say "the dataset nobody else has built," "only," or "first" — these were flagged as unsupported absolutes and removed. If a judge asks about competitors, answer on capability and evidence, not on an unverifiable superlative.
-- The Proven/Pilot/Not Built slide is now the deck's centrepiece — if a judge only remembers one slide, it should be this one. Don't rush past it.
+- Never state a margin, savings percentage, or cost-reduction number, anywhere, including Q&A. It isn't measured.
+- Never say "the dataset nobody else has built," "only," or "first"; these were flagged as unsupported absolutes and removed. If a judge asks about competitors, answer on capability and evidence, not on an unverifiable superlative.
+- The Proven/Pilot/Not Built slide is now the deck's centrepiece. If a judge only remembers one slide, it should be this one. Don't rush past it.
 
 ---
 
 ## Deck history
-Three earlier decks are superseded — do not present any of them:
-- `.../docs/p6yb4zccmjy3sbi` — pre-calibration, overclaimed "wallet credited."
-- `.../docs/ws921eo2ozpw8bp` — original 10-card rubric-mapped version, pre-timing-freeze.
-- `.../docs/i1kl0ftsc184hbx` — five-beat version, calibration correct but missing the Proven/Pilot/Not Built slide, the disagreement-path demo, and unscoped pilot-outcome metrics.
-Current deck (`1dhqhqj19mgd758`) supersedes all three.
+Three earlier decks are superseded, do not present any of them:
+- `.../docs/p6yb4zccmjy3sbi`: pre-calibration, overclaimed "wallet credited."
+- `.../docs/ws921eo2ozpw8bp`: original 10-card rubric-mapped version, pre-timing-freeze.
+- `.../docs/i1kl0ftsc184hbx`: five-beat version, calibration correct but missing the Proven/Pilot/Not Built slide, the disagreement-path demo, and unscoped pilot-outcome metrics.
+Current deck (`1dhqhqj19mgd758`) supersedes all three, but still needs the manual em-dash cleanup and card-2 text swap described above before presenting.
