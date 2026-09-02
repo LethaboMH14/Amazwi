@@ -62,9 +62,14 @@ def test_seed_demo_is_idempotent(db_engine, monkeypatch):
                 ConsentGrant.user_id.in_(speaker_ids + verifier_ids)
             )
         ).scalar_one() == 8
+        # Codex's richer constraint check (all three array constraints, not
+        # just blocked_words), kept and scoped to the seed's own card ids.
         bad = conn.execute(
             select(func.count()).select_from(Card).where(
-                Card.id.in_(card_ids), func.cardinality(Card.blocked_words) != 4
+                Card.id.in_(card_ids),
+                (func.cardinality(Card.blocked_words) != 4)
+                | (func.cardinality(Card.accepted_answers) < 2)
+                | (func.cardinality(Card.distractors) != 3),
             )
         ).scalar_one()
         assert bad == 0

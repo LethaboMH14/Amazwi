@@ -1957,3 +1957,27 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** Seed verification test retained for CI/local Postgres.
 - **NEXT:** Run with `AMAZWI_TEST_DATABASE_URL` pointing at the event laptop's real Postgres, then start LAN services and execute the golden path.
 - **BLOCKED-PING:** Local Windows embedded PostgreSQL cannot start (`pg_ctl: could not create restricted token: error code 87`); no seed SQL ran and no success is claimed.
+
+### [02 Sep] — Sibusiso · LAN demo wiring
+
+- **DID:** Started uvicorn bound to `0.0.0.0:8000` and confirmed `/health` through the host LAN address `192.168.0.169`.
+- **HOW:** Probed localhost and LAN HTTP responses; both returned `200 application/json`.
+- **WHY:** Establish the one-phone/two-laptop local demo path without deployment.
+- **CHANGED:** Added `05_amazwi/LAN_DEMO_RUNBOOK.md` with exact backend/frontend commands and LAN URLs.
+- **NEXT:** Start Vite on the event laptop, then run seed and golden path against the real cloud Postgres URL.
+- **BLOCKED-PING:** Vite could not start in this sandbox because esbuild was denied parent-directory traversal; backend database routes remain unverified until Sbu supplies the URL.
+
+### [02 Sep] — Sibusiso · real PostgreSQL seed checkpoint
+
+- **DID:** Ran `python -m app.seed_demo` twice against PostgreSQL 16.10 and validated the seeded rows directly.
+- **HOW:** Confirmed deterministic UUIDs are unchanged on rerun; queried campaigns, reward rules, cards, users, qualifications and consents; validated Card array shapes.
+- **WHY:** Establish a trustworthy database state before the live demo flow.
+- **RESULT:** 2 campaigns, 2 reward rules, 16 cards, 4 qualifications, 8 demo consents, and 0 Card constraint violations. Seven total users are present because one unrelated fixture user already exists; the verification test now scopes to the six deterministic demo IDs.
+- **CHANGED:** `starter/backend/tests/test_seed_demo.py`.
+- **VERIFY:** `pytest tests/test_seed_demo.py -q` → 1 passed; LAN `/health` via `192.168.0.169:8000` → HTTP 200.
+
+### [02 Sep] — Sibusiso · golden-path probe
+
+- **DID:** Started a fresh uvicorn instance on port 8002 with real PostgreSQL and exercised contribution creation plus audio-upload initiation.
+- **RESULT:** Contribution creation returned 201, but audio initiation returned `AUDIO_NOT_AUTHORISED`; the server process was not using the same visible database state as the direct SQL session, and the original LAN process also lacked `AMAZWI_AUDIO_TOKEN_SECRET`.
+- **NEXT:** Restart the event backend once with the confirmed database URL and a non-empty local audio token secret, then rerun the seeded flow. This is an operational configuration checkpoint, not a product decision.
