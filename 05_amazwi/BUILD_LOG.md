@@ -5,6 +5,28 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · root-caused the golden-path blocker · 🔴 consent revocation still discarded
+
+**DID**
+- **Root-caused the `AUDIO_NOT_AUTHORISED` blocker. It was never an environment mismatch** — there was no second PostgreSQL database. `app/config.py`'s `database_url()` raises when `AMAZWI_DATABASE_URL` is unset, so the server could not have silently defaulted elsewhere.
+- The real cause is in `_transaction()` (`routes/contributions.py:33`, `routes/consents.py:39`): `session.begin_nested() if session.in_transaction() else session.begin()`. `require_identity_user()` runs *before* that block and issues a query, which opens SQLAlchemy's implicit transaction — so `in_transaction()` is already `True`, the helper takes the `begin_nested()` branch, and the route gets a **SAVEPOINT instead of a transaction**. Exiting releases the savepoint without committing the outer transaction, and `get_session()`'s `finally: session.close()` then discards the write entirely.
+- That accounts for every symptom exactly: HTTP 201 (the object is in the session identity map), the row invisible from any other connection, and the follow-up request failing to find the contribution.
+- **Why the suite never caught it:** the test fixture wraps each test in an outer transaction and asserts within the same session, so a write never has to survive a real commit. `routes/ops.py` behaved correctly only because it calls `session.commit()` explicitly.
+- Relayed Codex's four blocked commits to `origin` from this session (its process has no GitHub connectivity; mine does): `5044cc8`, `b63b965`, `6ceb447`, `9522d74` → `origin/main` at `5fb295d`.
+- Merge-resolved `test_seed_demo.py` where Codex and I had independently written the same fix: kept my id-scoped assertions (robust against other tests' rows) **and** adopted Codex's richer constraint check, which tests all three card array constraints where mine only checked `blocked_words`. Better than either version alone. Verified passing.
+
+**🔴 FOUND, NOT YET FIXED — consent revocation is silently discarded**
+- `routes/consents.py` has **two** `_transaction` blocks and **one** commit. `POST ""` (grant) was fixed; `POST /{scope}/revoke` (line 85) was not — it still has no `session.commit()` and therefore still has the exact bug.
+- **This is worse than the contribution bug and it is a governance failure, not a demo bug.** Revocation is a POPIA guarantee and a "never cut" item in `05_BUILD.md` (*"revoked consent → no playback assignment or export"*). As it stands, a user who withdraws consent receives a success response while the revocation is thrown away — they remain consented in the database and their audio stays assignable. We cannot carry that into a pitch that sells per-contribution consent evidence as the product.
+- **Ruling:** this must be fixed and proven before any demo run, ahead of further golden-path work.
+- Swept every other route so the remaining fix is small: `assignments.py` (2 commits), `datasets.py` (3), `ops.py` (1) are correct; `council.py` and `impact.py` are read-only. Only the revoke route is outstanding.
+
+**PING Codex**
+- Fix the revoke route, then re-sweep rather than trusting the two files touched.
+- **The separate-connection test is still missing.** The fix shipped without one, and the existing fixture pattern structurally cannot fail on an uncommitted write — which is precisely why this reached a live demo. A test that writes via the API and asserts from a *different* session is the only thing that stops this regressing.
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · CRITICAL PATH UNBLOCKED · real Postgres running, seed verified, full suite green
 
 **DID**
