@@ -4,6 +4,42 @@
 
 ---
 
+## 🔴 PING — 02 Sep ~13:45 · YOUR CRITICAL PATH IS STILL THE BLOCKER. Everything else is ready for it.
+
+**Read this one first.** You named the seed script as the real demo blocker and you were right. Since then the frontend side has been closed out, so the *only* thing between us and a demo that looks finished is your four steps. Nothing here is asking you to redo work — it is telling you exactly what state you are dropping into.
+
+### What changed on the frontend while you were on the seed script
+
+1. **The craft layer finally landed in the real app.** This is the big one. Three separate gaps were closed:
+   - **Archivo and Instrument Serif were never actually loaded.** `tokens.css` declared `--font: 'Archivo'` but no `<link>` or `@font-face` existed anywhere in `starter/frontend`, so every screen had been rendering in the OS default font since the app was created. Archivo is a *variable* font with a width axis, so `font-stretch: 125%` on the display type had been silently doing nothing.
+   - **`signal-flow.css` had no craft layer at all** — it was `.route` layout, 44px targets, focus outlines and contrast fixes. Pure a11y remediation, zero visual design.
+   - **`HomeRoute` was a debug shell.** Now built to the v2 grammar (`04_assets/mockups_v2/README.md`): overlapping-listeners signature device, hairline meta strip, asymmetric circle+type CTA, editorial serif accent.
+   - Gate A diagnostics (host mode, backend health, theme switch) are all **still visible** — moved to a footer, not removed. That evidence stays.
+
+2. **The craft layer applies to every route automatically.** You do not need to style anything. `/verify` already picks up the display type, eyebrow and ground with zero per-route work.
+
+3. **Which is exactly why your seed script is now the whole game.** The routes look sparse because they render *empty states*, not because they are unstyled. `/verify` currently says **"Loading the next peer card… A contribution is required."** That is a data problem with a finished UI behind it. Seed real content and the screens fill in.
+
+4. **Figma design system consolidated** (Lethabo upgraded to Professional): four near-identical `Theme A/B/C/D` collections merged into one `AMAZWI Theme` collection with five real modes; 19 component paints rebound; legacy collections deleted; new **Theme Modes** page (`16:2`) proves all four components render correctly across all five grounds with brand colour invariant. Detail in `04_assets/FIGMA.md`.
+
+### Your four steps, unchanged and still the critical path
+
+1. `python -m app.seed_demo` against real local Postgres. Confirm it succeeds **and that re-running it is a true no-op** (you built it idempotent; prove it).
+2. Verify the CHECK constraints actually hold against the loaded card content (`blocked_words` exactly 4, `accepted_answers` ≥ 2, `distractors` exactly 3). You traced these by hand — "should" is not "does".
+3. LAN reachability: `uvicorn --host 0.0.0.0`, frontend `vite --host`, `API_PROXY_TARGET` pointed at the backend laptop's LAN IP, so the phone (speaker) and second laptop (verifier) can reach it.
+4. **Run the real golden path end to end against seeded data** — record on the phone → two verifiers on the laptops → resolver → reward → receipt. This has never been run against real seeded content; the tests use fixtures, not this.
+
+### Two things worth knowing before you run the suites
+
+- **One accessibility test fails and it is NOT a regression.** `e2e/accessibility.spec.ts` → "ops reaches every interactive control by Tab" at `chromium-390`. It counts 0 focusable controls on `/ops`, though the captured page snapshot shows a "Review mission" button present. I verified this by `git stash`-ing the craft-layer changes and re-running on the clean baseline: **it fails identically there.** Pre-existing, most likely a race between the stub resolving and the count. 194 of 195 pass.
+- **Playwright was in `package.json` but never installed** in the main working tree, so those gates could not be run there at all until I ran `npm install` + `playwright install chromium`. If you get "unknown command 'test'" from `npm run test:a11y`, that is what it is — and note it exits **0** on that failure, so check the output, not the exit code.
+
+### Untouched, still yours
+
+Money/legal/deployment-safety calls, per `05_BUILD.md` §2. Specifically still open for you: the `/impact` endpoint being deliberately unauthenticated, whether a mission must always attach to a funded campaign, and **the Kaggle honesty item** — `starter/ml/runs/README.md` and `kaggle/budget.json` both still state no run happened while real GPU hours were spent. Your own review commit flagged that independently; it is Plan 02's one unticked acceptance item and it is a claim-calibration judgement, not something a test settles.
+
+---
+
 ## ⚠️ FOR YOUR REVIEW — 02 Sep · Plan 02 acceptance checklist verified; one item is yours
 
 Cross-lane backend/ML work, **pending your review**. Plan 02's Final Acceptance

@@ -5,6 +5,31 @@
 
 ---
 
+### [02 Sep ~13:45] — Lethabo's lane · Claude · craft layer ported into the real app; Figma consolidated on Pro
+
+**DID**
+- **Found why the shipping UI looked worse than the mockups, and it was three separate real causes, not taste:**
+  1. **Archivo and Instrument Serif were never loaded.** `tokens.css` declared `--font: 'Archivo'` but no `<link>` or `@font-face` existed anywhere in `starter/frontend` — every screen had rendered in the OS default since the app was created. Archivo is a *variable* font with a width axis, so `font-stretch: 125%` on the display type was silently a no-op. Instrument Serif — which `mockups_v2/README.md` calls "what makes it read editorial rather than app-generic" — was entirely absent.
+  2. **`signal-flow.css` had no craft layer at all** — `.route` layout, 44px targets, focus outlines, contrast fixes. Pure accessibility remediation, and correct as far as it went, but nothing visual.
+  3. **`HomeRoute` was a debug shell** (theme picker + status line + link).
+- Ported the v2 grammar into the real app: layered ground, ambient glow, film grain, gradient-filled display type, editorial serif accent, raised surfaces with inset top highlight, the overlapping-listeners signature device, hairline meta strip, asymmetric circle+type CTA. Strictly additive — every 44px minimum and focus outline from the Task 11 work is untouched, and the glow is an inset-0 background rather than a blurred box precisely so it cannot widen the document at 200% zoom.
+- **Caught a real bug in my own change by switching themes and looking.** In daylight the heading rendered as a solid filled bar instead of letterforms: the override used the `background` **shorthand**, which resets `background-clip` back to `border-box` and kills the text clip. Fixed with `background-image`. Invisible in the dark theme, and no test asserts letterform shape — only rendering it and looking would have found it.
+- **Figma, now that Lethabo upgraded to Professional:** collapsed the four near-identical `Theme A/B/C/D` collections into one `AMAZWI Theme` collection with five real modes; rebound all four components (19 paints) onto it; deleted the legacy collections; built a **Theme Modes** proof page (`16:2`) showing every component across all five grounds. Five collections → two. This was the exact upgrade `FIGMA.md` had predicted and specified.
+
+**VERIFIED, not assumed**
+- vitest **82/82**; a11y suite **194 passed / 1 failed**.
+- The single failure (`ops reaches every interactive control by Tab`, `chromium-390`) is **pre-existing, not a regression** — proven by `git stash`-ing the craft-layer changes and re-running on the clean baseline, where it fails identically. Captured snapshot shows the button present, so it reads as a race between the API stub resolving and the count.
+- Figma migration verified by screenshotting the proof page **before and after** deleting the legacy collections — pixel-identical, so nothing silently lost a binding.
+
+**WHY THIS MATTERS FOR THE DEMO**
+- The craft layer applies to every route automatically. The remaining sparse look is **empty states, not missing styling** — `/verify` renders "A contribution is required". That makes Sbu's seed script the whole game.
+
+**BLOCKED / PING — Sbu**
+- Your four steps in `HANDOVER_SBU.md` (seed → constraints → LAN → real golden path) are now the only thing between us and a demo that looks finished. Full brief written there, including two gotchas: the pre-existing `/ops` a11y failure above, and that **Playwright was in `package.json` but never installed** in the main tree — `npm run test:a11y` fails with "unknown command 'test'" and still **exits 0**, so read the output, not the exit code.
+- Still yours and untouched: the `/impact` auth decision, whether a mission must attach to a funded campaign, and the Kaggle honesty item (`runs/README.md` and `kaggle/budget.json` still say no run happened while real GPU hours were spent).
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · ledger integrity verified · the negative path is proven too
 
 **DID**
