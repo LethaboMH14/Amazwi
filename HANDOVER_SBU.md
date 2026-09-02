@@ -4,7 +4,15 @@
 
 ---
 
-## ⚠️ NEW — 02 Sep ~06:00 · mission authorisation (money-adjacent) — needs your review
+## ✅ REVIEWED 2 Sep by Sbu — mission authorisation (money-adjacent)
+
+> **Verdict: ACCEPTED**, with one ruling and one pitch-wording correction. Full review in [`HANDOVER_LETHABO.md`](HANDOVER_LETHABO.md) § "2 SEP — SBU'S REVIEW OF THE CROSS-LANE WORK".
+>
+> - **Ruling on `campaign_id`:** nullable is correct. Propose without a funded campaign; **never disburse** without one. Put the budget check in the disbursement path when it's built — do not retrofit `NOT NULL` onto the proposal table.
+> - **Pitch wording:** this gate rests on header-only identity (`app/identity.py`, no signature) until Plan 04 Task 2 lands. Say *"human-in-the-loop by design — an automated actor structurally cannot authorise a mission."* Do **not** say *"only an authorised MTN operator can."*
+> - Separately flagged, unrelated to this item: `runs/README.md` and `kaggle/budget.json` both still say no run happened, while real GPU hours were spent. Reconcile before any evidence pack or model card is generated. See the review section for the reasoning.
+
+### Original request (kept for history) — 02 Sep ~06:00
 
 Plan 03 Tasks 9+10 are built and green: mission proposals plus a **human-only** MTN Language Ops authorisation gate (`app/missions.py`, `app/routes/ops.py`, migration `e0f1a2b3c4d5`). Full detail in `05_amazwi/BUILD_LOG.md`'s newest entry.
 
