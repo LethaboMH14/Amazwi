@@ -24,6 +24,43 @@ Plan 03 Tasks 9+10 are built and green: mission proposals plus a **human-only** 
 
 ---
 
+## ✅ RULED ON 2 Sep by Sbu — Impact Map backend (`GET /impact`)
+
+> **Both questions answered, plus one thing you didn't ask about that I think is a real leak.**
+>
+> **1. Unauthenticated: APPROVED for the competition build.** The privacy work is genuinely sound — I read `impact.py` rather than the summary: `MIN_CELL_SIZE = 5` filters before banding, counts publish as bands, `model_gap_percent` is null rather than inferred from volume, `missions_completed` is 0 rather than approximated. That's the right instinct on all three.
+>
+> **But the exposure you should actually be worried about isn't personal data — it's commercial.** Each node publishes `campaign`. A public, unauthenticated endpoint therefore discloses which funding campaigns exist and roughly how much volume each has. That's sponsor-relations information, and no sponsor has agreed to it being public. For the demo with seeded data this is fine. Before any real sponsor's campaign is in there, either drop `campaign` from the public projection or put the endpoint behind identity.
+>
+> **2. 🔴 NEW — the bands are partially defeatable, and this one I'd fix.** `verified_total` is published **exactly**, and `coverage_percent` is `round(100 * verified_count / verified_total)`. Given both, you can solve backwards for `verified_count` within a narrow range. At demo-scale totals (a few hundred), one percentage point ≈ 2–3 clips, so a "5–9" band collapses to an almost-exact number — which defeats the point of banding, and by extension the k≥5 protection it's there to provide. Fix: band `coverage_percent` too, or round it hard (nearest 5%), or drop it and let the client derive a rough share from the band. Cheap fix, and it closes the hole properly.
+>
+> **3. Cell key deviation: APPROVED, and it was the right call.** Refusing to fabricate a province field you don't collect is exactly correct — `geography_available: false` plus "province-level coverage is not collected yet" is honest and costs nothing. **Do not add a province column for the competition.** A coarse geographic field on voice contributions is a POPIA consent question and a fresh consent-surface design, and it is not P0. Ship it null.
+
+### Original request (kept for history) — 02 Sep
+
+Plan 03 Tasks 7–8 (aggregate Coverage Constellation) are built and green: backend
+121 passed against real PostgreSQL, frontend 74 passed + clean typecheck. Full
+detail in `05_amazwi/BUILD_LOG.md` [02 Sep ~05:40]. Two things in your lane that
+I built to spec but should not be the one to finalise:
+
+1. **`GET /impact` is unauthenticated.** Rationale: every field has already passed
+   a ≥5-contribution minimum-cell-size suppression in `app/impact.py`, counts are
+   published as bands not exact values, and no user id, contribution id,
+   coordinate, audio key or transcript is present (asserted against the raw
+   response text in `tests/test_impact_api.py`). That is still a data-exposure
+   judgement — confirm or overrule it.
+2. **The cell key deviates from the plan.** The plan specifies
+   `(language, province, domain)`. `app/models.py` has no geographic column and no
+   domain vocabulary anywhere, so rather than fabricate a location field I
+   aggregate **declared language × funding campaign**, leave `province_code` null,
+   set `geography_available: false`, and have the UI say "province-level coverage
+   is not collected yet". `model_gap_percent` is null ("Model evidence
+   unavailable") and `missions_completed` is 0 — neither is inferred. If you want
+   real geography, that needs a consented, coarse province column and a migration,
+   which is your decision, not mine.
+
+---
+
 ## ✅ CURRENT — 01 Sep · implementation programme approved; autonomous execution starting
 
 ### Implementation update — 01 Sep

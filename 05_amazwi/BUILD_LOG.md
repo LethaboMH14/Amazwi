@@ -27,8 +27,15 @@
 - v7's outcome is still unverified in-repo — no artefact or real GPU-hour figure recorded. The promotion gate's artefact-hash requirement means an unfinished run cannot leak into a promotion, so this is a verify-it note, not an alarm.
 - Four `worktree-agent-*` branches remain on `origin`; their work has landed. Merge-or-delete before the event.
 
+**ALSO RULED — Impact Map (`GET /impact`), the second cross-lane item**
+- **Unauthenticated: approved for the competition build.** Read `impact.py` directly: `MIN_CELL_SIZE = 5` filters before banding, counts publish as bands, `model_gap_percent` is null rather than inferred from volume, `missions_completed` is 0 rather than approximated. Good instincts throughout.
+- **But the real exposure is commercial, not personal, and wasn't the thing asked about.** Each node publishes `campaign`, so a public endpoint discloses which funding campaigns exist and roughly their volume. Fine for seeded demo data; before a real sponsor's campaign is in there, drop `campaign` from the public projection or put the route behind identity.
+- 🔴 **New finding — the bands are partially defeatable.** `verified_total` is published exactly and `coverage_percent = round(100 * verified_count / verified_total)`. With both, `verified_count` solves backwards to a narrow range; at demo-scale totals one percentage point is ~2–3 clips, so a "5–9" band collapses to near-exact and the k≥5 protection stops protecting. Fix by banding or hard-rounding `coverage_percent`, or dropping it and deriving share client-side.
+- **Cell-key deviation: approved, and correct.** Refusing to fabricate a province field that isn't collected is right. Do **not** add a province column for the competition — a coarse geographic field on voice contributions is a POPIA consent question and a new consent surface, and it is not P0. Ship it null with `geography_available: false`.
+
 **NEXT**
 - Reconciling the two governance files needs the run's real output, which is on Lethabo's Kaggle account — hers to pull, not mine.
+- The `coverage_percent` fix is small and in her lane; flagged rather than patched so she isn't surprised mid-task.
 
 ---
 
@@ -76,6 +83,39 @@
 - Plan 03 still open: Task 0 (tooling lock), Tasks 1/2/5 finishing, Coverage Constellation (7–8), a11y gates (11), visual regression vs Figma (12), engagement-to-operations loop (13).
 - Did not touch Kaggle/GPU/Vercel this session, by instruction.
 
+---
+
+### [02 Sep ~05:40] — Lethabo's session · Claude · Plan 03 Tasks 7–8 (Coverage Constellation) finished — CROSS-LANE, PENDING SBU REVIEW
+
+**DID**
+- Recovered a predecessor agent's rate-limit-interrupted work from `origin/worktree-agent-a0372965fcf719c7d` (merged clean, no conflicts) and finished Plan 03 Tasks 7 and 8: the aggregate Impact Map / Coverage Constellation.
+- Backend (**cross-lane, Sbu's area — flagged for his review, not treated as final**): `app/impact.py` (`build_coverage`), `app/routes/impact.py` (`GET /impact`, also `/api/impact`), `CoverageNodeResponse`/`ImpactResponse` in `app/api_types.py`, router registered in `main.py`.
+- Frontend: `components/SouthAfricaCoverageMap.tsx` (flat SVG, `viewBox 0 0 320 300`, the plan's exact nine province centroids and exact band→radius map 6/8/10/12), `features/impact/ImpactRoute.tsx`, the `/impact` route in `App.tsx`, `api/contracts.ts` + `api/client.ts` (`getImpact`), and the Coverage Constellation CSS.
+
+**HOW / VERIFIED, not assumed**
+- Backend suite: `python -m pytest -q` → **121 passed** (22m41s, real PostgreSQL 16 per `conftest.py`), including the 10 tests in `tests/test_impact.py` and the API-shape tests in `tests/test_impact_api.py`.
+- Frontend: `npx tsc -b --noEmit` clean; `npm test` → **74 passed / 13 files**, including `SouthAfricaCoverageMap.test.tsx` (10) and `ImpactRoute.test.tsx` (7). Note the frontend `node_modules` was absent in this worktree and had to be `npm ci`'d first — the earlier "typecheck passes" state was not reproducible until then.
+- Every CSS custom property used (`--voice-1/2`, `--ground-deep`, `--text-dim`, `--border`, `--surface`, `--fs-h1`, `--fs-label`, `--fs-sm`, `--tracking-label`, `--r-md`, `--sp-1..5`) was grepped against `tokens.css` and exists — no invented tokens, no new colours.
+- Checked `models.py` directly for `province|region|latitude|longitude|location|geo` before accepting the "no geography" claim: **there is genuinely no geographic column anywhere** in the schema.
+
+**WHY — two honest deviations from the plan text, both deliberate**
+1. The plan keys cells by `(language, province, domain)`. The real schema has **neither a geographic column nor a domain vocabulary**. Rather than fabricate a location field, `build_coverage` aggregates over what the database actually holds — **declared language × funding campaign**. `province_code` is `None` on every node, `geography_available` is `False`, and the map renders an explicit "province-level coverage is not collected yet, showing national totals" state instead of scattering invented pins. The province pin path is real and tested so it works unchanged the day consented province data exists. `model_gap_percent` is likewise always `None` ("Model evidence unavailable") because no signed, active model-evaluation record exists in this database — ML metrics live unlinked in `starter/ml`. `missions_completed` is `0`, not approximated, because Task 9's `mission_proposals` table is not built.
+2. The plan says modify `starter/frontend/src/styles/materials.css`. **That file does not exist**; the styles went into the existing `signal-flow.css` instead.
+- Privacy is enforced in the backend, not the UI: a cell publishes only at ≥5 committed, peer-verified, corpus-eligible contributions, and published counts are bands (`5-19`/`20-49`/`50-99`/`100+`), never exact. `test_impact_api.py` asserts the absence of personal/geographic/audio fields against the **raw response text**, not just the parsed top level. Consistent with the standing "no public raw-audio archive" commitment.
+
+**CHANGED**
+- New: `starter/backend/app/impact.py`, `starter/backend/app/routes/impact.py`, `starter/backend/tests/test_impact.py`, `starter/backend/tests/test_impact_api.py`, `starter/frontend/src/components/SouthAfricaCoverageMap.tsx` (+test), `starter/frontend/src/features/impact/ImpactRoute.tsx` (+test).
+- Modified: `starter/backend/app/api_types.py`, `starter/backend/app/main.py`, `starter/frontend/src/App.tsx`, `starter/frontend/src/api/client.ts`, `starter/frontend/src/api/contracts.ts`, `starter/frontend/src/signal-flow.css`.
+
+**NEXT / BLOCKED-PING**
+- **Sbu:** `GET /impact` is deliberately **unauthenticated** — every field has already passed minimum-cell-size suppression and no personal field is present. That is a data-exposure judgement in your lane; please confirm or overrule it rather than inheriting it silently. Same for the language × campaign aggregation standing in for the plan's province × domain cell.
+- Not verified in a real browser this session (no dev server run) — only jsdom tests and typecheck. The 320–480px / zoom / screen-reader gates are Plan 03 Task 11 and remain open.
+- Plan 03 still open: Task 0, finishing Tasks 1/2/5, Task 9 (missions/MTN authorisation), Task 10, 11, 12, 13.
+- The CI portability bug flagged in `CLAUDE.md` (`test_object_key_cannot_escape_storage_root`, `Path(...).is_absolute()` on POSIX) was **not** touched by this session — it passes on Windows here, so it is untested against Linux CI from this worktree.
+
+**MERGE NOTE — reconciled with the sibling Tasks 9+10 agent**
+- `origin/main` moved twice during this work; the second move brought the parallel Tasks 9+10 (missions / MTN Language Ops) agent's commit, which touched five of the same files. Conflicts in `main.py`, `App.tsx`, `api/client.ts`, `api/contracts.ts`, `HANDOVER_SBU.md` and `BUILD_LOG.md` were all **pure additions on both sides** and were resolved by keeping both — the one real edit needed was collapsing two duplicated `import type { ... } from "./contracts"` lines in `client.ts` into a single import.
+- Both suites were **re-run after the merge, not assumed to still pass**: frontend `npx tsc -b --noEmit` clean and `npm test` → **82 passed / 14 files** (this session's 74 plus the sibling's 8), backend re-run to completion against real PostgreSQL.
 ---
 
 ### [02 Sep ~05:00] — Lethabo's session · Claude · v6 failed on a Kaggle-side transient error, v7 pushed; 4 agents recovered after rate-limit interruption

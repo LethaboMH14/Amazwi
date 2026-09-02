@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -92,3 +93,31 @@ class ContributionResult(BaseModel):
     understood: bool | None = None
     corpus_eligible: bool | None = None
     reason: str | None = None
+
+
+class CoverageNodeResponse(BaseModel):
+    """One published, privacy-thresholded coverage cell.
+
+    `province_code` is `None` until the schema carries a real, consented
+    coarse province field -- see app/impact.py's module docstring. No
+    personal, per-contribution, or audio field is ever present here.
+    """
+
+    id: str
+    language: str
+    province_code: str | None = None
+    campaign: str
+    verified_count_band: Literal["5-19", "20-49", "50-99", "100+"]
+    coverage_percent: int = Field(ge=0, le=100)
+    model_gap_percent: int | None = Field(default=None, ge=0, le=100)
+    updated_at: datetime
+
+
+class ImpactResponse(BaseModel):
+    verified_total: int = Field(ge=0)
+    languages_active: int = Field(ge=0)
+    missions_completed: int = Field(ge=0)
+    geography_available: bool = False
+    suppressed_cell_count: int = Field(ge=0)
+    generated_at: datetime
+    nodes: list[CoverageNodeResponse]
