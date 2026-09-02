@@ -54,20 +54,27 @@ export function HomeRoute() {
 
       <p className="serif">speak. be understood. earn.</p>
 
-      {/* Decorative: the two initials carry no information a screen-reader
-          user needs, and the sentence below states the same thing in words. */}
-      <div className="agreement-lens" aria-hidden="true">
-        <span className="listener">N</span>
-        <span className="listener">T</span>
-      </div>
-      <p className="serif" style={{ alignSelf: "center", textAlign: "center" }}>
-        two people are waiting to hear you
-      </p>
+      {/* One raised object rather than four flat siblings -- see the
+          .mission-card comment in signal-flow.css for why. */}
+      <section className="mission-card" aria-label="Today's mission">
+        {/* Decorative: the two initials carry no information a screen-reader
+            user needs, and the sentence below states the same thing in words. */}
+        <div className="agreement-lens" aria-hidden="true">
+          <span className="listener">N</span>
+          <span className="listener">T</span>
+        </div>
 
-      <div className="meta-strip">
-        <span>30 seconds &middot; 2 listeners</span>
-        <span className="money">R2.00</span>
-      </div>
+        <p className="serif" style={{ textAlign: "center" }}>
+          two people are waiting to hear you
+        </p>
+
+        <div className="mission-terms">
+          <span>30 seconds &middot; 2 listeners</span>
+          <span>
+            <span className="money">R2.00</span> when both understand you
+          </span>
+        </div>
+      </section>
 
       <Link to="/consent" className="cta">
         <span className="cta-dial" aria-hidden="true">
@@ -82,6 +89,30 @@ export function HomeRoute() {
           <span className="serif">contribute an isiZulu voice card</span>
         </span>
       </Link>
+
+      <div className="how-it-works">
+        <p className="eyebrow">How it works</p>
+        <ol>
+          <li>
+            <span className="step-index" aria-hidden="true">01</span>
+            <span>
+              <b>You speak.</b> Describe the word without saying it, in 30 seconds.
+            </span>
+          </li>
+          <li>
+            <span className="step-index" aria-hidden="true">02</span>
+            <span>
+              <b>Two people listen.</b> They each type what they understood, independently.
+            </span>
+          </li>
+          <li>
+            <span className="step-index" aria-hidden="true">03</span>
+            <span>
+              <b>Both agree, you earn.</b> Your reward is credited through MoMo.
+            </span>
+          </li>
+        </ol>
+      </div>
 
       <div className="route-footer">
         <ModeLabel mode={mode} />

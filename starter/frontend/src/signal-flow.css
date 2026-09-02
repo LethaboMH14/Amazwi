@@ -384,6 +384,76 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ---- The mission card: the second elevation plane.
+
+   04_assets/mockups_v2/README.md lists "one elevation plane -- nothing sat
+   above or below anything else" as failure #1 of the v1 set. Home had
+   exactly that problem again: every element sat flat on the ground with a
+   uniform gap between each, which is also failure #2 ("symmetric vertical
+   stacks with uniform padding").
+
+   Gathering the listeners, the waiting line and the mission terms into one
+   raised object fixes both at once -- it creates a real plane above the
+   ground, and it gives the lower half of the screen something to hold
+   instead of the dead space that was there before ("fill space with
+   MEANING, not decoration"). ---- */
+.mission-card {
+  inline-size: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-6) var(--sp-5) var(--sp-5);
+  border-radius: 28px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(178deg, rgba(190, 216, 255, 0.07), rgba(190, 216, 255, 0.015));
+  /* Layered rather than one hard drop: a tight contact shadow, a wide soft
+     ambient one, and the inset top highlight that reads as an edge catching
+     light. That combination is what separates expensive dark UI from flat. */
+  box-shadow:
+    inset 0 1px 0 var(--hi),
+    0 2px 6px -2px rgba(0, 0, 0, 0.4),
+    0 24px 60px -24px rgba(0, 0, 0, 0.85);
+}
+
+/* The print continues onto the raised surface, so the card reads as the
+   same material as the ground rather than a pasted-on rectangle. */
+.mission-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--texture);
+  opacity: calc(var(--texture-opacity, 0) * 0.5);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 42%, transparent 20%, #000 85%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 42%, transparent 20%, #000 85%);
+}
+
+.mission-card > * {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+}
+
+/* Mission terms sit inside the card on a hairline, not their own box --
+   editorial treatment over stacked form controls. */
+.mission-terms {
+  inline-size: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  align-items: baseline;
+  justify-content: space-between;
+  padding-block-start: var(--sp-4);
+  border-block-start: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+}
+
 /* ---- The signature device: two overlapping listener circles.
    Per 04_assets/mockups_v2/README.md this is simultaneously the
    content and the logo -- two people agreeing IS the mechanic, so
@@ -481,6 +551,54 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.1;
+}
+
+/* ---- How it works: three beats.
+
+   This exists to kill dead space with MEANING rather than decoration
+   (04_assets/mockups_v2/README.md: "v1's dead space became 'two people
+   are waiting to hear you'"). It doubles as the fastest possible read of
+   the mechanic for a judge, and it states the peer-verification rule --
+   two listeners, not one -- which is the product's whole claim. ---- */
+.how-it-works {
+  inline-size: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-block-start: var(--sp-2);
+}
+
+.how-it-works ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.how-it-works li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+}
+
+.how-it-works li b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.step-index {
+  flex: none;
+  inline-size: 22px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  color: var(--voice-1);
 }
 
 /* ---- Quiet footer: the Gate A evidence (host mode, backend health,
