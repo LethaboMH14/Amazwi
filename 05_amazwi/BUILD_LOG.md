@@ -5,6 +5,32 @@
 
 ---
 
+### [03 Sep] — Sbu (Claude, direct) · MoMo Collections goes live + Round-1 deck/script built to the judging PDFs
+
+**DID — verified, not assumed**
+- **Fixed the real MoMo blocker.** The `/collection/token/` call was sending `grant_type=client_credentials` as a form body. MTN's edge/WAF rejects that: it returns HTTP **200** with an HTML "Request Rejected" page instead of JSON, which our client then reported as the misleading "MoMo token response was invalid." Sending **no body at all** — what the organiser's own Collections PDF does — returns a real token. Verified live both ways against `mtnsouthafrica`.
+- Made `disbursement_subscription_key` optional on `MomoConfig` (MTN issues Collections/Disbursement separately; we hold Collections only — requiring both meant the config couldn't even construct). `_token()` now raises a specific, named error if a disbursement call is attempted without the key, instead of silently posting `None` as a header. `momo_smoke.py` reports missing disbursement as **skipped**, not failed.
+- **Live evidence, both through raw calls and through our own adapter code:** OAuth token issued, `requesttopay` → 202, status check → 200, `financialTransactionId: 7452008772`. This moves us off `DEMO_PROVIDER` for the pitch and makes "MoMo API core and demonstrated live" true rather than described.
+- One test (`test_token_is_cached_and_credentials_are_not_sent_in_request_body`) had asserted the exact body that fails live — it was green while the integration was dead. Corrected it to assert the empty body, with the WAF finding in a comment so nobody re-adds the body later. Full suite re-run after the fix: **264/264 passing.**
+- Re-disarmed `MOMO_ENABLE_TEST_TRANSFERS` back to `false` locally after the adapter check — the R5 ceiling (`MOMO_MAX_TEST_CENTS=500`) stays but transfers shouldn't sit armed between rehearsals.
+- Read all 3 organiser PDFs Sbu attached (judging rubric, run-of-show, MoMo Collections API) and found the real timing constraint: **there is no 10-minute demo slot anywhere** — Round 1 is a 2–3 min pitch + 1 min live demo, Round 2 finals ≈4–5 min, code freeze 09:00.
+- Built a 10-card BLUF-first Gamma deck (theme: Bonan Hale, black/yellow — closest fit to MTN branding without fabricating a logo) mapped explicitly to the weighted rubric: Innovation & Creativity 25%, Relevance to Fintech 20%, Feasibility & Scalability 20%, Technical Execution 20%, Presentation & Pitch 15%. Card 1 reserves an empty band for the real MTN/MoMo logos (none generated/faked) and states the hackathon name + Track 2. Card 5 is a near-empty holding slide for the live demo. No margin/savings percentage anywhere in the deck — `17_BUSINESS_CASE.md` explicitly forbids putting an unmeasured number on stage, and the deck honours that.
+- Wrote [`PITCH_SCRIPT.md`](PITCH_SCRIPT.md): Sbu delivers intro (BLUF + problem) and close (evidence + ask), Lethabo delivers the live demo narration, sized to the real 2–3 min Round 1 slot.
+
+**CHANGED**
+- `starter/backend/app/momo.py`, `starter/backend/scripts/momo_smoke.py`, `starter/backend/tests/test_momo.py` — committed as `5ac45cf`.
+- `05_amazwi/PITCH_SCRIPT.md` — new, committed as `e354209`.
+- Deck (finished): **https://gamma.app/docs/ws921eo2ozpw8bp** — 10 cards, theme Bonan Hale, card 1 logo zone confirmed empty (no fabricated MTN/MoMo logo).
+
+**NEXT**
+- Drop the finished Gamma URL/export into this entry and into `HANDOVER_SBU.md`.
+- Physical rehearsal of the script against the actual demo device (still human-only, not something I can verify).
+- Lethabo: confirm the isiZulu/Setswana phrase used in the live demo narration matches what's actually staged for Round 1.
+
+**BLOCKED-PING:** none — MoMo integration is the item that was actually blocking "Best MoMo API Integration" eligibility, and it's now resolved with live evidence.
+
+---
+
 ### [02 Sep] — Sbu (Claude, direct) · closing out Sbu's remaining action list — what's actually verified vs. what only Sbu can finish
 
 **DID — verified, not assumed**

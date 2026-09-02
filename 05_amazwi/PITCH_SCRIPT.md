@@ -1,6 +1,6 @@
 # AMAZWI — Round 1 Pitch Script (target: 2–3 min pitch + 1 min live demo)
 
-Deck: https://gamma.app/generations/K5Utiqf8VbSJwkBL24ylO
+Deck: https://gamma.app/docs/ws921eo2ozpw8bp
 Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility & Scalability 20% · Technical Execution 20% · Presentation & Pitch 15%
 
 Roles: **Sbu — intro (BLUF + problem).** **Lethabo — live demo.** **Sbu — close (ask).**
