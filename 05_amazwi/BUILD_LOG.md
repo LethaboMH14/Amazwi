@@ -5,6 +5,38 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · closing out Sbu's remaining action list — what's actually verified vs. what only Sbu can finish
+
+**DID — verified, not assumed**
+- Pulled 13 commits (arcade/rewards engagement layer, MoMo adapter, demo runbook) — clean fast-forward, no conflicts.
+- **Postgres had died on this machine too** (same class of failure Codex hit): a stale `postmaster.pid` from a crashed process was blocking startup. Confirmed the PID was actually dead before removing the lock, restarted clean.
+- `amazwi_pytest` had drifted out of sync with migration history (`DuplicateTable` on `campaigns`) — recreated it clean rather than patch around a corrupted state.
+- **Ran the full backend suite for real: 264/264 passing, fresh migrations, real PostgreSQL, ~112 seconds.** This was item 1 on the remaining-actions list ("waiting for PostgreSQL to be started") — it is no longer waiting, it is done and the number is current.
+- Confirmed the arcade/rewards modules add no new tables (deliberately derive everything from existing rows, per `arcade.py`'s own docstring) — so no missing migration, nothing silently unmigrated.
+- Independently confirmed CI green on `origin/main`'s actual HEAD (`8c190e3`) via `gh run list`, not by trusting the handover's claim.
+- Confirmed no stale "security" framing of the mission-authorisation operator gate exists in `DEMO_RUNBOOK.md` or elsewhere — my earlier ruling (`HANDOVER_LETHABO.md`, "governance control, not a security control until Plan 04 Task 2 lands") already holds; nothing to fix.
+- Left the demo database (`amazwi_test`) untouched — it is not alembic-tracked (built directly, not migrated) but is proven working end to end via today's real two-verifier browser walk. Not worth risking a working seeded state to force it onto the migration chain this late.
+
+**Where the remaining Sbu-owned items actually stand, honestly**
+
+| # | Item | Real status |
+|---|---|---|
+| 1 | Rerun full suite against real Postgres | **✅ Done, verified above.** 264/264. |
+| 2 | Resolve MTN sandbox HTTP 401 | 🔴 **Cannot be done from any AI session.** Confirmed genuinely isolated to the credential/entitlement layer (`BUILD_LOG.md` line ~85: auth fails before currency is even evaluated, no transaction endpoint called, no money moved). Needs Sbu, MTN's dev portal, and the correct Postman environment/subscription-key pairing. No amount of code changes fixes a 401 from the provider side. |
+| 3 | Decide whether the demo stays on `DEMO_PROVIDER` permanently | 🔴 **Sbu's call, not mine to make.** Given item 2 is unresolved and the event clock is what it is, my honest recommendation: **yes, stay on `DEMO_PROVIDER`.** The demo already proves the state machine, idempotency and honest labelling — which is the actual engineering claim — without needing live settlement to work. Chasing a real MoMo call this late risks the one thing that currently works. This is a recommendation, not a decision; it's still Sbu's to make. |
+| 4 | Close the Plan 04 authentication framing before calling the operator gate "security" | **✅ Already closed.** Ruled on this earlier today; verified just now that no doc contradicts it. |
+| 5 | Reconcile the Kaggle ledger | Deliberately not touched — Sbu explicitly handed this to Lethabo's account/session earlier in this thread ("lethabo will deal with the training and kaggle"). Not re-opening it. |
+| 6 | Physical phone rehearsal, capture the refusal receipt screen | 🔴 **Cannot be done by any AI session — needs a real phone in real hands.** The digital equivalent (two verifiers, real browsers, real disagreement → `UNVALIDATED` → R0.00 → receipt) is already proven and logged earlier today. What's left is purely physical: the actual devices, the actual room, the actual screenshot. |
+| 7 | Review remaining decisions in both HANDOVER files | Reviewed while writing this entry — nothing found that contradicts a decision already ruled on. |
+
+**WHY**
+- The distinction that matters here: three of the seven items were genuinely still open and are now closed by actually running them, not by asserting they're fine. The other three are real, and no session — mine, Codex's, or anyone else's — can close them without a human physically present or holding real MTN credentials. Saying so plainly is more useful than another round of "blocked, will retry."
+
+**NEXT**
+- Nothing further from this session unless asked. The three physical/credential items above are the honest remainder.
+
+---
+
 ### [02 Sep ~23:45] — Lethabo's session · Claude · rewards/redemption screen from the Figma reference; catalogue that names no partner we don't have
 
 **DID**
