@@ -1,6 +1,6 @@
 # Accessibility evidence — the real React frontend
 
-**Date:** 2 Sep 2026 · **Scope:** `starter/frontend/src/`, all five routes (`/`, `/consent`, `/record/:contributionId`, `/verify`, `/result/:contributionId`), Chromium at 320 / 360 / 390 / 430 / 480 CSS px, in both selectable themes.
+**Date:** 2 Sep 2026 · **Scope:** `starter/frontend/src/`, all seven routes (`/`, `/consent`, `/record/:contributionId`, `/verify`, `/result/:contributionId`, `/impact`, `/ops`), Chromium at 320 / 360 / 390 / 430 / 480 CSS px, in both selectable themes.
 **Task:** `docs/superpowers/plans/2026-09-01-amazwi-03-signal-flow-ops.md` Task 11 — "Add 320–480px, 200% zoom, keyboard, and screen-reader gates".
 
 **What this is not:** a WCAG conformance claim. It is a record of what an automated suite actually measured on this date, in a real browser, on the real application — plus the specific things it does **not** cover, listed in §6. Automated tooling catches a minority of real accessibility barriers; passing it is a floor, not a certificate.
@@ -32,6 +32,8 @@ Two portability fixes were needed to run at all on Windows and are noted in the 
 ---
 
 ## Findings
+
+*Route count note: §1–§5 below say "five routes" because five existed when those measurements were taken. `/impact` and `/ops` landed on main mid-task and were added to the gates afterwards — see §7 of "What this does NOT cover". The final 265/265 figure covers all seven.*
 
 ### 1. Touch target size — REAL FAILURE ON ALL FIVE ROUTES, fixed
 
@@ -117,7 +119,7 @@ Verified in a real browser, not inferred: before the fix `--ground` computed to 
 | axe serious/critical, 5 routes × 2 themes | **Fail: `color-contrast` on home, result** | Pass | `@axe-core/playwright`, wcag2a/2aa/21a/21aa |
 | Light theme actually light | **Fail — rendered dark** | Pass | Computed `--ground` + screenshot |
 
-**Final run: 195/195 passing** across 5 viewport widths (`npx playwright test`). Unit suite 57/57 (`npm test`); `npx tsc -b --noEmit` clean; `vite build` succeeds.
+**Final run: 265/265 passing** across 5 viewport widths x 7 routes (`npx playwright test`). Unit suite 82/82 (`npm test`); `npx tsc -b --noEmit` clean; `vite build` succeeds.
 
 ---
 
@@ -129,5 +131,9 @@ Verified in a real browser, not inferred: before the fix `--ground` computed to 
 4. **`prefers-reduced-motion` not live-toggled.** The `!important` reset in `tokens.css`/`signal-flow.css` was read, not observed firing — the same limitation recorded in the mockup evidence.
 5. **200% zoom is emulated by doubling the root font size**, which is what text-zoom does to a relative-unit layout. Browser full-page zoom is a related but not identical operation.
 6. **Automated axe only.** Reading order, meaningful sequence, error-recovery quality, and whether the isiZulu/Setswana copy is comprehensible to the people it is for are all human judgements no scanner makes.
-7. **Only the five routes that exist today.** Coverage Constellation, missions, and the MTN Language Ops route (Plan 03 Tasks 7–10) are not built, so they are not gated. When they land, they must be added to `ROUTES` in `e2e/fixtures.ts` — the gates iterate that list, so a new route is otherwise silently ungated.
-8. **Contrast is inherited from the token palettes, not independently re-derived.** Links now use `--text` on `--ground`; axe confirms those specific pairs pass, but the palettes as a whole have not been audited pair-by-pair.
+7. **Only the seven routes that exist today.** `/impact` (Coverage Constellation) and `/ops` (MTN Language Ops) landed on main while this work was in progress and were added to `ROUTES` in `e2e/fixtures.ts` and gated here. Any future route must be added the same way — the gates iterate that list, so a new route is otherwise silently ungated and no test will fail to tell you.
+
+   Adding them surfaced a stubbing hazard worth recording: both routes map over arrays from their API response, so a wrongly-shaped stub throws during render, React unmounts the whole tree, and the gate reports "0 `<main>` elements" — which looks identical to a real landmark failure. `/ops` additionally renders a no-access state with **zero interactive controls** unless `roles` contains exactly `MTN_LANGUAGE_OPS`, which failed the keyboard gate for a stub reason rather than an accessibility one. Both stubs are now contract-shaped and commented; keep them in sync with `api/contracts.ts`.
+
+8. **`/ops` is gated only in its authorised-operator state.** The no-access branch and the mission-authorisation confirmation flow are not separately swept by these gates.
+9. **Contrast is inherited from the token palettes, not independently re-derived.** Links now use `--text` on `--ground`; axe confirms those specific pairs pass, but the palettes as a whole have not been audited pair-by-pair.

@@ -22,10 +22,12 @@
 - Deleted the committed `test-results/` tree and added `starter/frontend/.gitignore` — stale run artefacts of the wrong app read as evidence long after the run is forgotten.
 - Scoped `vitest.config.ts` to `src/**` — it was collecting the Playwright specs and erroring.
 
+- **After rebasing onto Sbu's merged main**, `/impact` and `/ops` had landed. Added both to `ROUTES` and gated them too — an ungated route is silently ungated, and no test fails to tell you. That surfaced a stubbing hazard worth recording: both map over arrays from their API response, so a wrongly-shaped stub throws during render, React unmounts, and the gate reports "0 `<main>`" — indistinguishable from a real landmark failure. `/ops` also renders a zero-control no-access state unless `roles` contains exactly `MTN_LANGUAGE_OPS`. Both stubs are now contract-shaped and commented. **No accessibility defect was found in either new route** once stubbed correctly.
+
 **HOW / VERIFIED**
-- `npx playwright test` — **195/195 passing** across Chromium at 320/360/390/430/480px, both themes. Real `Tab` presses (not `.focus()`, which never sets `:focus-visible`), `getBoundingClientRect()` for sizes, live `scrollWidth`/`clientWidth` for reflow.
+- `npx playwright test` — **265/265 passing** (7 routes × 5 widths) across Chromium at 320/360/390/430/480px, both themes. The pre-rebase five-route run was 195/195. Real `Tab` presses (not `.focus()`, which never sets `:focus-visible`), `getBoundingClientRect()` for sizes, live `scrollWidth`/`clientWidth` for reflow.
 - Rendered in a real browser and looked, per the standing rule: screenshots at 320px in both themes. Confirmed by computed style that `--ground` under `daylight` went `#0C1123` → `#FBF2E6`, with the `--voice-*` brand gradient unchanged as the token file's invariant requires.
-- `npx vitest run` 57/57 · `npx tsc -b --noEmit` clean · `vite build` succeeds.
+- `npx vitest run` 82/82 · `npx tsc -b --noEmit` clean · `vite build` succeeds.
 
 **WHY**
 - A green gate on an unmounted page is worse than no gate, because it looks like evidence. Both harness bugs had to be fixed before any number here could be honest — and the predecessor's captured artefacts had to be called what they were rather than inherited as findings.
@@ -36,7 +38,7 @@
 **NEXT / BLOCKED-PING**
 - ⚠️ **Lethabo's call needed:** mapping "Signal Daylight" → the `earth` palette is the only reading `tokens.css` supports (sole light palette), but which canonical theme each product-facing name means is a design decision, not a mechanical one. The cleaner long-term fix is renaming the themes in `theme.tsx` to canonical names, which changes `theme.test.tsx` and the persisted `localStorage` value. Flagged, not settled.
 - Not covered, listed in full in §"What this does NOT cover": Chromium only, no real screen reader, no physical device, `prefers-reduced-motion` read but not observed firing. **Not a WCAG conformance claim.**
-- When Coverage Constellation / missions / MTN Language Ops routes land, add them to `ROUTES` in `e2e/fixtures.ts` — the gates iterate that list, so a new route is otherwise silently ungated.
+- Any future route must be added to `ROUTES` in `e2e/fixtures.ts` — the gates iterate that list, so a new route is otherwise silently ungated. `/impact` and `/ops` are now covered.
 
 ---
 
