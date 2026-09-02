@@ -16,6 +16,13 @@ export default defineConfig({
       "/api": {
         target: process.env.API_PROXY_TARGET || "http://127.0.0.1:8000",
         changeOrigin: true,
+        // Every backend router is mounted at its bare path (/consents,
+        // /contributions, ...) with no /api prefix -- confirmed by every
+        // backend test calling routes that way. Only /health is dual-
+        // registered under both. Without this rewrite, every real API
+        // call the client makes 404s; only /api/health happened to work,
+        // which is why this was invisible until an actual browser walk.
+        rewrite: (path) => path.replace(/^\/api/, ""),
         // Browser media elements cannot attach headers. Each demo device
         // runs its own proxy process with its own seeded identity.
         headers: identityHeaders,
