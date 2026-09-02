@@ -1922,3 +1922,12 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** Seed verification test retained for CI/local Postgres.
 - **NEXT:** Run with `AMAZWI_TEST_DATABASE_URL` pointing at the event laptop's real Postgres, then start LAN services and execute the golden path.
 - **BLOCKED-PING:** Local Windows embedded PostgreSQL cannot start (`pg_ctl: could not create restricted token: error code 87`); no seed SQL ran and no success is claimed.
+
+### [02 Sep] — Sibusiso · LAN demo wiring
+
+- **DID:** Started uvicorn bound to `0.0.0.0:8000` and confirmed `/health` through the host LAN address `192.168.0.169`.
+- **HOW:** Probed localhost and LAN HTTP responses; both returned `200 application/json`.
+- **WHY:** Establish the one-phone/two-laptop local demo path without deployment.
+- **CHANGED:** Added `05_amazwi/LAN_DEMO_RUNBOOK.md` with exact backend/frontend commands and LAN URLs.
+- **NEXT:** Start Vite on the event laptop, then run seed and golden path against the real cloud Postgres URL.
+- **BLOCKED-PING:** Vite could not start in this sandbox because esbuild was denied parent-directory traversal; backend database routes remain unverified until Sbu supplies the URL.
