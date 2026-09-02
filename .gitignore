@@ -12,3 +12,25 @@ dist/
 .vite/
 .superpowers/
 .worktrees/
+
+# Local runtime artefacts -- never commit these.
+# .private_audio/ holds REAL consented voice recordings from demo runs.
+# Committing it would put raw audio in the repository, breaking the
+# private-by-default guarantee in 02_TECH.md §7/§11 and the POPIA
+# position the product is built on. This is a hard line, not tidiness.
+.private_audio/
+**/.private_audio/
+
+# Embedded/local PostgreSQL data directories from test and demo runs.
+.pgdata_test/
+**/.pgdata_test/
+pgdata/
+**/pgdata/
+
+# Python virtualenvs (backend and ml both create one locally)
+.venv/
+**/.venv/
+
+# Playwright run artefacts
+test-results/
+playwright-report/
