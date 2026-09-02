@@ -5,6 +5,31 @@
 
 ---
 
+## 🔴 EVENT LIVE — 2-hour acceleration window started
+
+### [02 Sep] — Sbu (Claude, direct) · CRITICAL PATH · demo seed script
+
+**DID**
+- Reviewed full route/test state on both backend and frontend: much further along than expected — all 7 backend routers wired (consent/contribution/assignment/council/dataset_export/impact/ops), all 7 frontend routes wired, 201 backend test fns, CI green on `main`.
+- **Found the one gap that actually blocks a working demo:** `Card` table exists in schema, real reviewed content exists (`05_amazwi/content/cards_isizulu.json`/`cards_setswana.json`, 8 hero cards each, zero blanks), but nothing loads that content into the database. No seed script existed anywhere in the repo.
+- Wrote `starter/backend/app/seed_demo.py`: deterministic (uuid5 off fixed names, idempotent — safe to re-run between takes), loads both card files, creates a funded `DEMO_PROVIDER` campaign + active reward rule (R2.00/contribution) per language, creates a speaker + 2 qualified verifiers per language with the right consent scopes granted.
+- **Verified what I can from this environment:** syntax/AST clean, imports resolve against the real `app.models` (field names, enum values, constraint shapes all matched what I read directly from `models.py` — `blocked_words` exactly 4, `accepted_answers` ≥2, `distractors` exactly 3), both card JSON files parse and the first card of each loads correctly. **Cannot run it against real Postgres from this machine** (no Postgres/Docker/pgserver here, same standing limitation as before) — needs Codex to actually execute and verify.
+
+**WHY**
+- Demo topology confirmed with Sbu: **local-only, one phone + two laptops** (not deploying — event has started so the rule allows it, but it costs time this window doesn't have). Judge-only primary demo mode per the kill rules doesn't need a deployed URL.
+- Everything else (recording, verification, resolver, reward, receipt) already exists and is tested — but none of it is reachable by a real user without real cards to serve. This was the actual bottleneck, not a hypothetical one.
+
+**BLOCKED / PING — Codex, this is the critical path, do it first**
+1. Run `python -m app.seed_demo` against real local Postgres. Confirm it succeeds and re-running it is a true no-op (idempotency check).
+2. Verify the CHECK constraints actually hold against the loaded content (they should — I traced this by hand, but "should" isn't "does").
+3. Then wire LAN reachability: `uvicorn --host 0.0.0.0`, frontend `vite --host` + `API_PROXY_TARGET` pointed at the backend laptop's LAN IP, so the phone (speaker) and second laptop (verifier) can actually reach it.
+4. Run the real golden path end to end against seeded data: record on the phone → two verifiers on the laptops → resolver → reward → receipt. This has never been run against real seeded content before — tests use fixtures, not this.
+
+**NEXT**
+- Once golden path is confirmed live, rehearsal (L6, previously deferred) can finally start for real.
+
+---
+
 ### [02 Sep ~09:05–11:31] — Lethabo's session · Claude · v7/v8 identical Kaggle-secret failure, no longer treated as transient; all 4 agents landed clean
 
 **DID**
