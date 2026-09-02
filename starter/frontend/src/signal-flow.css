@@ -322,6 +322,22 @@
   font-weight: 800;
 }
 
+/* MTN yellow on a cream ground measures 1.37:1 -- far below the 4.5:1
+   AA floor, and axe did NOT flag it (measured directly in the browser
+   on 2 Sep 2026, which is the only reason it was caught).
+
+   The brand rule in 04_assets/themes/tokens.css is that --rand appears
+   ONLY where value moves, so recolouring money in light themes would
+   break the one signal the product guards most carefully. Instead the
+   yellow keeps its exact brand value and gains a dark chip to sit on:
+   #FFCB05 on #241408 measures ~10.3:1. Same signal, readable ground. */
+[data-theme="daylight"] .money,
+[data-theme="earth"] .money {
+  background: #241408;
+  padding: 2px 10px;
+  border-radius: var(--r-pill);
+}
+
 /* Big single statistics (Impact Map counts) get display treatment
    rather than body treatment -- part of the same scale-contrast rule. */
 .impact-metrics dd {
