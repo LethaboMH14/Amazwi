@@ -2015,3 +2015,9 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **DID:** Added the missing commit after `POST /consents/{scope}/revoke` and a regression assertion from a separate SQLAlchemy connection.
 - **WHY:** Revocation must survive request teardown and enforce the POPIA playback/export guarantee.
 - **CHANGED:** `starter/backend/app/routes/consents.py`, `starter/backend/tests/test_consent_api.py`.
+
+### [02 Sep] — Sibusiso · live seeded golden path
+
+- **DID:** Verified exact seeded speaker/verifier header pairs, then ran contribution creation, audio upload/finalisation, two independent verifier answers, resolver and result receipt over HTTP.
+- **HOW:** Used card `zu-001` (`467e6241-cb06-5395-aaa8-d63832bcc538`) and accepted answer `indiza`.
+- **RESULT:** `AVAILABLE` audio; resolver `CORPUS_ELIGIBLE`; `understood=true`; reward receipt `200` minor units (R2.00 ZAR); reason confirms both verifiers, audio quality and active consent. `AUDIO_NOT_AUTHORISED` did not recur.
