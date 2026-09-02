@@ -4,14 +4,15 @@
 
 ---
 
-<<<<<<< HEAD
 ## ⚠️ FOR YOUR REVIEW — 02 Sep · Plan 02 acceptance checklist verified; one item is yours
 
 Cross-lane backend/ML work, **pending your review**. Plan 02's Final Acceptance
 Checklist has been verified item-by-item against the tests that actually exist
 (not the filenames the plan prescribes — substitutions are documented inline in
 the plan doc). 15 of 16 items are ticked with named proving tests. Backend 168
-passed against real embedded PostgreSQL 16, ML 40 passed.
+passed against real embedded PostgreSQL 16 before merging `main`, and 196 passed
+after (the extra 28 are your Tasks 9+10 missions/ops tests arriving in the merge,
+not mine). ML 40 passed both before and after.
 
 Four real bugs were found and fixed in the process, all detailed in
 `05_amazwi/BUILD_LOG.md`'s newest entry: a `None + 1` crash that made the

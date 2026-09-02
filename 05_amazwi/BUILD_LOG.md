@@ -87,8 +87,9 @@
 - Also added `test_worker_main_is_a_no_op_when_the_council_is_disabled` — the disabled check sits *before* the `AMAZWI_DATABASE_URL` lookup, and reordering those two lines would make a disabled deployment crash on startup while nothing else in the suite noticed.
 
 **HOW / VERIFIED**
-- `cd starter/backend && python -m pytest -q` — real embedded PostgreSQL 16, not SQLite, ~25 minutes per run. Full suite run twice: 167 passed pre-change, 168 passed after.
-- `cd starter/ml && python -m pytest -q` — 38 passed pre-change, 40 passed after.
+- `cd starter/backend && python -m pytest -q` — real embedded PostgreSQL 16, not SQLite. Full suite run three times: **167 passed** pre-change, **168 passed** after my changes, and **196 passed** again after merging `origin/main` (the jump to 196 is the other agent's Plan 03 Tasks 9+10 missions/ops tests arriving in the merge, not anything of mine). First run took 25 minutes on a cold embedded server; later runs ~4 minutes warm.
+- `cd starter/ml && python -m pytest -q` — 38 passed pre-change, 40 passed after, and 40 passed again post-merge.
+- The merge with `origin/main` hit real conflicts in `BUILD_LOG.md` and `HANDOVER_SBU.md` (two agents writing new top-of-file entries at once). Both sides' content was kept in full — the other agent's 06:00 entry sits above this 05:30 one, preserving newest-at-top ordering. Nothing was dropped, and no conflict markers remain (`grep` verified).
 - Confirmed `app/routes/council.py` really reads the literal `COUNCIL_ATTEMPTS_EXHAUSTED` (line 62) rather than taking the predecessor's comment on trust.
 
 **LIMITATIONS, stated plainly**
