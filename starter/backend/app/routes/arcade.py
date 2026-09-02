@@ -20,6 +20,8 @@ from sqlalchemy.orm import Session
 
 from app.api_types import (
     ArcadeDashboardResponse,
+    CatalogueRowResponse,
+    RewardsResponse,
     DeckSummaryResponse,
     InvitationRowResponse,
     LeaderboardRowResponse,
@@ -38,6 +40,7 @@ from app.arcade import (
     progression_for_user,
     speaker_outcomes,
 )
+from app.rewards import build_catalogue
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
 
@@ -162,3 +165,40 @@ def arcade_dashboard(
     identity: AuthenticatedIdentity = Depends(get_current_identity),
 ) -> ArcadeDashboardResponse:
     return _dashboard(session, identity, language, datetime.now(timezone.utc))
+
+
+@router.get("/rewards", response_model=RewardsResponse)
+@router.get("/api/rewards", response_model=RewardsResponse, include_in_schema=False)
+def rewards(
+    session: Session = Depends(get_session),
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+) -> RewardsResponse:
+    """What this contributor's ledger credit can become.
+
+    The provider mode is read from the running app's provider adapter,
+    not from a request field, so a client cannot ask to be told it is
+    live. With the DemoProvider every row comes back
+    PROVIDER_NOT_CONNECTED and the UI renders no redeem action.
+    """
+    from app.main import provider  # local import: avoids a circular import
+
+    user = require_identity_user(session, identity)
+    view = build_catalogue(session, user_id=user.id, provider_mode=provider.mode)
+    return RewardsResponse(
+        balance_cents=view.balance_cents,
+        provider_mode=view.provider_mode,
+        provider_connected=view.provider_connected,
+        items=[
+            CatalogueRowResponse(
+                key=row.item.key,
+                title=row.item.title,
+                description=row.item.description,
+                threshold_cents=row.item.threshold_cents,
+                momo_product=row.item.momo_product,
+                availability=row.availability.value,
+                shortfall_cents=row.shortfall_cents,
+            )
+            for row in view.rows
+        ],
+        generated_at=datetime.now(timezone.utc),
+    )

@@ -217,3 +217,32 @@ class ArcadeDashboardResponse(BaseModel):
     leaderboard: list[LeaderboardRowResponse]
     leaderboard_language: str | None
     generated_at: datetime
+
+
+# --- reward catalogue -------------------------------------------------
+# `availability` is computed server-side from the live provider mode, so
+# a client cannot render a redeem button the backend would refuse. There
+# is deliberately no points balance: the ledger is denominated in rand
+# cents and a parallel currency would be a second source of truth.
+
+
+class CatalogueRowResponse(BaseModel):
+    key: str
+    title: str
+    description: str
+    threshold_cents: int = Field(ge=0)
+    momo_product: str
+    availability: Literal[
+        "REDEEMABLE", "INSUFFICIENT_CREDIT", "PROVIDER_NOT_CONNECTED"
+    ]
+    shortfall_cents: int = Field(ge=0)
+
+
+class RewardsResponse(BaseModel):
+    balance_cents: int = Field(ge=0)
+    provider_mode: str
+    provider_connected: bool
+    thresholds_are_proposed: bool = True
+    """Redemption thresholds are placeholders pending Sbu's money review."""
+    items: list[CatalogueRowResponse]
+    generated_at: datetime

@@ -7,6 +7,7 @@ import { ResultRoute } from "./features/result/ResultRoute";
 import { ImpactRoute } from "./features/impact/ImpactRoute";
 import { OpsRoute } from "./features/ops/OpsRoute";
 import { ArcadeRoute } from "./features/arcade/ArcadeRoute";
+import { RewardsRoute } from "./features/rewards/RewardsRoute";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/impact" element={<ImpactRoute />} />
         <Route path="/ops" element={<OpsRoute />} />
         <Route path="/dashboard" element={<ArcadeRoute />} />
+        <Route path="/rewards" element={<RewardsRoute />} />
       </Routes>
     </BrowserRouter>
   );

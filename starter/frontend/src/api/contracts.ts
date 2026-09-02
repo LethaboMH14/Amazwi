@@ -93,3 +93,33 @@ export interface ArcadeDashboard {
   leaderboard_language: string | null;
   generated_at: string;
 }
+
+// --- Reward catalogue -----------------------------------------------------
+// Mirrors app/api_types.py's RewardsResponse. `availability` is computed
+// server-side from the live provider mode, so the client cannot render a
+// redeem button the backend would refuse. Note the absence of a points
+// balance: the ledger is rand cents, and a parallel currency would be a
+// second source of truth for money.
+export type RewardAvailability =
+  | "REDEEMABLE"
+  | "INSUFFICIENT_CREDIT"
+  | "PROVIDER_NOT_CONNECTED";
+export interface CatalogueRow {
+  key: string;
+  title: string;
+  description: string;
+  threshold_cents: number;
+  /** The real MTN MoMo product this maps to -- never a partner brand. */
+  momo_product: string;
+  availability: RewardAvailability;
+  shortfall_cents: number;
+}
+export interface Rewards {
+  balance_cents: number;
+  provider_mode: string;
+  provider_connected: boolean;
+  /** Thresholds are placeholders pending Sbu's money review. */
+  thresholds_are_proposed: boolean;
+  items: CatalogueRow[];
+  generated_at: string;
+}

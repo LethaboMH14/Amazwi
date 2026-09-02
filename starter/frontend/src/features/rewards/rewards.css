@@ -1,0 +1,254 @@
+/**
+ * My Rewards -- mobile-first redemption screen.
+ *
+ * Geometry, spacing and card anatomy follow the 360x804 fintech
+ * reference frame, mapped onto its own spacing scale:
+ *   reference xxxs/xs/s/m/l = 4/8/12/16/20  ->  AMAZWI's existing scale
+ *   card radius 12px, page gutter 20px, card gap 12px, card padding 12px
+ *
+ * Colour does NOT follow the reference. Its palette is a light green
+ * fintech theme (#0a3706 text on white); every value below resolves
+ * through tokens.css instead, so all five AMAZWI themes and the existing
+ * contrast evidence keep holding.
+ *
+ * `.money` is intentionally NOT recoloured here -- signal-flow.css owns
+ * it, including the dark chip that fixes yellow-on-cream in the light
+ * themes. Overriding it locally would silently reintroduce a 1.37:1
+ * contrast failure on the single most important number on the screen.
+ */
+
+.rewards {
+  /* Mobile frame width, centred, but free to grow on a larger screen
+     rather than pinning to 360px -- a fixed canvas cannot pass the
+     200%-zoom reflow gate. */
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 20px 40px;
+  min-height: 100vh;
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.rewards h1 {
+  font-size: var(--fs-h1);
+  letter-spacing: var(--tracking-display);
+  margin: 0 0 20px;
+}
+
+.rewards-error {
+  border: 1px solid var(--danger, #C0341A);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  margin: 0 0 16px;
+}
+.rewards-loading { color: var(--text-dim); }
+
+/* --- balance card -------------------------------------------------- */
+
+.balance-card {
+  position: relative;
+  overflow: hidden;
+  padding: 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(130% 160% at 92% 8%, var(--glow), transparent 62%),
+    var(--surface);
+  box-shadow: inset 0 4px 4px rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+.balance-body { position: relative; z-index: 1; max-width: 62%; }
+
+.balance-figure { margin: 0; display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.balance-figure .money { font-size: 28px; letter-spacing: -0.02em; }
+.balance-unit { font-size: var(--fs-sm); color: var(--text-dim); }
+
+.balance-note {
+  color: var(--text-dim);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 6px 0 12px;
+}
+
+.btn-earn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--hi);
+  color: var(--text);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-earn:hover { filter: brightness(1.1); }
+.btn-earn:focus-visible { outline: 2px solid var(--voice-1, #FF5A36); outline-offset: 2px; }
+.btn-earn-dot {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--voice-grad, linear-gradient(96deg, #FF5A36, #FF9B3F));
+  flex: none;
+}
+
+/* The reference's scattered-coin artwork, bleeding off the right edge.
+   Built from tokens rather than a raster so it themes correctly and
+   ships no extra bytes. Decorative only -- aria-hidden in the markup. */
+.balance-art { position: absolute; inset: 0; pointer-events: none; }
+.balance-art .coin {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--voice-grad, linear-gradient(96deg, #FF5A36, #FF9B3F));
+  opacity: 0.22;
+}
+.coin-1 { width: 34px; height: 34px; right: 14px;  top: 10px; }
+.coin-2 { width: 22px; height: 22px; right: 56px;  top: 42px; opacity: 0.16; }
+.coin-3 { width: 44px; height: 44px; right: -10px; top: 54px; opacity: 0.18; }
+.coin-4 { width: 16px; height: 16px; right: 74px;  top: 12px; opacity: 0.13; }
+.coin-5 { width: 26px; height: 26px; right: 30px;  bottom: 8px; opacity: 0.14; }
+
+/* --- provider truth ------------------------------------------------ */
+
+.provider-note {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--calm, #4C6FA5);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  padding: 11px 13px;
+  margin: 0 0 16px;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+.provider-note strong { color: var(--text); }
+
+/* --- reward cards -------------------------------------------------- */
+
+.reward-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+
+.reward-card {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  padding: 12px;
+  display: grid;
+  gap: 16px;
+}
+
+.reward-head { display: flex; gap: 12px; align-items: flex-start; }
+.reward-copy { flex: 1; min-width: 0; }
+.reward-copy h2 {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 2px;
+  overflow-wrap: anywhere;
+}
+.reward-copy p {
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* Cost cluster: the reference's stacked-coin glyph plus a figure. */
+.reward-cost { display: grid; justify-items: center; gap: 3px; flex: none; }
+.reward-coins { display: grid; gap: 1px; width: 32px; }
+.reward-coins > span {
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--voice-grad, linear-gradient(96deg, #FF5A36, #FF9B3F));
+  opacity: 0.55;
+}
+.reward-coins > span:nth-child(2) { opacity: 0.75; }
+.reward-coins > span:nth-child(3) { opacity: 0.95; }
+.reward-price { font-size: 13px; font-weight: 700; white-space: nowrap; }
+
+.reward-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* The reference's scarcity-badge slot, carrying the availability state.
+   Same position and weight; the copy is true rather than urgent. */
+.reward-state {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+  padding: 4px 10px;
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+}
+.state-redeemable {
+  background: var(--understood, #1F8A54);
+  color: #fff;
+}
+.state-insufficient_credit {
+  border-color: var(--border);
+  color: var(--text-dim);
+}
+/* Not red: an unconnected provider is a build state, not a user error. */
+.state-provider_not_connected {
+  border-color: var(--border);
+  background: var(--hi);
+  color: var(--text-dim);
+}
+
+.reward-buttons { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+
+.btn-redeem, .btn-details {
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  white-space: nowrap;
+}
+.btn-redeem {
+  background: var(--voice-grad, linear-gradient(96deg, #FF5A36, #FF9B3F));
+  border-color: transparent;
+  color: #fff;
+}
+.btn-redeem:focus-visible, .btn-details:focus-visible {
+  outline: 2px solid var(--voice-1, #FF5A36);
+  outline-offset: 2px;
+}
+.btn-details:hover, .btn-redeem:hover { filter: brightness(1.08); }
+
+.reward-details {
+  margin: 0;
+  padding: 11px 12px;
+  border-radius: var(--r-sm);
+  background: var(--ground);
+  border: 1px solid var(--border);
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+}
+.reward-details > div { display: flex; justify-content: space-between; gap: 12px; }
+.reward-details dt { color: var(--text-dim); }
+.reward-details dd { margin: 0; font-weight: 600; text-align: right; }
+
+.rewards-footnote {
+  color: var(--text-dim);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 16px 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-earn, .btn-redeem, .btn-details { transition: none; }
+}

@@ -57,6 +57,7 @@ export function initials(name: string): string {
 
 const NAV_PRIMARY = [
   { to: "/dashboard", label: "Dashboard", icon: "◆" },
+  { to: "/rewards", label: "My rewards", icon: "◇" },
   { to: "/impact", label: "Impact map", icon: "◈" },
 ];
 
