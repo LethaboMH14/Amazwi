@@ -5,7 +5,11 @@ from app import seed_demo
 
 
 def test_seed_demo_is_idempotent(db_engine, monkeypatch):
-    monkeypatch.setenv("AMAZWI_DATABASE_URL", str(db_engine.url))
+    # `str(url)` masks the password as "***" -- seed_demo then connects with a
+    # bogus password. That passes on a local Postgres using `trust` auth (which
+    # never checks it) and fails anywhere a password is actually required, which
+    # is exactly how this got through local runs and broke CI's postgres service.
+    monkeypatch.setenv("AMAZWI_DATABASE_URL", db_engine.url.render_as_string(hide_password=False))
     seed_demo.get_engine.cache_clear()
     seed_demo.seed()
     seed_demo.seed()
@@ -77,7 +81,11 @@ def test_seed_demo_is_idempotent(db_engine, monkeypatch):
 
 
 def test_reset_returns_demo_to_known_baseline(db_engine, monkeypatch):
-    monkeypatch.setenv("AMAZWI_DATABASE_URL", str(db_engine.url))
+    # `str(url)` masks the password as "***" -- seed_demo then connects with a
+    # bogus password. That passes on a local Postgres using `trust` auth (which
+    # never checks it) and fails anywhere a password is actually required, which
+    # is exactly how this got through local runs and broke CI's postgres service.
+    monkeypatch.setenv("AMAZWI_DATABASE_URL", db_engine.url.render_as_string(hide_password=False))
     monkeypatch.setenv(seed_demo.RESET_GUARD_ENV, "true")
     seed_demo.get_engine.cache_clear()
     seed_demo.seed(reset=True)
@@ -114,7 +122,11 @@ def test_reset_returns_demo_to_known_baseline(db_engine, monkeypatch):
 
 
 def test_reset_requires_explicit_guard(db_engine, monkeypatch):
-    monkeypatch.setenv("AMAZWI_DATABASE_URL", str(db_engine.url))
+    # `str(url)` masks the password as "***" -- seed_demo then connects with a
+    # bogus password. That passes on a local Postgres using `trust` auth (which
+    # never checks it) and fails anywhere a password is actually required, which
+    # is exactly how this got through local runs and broke CI's postgres service.
+    monkeypatch.setenv("AMAZWI_DATABASE_URL", db_engine.url.render_as_string(hide_password=False))
     monkeypatch.delenv(seed_demo.RESET_GUARD_ENV, raising=False)
     seed_demo.get_engine.cache_clear()
 
