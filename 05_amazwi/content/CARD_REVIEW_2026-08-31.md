@@ -5,7 +5,7 @@
 ## Current outcome
 
 - **isiZulu (`zu`): `REVIEWED`.** Sbu approved all eight targets, blocked words, accepted answers and distractors. There are no pending native-review items.
-- **Setswana (`tn`): `NEEDS_NATIVE_CONFIRMATION`.** Lethabo approved the original hero-card content, including the `pula`→`thipa` replacement. Four later distractor replacements still need Lethabo's read-aloud confirmation: `moraka` (`sw-004`), `jusi` (`sw-005`), and `ting` plus `diphaphatha` (`sw-007`).
+- **Setswana (`tn`): `REVIEWED`.** Lethabo approved all eight cards, including the later read-aloud confirmation of `moraka` (`sw-004`), `jusi` (`sw-005`), and `ting` plus `diphaphatha` (`sw-007`) on 2 September.
 - Both decks now contain eight cards, two or more accepted answers per card, unique IDs, and no accepted-answer overlap with blocked words or distractors.
 - Every card carries the same ISO 639-1 language code as its deck: `zu` for isiZulu and `tn` for Setswana.
 

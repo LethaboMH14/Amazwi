@@ -1,15 +1,10 @@
 {
   "language": "tn",
   "review": {
-    "status": "NEEDS_NATIVE_CONFIRMATION",
+    "status": "REVIEWED",
     "owner": "Lethabo",
-    "last_reviewed_on": "2026-08-31",
-    "pending_items": [
-      "sw-004 distractor: moraka",
-      "sw-005 distractor: jusi",
-      "sw-007 distractor: ting",
-      "sw-007 distractor: diphaphatha"
-    ]
+    "last_reviewed_on": "2026-09-02",
+    "pending_items": []
   },
   "hero_8": [
     {
