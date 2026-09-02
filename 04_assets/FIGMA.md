@@ -5,25 +5,31 @@
 
 ## What is in it
 
-**38 colour variables across five collections**, plus a Foundations sheet documenting the rules.
+**Two collections**, plus a Foundations sheet and a Theme Modes proof page.
 
-| Collection | Contents | Why separate |
-|---|---|---|
-| **AMAZWI Brand (invariant)** | `voice-1-ember` · `voice-2-magenta` · `rand-money-only` · `understood` · `missed-ochre` | **These five never change, whatever the ground is.** Keeping them in their own collection makes that rule structural rather than a note in a document |
-| Theme A · Midnight Shweshwe | ground, ground-deep, surface, text-primary, text-secondary, border | **Recommended default** |
-| Theme B · Highveld Dusk | same six | Splash and deck only — least legible |
-| Theme C · Red Earth (Day) | same six | **Mandatory.** Outdoor legibility |
-| Theme D · Ndebele (seasonal) | same six + four accents | September skin |
+| Collection | Modes | Contents | Why separate |
+|---|---|---|---|
+| **AMAZWI Brand (invariant)** | 1 (`Fixed`) | `voice-1-ember` · `voice-2-magenta` · `rand-money-only` · `understood` · `missed-ochre` | **These five never change, whatever the ground is.** Keeping them in their own collection makes that rule structural rather than a note in a document |
+| **AMAZWI Theme** | **5** — Midnight Shweshwe · Highveld Dusk · Red Earth (Day) · Ndebele (seasonal) · Ink (neutral shell) | `ground` · `ground-deep` · `surface` · `text` · `text-dim` · `border` · `hi` · `glow` | One collection, five modes. Switch the mode and every bound component restyles |
 
-Every variable is **scope-restricted** — text tokens only offer themselves on text fills, borders only on strokes. Default `ALL_SCOPES` pollutes every picker, so it was set explicitly.
+Variables are **scope-restricted** — text tokens only offer themselves on text fills, `border` only on strokes. Default `ALL_SCOPES` pollutes every picker, so it was set explicitly.
 
-## ⚠️ Plan limitation, and what it costs
+Token names match [`themes/tokens.css`](themes/tokens.css) **exactly** (`text`/`text-dim`, not the old `text-primary`/`text-secondary`) so Figma↔code handoff is 1:1. `tokens.css` remains the canonical source — it is byte-synced by `tokens.sync.test.ts` and wins any disagreement.
 
-The Figma seat is **View on a starter plan**, which allows **one variable mode per collection**. The correct architecture is *one* Theme collection with four modes — switch the whole file between grounds with a dropdown. That needs **Professional or above**.
+## ✅ Plan limitation RESOLVED — 2 Sep 2026
 
-**The workaround:** each theme is its own collection. It works, but switching themes means rebinding rather than flipping a mode.
+The file was previously on a **starter plan (View seat)**, which allows only **one variable mode per collection**. That forced the wrong architecture: four near-identical `Theme A/B/C/D` collections, where switching themes meant *rebinding every component* rather than flipping a mode. This document predicted the fix: *"If the plan is upgraded, collapse Themes A–D into a single collection with four modes... a mechanical merge."*
 
-**If the plan is upgraded**, collapse Themes A–D into a single collection with four modes. The token names are already identical across all four, so it is a mechanical merge.
+**Lethabo upgraded to Professional (Full seat) and the merge is done:**
+
+- Created `AMAZWI Theme` with five real modes, values copied verbatim from `tokens.css`.
+- **Rebound all four components** off the legacy collections onto it — 19 paints. The four Brand bindings were deliberately left alone, which is why brand colour is identical in every mode.
+- Deleted `Theme A/B/C/D`. Five collections → two.
+- **Verified, not assumed:** screenshotted the Theme Modes page (`16:2`) before *and* after deleting the legacy collections — pixel-identical, so nothing lost a binding.
+
+### Theme Modes page (`16:2`) — the proof artifact
+
+Every component rendered in all five modes side by side, each column carrying its own `setExplicitVariableModeForCollection`. This page is impossible to build on the starter tier and is the clearest single demonstration that the invariant-brand rule holds: the ember CTA, the MTN-yellow `R 2.50`, the green `UNDERSTOOD` and the ochre chips are **identical across all five grounds**, while everything behind them changes.
 
 ## Components — DONE, 31 Aug 2026 (L2/L3)
 
