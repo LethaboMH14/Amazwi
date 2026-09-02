@@ -5,6 +5,51 @@
 
 ---
 
+### [02 Sep] — Sbu (Claude, direct) · root-caused the golden-path blocker · 🔴 consent revocation still discarded
+
+**DID**
+- **Root-caused the `AUDIO_NOT_AUTHORISED` blocker. It was never an environment mismatch** — there was no second PostgreSQL database. `app/config.py`'s `database_url()` raises when `AMAZWI_DATABASE_URL` is unset, so the server could not have silently defaulted elsewhere.
+- The real cause is in `_transaction()` (`routes/contributions.py:33`, `routes/consents.py:39`): `session.begin_nested() if session.in_transaction() else session.begin()`. `require_identity_user()` runs *before* that block and issues a query, which opens SQLAlchemy's implicit transaction — so `in_transaction()` is already `True`, the helper takes the `begin_nested()` branch, and the route gets a **SAVEPOINT instead of a transaction**. Exiting releases the savepoint without committing the outer transaction, and `get_session()`'s `finally: session.close()` then discards the write entirely.
+- That accounts for every symptom exactly: HTTP 201 (the object is in the session identity map), the row invisible from any other connection, and the follow-up request failing to find the contribution.
+- **Why the suite never caught it:** the test fixture wraps each test in an outer transaction and asserts within the same session, so a write never has to survive a real commit. `routes/ops.py` behaved correctly only because it calls `session.commit()` explicitly.
+- Relayed Codex's four blocked commits to `origin` from this session (its process has no GitHub connectivity; mine does): `5044cc8`, `b63b965`, `6ceb447`, `9522d74` → `origin/main` at `5fb295d`.
+- Merge-resolved `test_seed_demo.py` where Codex and I had independently written the same fix: kept my id-scoped assertions (robust against other tests' rows) **and** adopted Codex's richer constraint check, which tests all three card array constraints where mine only checked `blocked_words`. Better than either version alone. Verified passing.
+
+**🔴 FOUND, NOT YET FIXED — consent revocation is silently discarded**
+- `routes/consents.py` has **two** `_transaction` blocks and **one** commit. `POST ""` (grant) was fixed; `POST /{scope}/revoke` (line 85) was not — it still has no `session.commit()` and therefore still has the exact bug.
+- **This is worse than the contribution bug and it is a governance failure, not a demo bug.** Revocation is a POPIA guarantee and a "never cut" item in `05_BUILD.md` (*"revoked consent → no playback assignment or export"*). As it stands, a user who withdraws consent receives a success response while the revocation is thrown away — they remain consented in the database and their audio stays assignable. We cannot carry that into a pitch that sells per-contribution consent evidence as the product.
+- **Ruling:** this must be fixed and proven before any demo run, ahead of further golden-path work.
+- Swept every other route so the remaining fix is small: `assignments.py` (2 commits), `datasets.py` (3), `ops.py` (1) are correct; `council.py` and `impact.py` are read-only. Only the revoke route is outstanding.
+
+**PING Codex**
+- Fix the revoke route, then re-sweep rather than trusting the two files touched.
+- **The separate-connection test is still missing.** The fix shipped without one, and the existing fixture pattern structurally cannot fail on an uncommitted write — which is precisely why this reached a live demo. A test that writes via the API and asserts from a *different* session is the only thing that stops this regressing.
+
+---
+
+### [02 Sep] — Sbu (Claude, direct) · CRITICAL PATH UNBLOCKED · real Postgres running, seed verified, full suite green
+
+**DID**
+- **Unblocked Codex's `pg_ctl: could not create restricted token: error code 87`** — downloaded the official EnterpriseDB PostgreSQL 16.10 Windows binaries zip directly (no installer GUI, no admin rights needed) to `C:\Users\lovilocal.adm\pgtools\pg16`, ran `initdb`, started `pg_ctl` — no restricted-token error at all in this process context. Real PostgreSQL 16.10 now running on `localhost:5432`, database `amazwi_test`. (First extraction attempt silently stalled on an interactive overwrite prompt in a non-interactive shell — re-extracted with `-o` to a clean directory, which is why this took two tries.)
+- Ran all 5 Alembic migrations clean against it.
+- **Ran `seed_demo.py` for real for the first time — worked on the first try.** Re-ran it a second time: identical UUIDs both times, confirming idempotency directly (not just via a test).
+- Ran Codex's `test_seed_demo.py`: **found and fixed a real bug in the test, not the seed script.** It asserted `ConsentGrant` count == 10; actual correct count is 8 (2 scopes × 2-language speakers = 4, + 1 scope × 4 verifiers = 4). Traced why: `resolver.py` only requires `RECORD_PROCESS_ROUND` for `CORPUS_ELIGIBLE` (checked directly in the code) — `RETAIN_MODEL_DEVELOPMENT` (which would explain a count of 10) only gates dataset export in `app/datasets.py`, a separate feature, not the golden path. The test had never actually run against real Postgres before this (Codex's embedded fixture was broken the whole time), so this bug shipped unverified.
+- Ran the **full backend suite**: 210 passed, 1 failed — `test_seed_demo.py` again, this time `User` count 7 vs expected 6. Recreated a fully clean database and reran: **same failure**, proving it wasn't stale data from my manual runs. Root cause: the test asserted table-wide counts, which is fragile when the full suite runs and some other test leaves a row in the shared database without a rolled-back transaction. Fixed properly (not a shortcut): rewrote every assertion in `test_seed_demo.py` to scope by the seed's own deterministic ids (`Card.id.in_(card_ids)` etc.) instead of counting whole tables — correct regardless of what else exists in the database, not just a fix for today.
+- **Full suite, clean database, one run: 211/211 passed, ~2 min 17 sec.**
+
+**WHY**
+- This was the actual bottleneck for the whole 2-hour window — nothing downstream (LAN wiring, live golden path, rehearsal) can happen without a working Postgres and a verified seed. Getting a real local instance running myself (rather than waiting on a cloud Postgres signup) turned out faster once the zip-binaries approach sidestepped whatever made Codex's embedded fixture hit the restricted-token error.
+
+**PING Codex / Lethabo**
+- **You can stop waiting on a cloud Postgres URL.** If you also want a local instance: download `https://get.enterprisedb.com/postgresql/postgresql-16.10-1-windows-x64-binaries.zip`, `unzip -oq <file> -d pg16` (the `-o` matters — a bare `unzip` will silently stall on overwrite prompts in a non-interactive shell), then `initdb` + `pg_ctl start`. Or just keep using whatever got you unblocked already if you're already running.
+- `test_seed_demo.py` is pushed with the fix — pull before running it again, the old version will spuriously fail under the full suite.
+- **Critical path is now: LAN wiring, then the live golden path.** That's the next thing that needs to happen, and it's untested against real seeded content until it runs.
+
+**NEXT**
+- Handing LAN wiring + live golden path run back to whoever has device access (Codex/Lethabo) — I can verify backend-only logic from here but can't drive an actual phone+laptop session.
+
+---
+
 ## 🔴 EVENT LIVE — 2-hour acceleration window started
 
 ### [02 Sep] — Sbu (Claude, direct) · CRITICAL PATH · demo seed script
@@ -1934,3 +1979,45 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **CHANGED:** Seed verification test retained for CI/local Postgres.
 - **NEXT:** Run with `AMAZWI_TEST_DATABASE_URL` pointing at the event laptop's real Postgres, then start LAN services and execute the golden path.
 - **BLOCKED-PING:** Local Windows embedded PostgreSQL cannot start (`pg_ctl: could not create restricted token: error code 87`); no seed SQL ran and no success is claimed.
+
+### [02 Sep] — Sibusiso · LAN demo wiring
+
+- **DID:** Started uvicorn bound to `0.0.0.0:8000` and confirmed `/health` through the host LAN address `192.168.0.169`.
+- **HOW:** Probed localhost and LAN HTTP responses; both returned `200 application/json`.
+- **WHY:** Establish the one-phone/two-laptop local demo path without deployment.
+- **CHANGED:** Added `05_amazwi/LAN_DEMO_RUNBOOK.md` with exact backend/frontend commands and LAN URLs.
+- **NEXT:** Start Vite on the event laptop, then run seed and golden path against the real cloud Postgres URL.
+- **BLOCKED-PING:** Vite could not start in this sandbox because esbuild was denied parent-directory traversal; backend database routes remain unverified until Sbu supplies the URL.
+
+### [02 Sep] — Sibusiso · real PostgreSQL seed checkpoint
+
+- **DID:** Ran `python -m app.seed_demo` twice against PostgreSQL 16.10 and validated the seeded rows directly.
+- **HOW:** Confirmed deterministic UUIDs are unchanged on rerun; queried campaigns, reward rules, cards, users, qualifications and consents; validated Card array shapes.
+- **WHY:** Establish a trustworthy database state before the live demo flow.
+- **RESULT:** 2 campaigns, 2 reward rules, 16 cards, 4 qualifications, 8 demo consents, and 0 Card constraint violations. Seven total users are present because one unrelated fixture user already exists; the verification test now scopes to the six deterministic demo IDs.
+- **CHANGED:** `starter/backend/tests/test_seed_demo.py`.
+- **VERIFY:** `pytest tests/test_seed_demo.py -q` → 1 passed; LAN `/health` via `192.168.0.169:8000` → HTTP 200.
+
+### [02 Sep] — Sibusiso · golden-path probe
+
+- **DID:** Started a fresh uvicorn instance on port 8002 with real PostgreSQL and exercised contribution creation plus audio-upload initiation.
+- **RESULT:** Contribution creation returned 201, but audio initiation returned `AUDIO_NOT_AUTHORISED`; the server process was not using the same visible database state as the direct SQL session, and the original LAN process also lacked `AMAZWI_AUDIO_TOKEN_SECRET`.
+- **NEXT:** Restart the event backend once with the confirmed database URL and a non-empty local audio token secret, then rerun the seeded flow. This is an operational configuration checkpoint, not a product decision.
+
+### [02 Sep] — Sibusiso · clean-server recheck
+
+- **DID:** Terminated listeners on ports 8000–8002 and started uvicorn fresh with both `AMAZWI_DATABASE_URL` and `AMAZWI_AUDIO_TOKEN_SECRET` set before import.
+- **RESULT:** `/contributions` returned 201, but `/audio/uploads` still returned `AUDIO_NOT_AUTHORISED`; the contribution was not visible from a separate direct connection to `amazwi_test`, indicating the running process is reaching a different PostgreSQL database/cluster despite the shell URL. This needs Sbu to identify the active Postgres service/connection target before another retry.
+- **PUSH:** GitHub HTTPS is unreachable (`curl` and `git ls-remote` fail to connect); local commit remains unpushed.
+
+### [02 Sep] — Sibusiso · consent persistence hardening
+
+- **DID:** Added the missing commit after `POST /consents/{scope}/revoke` and a regression assertion from a separate SQLAlchemy connection.
+- **WHY:** Revocation must survive request teardown and enforce the POPIA playback/export guarantee.
+- **CHANGED:** `starter/backend/app/routes/consents.py`, `starter/backend/tests/test_consent_api.py`.
+
+### [02 Sep] — Sibusiso · live seeded golden path
+
+- **DID:** Verified exact seeded speaker/verifier header pairs, then ran contribution creation, audio upload/finalisation, two independent verifier answers, resolver and result receipt over HTTP.
+- **HOW:** Used card `zu-001` (`467e6241-cb06-5395-aaa8-d63832bcc538`) and accepted answer `indiza`.
+- **RESULT:** `AVAILABLE` audio; resolver `CORPUS_ELIGIBLE`; `understood=true`; reward receipt `200` minor units (R2.00 ZAR); reason confirms both verifiers, audio quality and active consent. `AUDIO_NOT_AUTHORISED` did not recur.

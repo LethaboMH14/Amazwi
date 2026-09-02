@@ -56,6 +56,7 @@ def create_consent(
             request.scopes,
             identity.user_id,
         )
+    session.commit()
     return [_state(grant) for grant in grants]
 
 
@@ -90,6 +91,7 @@ def revoke_consent(
                 identity.user_id,
                 reason,
             )
+        session.commit()
     except ConsentAlreadyRevokedError as exc:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
