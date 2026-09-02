@@ -5,6 +5,25 @@
 
 ---
 
+### [03 Sep] — Sbu (Claude, direct) · regenerated the live Gamma deck with every accumulated fix baked in, verified by reading it back
+
+**DID**
+- Ran a full deck regeneration (rather than the manual-paste checklist) with every fix from both Codex review rounds folded directly into the generation source text and instructions: corrected card 2 wording, sandbox-explicit MoMo card, new visible pilot-outcomes card, PROVEN/PILOT/NOT BUILT as a 3-column card, complete banned-phrase list, zero em dashes.
+- Final deck: **https://gamma.app/docs/35l5lmuw841k199**. This exhausted the remaining Gamma credits (0 left) — no further regeneration is possible from this environment.
+- **Did not take the generation on faith.** Read the actual generated HTML back via the Gamma API and checked it card by card against the checklist rather than assuming the prompt instructions were honoured. Confirmed present in the real output: empty logo band, corrected card 2 text, zero em dashes, "SANDBOX ONLY" label with an explicit "No speaker was paid" warning on the MoMo card, the 3-column Proven/Pilot/Not Built layout, all six pilot-outcome metrics visible as their own card, and no banned phrases anywhere in the text.
+- Updated `PITCH_SCRIPT.md`: deck link, deck history (4 stale links now listed), the fix checklist replaced with a verified-status section, and the final go/no-go checklist updated to point at the new link with items 6–7 correctly left open (human rehearsal, not something this session can complete).
+
+**WHY**
+- Given the earlier finding that this tool cannot patch a single card and that a prior deck (`i1kl0ftsc184hbx`) shipped with an overclaim baked into its text, verifying the regenerated output against source rather than trusting the generation call was the only way to actually close out the checklist rather than just relabel it "should be fixed now."
+
+**NEXT**
+- Paste real MTN/MoMo logos into card 1's reserved band.
+- Rehearse the six-beat script end to end against a stopwatch, with both teammates drilling the "AMAZWI ledger credit, never MoMo wallet payout" line.
+
+**BLOCKED-PING:** none — everything reachable from this environment for the pitch prep is now done; what remains is real-world logos and rehearsal.
+
+---
+
 ### [03 Sep] — Sbu (Claude, direct) · finalised all remaining deck-fix text from Codex's checklist
 
 **DID**

@@ -6,6 +6,20 @@
 
 ---
 
+## 3 SEP (final) — this is the deck to present, Gamma credits are exhausted, please don't ask for another regen
+
+**Final deck: https://gamma.app/docs/35l5lmuw841k199** — this is the one, and only this one. Every other link anywhere in this repo's history is stale (`1dhqhqj19mgd758`, `i1kl0ftsc184hbx`, `p6yb4zccmjy3sbi`, `ws921eo2ozpw8bp`).
+
+This went through two rounds of external critique (from Codex) plus my own verification — I read the actual generated card content back via the API rather than trusting the generation prompt, and confirmed everything landed: no em dashes, corrected market-gap wording on card 2, the MoMo card explicitly labelled "SANDBOX ONLY" with "No speaker was paid" stated on the card itself, the Proven/Pilot/Not Built card as three clean columns, and a dedicated pilot-outcomes card (repeat MoMo opens, cost per eligible contribution, verifier liquidity, settlement feasibility, etc.) visible, not just spoken.
+
+**Two things only you and I can finish from here, listed in `PITCH_SCRIPT.md`'s final go/no-go:**
+1. Paste the real MTN and MTN MoMo logos into card 1's reserved band (still empty, deliberately).
+2. Rehearse. Your demo beat is agreement path (0:40 live) + disagreement path (0:12, pre-captured cut) as one continuous ~52s unit — drill it against a stopwatch. And both of us need to reflexively say "AMAZWI ledger credit," never "MoMo wallet payout," including in Q&A.
+
+Gamma credits are at 0 — no more regenerations possible from my side. If the deck needs a further tweak, it has to be a manual edit in the Gamma editor.
+
+---
+
 ## 3 SEP (later) — deck/script revised again against a "what gets us to 90+" critique — re-read before rehearsing
 
 Superseding the section directly below this one. Deck and script both changed structurally, not just wording:
