@@ -5,6 +5,25 @@
 
 ---
 
+### [02 Sep ~09:05–11:31] — Lethabo's session · Claude · v7/v8 identical Kaggle-secret failure, no longer treated as transient; all 4 agents landed clean
+
+**DID**
+- v7 failed with the exact same `ConnectionError` from Kaggle's own `kaggle_secrets.py` client reaching their internal secrets service as v6. Retried once more (a genuine client-side `SSLError` on the push attempt itself, separate issue) → pushed as v8. v8 failed with the **byte-identical traceback** a third time in a row.
+- **Stopped retrying blind after the third identical failure.** One or two retries hitting a plausibly-transient platform error is reasonable; three identical tracebacks in a row is a pattern, not noise — continuing to retry without new information would just burn kernel-run attempts for no reason. Flagged to Lethabo directly: check the kernel editor's Add-ons → Secrets panel to confirm `HF_TOKEN` is still actually toggled on for this kernel (it's possible it detached, or this is a real Kaggle-side outage on their secrets service — not something resolvable from this side either way).
+- Resumed all 3 remaining rate-limited agents once the user confirmed the 9am reset had passed. **All 3 completed cleanly and pushed real, verified work to `main`:**
+  - Plan 02 acceptance verification (`59fd07b`) — 15/16 checklist items ticked against real tests, 4 real bugs found and fixed (a `retry_count` `TypeError` that made `PARTIAL` state unreachable, dead `AI_COUNCIL_MAX_ATTEMPTS` config, an outbox-rollback test that never actually checked the event was gone, and a missing calibration/attribution assertion in `test_tabular.py` the agent found itself). Backend 210/210, ML 40/40.
+  - Coverage Constellation (`c939393`) — real aggregate query, no synthetic data; found the schema genuinely has no geographic column and built the honest fallback (language × campaign, `geography_available: false`) rather than inventing location data. Backend 149/149, frontend 82/82.
+  - Real-app accessibility gates (`3eadd34`) — **the most important finding of the four**: discovered the previous "real" Playwright/axe evidence I'd reported earlier was actually captured against an unrelated stray app on the same port (`reuseExistingServer` silently attaching to someone else's dev server), plus a second harness bug (`**/api/**` route-stubbing also matching the app's own `/src/api/client.ts` module) that made every gate pass vacuously against a blank, unmounted page. Once fixed, found and fixed real violations on every route (touch targets, 200% reflow overflow, missing contrast, a missing `aria-live` region, an unlabelled landmark) plus a genuinely broken light theme (`data-theme="daylight"` never matched anything in `tokens.css`, so it silently rendered the dark palette — the light theme has never actually worked until this fix). 265/265 Playwright, 82/82 vitest.
+
+**WHY**
+- The accessibility agent's willingness to say "the evidence I inherited was fake" rather than build on top of it is exactly the standard this project has tried to hold all night — a wrong result presented confidently is worse than an honest "this doesn't work yet."
+
+**NEXT / BLOCKED-PING**
+- **Waiting on Lethabo**: confirm `HF_TOKEN` is still attached in the Kaggle kernel editor before another push is attempted. Not retrying blind a fourth time.
+- Which canonical theme name ("Signal Daylight") maps to which `tokens.css` palette is now an explicit open decision (currently aliased to `earth`) — flagged, not settled, by the accessibility agent.
+
+---
+
 ### [02 Sep ~05:00] — Lethabo's session · Claude · v6 failed on a Kaggle-side transient error, v7 pushed; 4 agents recovered after rate-limit interruption
 
 **DID**
