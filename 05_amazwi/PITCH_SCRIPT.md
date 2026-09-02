@@ -30,7 +30,7 @@ Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility &
 
 Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slot for handoff, clicks, and judge reaction. If time is tight, cut adjectives from beat 5 first; never cut the MoMo evidence line, the Proven/Pilot/Not Built structure, or the final ask.
 
-**Deck edit needed, still outstanding:** the live deck (`1dhqhqj19mgd758`) still has em dashes throughout its generated card text, and several cards need the wording fixes below applied by hand in the Gamma editor. This tool cannot patch cards in an existing Gamma, and regenerating from scratch isn't reliable right now (Gamma credits are nearly exhausted).
+**Deck status:** the current deck (`35l5lmuw841k199`) is fully regenerated and verified; no manual edits are outstanding from the earlier review rounds. The one addition below (the "why does better data matter to MTN specifically" answer) still needs a manual paste, since Gamma credits are at 0 and this tool cannot patch a single card.
 
 **Scope calibration, do not undo:** the live MoMo Collections call funds a **mission**; it does not disburse to a speaker's own wallet. Speaker payout is a separate, not-yet-built settlement step. Say "the AMAZWI ledger is credited," never "your MoMo wallet is credited." Also never say: "cash-out is live," "money crossed MoMo twice," "k-anonymised" (not in this build), or "the dataset nobody else has built."
 
@@ -88,6 +88,8 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 
 **If a judge asks "how does MTN make money" - the exact answer:** "We are not claiming revenue before measuring it. The pilot tests whether funded mini-app missions increase repeat MoMo use and produce useful, consented voice-intent data, at a cost MTN can support." Never answer this question with a margin, savings percentage, or revenue projection.
 
+**If a judge asks "what specifically does better African-language data let MTN do" - this was a real gap Sbu caught: the deck gestures at "useful for MTN's voice products" but never names the mechanism. The exact backup answer:** "Two concrete things. First, voice-operable MoMo: balance checks, sending money, agent and merchant transactions by voice, not just text menus or USSD. That matters specifically because a large share of South Africans don't reliably read for meaning in any language, per PIRLS 2021, so voice access reaches users a text interface excludes. Second, MTN has already publicly disclosed a 150MW AI data centre investment, with South Africa and Nigeria named as priority markets, in its H1 2026 results. Governed, consented South African speech data is a direct input to that stated infrastructure plan, not a hypothetical use case we're inventing to sound relevant." Keep this for Q&A only; it's too long for the timed beats.
+
 ---
 
 ## 5 - Proven / Pilot / Not built, then the ask (0:30) - SBU
@@ -126,6 +128,20 @@ The deck was fully regenerated with every fix from both Codex review rounds bake
 6. **Pilot-outcomes card:** confirmed present as its own card with all six items (repeat MoMo opens, funded mission participation, cost per eligible contribution, verifier liquidity, settlement feasibility, usefulness of intent-labelled speech) visible, plus the "none of these numbers exist yet" line.
 
 **Gamma credits are now at 0** after this regeneration. If anything needs to change from here, it has to be a manual edit in the Gamma editor, not another regeneration from this environment.
+
+---
+
+## One real gap found after the deck was finalised: the deck never names how better data helps MTN
+
+Sbu caught this directly: card 2 and card 9 both gesture at the dataset being "useful" or "tailored to MoMo use cases," but nowhere does the deck say what that actually means in practice. A judge could reasonably ask "useful for what?" and get a vague answer. Two fixes, both optional manual pastes (deck credits are at 0, so this can't be regenerated):
+
+**Recommended: add one bullet to card 9's "What MTN gets" list.** Paste this as a fourth bullet in that list:
+
+> A direct input to MTN's own disclosed AI infrastructure investment: the 150MW AI data centre programme named in MTN's H1 2026 results, with South Africa and Nigeria as priority markets.
+
+**Full Q&A backup answer (spoken only, do not put on a slide):** see the new backup answer added to beat 4 above ("what specifically does better African-language data let MTN do"). It names two concrete mechanisms: voice-operable MoMo for users the PIRLS 2021 literacy data shows text interfaces exclude, and a direct input to MTN's already-disclosed AI data centre investment. Both claims are sourced from `07_TRUTH.md`'s verified claims register, not invented for this answer.
+
+If there's no time to paste the card 9 bullet before presenting, the Q&A backup alone is enough to survive the question if it's asked. It just means the deck itself stays slightly under-expressed on this point, which is a smaller risk than leaving the question unanswerable.
 
 ---
 

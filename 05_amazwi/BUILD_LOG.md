@@ -5,6 +5,23 @@
 
 ---
 
+### [03 Sep] — Sbu (Claude, direct) · found and closed a real gap: the deck never named how better data helps MTN
+
+**DID**
+- Sbu asked directly whether the pitch explains how a larger, more accurate African-language dataset actually benefits MTN. Checked the finalised deck's own text (already read back via the Gamma API in the previous entry) and confirmed: no, it doesn't. Card 2 and card 9 both say the data is "useful"/"tailored to MoMo use cases" but never name a mechanism.
+- Drafted a sourced answer, both verified against `07_TRUTH.md`'s claims register: (1) voice-operable MoMo reaches users the PIRLS 2021 literacy data shows text interfaces exclude, and (2) governed South African speech data is a direct input to MTN's own disclosed 150MW AI data centre investment (H1 2026 results, SA/Nigeria priority markets) — not an invented use case.
+- Added this as a full Q&A backup answer at beat 4 in `PITCH_SCRIPT.md`, plus a short optional card-9 bullet for manual paste. Deck credits are at 0, so this can't be baked into another regeneration — flagged as optional-but-recommended, with the Q&A answer alone treated as sufficient if there's no time to edit the card.
+
+**WHY**
+- This closes a real gap a technical or commercial judge could exploit ("useful for what, specifically?") that survived two full critique rounds because nobody had asked the direct question until now.
+
+**NEXT**
+- Optional: paste the card-9 bullet in the Gamma editor if time allows before presenting.
+
+**BLOCKED-PING:** none.
+
+---
+
 ### [03 Sep] — Sbu (Claude, direct) · regenerated the live Gamma deck with every accumulated fix baked in, verified by reading it back
 
 **DID**
