@@ -1940,3 +1940,9 @@ Sibusiso explicitly accepts the team's decision to continue product-specific imp
 - **RESULT:** 2 campaigns, 2 reward rules, 16 cards, 4 qualifications, 8 demo consents, and 0 Card constraint violations. Seven total users are present because one unrelated fixture user already exists; the verification test now scopes to the six deterministic demo IDs.
 - **CHANGED:** `starter/backend/tests/test_seed_demo.py`.
 - **VERIFY:** `pytest tests/test_seed_demo.py -q` → 1 passed; LAN `/health` via `192.168.0.169:8000` → HTTP 200.
+
+### [02 Sep] — Sibusiso · golden-path probe
+
+- **DID:** Started a fresh uvicorn instance on port 8002 with real PostgreSQL and exercised contribution creation plus audio-upload initiation.
+- **RESULT:** Contribution creation returned 201, but audio initiation returned `AUDIO_NOT_AUTHORISED`; the server process was not using the same visible database state as the direct SQL session, and the original LAN process also lacked `AMAZWI_AUDIO_TOKEN_SECRET`.
+- **NEXT:** Restart the event backend once with the confirmed database URL and a non-empty local audio token secret, then rerun the seeded flow. This is an operational configuration checkpoint, not a product decision.
