@@ -186,3 +186,262 @@
   outline: 3px solid var(--voice-1);
   outline-offset: 2px;
 }
+
+/* ============================================================
+   CRAFT LAYER — ported 2 Sep 2026 from 04_assets/mockups_v2.
+
+   Everything above this line is layout and accessibility. None of
+   the visual craft the v2 mockups established had ever been ported
+   into the real app, so the shipping UI was flat: no grain, no
+   ambient glow, no elevation, no inner highlight, no scale contrast,
+   no editorial serif. This block closes that gap.
+
+   Source of each rule is 04_assets/mockups_v2/README.md's "visual
+   grammar" table and the .dc.html sources themselves.
+
+   STRICTLY ADDITIVE. It must not weaken the gates above: every
+   control keeps its 44px minimum, focus stays a real outline, and
+   nothing introduces a fixed pixel width or a horizontal overflow
+   (the ambient glow is a background-image on an inset-0 pseudo
+   element, never a blurred box, precisely so it cannot widen the
+   document at 200% zoom).
+   ============================================================ */
+
+.route {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 130% 55% at 12% -8%, var(--ground-2, #1E2547) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 45% at 96% 30%, rgba(232, 38, 127, 0.13) 0%, transparent 62%),
+    linear-gradient(174deg, var(--ground) 0%, var(--ground-deep) 100%);
+}
+
+/* Ambient glow behind the focal element — the single biggest craft
+   win per the v2 README. Kept as an inset-0 background so it can
+   never contribute to scrollWidth. */
+.route::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: radial-gradient(circle 340px at 8% 22%, var(--glow), transparent 70%);
+  opacity: 0.75;
+}
+
+/* Film grain: ~400 bytes, no asset request. Turns flat fill into
+   material. Opacity is deliberately low so it never affects text
+   contrast — the axe gate would catch it if it did. */
+.route::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.38;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+}
+
+/* ---- Display type: gradient-filled with a soft glow, not flat white.
+   Tight tracking and a wide size gap against the 10px kicker is the
+   scale contrast the v2 grammar calls for ("no mid-sizes"). ---- */
+.route h1 {
+  font-size: clamp(2.75rem, 11vw, 4.125rem);
+  font-weight: 800;
+  font-stretch: 125%;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  background: linear-gradient(160deg, #FFFFFF 4%, #FFD2BE 46%, #FF9BB4 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 60px rgba(255, 90, 54, 0.26);
+}
+
+/* The light theme needs its own display fill -- a near-white gradient
+   is invisible on a cream ground.
+
+   Uses background-IMAGE, not the `background` shorthand: the shorthand
+   resets every background-* longhand it does not name, which silently
+   wipes the background-clip:text set above and renders the heading as a
+   solid filled rectangle instead of letterforms. Caught on 2 Sep 2026 by
+   actually switching to daylight in a browser and looking -- it is
+   invisible in the dark theme and no test asserts letterform shape. */
+[data-theme="daylight"] .route h1 {
+  background-image: linear-gradient(160deg, #241408 10%, #7A2E1A 70%, #C0341A 100%);
+  text-shadow: none;
+}
+
+.route .eyebrow {
+  letter-spacing: 0.34em;
+}
+
+/* ---- Editorial serif accent. Per the v2 README this is the single
+   thing that stops the UI reading app-generic. ---- */
+.serif {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-dim);
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+/* ---- Raised surfaces. The inset top highlight is what separates
+   expensive dark UI from amateur dark UI: it reads as an edge
+   catching light. ---- */
+.signal-card,
+.impact-gap-card {
+  background: linear-gradient(178deg, rgba(190, 216, 255, 0.055), rgba(190, 216, 255, 0.02));
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow:
+    inset 0 1px 0 var(--hi),
+    0 20px 44px -18px rgba(0, 0, 0, 0.9);
+}
+
+/* ---- Primary action: real elevation and an inner highlight, so it
+   sits above the surface rather than being painted onto it. ---- */
+.route button {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 16px 38px -12px rgba(232, 38, 127, 0.6);
+  letter-spacing: -0.01em;
+}
+
+.route button:disabled {
+  box-shadow: inset 0 1px 0 var(--hi);
+}
+
+/* Money is the one place --rand appears, and it is always tabular so
+   digits do not shift between states. */
+.money {
+  color: var(--rand);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+/* Big single statistics (Impact Map counts) get display treatment
+   rather than body treatment -- part of the same scale-contrast rule. */
+.impact-metrics dd {
+  font-weight: 800;
+  font-stretch: 115%;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- The signature device: two overlapping listener circles.
+   Per 04_assets/mockups_v2/README.md this is simultaneously the
+   content and the logo -- two people agreeing IS the mechanic, so
+   the mark is literal rather than decorative geometry. An earlier
+   abstract version of this rendered as "a smudge" and was rejected
+   on exactly that basis. ---- */
+.agreement-lens {
+  position: relative;
+  block-size: 92px;
+  inline-size: 150px;
+  align-self: center;
+  flex: none;
+}
+
+.agreement-lens .listener {
+  position: absolute;
+  inset-block-start: 6px;
+  inline-size: 80px;
+  block-size: 80px;
+  border-radius: 999px;
+  border: 2px solid var(--ground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.8);
+}
+
+.agreement-lens .listener:first-child {
+  inset-inline-start: 0;
+  background: linear-gradient(148deg, #E8A06A, #B8623C);
+  color: #2A1206;
+}
+
+.agreement-lens .listener:last-child {
+  inset-inline-start: 60px;
+  background: linear-gradient(148deg, #8FA8D8, #4A6396);
+  color: #0B1224;
+}
+
+/* ---- Meta strip: hairline rules, not a heavy card. Editorial
+   treatment over form-control treatment. ---- */
+.meta-strip {
+  inline-size: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--sp-4);
+  border-block: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+}
+
+/* ---- Asymmetric CTA: circle plus two lines of type, never a
+   full-width slab. Overrides the generic .route a[href] underline
+   while keeping every accessibility guarantee (min 44px, real
+   focus outline, real link semantics). ---- */
+.route a.cta {
+  inline-size: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--sp-4);
+  text-decoration: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.cta-dial {
+  inline-size: 74px;
+  block-size: 74px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--voice-grad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.34),
+    0 18px 40px -14px rgba(232, 38, 127, 0.75);
+}
+
+.cta-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: start;
+}
+
+.cta-copy strong {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* ---- Quiet footer: the Gate A evidence (host mode, backend health,
+   theme switch) is real and must stay visible, but it is diagnostic
+   chrome, not the product. ---- */
+.route-footer {
+  inline-size: 100%;
+  margin-block-start: auto;
+  padding-block-start: var(--sp-5);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-4);
+  border-block-start: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+}

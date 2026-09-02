@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AMAZWI</title>
+    <!-- Archivo is a VARIABLE font with a width axis (wdth 62..125). The design
+         system's display type uses font-stretch:125%, which silently does
+         nothing without it -- system-ui has no width axis. Instrument Serif is
+         the editorial accent 04_assets/mockups_v2/README.md calls "what makes
+         it read editorial rather than app-generic". Neither was ever loaded,
+         so every screen rendered in the OS default until 2 Sep 2026. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900&family=Instrument+Serif:ital@0;1&display=swap"
+    />
   </head>
   <body>
     <div id="root"></div>
