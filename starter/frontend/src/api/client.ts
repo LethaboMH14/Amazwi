@@ -1,9 +1,10 @@
-import type { Assignment, ConsentScope, ConsentState, Contribution, Impact, MissionProposal, OpsView, Result } from "./contracts";
+import type { Assignment, Card, ConsentScope, ConsentState, Contribution, Impact, MissionProposal, OpsView, Result } from "./contracts";
 export class ApiError extends Error { constructor(public readonly status:number, public readonly code:string, message:string){super(message);} }
 function headers(): HeadersInit { const env=(import.meta as ImportMeta & {env:Record<string,string|undefined>}).env; const h:Record<string,string>={Accept:"application/json"}; if(env.VITE_USER_ID)h["X-User-ID"]=env.VITE_USER_ID; if(env.VITE_PROVIDER_SUBJECT)h["X-Provider-Subject"]=env.VITE_PROVIDER_SUBJECT; return h; }
 async function request<T>(path:string, init:RequestInit={}):Promise<T>{ const r=await fetch(`/api${path}`,{...init,headers:{...headers(),...(init.headers??{})}}); if(!r.ok){let d:{code?:string;detail?:string}={};try{d=await r.json();}catch{} throw new ApiError(r.status,d.code??"HTTP_ERROR",d.detail??"Request failed. Please try again.");} return r.status===204?undefined as T:r.json(); }
 export const api={
  grantConsent:(scopes:ConsentScope[],version="2026-09-01")=>request<ConsentState[]>("/consents",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({version,scopes})}),
+ getCard:(cardId:string)=>request<Card>(`/cards/${cardId}`),
  createContribution:(cardId:string)=>request<Contribution>("/contributions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({card_id:cardId})}),
  beginUpload:(contributionId:string)=>request<{audio_object_id:string}>(`/contributions/${contributionId}/audio/uploads`,{method:"POST"}),
  uploadAudio:async(id:string,blob:Blob)=>{const r=await fetch(`/api/private-audio/uploads/${id}`,{method:"PUT",headers:{...headers(),"Content-Type":blob.type},body:blob});if(!r.ok)throw new ApiError(r.status,"UPLOAD_FAILED","Audio upload failed.");},

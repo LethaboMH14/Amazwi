@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, userMessage } from "../../api/client";
 import type { ChangeEvent } from "react";
+import type { Card } from "../../api/contracts";
 
 // `zu-001`, deterministically created by `python -m app.seed_demo`.
 const DEMO_CARD_ID = "467e6241-cb06-5395-aaa8-d63832bcc538";
@@ -26,6 +27,22 @@ export function RecordingRoute() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const canRecord = typeof navigator !== "undefined" && Boolean(navigator.mediaDevices?.getUserMedia);
+
+  // The card IS the game. Load it before recording so the speaker can see the
+  // target and the four words they may not say. Failing to load it must not
+  // block recording -- the audio is still worth capturing -- so this degrades
+  // to the plain prompt rather than throwing.
+  const [card, setCard] = useState<Card | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .getCard(DEMO_CARD_ID)
+      .then((c) => !cancelled && setCard(c))
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function upload(blob: Blob, durationMs: number) {
     setBusy(true);
@@ -91,5 +108,5 @@ export function RecordingRoute() {
     event.target.value = "";
   }
 
-  return <main className="route" aria-labelledby="record-title"><p className="eyebrow">isiZulu contribution</p><h1 id="record-title">Say the card aloud</h1><p>Record one clear take. Your audio stays private until approved peers verify it.</p>{!canRecord && <p>Microphone access needs HTTPS. Use your phone&rsquo;s recorder here; the audio remains private.</p>}{error && <p role="alert">{error}</p>}<input ref={fileInput} type="file" accept="audio/*" capture="user" onChange={onCapturedFile} hidden aria-label="Record audio with phone" /><button onClick={() => recording ? stop() : start()} disabled={busy}>{busy ? "Uploading securely…" : recording ? "Stop recording" : "Start recording"}</button></main>;
+  return <main className="route" aria-labelledby="record-title"><p className="eyebrow">isiZulu contribution</p><h1 id="record-title">Say the card aloud</h1>{card && <div className="play-card"><p className="eyebrow">Your word</p><p className="play-card-target">{card.target}</p><p className="eyebrow">Don&rsquo;t say</p><ul className="blocked-words">{card.blocked_words.map((w) => <li key={w}>{w}</li>)}</ul></div>}<p>Record one clear take. Your audio stays private until approved peers verify it.</p>{!canRecord && <p>Microphone access needs HTTPS. Use your phone&rsquo;s recorder here; the audio remains private.</p>}{error && <p role="alert">{error}</p>}<input ref={fileInput} type="file" accept="audio/*" capture="user" onChange={onCapturedFile} hidden aria-label="Record audio with phone" /><button onClick={() => recording ? stop() : start()} disabled={busy}>{busy ? "Uploading securely…" : recording ? "Stop recording" : "Start recording"}</button></main>;
 }

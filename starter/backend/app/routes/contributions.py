@@ -21,7 +21,7 @@ from app.consent import ConsentRequiredError
 from app.consent import require_active_scope
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
-from app.models import Assignment, AudioObject, ConsentScope, Contribution
+from app.models import Assignment, AudioObject, Card, ConsentScope, Contribution
 from app.storage import AudioUnavailable, InvalidAudioToken, LocalAudioObjectStore
 
 
@@ -51,6 +51,38 @@ def _error(exc: Exception) -> HTTPException:
     return HTTPException(status_code=mapping.get(code, 400), detail={"code": code})
 
 
+@router.get("/cards/{card_id}")
+def get_card(
+    card_id: str,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+):
+    """The card a SPEAKER is about to describe: target plus blocked words.
+
+    Both fields are exactly what the speaker is being asked to work with, so
+    withholding them is what breaks the game -- the recording screen said
+    "Say the card aloud" and showed no card at all until 2 Sep 2026.
+
+    Deliberately NOT a verifier leak: a verifier never learns a card_id until
+    routes/assignments.py reveals it, which only happens after their answer is
+    locked. Knowing the id is the capability here. Authentication is still
+    required so this is not an open corpus dump.
+    """
+    require_identity_user(session, identity)
+    try:
+        card = session.get(Card, uuid.UUID(card_id))
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail={"code": "CARD_NOT_FOUND"}) from exc
+    if card is None:
+        raise HTTPException(status_code=404, detail={"code": "CARD_NOT_FOUND"})
+    return {
+        "id": str(card.id),
+        "language": card.language,
+        "target": card.target,
+        "blocked_words": list(card.blocked_words),
+    }
+
+
 @router.post("/contributions", status_code=status.HTTP_201_CREATED)
 def create_contribution_route(
     request: ContributionCreateRequest,
@@ -68,7 +100,31 @@ def create_contribution_route(
         if isinstance(exc, HTTPException):
             raise
         raise _error(exc) from exc
-    return {"id": str(contribution.id), "state": contribution.state.value, "reward_rule_id": str(contribution.reward_rule_id)}
+    # The speaker must be able to SEE the card they are describing -- the
+    # target word and the four words they may not say ARE the game. Without
+    # this the recording screen says "Say the card aloud" and shows no card,
+    # which is what it did until 2 Sep 2026.
+    #
+    # Safe to return here specifically because this is the contribution's own
+    # speaker, who by definition already knows the target: they are being
+    # asked to describe it. This is NOT the verifier path -- assignments.py
+    # deliberately withholds the card until a verifier has locked their answer
+    # (routes/assignments.py), and that asymmetry is the whole integrity
+    # model. Do not reuse this shape on any verifier-facing route.
+    card = session.get(Card, contribution.card_id)
+    return {
+        "id": str(contribution.id),
+        "state": contribution.state.value,
+        "reward_rule_id": str(contribution.reward_rule_id),
+        "card": None
+        if card is None
+        else {
+            "id": str(card.id),
+            "language": card.language,
+            "target": card.target,
+            "blocked_words": list(card.blocked_words),
+        },
+    }
 
 
 @router.post("/contributions/{contribution_id}/audio/uploads", response_model=AudioUploadResponse)

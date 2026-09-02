@@ -325,6 +325,48 @@
   line-height: 1.35;
 }
 
+/* ---- The play card: the actual game surface. Target word gets display
+   treatment; blocked words are struck through as an editorial list rather
+   than chips, per 04_assets/mockups_v2/README.md's visual grammar. ---- */
+.play-card {
+  inline-size: 100%;
+  box-sizing: border-box;
+  padding: var(--sp-5);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: linear-gradient(178deg, rgba(190, 216, 255, 0.055), rgba(190, 216, 255, 0.02));
+  box-shadow: inset 0 1px 0 var(--hi), 0 20px 44px -18px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.play-card-target {
+  font-size: clamp(2.25rem, 9vw, 3.25rem);
+  font-weight: 800;
+  font-stretch: 125%;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  margin-block-end: var(--sp-3);
+}
+
+.blocked-words {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+}
+
+.blocked-words li {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  text-decoration: line-through;
+  text-decoration-color: var(--voice-1);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+}
+
 /* ---- Raised surfaces. The inset top highlight is what separates
    expensive dark UI from amateur dark UI: it reads as an edge
    catching light. ---- */

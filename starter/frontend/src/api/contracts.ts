@@ -1,6 +1,10 @@
 export type ConsentScope = "RECORD_PROCESS_ROUND" | "ASSIGNED_VERIFIER_PLAYBACK" | "RETAIN_MODEL_DEVELOPMENT";
 export interface ConsentState { scope: ConsentScope; version: string; granted_at: string; revoked_at: string | null; }
-export interface Contribution { id: string; state: string; reward_rule_id: string; }
+export interface Card { id: string; language: string; target: string; blocked_words: string[]; }
+// `card` is returned to the contribution's own SPEAKER only -- they are being
+// asked to describe the target, so they must see it and the blocked words.
+// Verifier-facing routes deliberately withhold it until an answer is locked.
+export interface Contribution { id: string; state: string; reward_rule_id: string; card: Card | null; }
 export interface Assignment { id: string; contribution_id: string; language: string; prompt_text: string; audio_playback_url?: string; mode: string; }
 export interface Result { contribution_id: string; outcome: string; reward_minor: number; currency: string; }
 export type CoverageBand = "5-19" | "20-49" | "50-99" | "100+";
