@@ -5,6 +5,27 @@
 
 ---
 
+### [03 Sep] — Sbu (Claude, direct) · applied Codex's external review of the pitch (84/100, ceiling ~88-90)
+
+**DID**
+- Codex reviewed the repo, handover notes and `PITCH_SCRIPT.md` from outside this session, could not open the live Gamma pixels, and gave a scored critique (provisional 84/100). Verified one of its factual claims before acting on it rather than trusting it blind: checked `starter/backend/app/resolver.py` lines 193-218 and confirmed the resolver's reason strings are hardcoded English — the script's claim that refusal reasons show "in the speaker's own language" was false. Removed it.
+- Measured actual word counts against normal speaking pace (~2.2 words/sec) rather than estimating — the prior script's stated 2:55–3:05 total did not match its own word count. Rewrote to a real ~2:15–2:30 target with headroom.
+- Fixed a real contradiction Codex caught: the old closing line "MoMo is how it gets paid" implied a live payout that doesn't exist. Replaced with a close that states what's proven, what's not, and the specific ask.
+- Cut the opening from seven statistics to two, dropped the Ayoba reference (risk: reads as MTN criticism), reframed beat 4 around the commercial question MTN needs answered rather than just reporting HTTP status codes.
+- Confirmed the correct Gamma link (`1dhqhqj19mgd758`) and listed all three stale links explicitly in the script so nobody presents an old deck by mistake.
+- Logged the outstanding manual deck fixes Codex flagged (em dashes, card 2 text, MoMo card wording, banned-phrase sweep, visible pilot-metrics line) as a checklist in `PITCH_SCRIPT.md` — none of these could be applied programmatically; no per-card edit tool exists for a live Gamma and credits are nearly exhausted.
+
+**WHY**
+- An external, independent review caught things this session's own passes missed — the timing math and the localization claim were both real errors, not nitpicks. Verifying before acting on a critique (rather than either dismissing it or applying it uncritically) is the right posture for any second-opinion review, cross-agent or human.
+
+**NEXT**
+- Manual Gamma editor pass against the checklist in `PITCH_SCRIPT.md`.
+- Rehearse the tightened six-beat script against a stopwatch.
+
+**BLOCKED-PING:** none.
+
+---
+
 ### [03 Sep] — Sbu (Claude, direct) · pitch frozen to five-beat structure, deck rebuilt with calibrated claims
 
 **DID**
