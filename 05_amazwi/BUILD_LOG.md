@@ -82,6 +82,7 @@
 - Opened the gitignored `starter/backend/.env` template for the MTN values. No credentials were written to source, logs, or commits.
 - Found the phone's `getUserMedia` failure was plain HTTP: `.certs/` was absent in this checkout. Generated a three-day, LAN-IP self-signed cert (gitignored), restarted speaker Vite over HTTPS, and verified `https://192.168.42.56:5173/api/health` through the proxy.
 - Auth-only MoMo smoke against the populated `MOMO_BASE_URL` returned HTTP 404. The configured host is `momo.mtn.com/api/`, while the repository's verified integration notes and MTN developer material identify `sandbox.momodeveloper.mtn.com` for sandbox endpoints. No alternate host was tried with credentials; exact Postman environment/base URL must be confirmed before retrying.
+- After the base was corrected to `sandbox.momodeveloper.mtn.com`, both collection and disbursement OAuth checks returned HTTP 401. This isolates the blocker to the supplied API user/key, subscription-key pairing, or target-environment entitlement; no transaction endpoint was called and no money moved. `MOMO_TEST_CURRENCY` is currently `Rand`, which must be corrected to the sandbox currency once the organiser confirms it (auth fails before currency is evaluated).
 
 **WHY**
 - The refusal branch is the required fallback evidence, while the MoMo adapter must not turn a demo credential into an accidental paid call. MTN's sandbox APIs are asynchronous (`202` then status/callback), so the app keeps internal ledger credit separate from provider settlement.
