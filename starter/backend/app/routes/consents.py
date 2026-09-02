@@ -91,6 +91,7 @@ def revoke_consent(
                 identity.user_id,
                 reason,
             )
+        session.commit()
     except ConsentAlreadyRevokedError as exc:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

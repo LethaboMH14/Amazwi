@@ -105,7 +105,7 @@ def test_consent_api_requires_identity():
     assert response.status_code == 401
 
 
-def test_consent_api_lists_and_revokes_a_scope(api_client):
+def test_consent_api_lists_and_revokes_a_scope(api_client, db_engine, users):
     granted = api_client.post(
         "/consents",
         json={"version": "2026-09-01", "scopes": ["ASSIGNED_VERIFIER_PLAYBACK"]},
@@ -119,6 +119,18 @@ def test_consent_api_lists_and_revokes_a_scope(api_client):
     revoked = api_client.post("/consents/ASSIGNED_VERIFIER_PLAYBACK/revoke")
     assert revoked.status_code == 200
     assert revoked.json()["revoked_at"] is not None
+
+    # Prove the API commit survives a separate connection; same-session
+    # assertions would miss the SAVEPOINT-without-outer-commit regression.
+    authenticated, _ = users
+    with db_engine.connect() as separate:
+        persisted = separate.scalar(
+            select(ConsentGrant.revoked_at).where(
+                ConsentGrant.user_id == authenticated.id,
+                ConsentGrant.scope == "ASSIGNED_VERIFIER_PLAYBACK",
+            )
+        )
+    assert persisted is not None
 
     repeated = api_client.post("/consents/ASSIGNED_VERIFIER_PLAYBACK/revoke")
     assert repeated.status_code == 409
