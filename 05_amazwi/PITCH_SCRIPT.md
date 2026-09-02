@@ -1,61 +1,83 @@
-# AMAZWI — Round 1 Pitch Script (target: 2–3 min pitch + 1 min live demo)
+# AMAZWI — Round 1 Pitch Script (five-beat structure, ~2.5 min total)
 
-Deck: https://gamma.app/docs/ws921eo2ozpw8bp
+Deck: https://gamma.app/generations/PJOrkqXOpWrTLvrEd0GhS (regenerating — replace with the finished `/docs/...` URL once it lands; **also needs a re-check against the calibration below, see note at bottom**)
 Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility & Scalability 20% · Technical Execution 20% · Presentation & Pitch 15%
 
-Roles: **Sbu — intro (BLUF + problem).** **Lethabo — live demo.** **Sbu — close (ask).**
-Total speaking budget ≈ 200–220 words for the intro half, ≈ 100–120 for demo narration, ≈ 60–80 for the close. Read it out loud once before the room — if it runs long, cut adjectives first, never cut the MoMo evidence line or the ask.
+**Feature work is frozen. This is the fixed shape from here to the pitch — five beats, five timers:**
+
+| # | Beat | Time | Speaker |
+|---|------|------|---------|
+| 1 | Problem | 0:20 | Sbu |
+| 2 | Product explanation | 0:30 | Sbu |
+| 3 | Live demo | 0:60 | Lethabo |
+| 4 | MoMo proof | 0:20 | Sbu |
+| 5 | The ask | ~0:20–0:30 | Sbu |
+
+Total ≈ 2:30–2:40 — fits the real Round 1 slot with room to breathe. Rehearse against a timer, not against memory.
+
+**Scope calibration (do not undo this — it's a correction, not a preference):** the live MoMo Collections call funds a **campaign**, it does not disburse to a speaker's own wallet. Speaker payout is a separate, not-yet-built settlement step. Say "the AMAZWI ledger is credited," never "your MoMo wallet is credited," when talking about a speaker's reward.
 
 ---
 
-## SBU — Intro (Cards 1–3, ~60–70 seconds)
+## 1 — Problem (0:20) — SBU
 
-> "AMAZWI is a MoMo Mini App where South Africans speak their own languages and receive a transparent reward credit in an auditable wallet ledger.
+> "African-language speech is underrepresented in AI. isiZulu alone has over twelve million speakers and almost no open, high-quality speech data.
 >
-> Three things it is designed to do at once: create a repeatable reason to open MoMo beyond sending money, turn participation into a governed value loop, and produce intent-labelled South African speech for future voice services.
->
-> This isn't only a concept. Right now the campaign funding leg makes a real MTN MoMo Collections sandbox call, the contribution is verified by real people, and the result is recorded in a real ledger. Speaker cash-out is a separate, explicitly labelled settlement step.
->
-> Why now: African languages remain underrepresented in public voice resources, while MoMo already has the distribution and transaction habit. MTN's own numbers show the opportunity: transactions and value are growing faster than revenue. Engagement still needs to convert into durable value.
->
-> Here's how it works." *(→ hand to Lethabo, advance to demo card)*
+> And MTN needs meaningful daily engagement inside MoMo. Ayoba shuts down in March — its lifestyle layer goes with it. The wallet stays, with nothing pulling people back to open it."
 
 ---
 
-## LETHABO — Live Demo (Card 5, ~60 seconds)
+## 2 — Product explanation (0:30) — SBU
 
-*(Sbu's line to fill before rehearsal — Lethabo drives the phone, narrates the three-step flow live: record → peer verifies → wallet credited. Suggested narration skeleton, edit to match what's actually on screen:)*
+> "AMAZWI fixes both at once. Speak → two human verifiers → a deterministic decision → a transparent reward receipt in an auditable ledger.
+>
+> A speaker records a short phrase in their own language, inside the MoMo Mini App. Two independent peers verify it — people are the authority, our AI is advisory and never overrules them. Agree, and the AMAZWI ledger is credited once, by construction. Disagree, and nothing is paid — the receipt says exactly why, in the speaker's own language."
+
+*(→ hand to Lethabo)*
+
+---
+
+## 3 — Live demo (0:60) — LETHABO
+
+*(Drive the phone, narrate live. Fill in the actual phrase before rehearsal.)*
 
 > "Watch the flow. I record a phrase — [isiZulu/Setswana phrase] — seconds, not minutes.
 >
-> A peer verifier — a real person, on a separate device — hears it and confirms it matches. Our AI never makes this call; it's advisory only.
+> A peer verifier, a real person on a separate device, hears it and confirms it matches.
 >
 > They agree — the AMAZWI ledger is credited once, right now. [show receipt]
 >
 > If they'd disagreed, the receipt would say exactly why, and pay nothing. Refusal is a first-class result here, not a hidden failure."
 
-**Backup if live demo fails:** fall back to the screenshot/receipt evidence in the deck; say so plainly, don't pretend it worked.
+**Backup if live demo fails:** fall back to the receipt evidence already in the deck, say plainly that you're doing so, and move straight to beat 4. Don't stall trying to fix it live.
 
 ---
 
-## SBU — Close (Cards 6–10, ~50–60 seconds)
+## 4 — MoMo proof (0:20) — SBU
 
-> "That MoMo Collections call you just saw is real — OAuth token issued, requesttopay accepted, status confirmed, transaction ID seven-four-five-two-double-oh-eight-seven-seven-two. It proves the campaign funding leg; it is not a disguised speaker payout. Every ledger credit is idempotent by construction — recorded once, never twice.
+> "That reward isn't simulated. This is a real MoMo Collections request against the MTN sandbox — it funds the campaign leg, not a disguised speaker payout: OAuth token issued, requesttopay accepted, status confirmed. Sandbox result, clearly labelled as sandbox — and every ledger credit it produces is idempotent, recorded once, never twice, by construction."
+
+---
+
+## 5 — The ask (~0:20–0:30) — SBU
+
+> "The ask: one MTN-supported language pilot, plus a MoMo partnership to test two things — funded missions, sponsor-backed campaigns that pay speakers to fill real coverage gaps, and provider settlement, building the speaker payout leg out from sandbox proof into a live, settled transaction end to end.
 >
-> The next settlement step is MoMo Disbursement or an approved redemption catalogue. That provider leg is not provisioned in this demo, so we label it instead of pretending the ledger credit is cash-out. We will measure redemption mix, fees and repeat play in the pilot before making an economic claim.
->
-> Trust is enforced in code: two-verifier peer truth, four separate consent scopes, audience-bound audio tokens and aggregate reporting with minimum-cell suppression. That is the governance foundation for a future licensed corpus; it is not a claim that every downstream legal or language-quality step is finished.
->
-> Two hundred and sixty-four backend tests pass, CI is green, and the backend is language-parameterized: adding another language is a governed content pack and verifier cohort, not a rewrite of the state machine.
->
-> The ask: a MoMo sandbox partnership and one language pilot. Give us that, and we give MTN a testable path to more frequent MoMo engagement, dormant-wallet reactivation and a governed voice-intent corpus MTN can grow.
+> Give us that, and MTN gets a daily-use engagement engine, a dormant-wallet reactivation path, and first ownership of the African-language dataset nobody else has built.
 >
 > Izwi lakho linenani — your voice has value, and MoMo is how it gets paid."
 
 ---
 
 ## Notes for rehearsal
-- Practise the handoff line ("Here's how it works") — a clean pass beats a rushed one.
-- If judges cut in with a question mid-pitch, answer in one sentence and return to the script — don't chase a tangent inside a 3-minute slot.
-- Keep the MoMo transaction ID exact; it's your single hardest piece of evidence — don't paraphrase it.
-- Do not say a margin/savings percentage under any circumstance — the deck deliberately omits one; inventing one live would contradict the deck.
+- Time each beat separately first, then run the whole thing end to end against a stopwatch. Beat 3 (demo) is the one most likely to overrun — Lethabo should rehearse it standalone until it reliably lands under 60s.
+- If judges interrupt with a question, answer in one sentence and return to the next beat — don't chase a tangent inside a 2.5-minute slot.
+- Beat 4 is deliberately labelled **sandbox**, not production — say the word "sandbox" out loud; don't let it sound like a live settled payment, because it isn't one yet. That gap is exactly what beat 5's ask is for.
+- **Never say the MoMo call pays the speaker directly.** It funds the campaign; speaker cash-out is a separate, not-yet-built settlement step. This was a real overclaim caught in an earlier draft — don't reintroduce it under pressure to sound more finished than the build is.
+- Never state a margin, savings percentage, or cost-reduction number — not in beat 4, not in Q&A. It isn't measured, and the deck doesn't claim one.
+- Cut adjectives before you cut the MoMo evidence line or the ask — those two carry the rubric weight (Technical Execution, Relevance to Fintech).
+
+---
+
+## ⚠️ Open item: the Gamma deck text may still have the old overclaim
+The deck currently regenerating (`https://gamma.app/generations/PJOrkqXOpWrTLvrEd0GhS`) was drafted from the five-beat structure but **before** this calibration commit (`cdcb304`) was pulled. Its card text likely says things like "the wallet is credited" / "MoMo Collections request... shown live" without distinguishing campaign-funding from speaker payout. Before presenting: read the finished deck card-by-card against this script's calibration note and correct any card that implies MoMo pays the speaker directly, rather than funding the campaign that the ledger then pays out from.
