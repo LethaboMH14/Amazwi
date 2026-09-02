@@ -1,6 +1,6 @@
 # AMAZWI — Round 1 Pitch Script (five-beat structure, ~2.5 min total)
 
-Deck: https://gamma.app/generations/PJOrkqXOpWrTLvrEd0GhS (regenerating — replace with the finished `/docs/...` URL once it lands; **also needs a re-check against the calibration below, see note at bottom**)
+Deck: https://gamma.app/docs/i1kl0ftsc184hbx
 Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility & Scalability 20% · Technical Execution 20% · Presentation & Pitch 15%
 
 **Feature work is frozen. This is the fixed shape from here to the pitch — five beats, five timers:**
@@ -79,5 +79,5 @@ Total ≈ 2:30–2:40 — fits the real Round 1 slot with room to breathe. Rehea
 
 ---
 
-## ⚠️ Open item: the Gamma deck text may still have the old overclaim
-The deck currently regenerating (`https://gamma.app/generations/PJOrkqXOpWrTLvrEd0GhS`) was drafted from the five-beat structure but **before** this calibration commit (`cdcb304`) was pulled. Its card text likely says things like "the wallet is credited" / "MoMo Collections request... shown live" without distinguishing campaign-funding from speaker payout. Before presenting: read the finished deck card-by-card against this script's calibration note and correct any card that implies MoMo pays the speaker directly, rather than funding the campaign that the ledger then pays out from.
+## Deck history
+An earlier five-beat deck (`.../docs/p6yb4zccmjy3sbi`) was generated before the campaign-vs-payout calibration and overclaimed "wallet credited." It was superseded by the version linked at the top of this file, which bakes the calibration into every card's text. Do not present the `p6yb4zccmjy3sbi` link.

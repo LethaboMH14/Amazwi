@@ -5,6 +5,24 @@
 
 ---
 
+### [03 Sep] — Sbu (Claude, direct) · pitch frozen to five-beat structure, deck rebuilt with calibrated claims
+
+**DID**
+- Sbu froze feature work and set a fixed five-beat pitch shape: Problem (0:20) → Product explanation (0:30) → Live demo (0:60, Lethabo) → MoMo proof (0:20) → The ask (~0:20–0:30). Total ≈2:30–2:40, inside the real Round 1 slot.
+- Rewrote `PITCH_SCRIPT.md` to that shape. Mid-rewrite hit a real conflict with `cdcb304` (the calibration entry above, pushed by another session while this one was working) — merged rather than overwrote: kept this session's five-beat timing, adopted the other session's more accurate claim ("the AMAZWI ledger is credited," never "your MoMo wallet is credited"; the live Collections call funds the campaign, not a speaker payout).
+- First deck regeneration (`.../docs/p6yb4zccmjy3sbi`) was built from the five-beat outline **before** noticing the calibration commit — it still had the old overclaim baked into card text. Did not present it as final; regenerated a second time with the corrected wording embedded directly in the card source text, not left to be caught at review.
+- Final deck: **https://gamma.app/docs/i1kl0ftsc184hbx** — five beats, sandbox explicitly labelled, campaign-vs-payout distinction stated on the MoMo proof card itself. Card 1 confirmed empty logo band (no fabricated MTN/MoMo logo).
+
+**WHY**
+- A judge-facing deck that says "your wallet is credited" when the built system only credits an internal ledger and has no speaker cash-out leg is exactly the kind of overclaim `CLAUDE.md`'s standard calls out — state limitations plainly, in the same breath as the finding.
+
+**NEXT**
+- Confirm the final deck link renders correctly, drop the real MTN/MoMo logos into card 1, rehearse against a stopwatch per beat.
+
+**BLOCKED-PING:** none.
+
+---
+
 ### [03 Sep] — Sbu · pitch claim calibration after live MoMo Collections proof
 
 **DID**
