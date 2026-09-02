@@ -5,6 +5,52 @@
 
 ---
 
+### [02 Sep ~06:00] — Lethabo's session · Claude · Plan 03 Tasks 9+10: missions + human-only MTN authorisation — CROSS-LANE, PENDING SBU'S REVIEW
+
+**DID**
+- Recovered a rate-limited predecessor agent's uncommitted work from `origin/worktree-agent-a9ac1d6b3fdc7bff6` by merge (not by re-implementing), then read every changed file and re-ran everything rather than trusting the "WIP checkpoint" label. **Finding: the work was actually complete, not partial** — including the `test_migrations.py` expectations the predecessor said were still to be written. Nothing was found broken.
+- Shipped Plan 03 Task 9 (`app/missions.py`, `app/models.py`, migration `e0f1a2b3c4d5_language_ops`) and Task 10 (`app/routes/ops.py`, `src/features/ops/OpsRoute.tsx`).
+
+**HOW the human-only authorisation gate is enforced — four independent layers, each with a test**
+1. **Persisted principal kind.** `users.principal_kind` is a DB column with a `ck_user_principal_kind` CHECK constraint. An automated worker is stored `AUTOMATED` and can never satisfy the gate. There is no request field, header or body key that sets it — `OperatorPrincipal` is constructible only from a persisted `users` row via `principal_for_user`.
+2. **Role check.** `MTN_LANGUAGE_OPS` must be in the persisted `users.roles` array.
+3. **Exact confirmation echo.** `authorise_mission(..., *, confirmation_text)` is keyword-only with **no default**, and must be byte-equal to `CONFIRMATION_TEXT`. A scheduled job cannot silently agree to a sentence it must reproduce. The echoed text is persisted on the authorisation row.
+4. **No automated caller can exist.** `test_no_module_outside_the_ops_route_can_call_authorise_mission` scans the whole `app/` tree with a regex and asserts the caller set is exactly `["routes/ops.py"]`. If a future outbox worker or scheduler imports it, the suite goes red.
+
+**The tests that prove it (all passing):**
+- `test_automated_actor_cannot_authorise_without_the_human_step` — the key one. The automated actor is deliberately granted the `MTN_LANGUAGE_OPS` role *and* supplies the correct confirmation text (everything a machine could possibly supply) and is still refused; then asserts zero `mission_authorisations` rows, proposal still `PROPOSED`, and zero `MISSION_AUTHORISED` audit events — i.e. no partial side effects.
+- `test_human_without_the_operator_role_cannot_authorise`, `test_operator_without_explicit_confirmation_cannot_authorise` (empty / "yes" / lower-cased / trailing-space variants all refused).
+- HTTP-boundary equivalents in `test_ops_api.py`: `test_automated_principal_is_refused_at_the_http_boundary` (403), `test_missing_confirmation_is_refused`, `test_wrong_confirmation_text_is_refused`, `test_missing_idempotency_key_is_refused`, and `test_authorise_route_accepts_no_mission_terms_from_the_request`.
+- DB-level: `test_mission_authorisation_evidence_cannot_be_edited_or_deleted` (triggers make authorisation rows immutable and undeletable) and `test_mission_proposal_budget_check_is_enforced_by_the_database`.
+- Frontend: `OpsRoute.test.tsx` — no controls without the role, a second explicit human confirmation required, no mutable mission terms sent, and the UI never says "launched" before `AUTHORISED` comes back.
+
+**WHY / money boundary — read this, Sbu**
+- Mission terms (language, province, domain, target, fixed reward, budget) are read **only from the persisted proposal**, never from the request body. `MissionAuthorisationRequest` has exactly one field: the confirmation string.
+- Authorisation **records human intent and moves no money**. It does not touch `campaigns.funded_cents` / `campaigns.committed_cents` and calls no payment adapter — `test_authorisation_writes_an_audit_event_and_moves_no_money` asserts this. `MissionProposal` carries a nullable FK to the existing `campaigns` table rather than inventing a parallel budget concept; actually funding a mission from a campaign remains a separate, unbuilt, **Sbu-owned** decision. No money/legal decision was invented here.
+- Where the plan's wording was ambiguous about *where* the human gate sits, the conservative reading was taken: the gate is in the service layer on the authorisation call itself, not only in the UI. A UI-only gate would have left the API auto-approvable.
+- `Model evidence` on the Ops readiness panel is returned as an explicit `available: false` marker with an "no evaluation run is recorded" message, not a fabricated number — no evaluation-run table exists in this repo yet.
+
+**VERIFIED, not assumed**
+- Backend: `python -m pytest -q` — **135 passed, 0 failed** (31m43s; embedded PostgreSQL 16 via `pgserver`, real Postgres not SQLite).
+- Frontend: `npm ci` then `npm test` — **65 passed across 12 files**; `node ./node_modules/typescript/bin/tsc -b --noEmit` — clean, no output. (`npx tsc` misfires on this machine — "This is not the tsc command you are looking for" / "Could not determine Node.js install directory"; the local binary was invoked directly instead. Noting it so the next person doesn't read it as a real type error.)
+- Alembic chain checked for a split head: exactly one migration declares `down_revision = "d9e0f1a2b3c4"`, so `e0f1a2b3c4d5` is a single head.
+- `starter/frontend/node_modules` was absent in this worktree and had to be installed; `npm ci` warns that `esbuild@0.21.5`'s postinstall was not run under the allow-scripts policy. It did not block the test run, but flagging it rather than staying silent.
+
+**LIMITATION, stated plainly**
+- The Ops route was **not** rendered in a real browser this session — it is verified by jsdom component tests and typecheck only. The 320–480px / zoom / keyboard / screen-reader gates (Plan 03 Task 11) remain open and were not attempted.
+- `routes/ops.py` ends with a defensive `assert proposal.state is AUTHORISED` post-condition. That would be stripped under `python -O`. It is a sanity check, **not** the gate — every actual refusal path raises a real exception — but it should become an explicit raise during Stage 9 hardening.
+
+**CHANGED**
+- New: `app/missions.py`, `app/routes/ops.py`, `alembic/versions/e0f1a2b3c4d5_language_ops.py`, `tests/test_missions.py`, `tests/test_ops_api.py`, `src/features/ops/OpsRoute.tsx` + test.
+- Modified: `app/models.py` (`PrincipalKind`, `MissionProposal`, `MissionAuthorisation`, `users.principal_kind`/`roles`/`display_name`), `app/api_types.py`, `app/main.py`, `tests/test_migrations.py`, `src/App.tsx`, `src/api/client.ts`, `src/api/contracts.ts`.
+
+**NEXT / BLOCKED-PING**
+- **Sbu**: this is money/authorisation territory and needs your review before it is treated as final — specifically the campaign FK being nullable and disbursement being deliberately left unbuilt.
+- Plan 03 still open: Task 0 (tooling lock), Tasks 1/2/5 finishing, Coverage Constellation (7–8), a11y gates (11), visual regression vs Figma (12), engagement-to-operations loop (13).
+- Did not touch Kaggle/GPU/Vercel this session, by instruction.
+
+---
+
 ### [02 Sep ~04:10] — Lethabo's session · Claude · v5 real failure diagnosed and fixed, v6 pushed
 
 **DID**
