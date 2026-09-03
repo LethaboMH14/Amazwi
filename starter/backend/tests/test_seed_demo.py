@@ -51,11 +51,16 @@ def test_seed_demo_is_idempotent(db_engine, monkeypatch):
         assert conn.execute(
             select(func.count()).select_from(User).where(User.id.in_(speaker_ids + verifier_ids))
         ).scalar_one() == 6
+            # 8, not 4: every demo verifier is qualified in EVERY seeded
+            # language (4 verifiers x 2 languages). Single-language
+            # verifiers meant a Setswana recording had no eligible
+            # listener on either demo laptop, so the clip landed and
+            # nobody in the room was allowed to hear it.
         assert conn.execute(
             select(func.count()).select_from(VerifierQualification).where(
                 VerifierQualification.user_id.in_(verifier_ids)
             )
-        ).scalar_one() == 4
+        ).scalar_one() == 8
         # 2 scopes/speaker (RECORD_PROCESS_ROUND, ASSIGNED_VERIFIER_PLAYBACK) x 2
         # languages = 4, + 1 scope/verifier x 4 verifiers = 4. Total 8, not 10 --
         # RETAIN_MODEL_DEVELOPMENT is not granted here because resolver.py only
