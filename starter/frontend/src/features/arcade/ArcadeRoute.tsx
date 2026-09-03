@@ -32,6 +32,7 @@ import { TabBar } from "./TabBar";
 import { LiveAlert } from "./LiveAlert";
 import { ThemeControl } from "../../theme";
 import { ModeLabel } from "../../ModeLabel";
+import { ConnectionBadge } from "../../ConnectionBadge";
 import { createHostBridge, type HostBridge } from "../../hostBridge";
 import "./arcade.css";
 
@@ -667,6 +668,7 @@ export function ArcadeRoute() {
           Diagnostic chrome, so it sits at the foot rather than competing
           with the product. */}
       <footer className="desk-evidence">
+        <ConnectionBadge />
         <ModeLabel mode={hostMode} />
         <span>backend: {backendStatus}</span>
       </footer>

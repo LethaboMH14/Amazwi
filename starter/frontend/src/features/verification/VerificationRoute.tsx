@@ -5,6 +5,7 @@ import { api, userMessage } from "../../api/client";
 import type { Assignment } from "../../api/contracts";
 import { StatusAnnouncer } from "../../components/SignalPrimitives";
 import { Mascot } from "../arcade/Mascot";
+import { ConnectionBadge } from "../../ConnectionBadge";
 import "../flow.css";
 
 export function VerificationRoute() {
@@ -134,6 +135,10 @@ export function VerificationRoute() {
           <span className="waiting-live" aria-hidden="true">
             <i /><i /><i />
           </span>
+          {/* A waiting screen and a dead screen look identical without
+              this. During a demo that is the difference between "nobody
+              has recorded yet" and "this tab has been stale for an hour". */}
+          <ConnectionBadge intervalMs={5000} />
         </section>
       )}
 
