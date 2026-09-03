@@ -1,0 +1,80 @@
+/* Mascot: the two listeners.
+ *
+ * The idle motion is deliberately small and slow. A mascot that bounces
+ * hard reads as a toy and undercuts a product where the money is real;
+ * a gentle offset bob reads as two people breathing, which is the point.
+ * The two listeners are offset in phase so they feel like separate
+ * people rather than one rigid object.
+ */
+
+.mascot { display: block; overflow: visible; }
+
+.mascot-listener {
+  transform-origin: center;
+  animation: mascot-bob 4.4s ease-in-out infinite;
+}
+.mascot-listener-b { animation-delay: -1.6s; animation-duration: 5.1s; }
+
+@keyframes mascot-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-3px) rotate(-1.2deg); }
+}
+
+/* Blink: a long hold open, one fast close. A steady blink is unsettling;
+   the pause is what makes it read as alive. */
+.mascot-eye {
+  transform-origin: center;
+  animation: mascot-blink 6.2s infinite;
+}
+.mascot-listener-b .mascot-eye { animation-delay: -2.9s; }
+
+@keyframes mascot-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(0.12); }
+}
+
+/* Mouths appear only when peers agreed. Idle and listening are neutral --
+   a permanent grin on a screen that sometimes has to say "they did not
+   agree" is the kind of tonal mismatch that makes a product feel fake. */
+.mascot-smile { opacity: 0; transition: opacity 260ms var(--ease, ease); }
+.mascot-understood .mascot-smile { opacity: 1; }
+
+/* Missed: eyes widen slightly and the pair tilt apart a little. Curious,
+   not sad. Nobody failed -- two people heard differently, and that
+   refusal is what protects the corpus. */
+.mascot-missed .mascot-listener-a { transform: rotate(-3deg); }
+.mascot-missed .mascot-listener-b { transform: rotate(3deg); }
+.mascot-missed .mascot-eye { transform: scale(1.15); }
+
+/* Sound arcs pulse only while a recording is running. */
+.mascot-waves { opacity: 0; transition: opacity 200ms var(--ease, ease); }
+.mascot-listening .mascot-waves {
+  opacity: 1;
+  animation: mascot-wave 1.5s ease-in-out infinite;
+}
+@keyframes mascot-wave {
+  0%, 100% { opacity: 0.45; transform: translateX(0); }
+  50%      { opacity: 1;    transform: translateX(3px); }
+}
+
+.mascot-understood .mascot-listener {
+  animation: mascot-cheer 700ms var(--ease, ease) 1;
+}
+@keyframes mascot-cheer {
+  0%   { transform: translateY(0) scale(1); }
+  35%  { transform: translateY(-9px) scale(1.05); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* Everything above is decoration on a static drawing that already reads
+   correctly. Under reduced motion the mascot simply stops moving -- it
+   is never removed, because it carries an aria-label describing state. */
+@media (prefers-reduced-motion: reduce) {
+  .mascot-listener,
+  .mascot-eye,
+  .mascot-waves,
+  .mascot-understood .mascot-listener {
+    animation: none !important;
+  }
+  .mascot-listening .mascot-waves { opacity: 1; }
+}

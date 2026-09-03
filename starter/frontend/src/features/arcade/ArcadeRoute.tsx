@@ -26,6 +26,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api, userMessage } from "../../api/client";
 import type { ArcadeDashboard, LeaderboardRow, QuestRow } from "../../api/contracts";
+import { Mascot } from "./Mascot";
+import { TabBar } from "./TabBar";
 import "./arcade.css";
 
 const LANGUAGE_NAMES: Record<string, string> = { zu: "isiZulu", tn: "Setswana" };
@@ -399,10 +401,14 @@ export function ArcadeRoute() {
                   </button>
                 </div>
               </div>
-              <div className="desk-hero-figure" aria-hidden="true">
-                <span className="listener listener-a" />
-                <span className="listener listener-b" />
-              </div>
+              {/* The signature device, given a face. `understood` when
+                  the speaker's last clips landed, so the mascot reflects
+                  real state rather than smiling unconditionally. */}
+              <Mascot
+                size={132}
+                mood={data.outcomes.understood > 0 ? "understood" : "idle"}
+                className="desk-hero-mascot"
+              />
             </section>
 
             {/* --- overview strip ------------------------------------- */}
@@ -614,6 +620,10 @@ export function ArcadeRoute() {
           </section>
         </aside>
       )}
+
+      {/* Mobile only -- above 820px the left rail already does this job
+          and two navigations would compete for the same intent. */}
+      <TabBar pendingCount={pendingCount} />
     </div>
   );
 }

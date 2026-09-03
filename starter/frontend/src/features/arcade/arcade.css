@@ -1051,3 +1051,7 @@
     gap: 10px 22px;
   }
 }
+
+/* The mascot replaces the two bare circles as the hero anchor. */
+.desk-hero-mascot { flex: none; }
+@media (max-width: 700px) { .desk-hero-mascot { display: none; } }
