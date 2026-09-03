@@ -63,7 +63,7 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 
 ## 2 - Product explanation (0:22) - SBU
 
-> "One person speaks. Two approved peers independently verify the meaning. Agreement credits the AMAZWI ledger once; disagreement pays nothing and records why."
+> "One person speaks. Two approved peers independently verify the meaning. Agreement credits the AMAZWI ledger once; disagreement pays nothing and records why. Inside MoMo, that gives the mission a funding rail and the reward a transparent record, without pretending production cash-out is live."
 
 *(→ hand to Lethabo)*
 
@@ -89,27 +89,27 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 
 ## 4 - MoMo evidence + commercial "why" (0:25) - SBU
 
-> "We've proven a sandbox MoMo Collections funding request for the campaign: OAuth token, requesttopay accepted, status confirmed. The speaker cash-out leg is deliberately labelled not built.
+> "We've proven a sandbox MoMo Collections funding request for a fixed campaign: OAuth token, requesttopay accepted, status confirmed. No speaker was paid; cash-out is deliberately labelled not built.
 >
-> The pilot will measure whether funded missions increase repeat MoMo engagement, while producing useful, consented voice-intent labels. That's the commercial question, and it's the one we're asking MTN to help us answer."
+> The business test is whether sponsor-funded missions create repeat MoMo engagement and useful, consented voice-intent labels at a cost MTN can support. That's the question we're asking MTN to measure with us."
 
 **If a judge asks "how does MTN make money" - the exact answer:** "We are not claiming revenue before measuring it. The pilot tests whether funded mini-app missions increase repeat MoMo use and produce useful, consented voice-intent data, at a cost MTN can support." Never answer this question with a margin, savings percentage, or revenue projection.
 
 **If a judge asks "what specifically does better African-language data let MTN do, and how could this make MTN money if they invest" - the full backup answer, expanded to cover NLP, AI/data science, AI data centres and the AI race directly. This is Q&A-depth material, not a slide; deliver the first paragraph if time is short, add the rest only if pressed:**
 
-> "Three layers, all pointing at the same asset.
+> "Three layers, all pointing at the same potential asset.
 >
-> **NLP and AI products.** Voice-operable MoMo needs South African-language NLP: balance checks, sending money, agent and merchant transactions by voice, not just text menus or USSD. Governed, consented speech data is the raw input every one of those products needs before it can exist. That's not hypothetical. MTN's own Group President, Ralph Mupita, told TechAfrica News in April 2026: 'I think the next frontier is how do we develop the digital services ourselves that we can have our customers consume.' This is exactly that: a digital service built on data MTN doesn't currently hold.
+> **NLP and AI products.** Voice-operable MoMo could support South African-language intents such as balance checks, sending money, and agent or merchant transactions by voice. Governed, consented speech data would be a necessary input to those products. MTN's own Group President, Ralph Mupita, told TechAfrica News in April 2026: 'I think the next frontier is how do we develop the digital services ourselves that we can have our customers consume.' AMAZWI is a small, testable way to explore that opportunity; we are not claiming MTN has no existing language data.
 >
-> **AI data centres.** MTN has already disclosed a 150MW AI data centre investment, with South Africa and Nigeria named as priority markets, in its H1 2026 results. Capacity without African-language data to run on it is compute looking for a job. Governed South African speech data gives that infrastructure a concrete, local workload; it's a direct input to a plan MTN has already committed capital to, not a use case we're inventing to sound relevant.
+> **AI data centres.** MTN has disclosed a 150MW AI data centre investment, with South Africa and Nigeria named as priority markets, in its H1 2026 results. We are not claiming this prototype feeds that infrastructure today. The pilot tests whether governed South African speech data creates a useful local workload before MTN commits further capital.
 >
-> **The AI race.** Every major foundation model lab is short African-language data right now; that's exactly why Google Research built WAXAL. Owning a governed, consent-clean, provenance-traceable South African corpus is a genuine strategic asset in that race: it's something MTN could license, build on internally, or use to negotiate from a position of owning the input rather than buying the output. We are not putting a number on that asset today, because it hasn't been measured. But the strategic logic; own the scarce input in a market everyone is racing to enter; is the same logic behind MTN's own AI infrastructure bet. This pilot is the cheapest way to test whether that logic holds before committing further capital."
+> **The AI race.** African-language data is scarce, which is why initiatives such as WAXAL exist. A governed, consent-clean, provenance-traceable South African corpus could become a strategic asset that MTN might use internally, license, or use to negotiate from a stronger position. We are not putting a value on that asset today. This pilot tests whether the strategic logic holds before MTN commits further capital."
 
 Never turn this into a specific revenue, margin, or savings figure. The argument is strategic and evidence-based (Mupita's own words, MTN's own disclosed data centre plan, the AI industry's well-known data scarcity problem), not a financial projection we haven't earned the right to make.
 
 **Optional card-9 addition (manual paste, since Gamma credits are at 0):**
 
-> A direct input to MTN's own disclosed AI infrastructure investment: the 150MW AI data centre programme named in MTN's H1 2026 results, with South Africa and Nigeria as priority markets. As MTN's own Group President has said, "the next frontier is how do we develop the digital services ourselves that we can have our customers consume."
+> A potential local-language use case for MTN's disclosed AI infrastructure investment: the 150MW AI data centre programme named in MTN's H1 2026 results, with South Africa and Nigeria as priority markets. The pilot must test usefulness before this is treated as an infrastructure input. As MTN's own Group President has said, "the next frontier is how do we develop the digital services ourselves that we can have our customers consume."
 
 ---
 
