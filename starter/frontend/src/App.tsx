@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ScrollToTop } from "./ScrollToTop";
 import { HomeRoute } from "./HomeRoute";
 import { ConsentRoute } from "./features/consent/ConsentRoute";
@@ -16,7 +16,13 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<HomeRoute />} />
+        {/* The desk is the product; the old marketing home is not what a
+            device should land on. Every demo device opens a bare origin
+            with no path, and landing on a screen with one button was the
+            "why is it loading this" moment. Kept at /welcome so the Gate A
+            narrative screen is not lost. */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/welcome" element={<HomeRoute />} />
         <Route path="/consent" element={<ConsentRoute />} />
         <Route path="/record" element={<RecordingRoute />} />
         <Route path="/verify" element={<VerificationRoute />} />
