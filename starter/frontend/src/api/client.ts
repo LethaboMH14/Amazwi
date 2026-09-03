@@ -33,7 +33,10 @@ export const api={
  // finalise failed with AUDIO_DURATION_INVALID and every upload was left
  // stranded as a .pending file that no verifier could ever play.
  finaliseAudio:(id:string,sha256:string,blob:Blob,durationMs:number)=>request(`/contributions/${id}/audio/finalise`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sha256,mime_type:blob.type||"audio/webm",codec:codecFor(blob.type),duration_ms:Math.round(durationMs),byte_length:blob.size})}),
- getNextAssignment:(id:string,language="zu")=>request<Assignment>(`/assignments/next?contribution_id=${encodeURIComponent(id)}&language=${encodeURIComponent(language)}`),
+ // `language` is REQUIRED. It defaulted to "zu", so claiming a Setswana
+ // clip asked the server for an isiZulu assignment -- the wrong cohort
+ // filter for the clip actually being verified.
+ getNextAssignment:(id:string,language:string)=>request<Assignment>(`/assignments/next?contribution_id=${encodeURIComponent(id)}&language=${encodeURIComponent(language)}`),
  getAssignmentPlayback:(id:string)=>request<{url:string}>(`/assignments/${id}/playback`,{method:"POST"}),
  submitAnswer:(id:string,answer:string)=>request(`/assignments/${id}/answer`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({answer_text:answer,violation_vote:false})}),
  getResult:(id:string)=>request<Result>(`/contributions/${id}/result`),

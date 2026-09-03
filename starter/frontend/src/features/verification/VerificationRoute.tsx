@@ -12,6 +12,7 @@ export function VerificationRoute() {
   const contributionId = params.get("contributionId") ?? "";
   const [assignment, setAssignment] = useState<Assignment>();
   const [speakerName, setSpeakerName] = useState("");
+  const [language, setLanguage] = useState("");
   const [answer, setAnswer] = useState("");
   const [status, setStatus] = useState("Finding someone who needs you…");
   const [error, setError] = useState("");
@@ -34,6 +35,9 @@ export function VerificationRoute() {
     // that was actually working. Discard anything from a superseded run.
     try {
       let target = contributionId;
+      // Default only matters when an id came from the URL and we never saw
+      // a queue row to learn the real language from.
+      let claimLanguage = language || "zu";
       if (!target) {
         const queue = await api.getVerificationQueue();
         if (queue.items.length === 0) {
@@ -47,8 +51,10 @@ export function VerificationRoute() {
         }
         target = queue.items[0].contribution_id;
         setSpeakerName(queue.items[0].speaker_name);
+        setLanguage(queue.items[0].language);
+        claimLanguage = queue.items[0].language;
       }
-      const value = await api.getNextAssignment(target);
+      const value = await api.getNextAssignment(target, claimLanguage);
       const playback = await api.getAssignmentPlayback(value.id);
       setAssignment({ ...value, audio_playback_url: playback.url });
       setStatus("Listen, then type the word you heard.");
@@ -154,7 +160,10 @@ export function VerificationRoute() {
               </button>
               <div className="player-meta">
                 <b>{speakerName || "A peer"}</b>
-                <span>Play it as many times as you need.</span>
+                <span>
+                  {language === "tn" ? "Setswana" : language === "zu" ? "isiZulu" : "—"}
+                  {" · play it as many times as you need."}
+                </span>
               </div>
             </div>
             {/* The real element does the work; the button above drives it.

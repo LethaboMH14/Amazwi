@@ -234,21 +234,36 @@ def seed(*, reset: bool = False) -> None:
                     display_name=f"Demo Verifier {n} ({lang_code})",
                 )
                 _grant_consent(session, verifier, [ConsentScope.ASSIGNED_VERIFIER_PLAYBACK])
-                existing_qual = session.query(VerifierQualification).filter_by(
-                    user_id=verifier.id, language=lang_code, revoked_at=None
-                ).one_or_none()
-                if existing_qual is None:
-                    session.add(
-                        VerifierQualification(
-                            user_id=verifier.id,
-                            language=lang_code,
-                            qualified_at=_now(),
-                            # reviewed_by must differ from user_id (CHECK constraint) --
-                            # the speaker reviews the verifier qualification for this
-                            # demo seed; this is not a real-world review workflow.
-                            reviewed_by=speaker.id,
+                # Qualify every demo verifier in EVERY seeded language, not
+                # only their own. This is not a shortcut -- it is a real bug
+                # fix. The demo runs two verifier laptops, and they signed in
+                # as the isiZulu pair; the moment a speaker chose Setswana on
+                # the phone, the clip was correctly excluded from both queues
+                # (no tn qualification) and the recording appeared to "not
+                # land". It had landed; nobody in the room was allowed to
+                # hear it.
+                #
+                # Bilingual verifiers are also the realistic case in South
+                # Africa, so this makes the seed more truthful, not less.
+                # The real qualification rules are untouched: cohorts.py
+                # still filters on an active, unrevoked qualification.
+                for qual_lang in LANGUAGES:
+                    existing_qual = session.query(VerifierQualification).filter_by(
+                        user_id=verifier.id, language=qual_lang, revoked_at=None
+                    ).one_or_none()
+                    if existing_qual is None:
+                        session.add(
+                            VerifierQualification(
+                                user_id=verifier.id,
+                                language=qual_lang,
+                                qualified_at=_now(),
+                                # reviewed_by must differ from user_id (CHECK
+                                # constraint) -- the speaker reviews the verifier
+                                # qualification for this demo seed; this is not a
+                                # real-world review workflow.
+                                reviewed_by=speaker.id,
+                            )
                         )
-                    )
 
             for raw_card in _load_cards(meta["file"]):
                 _upsert_card(session, campaign, raw_card)
