@@ -45,19 +45,19 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 
 > **African languages are structurally missing from speech AI. This is a data gap, not a demand gap.**
 >
-> Google Research's WAXAL programme is real and substantial: 27 African languages, over 100 million speakers, thousands of hours of natural speech, built with African academic and community partners. It is exactly the kind of investment this problem needs.
+> Google Research's WAXAL programme is real and substantial: 27 African languages, over 100 million speakers, thousands of hours of natural speech, built with African academic and community partners. Its purpose is to make African speech technology more representative and useful, instead of leaving African speakers out of the models and benchmarks that shape digital services.
 >
 > Its current challenge targets Lingala, Shona and Luganda. None of South Africa's official languages are among them. Foundation ASR models separately exceed 100% word-error-rate zero-shot on Southern Bantu languages: for a real person, that means these languages are effectively unusable with today's voice AI.
 >
-> MTN already has the daily-use surface this data needs to come from: MoMo. A funded, verified mini-app mission gives MTN a governed, consented source of local-language voice-intent data tailored to MoMo use cases.
+> MTN already has the daily-use surface this data needs to come from: MoMo. AMAZWI applies the same inclusion goal to South African languages through a funded, verified mini-app mission, producing governed, consented voice-intent data tailored to MoMo use cases.
 
 **Spoken (0:18):**
 
-> "Google's own WAXAL programme is real: 27 African languages, thousands of hours, a genuine investment. Its current challenge targets Lingala, Shona and Luganda. Not one South African language is among them. MTN already owns the daily-use surface that data needs to come from: MoMo."
+> "Google's own WAXAL programme is real: 27 African languages, thousands of hours, built to make African speech technology more representative. Its current challenge targets Lingala, Shona and Luganda. Not one South African language is among them. AMAZWI brings that inclusion goal to South African languages through MoMo."
 
 **If a judge asks "which model, which dataset, which languages" - the backup answer:** "Whisper large-v3-turbo, zero-shot, scores 146.30% WER across the tested Southern Bantu set and 223% on Setswana, in a named published benchmark (arXiv 2606.31642). Separately, foundation ASR models broadly exceed 100% WER zero-shot across all six Southern Bantu languages per Marivate et al. (arXiv). These are specific, named benchmarks, not a claim that every ASR system fails this way." Do not put this level of detail on the slide; have it ready verbatim for Q&A only.
 
-**If a judge asks "isn't WAXAL solving this already" - the exact answer:** "WAXAL is a real, substantial contribution, and we'd rather build alongside it than pretend it doesn't exist. But its own current challenge brief names Lingala, Shona and Luganda, not a single South African language. That's not a criticism of Google, it's the specific gap this pilot fills." Never say "Google skipped us" or any accusatory framing; the gap speaks for itself from Google's own materials.
+**If a judge asks "isn't WAXAL solving this already" - the exact answer:** "WAXAL is a real contribution to making African speech technology more representative, and we'd rather build alongside it than pretend it doesn't exist. But its own current challenge brief names Lingala, Shona and Luganda, not a single South African language. AMAZWI applies the same inclusion goal to a specific South African gap. That's not a criticism of Google." Never say "Google skipped us" or any accusatory framing.
 
 ---
 

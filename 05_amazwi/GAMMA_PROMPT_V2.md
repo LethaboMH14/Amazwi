@@ -18,13 +18,13 @@ AMAZWI. Izwi lakho linenani, your voice has value. MTN MoMo Mini App Hackathon 2
 ---
 
 Card 2, the problem, labelled "The Problem":
-Google Research's WAXAL programme is real and substantial: 27 African languages, over 100 million speakers, thousands of hours of natural speech, built with African academic and community partners over multiple years. It is exactly the kind of investment this problem needs, and we say so plainly rather than pretend it doesn't exist.
+Google Research's WAXAL programme is real and substantial: 27 African languages, over 100 million speakers, thousands of hours of natural speech, built with African academic and community partners over multiple years. Its purpose is to make African speech technology more representative and useful, instead of leaving African speakers out of the models and benchmarks that shape digital services. It is exactly the kind of investment this problem needs, and we say so plainly rather than pretend it doesn't exist.
 
 Its current challenge targets Lingala, Shona and Luganda. Not one South African official language is among them.
 
 Here is the real hook: when a person cannot be understood by voice AI, they are locked out of the digital future MTN and everyone else is building. And right now, almost nobody is paying South Africans to fix that gap themselves. Foundation ASR models exceed 100% word-error-rate zero-shot on Southern Bantu languages; in practice these languages are unusable with today's voice AI.
 
-MTN already owns the daily-use surface this data needs to come from: MoMo. A funded, verified mini-app mission gives MTN a governed, consented source of local-language voice-intent data tailored to MoMo use cases, and gives ordinary South Africans a fair, transparent way to be paid for closing that gap themselves.
+MTN already owns the daily-use surface this data needs to come from: MoMo. AMAZWI applies the same inclusion goal to South African languages through a funded, verified mini-app mission, giving MTN a governed, consented source of local-language voice-intent data tailored to MoMo use cases, and giving ordinary South Africans a fair, transparent way to contribute and earn a published ledger credit while production cash-out is tested separately.
 
 ---
 
