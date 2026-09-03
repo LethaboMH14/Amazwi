@@ -1,4 +1,4 @@
-import type { ArcadeDashboard, Assignment, Rewards, Card, ConsentScope, ConsentState, Contribution, Impact, MissionProposal, OpsView, Result } from "./contracts";
+import type { ArcadeDashboard, Assignment, Rewards, Card, ConsentScope, ConsentState, Contribution, Impact, MissionProposal, OpsView, Result, AssistantResponse } from "./contracts";
 export class ApiError extends Error { constructor(public readonly status:number, public readonly code:string, message:string){super(message);} }
 function headers(): HeadersInit { const env=(import.meta as ImportMeta & {env:Record<string,string|undefined>}).env; const h:Record<string,string>={Accept:"application/json"}; if(env.VITE_USER_ID)h["X-User-ID"]=env.VITE_USER_ID; if(env.VITE_PROVIDER_SUBJECT)h["X-Provider-Subject"]=env.VITE_PROVIDER_SUBJECT; return h; }
 // FastAPI wraps every error body as {"detail": ...}, and this backend raises
@@ -44,5 +44,6 @@ export const api={
  // mission terms are sent -- see contracts.ts. `idempotencyKey` is generated
  // per human click so a double-submit cannot authorise twice.
  authoriseMission:(proposalId:string,idempotencyKey:string,confirmation:string)=>request<MissionProposal>(`/ops/missions/${proposalId}/authorise`,{method:"POST",headers:{"Content-Type":"application/json","Idempotency-Key":idempotencyKey},body:JSON.stringify({confirmation})}),
+ assistant:(message:string,language="en")=>request<AssistantResponse>("/assistant",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message,language})}),
 };
 export function userMessage(e:unknown){if(e instanceof ApiError&&e.status===401)return "Sign in to MoMo to continue.";if(e instanceof ApiError&&e.status===409)return "This action is not available for the current round.";return e instanceof Error?e.message:"Something went wrong. Please try again.";}

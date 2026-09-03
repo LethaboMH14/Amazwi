@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.providers import provider
-from app.routes import consent_router, council_router
+from app.routes import assistant_router, consent_router, council_router
 from app.routes.datasets import router as dataset_export_router
 from app.routes.contributions import router as contribution_router
 from app.routes.assignments import router as assignment_router
@@ -15,6 +15,7 @@ app.include_router(consent_router)
 app.include_router(contribution_router)
 app.include_router(assignment_router)
 app.include_router(council_router)
+app.include_router(assistant_router)
 app.include_router(dataset_export_router)
 app.include_router(impact_router)
 app.include_router(ops_router)

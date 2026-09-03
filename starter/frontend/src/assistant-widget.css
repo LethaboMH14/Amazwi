@@ -1,0 +1,18 @@
+.assistant-widget { position: fixed; right: 16px; bottom: 16px; z-index: 20; font-family: var(--font, sans-serif); }
+.assistant-launch, .assistant-panel { border: 1px solid color-mix(in srgb, var(--ink, #14060c) 18%, transparent); background: var(--ground, #fff8ef); color: var(--ink, #14060c); box-shadow: 0 16px 40px rgb(20 6 12 / 18%); }
+.assistant-launch { min-height: 44px; border-radius: 999px; padding: 10px 16px; font-weight: 700; cursor: pointer; }
+.assistant-launch span { margin-left: 6px; }
+.assistant-panel { width: min(360px, calc(100vw - 32px)); padding: 18px; border-radius: 20px; }
+.assistant-heading { display: flex; justify-content: space-between; align-items: flex-start; }
+.assistant-heading h2 { margin: 0; font-size: 1.25rem; }
+.assistant-close { border: 0; background: transparent; font-size: 1.5rem; cursor: pointer; min-width: 44px; min-height: 44px; }
+.assistant-intro { font-size: .9rem; line-height: 1.4; }
+.assistant-panel label { display: block; font-size: .78rem; font-weight: 700; margin-bottom: 6px; }
+.assistant-input-row { display: flex; gap: 8px; }
+.assistant-input-row input { min-width: 0; flex: 1; border: 1px solid color-mix(in srgb, var(--ink, #14060c) 28%, transparent); border-radius: 10px; padding: 11px; background: transparent; color: inherit; }
+.assistant-input-row button, .assistant-route { min-height: 44px; border: 0; border-radius: 10px; padding: 10px 12px; background: var(--accent, #ffcf33); color: var(--ink, #14060c); font-weight: 700; text-decoration: none; cursor: pointer; }
+.assistant-response { margin-top: 14px; padding: 12px; border-radius: 12px; background: color-mix(in srgb, var(--accent, #ffcf33) 22%, transparent); }
+.assistant-response p { margin-top: 0; line-height: 1.45; }
+.assistant-response small { display: block; margin-top: 10px; opacity: .7; }
+.assistant-route { display: inline-block; }
+.assistant-error { color: #a40032; font-size: .9rem; }

@@ -52,6 +52,7 @@ class ProviderConfig:
     base_url: str
     api_key: str
     model: str
+    task: str = "general"
 
     @property
     def is_configured(self) -> bool:
@@ -62,23 +63,45 @@ def _read(name: str) -> str:
     return (os.environ.get(name) or "").strip()
 
 
-def resolve_provider() -> ProviderConfig | None:
+_PROVIDER_PREFIXES = {
+    "groq": "AMAZWI_GROQ",
+    "featherless": "AMAZWI_FEATHERLESS",
+    "aiml": "AMAZWI_AIML",
+}
+_DEFAULT_PROVIDER_ORDER = {
+    "fast": ("groq", "featherless", "aiml"),
+    "reasoning": ("featherless", "aiml", "groq"),
+    "general": ("groq", "featherless", "aiml"),
+}
+
+
+def resolve_provider(task: str = "general") -> ProviderConfig | None:
     """Pick a provider from the environment, or None.
 
-    Featherless first, AIML as the fallback, so a second key can sit in
-    the file without silently taking over. Returns None when the
+    Task-aware routing is configurable. Fast tasks prefer Groq; reasoning
+    tasks prefer Featherless; AIML remains an optional fallback. Returns None when the
     Council is disabled or nothing is fully configured -- never raises,
     because "not configured" is the normal state.
     """
     if not AI_COUNCIL_ENABLED:
         return None
 
-    for name, prefix in (("featherless", "AMAZWI_FEATHERLESS"), ("aiml", "AMAZWI_AIML")):
+    configured_order = tuple(
+        name.strip().lower()
+        for name in _read("AMAZWI_AI_PROVIDER_ORDER").split(",")
+        if name.strip().lower() in _PROVIDER_PREFIXES
+    )
+    provider_order = configured_order or _DEFAULT_PROVIDER_ORDER.get(
+        task, _DEFAULT_PROVIDER_ORDER["general"]
+    )
+    for name in provider_order:
+        prefix = _PROVIDER_PREFIXES[name]
         config = ProviderConfig(
             name=name,
             base_url=_read(f"{prefix}_BASE_URL"),
             api_key=_read(f"{prefix}_API_KEY"),
             model=_read(f"{prefix}_MODEL"),
+            task=task,
         )
         if config.is_configured:
             return config
@@ -89,6 +112,7 @@ def chat(
     messages: list[dict[str, str]],
     *,
     config: ProviderConfig | None = None,
+    task: str = "general",
     max_tokens: int = 220,
     temperature: float = 0.2,
 ) -> str:
@@ -98,7 +122,7 @@ def chat(
     request is one POST of one JSON body, and a new package in
     requirements.txt is a supply-chain decision this does not need.
     """
-    config = config or resolve_provider()
+    config = config or resolve_provider(task)
     if config is None:
         raise LLMUnavailable("no LLM provider is configured")
 
@@ -178,5 +202,6 @@ def explain_decision(
             {"role": "user", "content": prompt},
         ],
         config=config,
+        task="reasoning",
         max_tokens=120,
     )

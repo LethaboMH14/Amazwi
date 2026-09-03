@@ -123,3 +123,11 @@ export interface Rewards {
   items: CatalogueRow[];
   generated_at: string;
 }
+
+export interface AssistantResponse {
+  reply: string;
+  intent: string;
+  route: string | null;
+  provider: string;
+  advisory: boolean;
+}

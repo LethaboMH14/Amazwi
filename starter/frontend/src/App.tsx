@@ -8,6 +8,7 @@ import { ImpactRoute } from "./features/impact/ImpactRoute";
 import { OpsRoute } from "./features/ops/OpsRoute";
 import { ArcadeRoute } from "./features/arcade/ArcadeRoute";
 import { RewardsRoute } from "./features/rewards/RewardsRoute";
+import { AssistantWidget } from "./AssistantWidget";
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/dashboard" element={<ArcadeRoute />} />
         <Route path="/rewards" element={<RewardsRoute />} />
       </Routes>
+      <AssistantWidget />
     </BrowserRouter>
   );
 }

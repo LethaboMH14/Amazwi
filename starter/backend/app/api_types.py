@@ -248,6 +248,19 @@ class RewardsResponse(BaseModel):
     generated_at: datetime
 
 
+class AssistantRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=2000)
+    language: str = Field(default="en", min_length=2, max_length=16)
+
+
+class AssistantResponse(BaseModel):
+    reply: str
+    intent: str
+    route: str | None = None
+    provider: str
+    advisory: bool = True
+
+
 class RedemptionResponse(BaseModel):
     """A provider payment attempt created from ledger credit.
 
