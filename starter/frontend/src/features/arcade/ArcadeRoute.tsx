@@ -25,6 +25,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api, userMessage } from "../../api/client";
+import { usePolling } from "../../usePolling";
 import type { ArcadeDashboard, LeaderboardRow, QuestRow } from "../../api/contracts";
 import { Mascot } from "./Mascot";
 import { TabBar } from "./TabBar";
@@ -275,6 +276,11 @@ export function ArcadeRoute() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  // Keep the desk current. Without this the peer-request badge only ever
+  // reflected the state at page load, so a laptop left on the dashboard
+  // never noticed that someone had recorded.
+  usePolling(load, 8000);
 
   const pendingCount = data?.invitations.length ?? 0;
   const peers = (data?.peers ?? []).filter((p) =>

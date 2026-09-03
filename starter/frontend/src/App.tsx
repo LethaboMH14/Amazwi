@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ScrollToTop } from "./ScrollToTop";
 import { HomeRoute } from "./HomeRoute";
 import { ConsentRoute } from "./features/consent/ConsentRoute";
 import { RecordingRoute } from "./features/recording/RecordingRoute";
@@ -13,6 +14,7 @@ import { AssistantWidget } from "./AssistantWidget";
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomeRoute />} />
         <Route path="/consent" element={<ConsentRoute />} />

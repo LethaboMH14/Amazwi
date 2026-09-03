@@ -1,0 +1,363 @@
+/* ========================================================================
+   GOLDEN-PATH SCREENS — record, verify, receipt
+   ------------------------------------------------------------------------
+   These three are the screens a judge actually walks through, and they
+   were the last still wearing the old sparse layout: they inherited the
+   new theme but none of the new structure, so success on the record
+   screen rendered as nothing happening.
+
+   Same clay system as the dashboard (arcade.css owns the tokens), same
+   44px targets, same reduced-motion contract. What is different here is
+   the hierarchy: each screen has exactly ONE job, so each has exactly
+   one thing that is unmissable.
+
+     record  -> the word you must describe
+     verify  -> the play button
+     receipt -> what the two people typed
+   ======================================================================== */
+
+.flow {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px 20px 120px;
+  min-height: 100vh;
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--font);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.flow-head { display: flex; flex-direction: column; gap: 5px; }
+.flow-head h1 {
+  font-size: clamp(25px, 6vw, 31px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  margin: 0;
+}
+.flow-head .serif {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text-dim);
+  margin: 2px 0 0;
+}
+
+.flow-card {
+  background: var(--surface);
+  border-radius: var(--clay-radius, 22px);
+  box-shadow: var(--clay);
+  padding: 20px 18px;
+}
+
+.flow-error {
+  border-radius: var(--clay-radius-sm, 16px);
+  border-left: 3px solid var(--danger, #C0341A);
+  background: var(--surface);
+  box-shadow: var(--clay);
+  padding: 13px 15px;
+  margin: 0;
+  font-size: 14.5px;
+}
+
+.flow-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.flow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 54px;
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 16.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 180ms var(--ease), transform 140ms var(--ease);
+}
+.flow-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.flow-btn:not(:disabled):active { transform: scale(0.985); }
+.flow-btn:focus-visible { outline: 3px solid var(--voice-1); outline-offset: 3px; }
+
+.flow-btn-go {
+  background: var(--voice-grad);
+  color: #fff;
+  box-shadow:
+    inset 0 2px 2px rgba(255,255,255,0.28),
+    inset 0 -3px 6px rgba(0,0,0,0.17),
+    0 10px 22px -9px rgba(6,122,67,0.78);
+}
+.flow-btn-stop {
+  background: linear-gradient(180deg, #C0341A, #9C2814);
+  color: #fff;
+  box-shadow: 0 10px 22px -9px rgba(192,52,26,0.7);
+}
+.flow-btn-quiet {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--clay);
+  min-height: 48px;
+  font-size: 15px;
+}
+
+/* --- RECORD ---------------------------------------------------------- */
+/* The target word is the largest thing on the screen. It is what the
+   speaker is being asked to do, and it went missing from this screen
+   once already. */
+
+.play-card { text-align: left; }
+.play-target {
+  font-size: clamp(38px, 12vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 4px 0 20px;
+  overflow-wrap: anywhere;
+}
+.blocked-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.blocked-list li {
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--danger, #C0341A) 9%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--danger, #C0341A) 32%, transparent);
+  color: color-mix(in srgb, var(--danger, #C0341A) 78%, var(--text));
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rec-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 26px 18px;
+  border-radius: var(--clay-radius, 22px);
+  background: var(--ground-deep);
+  box-shadow: inset 0 2px 6px rgba(7,58,3,0.10);
+}
+.rec-timer {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-variant-numeric: tabular-nums;
+}
+.rec-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--danger, #C0341A);
+  animation: rec-pulse 1.15s ease-in-out infinite;
+}
+@keyframes rec-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.82)} }
+.rec-elapsed { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; }
+.rec-limit { font-size: 14px; color: var(--text-dim); }
+
+/* Live level meter, driven by real analyser data -- not a fake loop. */
+.meter { display: flex; align-items: flex-end; gap: 3px; height: 46px; }
+.meter span {
+  width: 4px;
+  min-height: 4px;
+  border-radius: 2px;
+  background: var(--understood, #06AA5B);
+  transition: height 90ms linear;
+}
+
+.rec-hint { font-size: 13.5px; color: var(--text-dim); text-align: center; margin: 0; line-height: 1.5; }
+
+/* --- VERIFY ----------------------------------------------------------- */
+
+.player { display: flex; align-items: center; gap: 14px; }
+.player-play {
+  flex: none;
+  width: 62px; height: 62px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--voice-grad);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,0.30),
+    inset 0 -3px 7px rgba(0,0,0,0.20),
+    0 10px 22px -8px rgba(6,122,67,0.75);
+}
+.player-play:focus-visible { outline: 3px solid var(--voice-1); outline-offset: 3px; }
+.player-play:active { transform: scale(0.95); }
+.player-meta { min-width: 0; }
+.player-meta b { display: block; font-size: 15.5px; }
+.player-meta span { font-size: 13px; color: var(--text-dim); }
+
+.answer-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 7px;
+}
+.answer-input {
+  width: 100%;
+  min-height: 58px;
+  padding: 16px 18px;
+  border-radius: var(--clay-radius-sm, 16px);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 600;
+}
+.answer-input:focus {
+  outline: none;
+  border-color: var(--voice-1);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--voice-1) 18%, transparent);
+}
+.answer-note { font-size: 13px; color: var(--text-dim); margin: 8px 0 0; line-height: 1.5; }
+
+/* --- RECEIPT ---------------------------------------------------------- */
+/* Peer truth is the product, so the two typed answers ARE the receipt. */
+
+.verdicts { display: flex; flex-direction: column; gap: 0; }
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 0;
+}
+.verdict + .verdict { border-top: 1px solid var(--border); }
+.verdict-avatar {
+  flex: none;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+.verdict-word { flex: 1; font-size: 17px; font-weight: 700; overflow-wrap: anywhere; }
+
+.receipt-money {
+  text-align: center;
+  padding: 26px 18px;
+  border-radius: var(--clay-radius, 22px);
+  background: var(--ground-deep);
+  box-shadow: inset 0 2px 6px rgba(7,58,3,0.10);
+}
+.receipt-amount {
+  font-size: clamp(38px, 11vw, 46px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  margin: 6px 0 0;
+  display: inline-block;
+}
+.receipt-disclosure {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 12px auto 0;
+  max-width: 34ch;
+}
+
+.detail-rows { display: flex; flex-direction: column; }
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 0;
+  font-size: 14px;
+}
+.detail-row + .detail-row { border-top: 1px solid var(--border); }
+.detail-row dt { color: var(--text-dim); }
+.detail-row dd { margin: 0; font-weight: 700; text-align: right; overflow-wrap: anywhere; }
+
+.reason-note {
+  border-radius: var(--clay-radius-sm, 16px);
+  background: var(--ground-deep);
+  padding: 13px 15px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin: 0;
+}
+.reason-note b { color: var(--text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rec-dot, .meter span, .flow-btn { animation: none !important; transition: none !important; }
+  .flow-btn:active, .player-play:active { transform: none; }
+}
+
+/* --- back navigation --------------------------------------------------
+   These screens are reachable directly (a phone opens /record, a laptop
+   opens /verify), so browser back is not always a route -- it can leave
+   the app entirely. An explicit way home is the only reliable one. */
+
+.flow-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 9px 15px 9px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--clay);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.flow-back:hover { color: var(--text); }
+.flow-back:focus-visible { outline: 3px solid var(--voice-1); outline-offset: 3px; }
+
+/* --- waiting state ---------------------------------------------------- */
+
+.waiting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 28px 20px;
+}
+.waiting-title { font-size: 18px; font-weight: 800; margin: 0; letter-spacing: -0.02em; }
+
+/* Three dots that keep moving, so an idle screen still reads as alive
+   and listening rather than stalled. */
+.waiting-live { display: inline-flex; gap: 6px; }
+.waiting-live i {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--understood, #06AA5B);
+  animation: waiting-pulse 1.4s ease-in-out infinite;
+}
+.waiting-live i:nth-child(2) { animation-delay: 0.18s; }
+.waiting-live i:nth-child(3) { animation-delay: 0.36s; }
+@keyframes waiting-pulse {
+  0%, 100% { opacity: 0.25; transform: translateY(0); }
+  50%      { opacity: 1;    transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waiting-live i { animation: none; opacity: 0.8; }
+}
