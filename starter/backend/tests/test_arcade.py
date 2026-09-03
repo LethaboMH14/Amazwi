@@ -654,3 +654,64 @@ def test_an_answered_clip_stops_inviting_the_verifier_who_answered(db_session):
     # the untouched clips because it is one answer from resolving.
     v2_rows = build_invitations(db_session, current_user_id=v2.id)
     assert v2_rows[0].contribution_id == target.id
+
+
+
+def test_a_peer_qualified_in_two_languages_is_one_person(db_session):
+    """One row per PERSON, not per qualification.
+
+    Regression test. build_peer_list joined verifier_qualifications, which
+    holds a row per (user, language), so a peer qualified in both isiZulu
+    and Setswana came back twice with the same user id. The desk rendered
+    them as two separate people and React warned about duplicate keys --
+    correctly, because the key genuinely was not unique. Every demo
+    verifier is qualified in both languages, so the whole list was
+    doubled. Caught by reading the browser console, not the code.
+    """
+    campaign = _campaign(db_session)
+    _card(db_session, campaign)
+    reviewer = _user(db_session, "sub-bi-reviewer", "Reviewer")
+    me = _user(db_session, "sub-bi-me", "Me")
+    bilingual = _user(db_session, "sub-bi-peer", "Bilingual Peer")
+
+    for user in (me, bilingual):
+        for language in ("zu", "tn"):
+            db_session.add(
+                VerifierQualification(
+                    user_id=user.id,
+                    language=language,
+                    qualified_at=NOW - timedelta(days=1),
+                    reviewed_by=reviewer.id,
+                )
+            )
+    db_session.flush()
+
+    rows = build_peer_list(db_session, current_user_id=me.id)
+    ids = [r.user_id for r in rows]
+    assert ids == [bilingual.id], "one row per person, however many languages"
+    assert len(ids) == len(set(ids)), "duplicate user ids break the list key"
+    assert rows[0].languages == ["tn", "zu"], "sorted, so the order is stable"
+
+
+def test_peer_list_is_deterministic_across_repeated_calls(db_session):
+    """Doctrine rule 5 -- the collapse must not traverse a set unordered."""
+    reviewer = _user(db_session, "sub-det-reviewer", "Reviewer")
+    me = _user(db_session, "sub-det-me", "Me")
+    peers = [_user(db_session, f"sub-det-{i}", f"Peer {i}") for i in range(5)]
+    for user in [me, *peers]:
+        for language in ("zu", "tn"):
+            db_session.add(
+                VerifierQualification(
+                    user_id=user.id,
+                    language=language,
+                    qualified_at=NOW - timedelta(days=1),
+                    reviewed_by=reviewer.id,
+                )
+            )
+    db_session.flush()
+
+    runs = [
+        [r.user_id for r in build_peer_list(db_session, current_user_id=me.id)]
+        for _ in range(5)
+    ]
+    assert all(run == runs[0] for run in runs)

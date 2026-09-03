@@ -64,7 +64,13 @@ export interface LeaderboardRow {
   verified_contributions: number; xp: number; tier: string; is_current_user: boolean;
 }
 export interface PeerRow {
-  user_id: string; display_name: string; language: string;
+  // Plural: one row per person, listing every language they verify in.
+  // `language` is the older singular field, kept optional so a frontend
+  // deployed ahead of its backend degrades instead of crashing -- which
+  // it did: peer.languages was undefined and .map threw, taking the whole
+  // desk down with it.
+  user_id: string; display_name: string;
+  languages?: string[]; language?: string;
   tier: string; verified_contributions: number;
 }
 /** A pending peer-verification request -- a real assignment, not a synthetic invite. */

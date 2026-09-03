@@ -175,7 +175,9 @@ class LeaderboardRowResponse(BaseModel):
 class PeerRowResponse(BaseModel):
     user_id: str
     display_name: str
-    language: str
+    # Plural: a peer qualified in two languages is ONE person, not two
+    # rows. The singular field forced a duplicate row per qualification.
+    languages: list[str]
     tier: str
     verified_contributions: int = Field(ge=0)
 

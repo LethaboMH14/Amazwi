@@ -57,7 +57,9 @@ function dto(overrides: Partial<ArcadeDashboard> = {}): ArcadeDashboard {
       {
         user_id: "peer-1",
         display_name: "Demo Verifier 1 (zu)",
-        language: "zu",
+        // Two languages on purpose: this peer is ONE person, and the
+        // singular field used to render them as two rows sharing a key.
+        languages: ["zu", "tn"],
         tier: "Beginner",
         verified_contributions: 0,
       },

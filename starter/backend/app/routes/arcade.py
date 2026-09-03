@@ -139,7 +139,7 @@ def _dashboard(
             PeerRowResponse(
                 user_id=str(row.user_id),
                 display_name=row.display_name,
-                language=row.language,
+                languages=list(row.languages),
                 tier=row.tier,
                 verified_contributions=row.verified_contributions,
             )

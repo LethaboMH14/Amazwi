@@ -26,7 +26,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api, userMessage } from "../../api/client";
 import { usePolling } from "../../usePolling";
-import type { ArcadeDashboard, LeaderboardRow, QuestRow } from "../../api/contracts";
+import type { ArcadeDashboard, LeaderboardRow, PeerRow, QuestRow } from "../../api/contracts";
 import { Mascot } from "./Mascot";
 import { TabBar } from "./TabBar";
 import { ThemeControl } from "../../theme";
@@ -256,6 +256,21 @@ export function RankMove({ delta }: { delta?: number }) {
       </svg>
     </span>
   );
+}
+
+/**
+ * Tolerates a backend that has not been restarted yet.
+ *
+ * The peer list changed from a singular `language` to a plural
+ * `languages` when one row per person replaced one row per
+ * qualification. A frontend hot-reloaded ahead of its backend saw
+ * `languages` undefined and threw on `.map`, which took the entire desk
+ * down -- a much worse failure than the duplicate-key warning the change
+ * was fixing. Falls back to the old field, then to nothing.
+ */
+function peerLanguages(peer: PeerRow): string[] {
+  if (peer.languages?.length) return peer.languages;
+  return peer.language ? [peer.language] : [];
 }
 
 export function ArcadeRoute() {
@@ -652,7 +667,8 @@ export function ArcadeRoute() {
                     <div>
                       <p className="peer-name">{peer.display_name}</p>
                       <p className="peer-tier">
-                        {peer.tier} · {languageName(peer.language)}
+                        {peer.tier} ·{" "}
+                        {peerLanguages(peer).map(languageName).join(" · ")}
                       </p>
                     </div>
                   </li>

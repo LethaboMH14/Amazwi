@@ -317,7 +317,9 @@ def build_leaderboard(
 class PeerRow:
     user_id: uuid.UUID
     display_name: str
-    language: str
+    # Every language this peer can verify in, sorted. A single `language`
+    # field forced one row per qualification and duplicated the person.
+    languages: list[str]
     tier: str
     verified_contributions: int
 
@@ -354,6 +356,19 @@ def build_peer_list(
     if not my_languages:
         return []
 
+    # ONE ROW PER PERSON, not one per qualification. The join below is
+    # over `verifier_qualifications`, which holds a row per (user,
+    # language) -- so a peer qualified in both isiZulu and Setswana came
+    # back twice, with the same user id. The screen rendered them as two
+    # separate people and React warned about duplicate keys, because the
+    # key it had (`user_id`) genuinely was not unique.
+    #
+    # Every demo verifier is qualified in both languages, so in practice
+    # the entire peer list was doubled.
+    #
+    # No LIMIT in SQL: limiting rows before collapsing would cut a peer's
+    # second language and could return fewer than `limit` PEOPLE. The
+    # collapse happens first, the limit after.
     rows = session.execute(
         select(User, VerifierQualification.language)
         .join(VerifierQualification, VerifierQualification.user_id == User.id)
@@ -362,23 +377,32 @@ def build_peer_list(
             VerifierQualification.revoked_at.is_(None),
             User.id != current_user_id,
         )
-        .order_by(VerifierQualification.language.asc(), User.id.asc())
-        .limit(limit)
+        .order_by(User.id.asc(), VerifierQualification.language.asc())
     ).all()
 
-    out: list[PeerRow] = []
+    languages_by_user: dict[uuid.UUID, list[str]] = {}
+    users_by_id: dict[uuid.UUID, User] = {}
     for user, language in rows:
-        verified = _verified_count(session, user.id)
+        users_by_id.setdefault(user.id, user)
+        bucket = languages_by_user.setdefault(user.id, [])
+        if language not in bucket:
+            bucket.append(language)
+
+    out: list[PeerRow] = []
+    # Sorted traversal, tie-broken by id -- doctrine rule 5.
+    for user_id in sorted(users_by_id, key=str):
+        user = users_by_id[user_id]
+        verified = _verified_count(session, user_id)
         out.append(
             PeerRow(
-                user_id=user.id,
+                user_id=user_id,
                 display_name=_display_name_for(user),
-                language=language,
+                languages=sorted(languages_by_user[user_id]),
                 tier=tier_for_verified_count(verified),
                 verified_contributions=verified,
             )
         )
-    return out
+    return out[:limit]
 
 
 @dataclass(frozen=True)
