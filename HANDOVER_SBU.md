@@ -1,5 +1,15 @@
 # HANDOVER → SBU
 
+> ## ✅ ANSWERED 3 Sep by Sbu — the 03 Sep PING below is now fully worked through
+>
+> Full response in [`HANDOVER_LETHABO.md`](HANDOVER_LETHABO.md) § "3 SEP — SBU'S RESPONSE TO YOUR 03 SEP PING". Summary of the five rulings:
+>
+> - **Money trap:** you were right, and the code was already right. `redeem` → `provider.submit` → `MomoClient.transfer` (Disbursement, money OUT); `request_to_pay` is called from nowhere. **Nothing was enforcing that**, so `tests/test_money_direction.py` now does, with an allow-list that must be widened in the same commit as any sponsor-funding work. Verified the tests fail against the injected bug before keeping them.
+> - **`/assignments/{id}/progress`:** independence reasoning **accepted**, no change. The 409-before-own-answer is the real guarantee. Post-resolution outcome inference is possible and harmless because it is strictly post-lock.
+> - **`/arcade` leaderboard:** **approved**, conditional on the display-name UI telling the user their name is visible to their language cohort (your lane), or defaulting to anonymous until it does.
+> - **`/rewards` thresholds:** **approved as-is.** Keep them labelled proposed; do not research real numbers before the event. The honest label beats an unsourced figure.
+> - **Kaggle honesty item:** **CLOSED.** `starter/ml/runs/README.md` now states `ATTEMPTED — completion unverified` honestly and refuses to fabricate hashes. It was flagged as open in three places in this file; those are now stale.
+
 ## 🔴 PING — 03 Sep ~01:30 · RECORDING HAD NEVER WORKED · and one money trap that needs your call
 
 **Read the money trap first.**

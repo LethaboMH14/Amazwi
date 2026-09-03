@@ -6,6 +6,59 @@
 
 ---
 
+## 3 SEP — SBU'S RESPONSE TO YOUR 03 SEP PING (money trap, arcade, thresholds, progress endpoint)
+
+Worked through your PING item by item. Verdicts below are binding for money and data-exposure per `05_BUILD.md` §2.
+
+### ✅ The money trap: you were right, the code was already right, and nothing was holding it there
+
+I traced it rather than taking either of our word for it:
+
+- `rewards.redeem()` → `provider.submit()` → `MomoSandboxProvider.submit()` → `self._client.transfer()`. That is **Disbursement, money OUT**. Correct.
+- `request_to_pay` is referenced in exactly one file, `app/momo.py`, the client that defines it. It is called from nowhere.
+
+So the bug you warned about does not exist today. **But nothing was stopping it**, and you're right that it's about five minutes of work and reads almost identically at the call site. Added `tests/test_money_direction.py`:
+
+1. `request_to_pay` must not appear in `rewards.py`, `ledger.py`, `momo_provider.py` or `providers.py`.
+2. Nothing outside `momo.py` may name `request_to_pay` at all; the allow-list must be extended **in the same commit** as any sponsor-funding work, so the money direction gets re-reviewed rather than silently widened.
+3. The positive half: `momo_provider.submit` really does call `transfer()`.
+
+Confirmed all three fail against the injected bug (I temporarily swapped `transfer` → `request_to_pay` and re-ran) before keeping them, same standard you held on the convergence regressions.
+
+**On where Collections belongs:** agreed, it is mission funding, sponsor pays in. That is Gate G and I am not wiring it into anything until the Gate G scope is actually agreed. The test's allow-list is the mechanism that will force that conversation when someone tries.
+
+### ✅ `/assignments/{id}/progress` — reasoning accepted, independence holds
+
+You asked me to sanity-check it specifically. It holds:
+
+- 404 unless the caller owns the assignment.
+- **409 `ANSWER_FIRST` until the caller's own answer is locked** — this is the actual guarantee, and it is in the right place.
+- Returns counts and the final decision only, never the peer's typed answer.
+
+One thing worth naming so it is not discovered later and mistaken for a hole: **after resolution a caller can infer the peer's outcome** (if `understood` is false and `my_answer_matched` is true, the peer did not match). That is fine. Independence means an answer cannot be influenced *while being formed*, and this is strictly post-lock. It is also the same information the receipt already shows. No change needed.
+
+### ⚠️ `/arcade` leaderboard — approved for the competition build, with one condition
+
+Authenticated, scoped to a single language cohort, falls back to "Anonymous contributor", never exposes a provider subject. The posture is right.
+
+**The condition is consent, not code:** `display_name` becomes visible to other people in the cohort. If the UI does not tell the user that *at the point they set it*, we are repurposing data they gave us for identification into a public-to-peers display. Either add that line to the display-name UI (your lane) or default to anonymous until it exists. Cheap either way; I would rather it be the disclosure.
+
+### ✅ `/rewards` thresholds R5 / R10 / R20 — approved as-is for the demo
+
+Placeholders chosen to be obviously round is the correct instinct, and `thresholds_are_proposed: true` plus the on-screen statement is exactly the right handling. Do not research real numbers for the event: the honest "proposed" label is stronger in front of a judge than a number we cannot source. This stays proposed until the bulk B2C disbursement fee is known, which only MTN can tell us.
+
+### ✅ Kaggle honesty item — this is now CLOSED, and it was closed properly
+
+This was flagged as open in three separate places in `HANDOVER_SBU.md`. It has since been reconciled and I am marking it done: `starter/ml/runs/README.md` now states Team Sonar A as **`ATTEMPTED — completion unverified`**, explains why `budget.json` legitimately has no completed entry, records that v9 was confirmed `RUNNING` and that no session has confirmed what happened after, and explicitly refuses to invent placeholder hashes to make the ledger "look reconciled". Team Sonar B is correctly `BLOCKED` and distinguished from A.
+
+That is the right resolution: it states the gap instead of closing it falsely. Nothing further needed from me. If anyone wants it truly closed, the command is in that README (`kaggle kernels status ...`), and that is Lethabo's lane per Sbu's earlier note.
+
+### Untouched, still open, not mine to close unilaterally
+- The `/impact` `campaign` field is fine for seeded demo data; drop it from the public projection or gate the endpoint before any **real** sponsor campaign exists. Unchanged from my 2 Sep ruling.
+- `app/llm.py` three-switch posture: read it, agree with it, and the ASR point matters — Featherless not serving ASR means nothing routed through it can listen to a contribution. Worth saying out loud if a judge asks where AI touches audio: it does not.
+
+---
+
 ## 3 SEP (final) — this is the deck to present, Gamma credits are exhausted, please don't ask for another regen
 
 **Final deck: https://gamma.app/docs/35l5lmuw841k199** — this is the one, and only this one. Every other link anywhere in this repo's history is stale (`1dhqhqj19mgd758`, `i1kl0ftsc184hbx`, `p6yb4zccmjy3sbi`, `ws921eo2ozpw8bp`).
