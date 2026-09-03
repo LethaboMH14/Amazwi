@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePolling } from "../../usePolling";
-import { api, userMessage } from "../../api/client";
+import { ApiError, api, userMessage } from "../../api/client";
 import type { Assignment, AssignmentProgress } from "../../api/contracts";
 import { StatusAnnouncer } from "../../components/SignalPrimitives";
 import { Mascot } from "../arcade/Mascot";
@@ -68,7 +68,37 @@ export function VerificationRoute() {
         setLanguage(queue.items[0].language);
         claimLanguage = queue.items[0].language;
       }
-      const value = await api.getNextAssignment(target, claimLanguage);
+      let value;
+      try {
+        value = await api.getNextAssignment(target, claimLanguage);
+      } catch (err) {
+        // A pinned id from the URL goes stale the moment that clip is
+        // answered or resolved, and the backend then answers 409
+        // ALREADY_ANSWERED (or 404) forever. Before this, load() retried
+        // the same dead id every 2.5s and the device never picked up any
+        // later recording -- and because LiveWatch mutes the "someone just
+        // recorded" alert on /verify, the verifier got no notification
+        // either. The screen looked alive and was completely stuck.
+        //
+        // Falling back to the queue is the recovery: drop the pin, take
+        // whatever is actually waiting. Only for a URL-pinned id -- a
+        // queue-derived target failing is a real error worth surfacing.
+        const stale =
+          err instanceof ApiError && (err.status === 409 || err.status === 404);
+        if (!contributionId || !stale) throw err;
+        const queue = await api.getVerificationQueue();
+        setQueueDepth(queue.items.length);
+        if (queue.items.length === 0) {
+          setAssignment(undefined);
+          setError("");
+          setStatus("");
+          return;
+        }
+        const row = queue.items[0];
+        setSpeakerName(row.speaker_name);
+        setLanguage(row.language);
+        value = await api.getNextAssignment(row.contribution_id, row.language);
+      }
       const playback = await api.getAssignmentPlayback(value.id);
       setAssignment({ ...value, audio_playback_url: playback.url });
       setStatus("Listen, then type the word you heard.");
