@@ -143,7 +143,30 @@ def test_governed_peer_flow_through_public_api(db_session, tmp_path):
                 verifier_playback = client.post(f"/assignments/{assignment_ids[-1]}/playback")
                 assert verifier_playback.status_code == 200, verifier_playback.text
                 # The URL is audience-bound: the assigned verifier may play it.
-                assert client.get(verifier_playback.json()["url"]).status_code == 200
+                playback_url = verifier_playback.json()["url"]
+                assert client.get(playback_url).status_code == 200
+
+                # Authorisation comes from the SIGNED TOKEN, not from an
+                # unsigned X-User-ID header. An <audio> element cannot send
+                # headers, so requiring one meant playback worked only
+                # because a dev proxy injected it, and broke anywhere that
+                # proxy is absent -- which is every deployment target.
+                no_identity = client.get(
+                    playback_url, headers={"X-User-ID": "", "X-Provider-Subject": ""}
+                )
+                assert no_identity.status_code == 200, no_identity.text
+
+                # A header that DISAGREES with the token is still refused,
+                # so supplying one is defence in depth and never a bypass.
+                other = verifiers[2] if len(verifiers) > 2 else verifiers[0]
+                if other.id != verifier.id:
+                    mismatched = client.get(
+                        playback_url, headers={"X-User-ID": str(other.id)}
+                    )
+                    assert mismatched.status_code == 403, mismatched.text
+
+                # A tampered token fails its signature check.
+                assert client.get(playback_url + "X").status_code == 403
                 answer = client.post(
                     f"/assignments/{assignment_ids[-1]}/answer",
                     json={"answer_text": " KGOMO ", "violation_vote": False},

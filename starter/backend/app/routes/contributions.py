@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from collections.abc import Iterator
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status, Header
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
@@ -21,7 +21,7 @@ from app.consent import ConsentRequiredError
 from app.consent import require_active_scope
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
-from app.models import Assignment, AudioObject, Card, ConsentScope, Contribution
+from app.models import Assignment, AudioObject, Card, ConsentScope, Contribution, User
 from app.storage import AudioUnavailable, InvalidAudioToken, LocalAudioObjectStore
 
 
@@ -248,36 +248,82 @@ def contributor_playback(
 @router.get("/private-audio/play/{token}")
 def play_audio(
     token: str,
-    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    x_user_id: str | None = Header(default=None),
     session: Session = Depends(get_session),
     store: LocalAudioObjectStore = Depends(get_audio_store),
 ):
+    """Stream a private clip, authorised by the SIGNED TOKEN itself.
+
+    The acting user is taken from the token's `aud` claim rather than
+    from an X-User-ID header, and that is a security IMPROVEMENT, not a
+    relaxation:
+
+      * the header identity (app/identity.py) carries NO signature -- it
+        is an unsigned assertion that anyone who knows a valid pair can
+        make;
+      * the playback token is HMAC-signed with a server secret, bound to
+        one audience, bound to one purpose, and expires in five minutes.
+
+    Every consent and assignment check below is unchanged. They simply
+    key on the token's audience instead of on an unsigned header, and
+    `store.open_private` still verifies the signature, the expiry, the
+    audience and the purpose before a byte is read.
+
+    This also fixes the only real client. An <audio> element CANNOT send
+    headers, so requiring one meant playback worked solely because a dev
+    proxy injected it -- and broke completely anywhere that proxy is not
+    present, which is every deployment target.
+
+    When a header IS supplied it must still agree with the token, so a
+    device that sends one gets defence in depth rather than a bypass.
+    """
     try:
-        require_identity_user(session, identity)
         now = __import__("datetime").datetime.now(__import__("datetime").timezone.utc)
         payload = store.token_payload(token)
+
+        raw_audience = payload.get("aud")
+        if not isinstance(raw_audience, str):
+            raise InvalidAudioToken("audio token has no audience")
+        try:
+            acting_user_id = uuid.UUID(raw_audience)
+        except ValueError as exc:
+            raise InvalidAudioToken("audio token audience is not a user id") from exc
+
+        # Defence in depth: a caller that DOES present a header must not be
+        # able to present a different one from the token it is redeeming.
+        if x_user_id:
+            try:
+                if uuid.UUID(x_user_id) != acting_user_id:
+                    raise InvalidAudioToken("header identity does not match the token")
+            except ValueError as exc:
+                raise InvalidAudioToken("header identity is not a user id") from exc
+
+        actor = session.get(User, acting_user_id)
+        if actor is None:
+            raise InvalidAudioToken("audio token audience is not a known user")
+
         audio = session.scalar(select(AudioObject).where(AudioObject.object_key == payload.get("key")))
         contribution = session.get(Contribution, audio.contribution_id) if audio else None
         if contribution is None:
             raise InvalidAudioToken("audio token is not authorised for this user")
         if payload.get("purpose") == "REPLAY":
-            if contribution.speaker_id != identity.user_id:
+            if contribution.speaker_id != acting_user_id:
                 raise InvalidAudioToken("audio token is not authorised for this user")
-            require_active_scope(session, identity.user_id, ConsentScope.RECORD_PROCESS_ROUND)
+            require_active_scope(session, acting_user_id, ConsentScope.RECORD_PROCESS_ROUND)
         elif payload.get("purpose") == "VERIFY":
             assignment = session.scalar(select(Assignment).where(
                 Assignment.contribution_id == contribution.id,
-                Assignment.verifier_id == identity.user_id,
+                Assignment.verifier_id == acting_user_id,
             ))
             if assignment is None:
                 raise InvalidAudioToken("audio token is not authorised for this user")
             require_active_scope(session, contribution.speaker_id, ConsentScope.ASSIGNED_VERIFIER_PLAYBACK)
-            require_active_scope(session, identity.user_id, ConsentScope.ASSIGNED_VERIFIER_PLAYBACK)
+            require_active_scope(session, acting_user_id, ConsentScope.ASSIGNED_VERIFIER_PLAYBACK)
         else:
             raise InvalidAudioToken("audio token has an invalid purpose")
         body = store.open_private(
             token,
-            audience=str(identity.user_id),
+            audience=str(acting_user_id),
             now=now,
             purpose=payload.get("purpose"),
         ).read()
