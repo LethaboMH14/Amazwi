@@ -47,6 +47,22 @@ export default defineConfig({
     // Keep the browser calling the same `/api/*` contract in dev and deploy.
     // Override when the backend is not running on the local default port.
     proxy: {
+      // Audio playback is NOT under /api. The backend returns a playback
+      // URL of `/private-audio/play/<token>` and the verifier screen puts
+      // that straight into an <audio src>. With only an /api rule, Vite
+      // served its own SPA index for that path -- 1378 bytes of text/html
+      // where audio/webm was expected -- so every verifier device showed a
+      // player that could never play anything, on every laptop, silently.
+      //
+      // A <audio> element cannot attach headers, which is the whole reason
+      // the proxy injects this device's seeded identity. Without that the
+      // backend correctly answers 401: the playback token is audience-bound
+      // and it re-checks consent at fetch time.
+      "/private-audio": {
+        target: process.env.API_PROXY_TARGET || "http://127.0.0.1:8000",
+        changeOrigin: true,
+        headers: identityHeaders,
+      },
       "/api": {
         target: process.env.API_PROXY_TARGET || "http://127.0.0.1:8000",
         changeOrigin: true,
