@@ -7,8 +7,14 @@ import { clampDuration, probeDurationMs } from "./digest";
 import { StatusAnnouncer } from "../../components/SignalPrimitives";
 import "../flow.css";
 
-// `zu-001`, deterministically created by `python -m app.seed_demo`.
-const DEMO_CARD_ID = "467e6241-cb06-5395-aaa8-d63832bcc538";
+// Languages the seeded decks cover. Both have a full native-reviewed
+// deck; only isiZulu was reachable from this screen before, because the
+// card id was hardcoded -- so every contribution in the whole product
+// was the same word and Setswana could not be recorded at all.
+const LANGUAGES = [
+  { code: "zu", label: "isiZulu" },
+  { code: "tn", label: "Setswana" },
+] as const;
 
 const MAX_SECONDS = 30;
 const BARS = 13;
@@ -56,16 +62,18 @@ export function RecordingRoute() {
   // block recording -- the audio is still worth capturing -- so this degrades
   // to the plain prompt rather than throwing.
   const [card, setCard] = useState<Card | null>(null);
+  const [language, setLanguage] = useState<string>(LANGUAGES[0].code);
   useEffect(() => {
     let cancelled = false;
+    setCard(null);
     api
-      .getCard(DEMO_CARD_ID)
+      .getNextCard(language)
       .then((c) => !cancelled && setCard(c))
       .catch(() => undefined);
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [language]);
 
   // Tear the meter down on unmount, or the AudioContext and its rAF loop
   // outlive the screen and keep the microphone indicator lit.
@@ -116,11 +124,15 @@ export function RecordingRoute() {
   }
 
   async function upload(blob: Blob, durationMs: number) {
+    if (!card) {
+      setError("No card is loaded yet. Wait a moment and try again.");
+      return;
+    }
     setBusy(true);
     setError("");
     setStatus("Uploading securely…");
     try {
-      const contribution = await api.createContribution(DEMO_CARD_ID);
+      const contribution = await api.createContribution(card!.id);
       const uploadTarget = await api.beginUpload(contribution.id);
       const hash = await digest(blob);
       await api.uploadAudio(uploadTarget.audio_object_id, blob);
@@ -198,9 +210,29 @@ export function RecordingRoute() {
       </button>
 
       <div className="flow-head">
-        <p className="eyebrow">isiZulu contribution</p>
+        <p className="eyebrow">
+          {LANGUAGES.find((l) => l.code === language)?.label} contribution
+        </p>
         <h1 id="record-title">Say the card aloud</h1>
       </div>
+
+      {/* Choosing the language is choosing which corpus you are building.
+          It belongs above the card, not buried in settings. */}
+      <fieldset className="lang-switch">
+        <legend className="visually-hidden">Choose a language</legend>
+        {LANGUAGES.map((l) => (
+          <button
+            key={l.code}
+            type="button"
+            className={`lang-chip${language === l.code ? " is-on" : ""}`}
+            aria-pressed={language === l.code}
+            disabled={recording || busy}
+            onClick={() => setLanguage(l.code)}
+          >
+            {l.label}
+          </button>
+        ))}
+      </fieldset>
 
       {card && (
         <section className="flow-card play-card" aria-label="Your card">

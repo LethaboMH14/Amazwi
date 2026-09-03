@@ -361,3 +361,45 @@
 @media (prefers-reduced-motion: reduce) {
   .waiting-live i { animation: none; opacity: 0.8; }
 }
+
+/* --- language switch --------------------------------------------------
+   Choosing the language is choosing which corpus you are building, so it
+   sits above the card rather than in settings. Disabled mid-recording:
+   switching language would orphan the take in progress. */
+
+.lang-switch {
+  display: flex;
+  gap: 8px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.lang-chip {
+  flex: 1;
+  min-height: 46px;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--clay);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 160ms var(--ease);
+}
+.lang-chip.is-on {
+  background: var(--voice-grad);
+  color: #fff;
+  box-shadow:
+    inset 0 2px 2px rgba(255,255,255,0.26),
+    0 8px 18px -8px rgba(6,122,67,0.72);
+}
+.lang-chip:disabled { opacity: 0.5; cursor: not-allowed; }
+.lang-chip:focus-visible { outline: 3px solid var(--voice-1); outline-offset: 3px; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

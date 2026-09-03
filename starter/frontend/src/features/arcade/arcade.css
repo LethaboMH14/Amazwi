@@ -1055,3 +1055,41 @@
 /* The mascot replaces the two bare circles as the hero anchor. */
 .desk-hero-mascot { flex: none; }
 @media (max-width: 700px) { .desk-hero-mascot { display: none; } }
+
+/* Theme control in the desk nav. Each demo device is its own origin, so
+   the saved theme does not travel between them -- this is how a device
+   that drifted gets brought back in line without clearing storage. */
+.desk-theme {
+  margin-top: auto;
+  padding: 12px 14px;
+  border-radius: var(--clay-radius-sm, 16px);
+  background: var(--surface);
+  box-shadow: var(--clay);
+  margin-bottom: 10px;
+}
+.desk-theme label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.desk-theme select {
+  min-height: 44px;
+  padding: 9px 11px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--ground);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.desk-theme select:focus-visible { outline: 2px solid var(--voice-1); outline-offset: 2px; }
+/* The note no longer needs to push itself down -- the theme block does. */
+.desk-note { margin-top: 0; }

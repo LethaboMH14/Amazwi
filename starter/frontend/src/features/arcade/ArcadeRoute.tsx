@@ -29,6 +29,8 @@ import { usePolling } from "../../usePolling";
 import type { ArcadeDashboard, LeaderboardRow, QuestRow } from "../../api/contracts";
 import { Mascot } from "./Mascot";
 import { TabBar } from "./TabBar";
+import { LiveAlert } from "./LiveAlert";
+import { ThemeControl } from "../../theme";
 import "./arcade.css";
 
 const LANGUAGE_NAMES: Record<string, string> = { zu: "isiZulu", tn: "Setswana" };
@@ -295,6 +297,9 @@ export function ArcadeRoute() {
 
   return (
     <div className="desk">
+      {/* Cross-device: this laptop learns that someone across the room
+          just spoke, without anyone touching it. */}
+      <LiveAlert invitations={data?.invitations ?? []} />
       {data && <BubbleField count={verifiedTotal} />}
       <a className="skip-link" href="#desk-main">
         Skip to dashboard
@@ -352,6 +357,14 @@ export function ArcadeRoute() {
             </Link>
           </li>
         </ul>
+
+        {/* Theme is stored per ORIGIN, and each demo device runs on its
+            own port -- so a device toggled once keeps that look while the
+            others do not. Reachable from the desk rather than only the
+            home screen footer, so any device can be brought back in line. */}
+        <div className="desk-theme">
+          <ThemeControl />
+        </div>
 
         {/* The reference puts a "GO PRO" upsell here. There is no paid
             tier, so this slot carries the one fact a contributor most

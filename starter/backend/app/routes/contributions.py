@@ -5,7 +5,7 @@ from collections.abc import Iterator
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
 from app.api_types import AudioFinaliseRequest, AudioUploadResponse, ContributionCreateRequest, PlaybackResponse
@@ -49,6 +49,45 @@ def _error(exc: Exception) -> HTTPException:
         "AUDIO_HASH_MISMATCH": 422,
     }
     return HTTPException(status_code=mapping.get(code, 400), detail={"code": code})
+
+
+@router.get("/cards/next")
+def next_card(
+    language: str,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+):
+    """A card to record in `language`, chosen at random from active cards.
+
+    Added because the recording screen hardcoded a single isiZulu card id,
+    so every contribution in the entire product was the same word and
+    Setswana was unreachable from the UI despite having a full reviewed
+    deck in the database.
+
+    Random rather than sequential: two speakers in the same room should
+    not be handed the same word, and a fixed order makes a demo look
+    scripted. Returns exactly the SPEAKER projection -- target and blocked
+    words, never accepted_answers or distractors.
+
+    NOTE: this route must be declared BEFORE /cards/{card_id}. FastAPI
+    matches in declaration order, so the parameterised route would
+    otherwise swallow "next" as a card id and 404 every request.
+    """
+    require_identity_user(session, identity)
+    card = session.scalar(
+        select(Card)
+        .where(Card.language == language, Card.active.is_(True))
+        .order_by(func.random())
+        .limit(1)
+    )
+    if card is None:
+        raise HTTPException(status_code=404, detail={"code": "NO_CARD_FOR_LANGUAGE"})
+    return {
+        "id": str(card.id),
+        "language": card.language,
+        "target": card.target,
+        "blocked_words": list(card.blocked_words),
+    }
 
 
 @router.get("/cards/{card_id}")

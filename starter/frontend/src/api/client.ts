@@ -23,6 +23,7 @@ export function codecFor(mimeType:string):string{if(mimeType.includes("ogg"))ret
 export const api={
  grantConsent:(scopes:ConsentScope[],version="2026-09-01")=>request<ConsentState[]>("/consents",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({version,scopes})}),
  getCard:(cardId:string)=>request<Card>(`/cards/${cardId}`),
+ getNextCard:(language:string)=>request<Card>(`/cards/next?language=${encodeURIComponent(language)}`),
  createContribution:(cardId:string)=>request<Contribution>("/contributions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({card_id:cardId})}),
  beginUpload:(contributionId:string)=>request<{audio_object_id:string}>(`/contributions/${contributionId}/audio/uploads`,{method:"POST"}),
  uploadAudio:async(id:string,blob:Blob)=>{const r=await fetch(`/api/private-audio/uploads/${id}`,{method:"PUT",headers:{...headers(),"Content-Type":blob.type},body:blob});if(!r.ok)throw new ApiError(r.status,"UPLOAD_FAILED","Audio upload failed.");},
