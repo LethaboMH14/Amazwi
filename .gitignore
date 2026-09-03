@@ -24,6 +24,13 @@ dist/
 # position the product is built on. This is a hard line, not tidiness.
 .private_audio/
 **/.private_audio/
+# Suffixed variants too. A verification run wrote real audio into
+# `.private_audio_verify/`, which the exact-name patterns above did not
+# match -- so it sat untracked and one `git add -A` away from being
+# committed. The glob closes that by name shape, not by remembering to
+# add each new directory.
+.private_audio*/
+**/.private_audio*/
 
 # Embedded/local PostgreSQL data directories from test and demo runs.
 .pgdata_test/
@@ -44,3 +51,7 @@ playwright-report/
 # Self-signed local-demo TLS certs (throwaway, private keys, never commit)
 .certs/
 **/.certs/
+
+# Local tooling logs from check/verify runs. Noise, and they capture
+# absolute paths from whichever machine produced them.
+*-check.log
