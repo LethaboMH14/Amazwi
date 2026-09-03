@@ -170,11 +170,31 @@ def main() -> int:
         print(f"token check: OK ({args.product} token obtained, value withheld)")
 
     if args.write and env_path:
-        with env_path.open("a", encoding="utf-8") as handle:
-            handle.write(f"\n# provisioned for {args.product} by momo_provision.py\n")
-            handle.write(f"MOMO_API_USER={api_user}\n")
-            handle.write(f"MOMO_API_KEY={api_key}\n")
-        print(f"\nwritten to {env_path} (MOMO_API_USER, MOMO_API_KEY)")
+        # REPLACE in place, never append. The loaders use setdefault, so the
+        # FIRST occurrence of a key wins -- appending a fresh credential
+        # beneath an existing one leaves the STALE value in force, and the
+        # symptom is a freshly minted key appearing not to work at all.
+        # (That happened on the first run of this script.)
+        existing = env_path.read_text(encoding="utf-8", errors="replace").splitlines()
+        updates = {"MOMO_API_USER": api_user, "MOMO_API_KEY": api_key}
+        seen = set()
+        out = []
+        for line in existing:
+            name = line.split("=", 1)[0].strip() if "=" in line else ""
+            if name in updates:
+                if name in seen:
+                    continue
+                out.append(name + "=" + updates[name])
+                seen.add(name)
+            else:
+                out.append(line)
+        for name, value in updates.items():
+            if name not in seen:
+                out.append(name + "=" + value)
+        env_path.write_text("\n".join(out) + "\n", encoding="utf-8")
+        print("\nupdated in place: " + str(env_path))
+        print("  One api user authenticates against BOTH products (verified),")
+        print("  so a single pair serves collection and disbursement.")
     else:
         print("\nAdd these to your env file (or re-run with --write):")
         print(f"  MOMO_API_USER={api_user}")
