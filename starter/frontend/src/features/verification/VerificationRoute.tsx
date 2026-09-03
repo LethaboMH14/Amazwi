@@ -11,9 +11,12 @@ import "../flow.css";
 export function VerificationRoute() {
   const [params] = useSearchParams();
   const contributionId = params.get("contributionId") ?? "";
+  // Sent by every link that targets a specific clip. Guessing it wrong
+  // means claiming in the wrong language, which the backend refuses.
+  const urlLanguage = params.get("language") ?? "";
   const [assignment, setAssignment] = useState<Assignment>();
   const [speakerName, setSpeakerName] = useState("");
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = useState(urlLanguage);
   const [answer, setAnswer] = useState("");
   const [status, setStatus] = useState("Finding someone who needs you…");
   const [error, setError] = useState("");
@@ -43,7 +46,11 @@ export function VerificationRoute() {
       let target = contributionId;
       // Default only matters when an id came from the URL and we never saw
       // a queue row to learn the real language from.
-      let claimLanguage = language || "zu";
+      // Deliberately NOT read from `language` state: load() writes that
+      // state, so depending on it here would recreate this callback and
+      // fire a second, redundant claim for the same clip. The URL carries
+      // it for a targeted link, and the queue row carries it otherwise.
+      let claimLanguage = urlLanguage || "zu";
       if (!target) {
         const queue = await api.getVerificationQueue();
         setQueueDepth(queue.items.length);
@@ -72,7 +79,7 @@ export function VerificationRoute() {
         setStatus("");
       }
     }
-  }, [contributionId]);
+  }, [contributionId, urlLanguage]);
 
   useEffect(() => {
     void load();

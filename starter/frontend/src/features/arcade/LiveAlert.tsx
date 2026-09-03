@@ -59,7 +59,13 @@ export function LiveAlert({ invitations }: { invitations: InvitationRow[] }) {
             className="live-alert-go"
             onClick={() =>
               navigate(
-                `/verify?contributionId=${encodeURIComponent(fresh.contribution_id)}`,
+                // The language MUST travel with the id. Without it the
+                // verify screen falls back to "zu", so a Setswana clip
+                // opened from this alert is claimed in the wrong language
+                // and refused -- the same way Setswana was unreachable
+                // before the queue existed.
+                `/verify?contributionId=${encodeURIComponent(fresh.contribution_id)}` +
+                  `&language=${encodeURIComponent(fresh.language)}`,
               )
             }
           >

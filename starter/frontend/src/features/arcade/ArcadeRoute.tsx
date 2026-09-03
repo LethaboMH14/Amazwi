@@ -604,9 +604,10 @@ export function ArcadeRoute() {
                           className="btn-pill"
                           onClick={() =>
                             navigate(
+                              // Language travels with the id -- see LiveAlert.
                               `/verify?contributionId=${encodeURIComponent(
                                 invite.contribution_id,
-                              )}`,
+                              )}&language=${encodeURIComponent(invite.language)}`,
                             )
                           }
                         >
