@@ -4,10 +4,10 @@ import random
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.api_types import AssignmentAnswerRequest, AssignmentResponse, ContributionResult
+from app.api_types import AssignmentProgressResponse, AssignmentAnswerRequest, AssignmentResponse, ContributionResult
 from app.cohorts import select_next_verifier
 from app.db import get_session
 from app.identity import AuthenticatedIdentity, get_current_identity, require_identity_user
@@ -210,4 +210,53 @@ def contribution_result(
         understood=decision.understood,
         corpus_eligible=decision.corpus_eligible,
         reason=decision.reason,
+    )
+
+
+@router.get(
+    "/assignments/{assignment_id}/progress",
+    response_model=AssignmentProgressResponse,
+)
+def assignment_progress(
+    assignment_id: uuid.UUID,
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+    session: Session = Depends(get_session),
+) -> AssignmentProgressResponse:
+    """Progress on a clip this verifier has already answered.
+
+    Exists because the verifier screen went static after submitting: it
+    said "thank you" and then never changed, so nobody could see that a
+    second listener had answered or that the clip had resolved. A person
+    who did the work should be able to watch it complete.
+
+    INDEPENDENCE IS PRESERVED. This returns counts and the final
+    decision, never the other verifier's typed answer -- and only to
+    someone who has already locked their own, so it cannot be used to
+    peek before answering.
+    """
+    require_identity_user(session, identity)
+    assignment = session.get(Assignment, assignment_id)
+    if assignment is None or assignment.verifier_id != identity.user_id:
+        raise HTTPException(status_code=404, detail={"code": "NO_ASSIGNMENT"})
+    if assignment.answered_at is None:
+        # Refusing before their own answer is locked is the whole
+        # independence guarantee, not a technicality.
+        raise HTTPException(status_code=409, detail={"code": "ANSWER_FIRST"})
+
+    answered = session.scalar(
+        select(func.count())
+        .select_from(Assignment)
+        .where(
+            Assignment.contribution_id == assignment.contribution_id,
+            Assignment.answered_at.is_not(None),
+        )
+    ) or 0
+    decision = session.get(EligibilityDecision, assignment.contribution_id)
+
+    return AssignmentProgressResponse(
+        contribution_id=str(assignment.contribution_id),
+        answers_so_far=min(int(answered), 2),
+        resolved=decision is not None,
+        understood=decision.understood if decision is not None else None,
+        my_answer_matched=assignment.matched,
     )

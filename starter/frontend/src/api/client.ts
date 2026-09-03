@@ -1,4 +1,4 @@
-import type { ArcadeDashboard, Assignment, Rewards, VerificationQueue, Card, ConsentScope, ConsentState, Contribution, Impact, MissionProposal, OpsView, Result, AssistantResponse } from "./contracts";
+import type { ArcadeDashboard, Assignment, AssignmentProgress, Rewards, VerificationQueue, Card, ConsentScope, ConsentState, Contribution, Impact, MissionProposal, OpsView, Result, AssistantResponse } from "./contracts";
 export class ApiError extends Error { constructor(public readonly status:number, public readonly code:string, message:string){super(message);} }
 function headers(): HeadersInit { const env=(import.meta as ImportMeta & {env:Record<string,string|undefined>}).env; const h:Record<string,string>={Accept:"application/json"}; if(env.VITE_USER_ID)h["X-User-ID"]=env.VITE_USER_ID; if(env.VITE_PROVIDER_SUBJECT)h["X-Provider-Subject"]=env.VITE_PROVIDER_SUBJECT; return h; }
 // FastAPI wraps every error body as {"detail": ...}, and this backend raises
@@ -42,6 +42,7 @@ export const api={
  getResult:(id:string)=>request<Result>(`/contributions/${id}/result`),
  getImpact:()=>request<Impact>("/impact"),
  getOps:()=>request<OpsView>("/ops"),
+ getAssignmentProgress:(id:string)=>request<AssignmentProgress>(`/assignments/${id}/progress`),
  getVerificationQueue:()=>request<VerificationQueue>("/assignments/queue"),
  getRewards:()=>request<Rewards>("/rewards"),
  getArcade:(language?:string)=>request<ArcadeDashboard>(`/arcade${language?`?language=${encodeURIComponent(language)}`:""}`),

@@ -127,7 +127,7 @@ def _dashboard(
         ],
         invitations=[
             InvitationRowResponse(
-                assignment_id=str(row.assignment_id),
+                assignment_id=str(row.assignment_id) if row.assignment_id else None,
                 contribution_id=str(row.contribution_id),
                 language=row.language,
                 speaker_name=row.speaker_name,

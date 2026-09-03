@@ -28,6 +28,7 @@ from app.arcade import (
     build_invitations,
     build_leaderboard,
     build_peer_list,
+    build_verification_queue,
     build_progression,
     build_quests,
     compute_xp,
@@ -472,3 +473,184 @@ def test_response_schema_publishes_no_fabricated_metric():
             f"'{forbidden}' appeared in the published schema; AMAZWI does not "
             "measure it and must not publish it"
         )
+
+
+# --- verification queue ordering -------------------------------------
+#
+# This is the bug that broke the entire two-device walk, so it gets a
+# test that fails loudly if the ordering ever reverts.
+
+
+def _queue_fixture(db_session):
+    """A speaker, two qualified verifiers, and three clips awaiting peers."""
+    campaign = _campaign(db_session)
+    card = _card(db_session, campaign)
+    reviewer = _user(db_session, "sub-q-reviewer", "Reviewer")
+    speaker = _user(db_session, "sub-q-speaker", "Speaker")
+    v1 = _user(db_session, "sub-q-v1", "Verifier One")
+    v2 = _user(db_session, "sub-q-v2", "Verifier Two")
+
+    for user in (v1, v2):
+        db_session.add(
+            VerifierQualification(
+                user_id=user.id,
+                language="zu",
+                qualified_at=NOW - timedelta(days=1),
+                reviewed_by=reviewer.id,
+            )
+        )
+
+    clips = []
+    for age_days in (3, 2, 1):  # oldest first
+        contribution = _contribution(
+            db_session,
+            speaker,
+            card,
+            ContributionState.OPEN,
+            created_at=NOW - timedelta(days=age_days),
+        )
+        # The queue only offers clips whose audio actually exists.
+        contribution.audio_key = f"audio/{contribution.id}"
+        clips.append(contribution)
+    db_session.flush()
+    return speaker, v1, v2, clips
+
+
+def test_queue_is_oldest_first_when_no_clip_has_been_started(db_session):
+    """Fairness: the speaker who has waited longest is served first."""
+    _, v1, _, clips = _queue_fixture(db_session)
+    rows = build_verification_queue(db_session, verifier_id=v1.id)
+    assert [r.contribution_id for r in rows] == [c.id for c in clips]
+
+
+def test_a_started_clip_outranks_every_untouched_one(db_session):
+    """The ordering must CONVERGE two verifiers onto the same clip.
+
+    Regression test for the bug that made the two-device walk impossible.
+    With pure oldest-first, verifier 1's queue head was a clip verifier 2
+    could not see (v2 had already answered it), and v2's head was an
+    older untouched clip. The two never worked on the same recording, so
+    no clip ever collected the two answers the resolver requires: every
+    contribution sat at "1 of 2" forever and no speaker was ever paid.
+
+    Answers-first fixes it. The moment anyone answers a clip, every other
+    eligible verifier is steered to that same clip, because it now sorts
+    above every untouched one -- however old those are.
+    """
+    _, v1, v2, clips = _queue_fixture(db_session)
+    newest = clips[-1]
+
+    # v1 answers the NEWEST clip -- the one oldest-first would rank last.
+    db_session.add(
+        Assignment(
+            contribution_id=newest.id,
+            verifier_id=v1.id,
+            mode=AssignmentMode.PROFICIENT_VERIFIER,
+            answer_text="ingubo",
+            answer_normalised="ingubo",
+            matched=True,
+            answered_at=NOW,
+        )
+    )
+    db_session.flush()
+
+    rows = build_verification_queue(db_session, verifier_id=v2.id)
+    assert rows, "verifier two must still have work"
+    assert rows[0].contribution_id == newest.id, (
+        "a clip needing ONE more answer must outrank untouched older clips; "
+        "otherwise two verifiers never converge and nothing ever resolves"
+    )
+    assert rows[0].answers_so_far == 1
+
+    # And it must have left v1's own queue -- you cannot answer twice.
+    assert newest.id not in {
+        r.contribution_id
+        for r in build_verification_queue(db_session, verifier_id=v1.id)
+    }
+
+
+def test_queue_ordering_is_deterministic_across_repeated_calls(db_session):
+    """Doctrine rule 5 -- no set-traversal nondeterminism in the queue."""
+    _, v1, _, _ = _queue_fixture(db_session)
+    runs = [
+        [r.contribution_id for r in build_verification_queue(db_session, verifier_id=v1.id)]
+        for _ in range(5)
+    ]
+    assert all(run == runs[0] for run in runs)
+
+
+def test_a_fresh_recording_invites_a_verifier_before_anyone_claims_it(db_session):
+    """The alert must fire for a NEW clip, which is the whole point of it.
+
+    Regression test. Invitations used to be built only from existing
+    Assignment rows, and an assignment is created only when a verifier
+    actively claims a clip. So a speaker recording produced no invitation
+    on any device, the "someone just recorded" alert never fired for a
+    new recording, and the laptops only discovered work when a human
+    navigated or reloaded -- exactly the reload the alert exists to
+    remove.
+    """
+    _, v1, v2, clips = _queue_fixture(db_session)
+
+    for verifier in (v1, v2):
+        rows = build_invitations(db_session, current_user_id=verifier.id)
+        assert {r.contribution_id for r in rows} == {c.id for c in clips}, (
+            "every unclaimed clip awaiting this verifier must be an invitation"
+        )
+        assert all(r.assignment_id is None for r in rows), (
+            "nothing has been claimed yet, so there is no assignment id to report"
+        )
+
+
+def test_claiming_a_clip_does_not_duplicate_its_invitation(db_session):
+    """One clip, one invitation -- whether or not it has been claimed."""
+    _, v1, _, clips = _queue_fixture(db_session)
+    target = clips[0]
+
+    db_session.add(
+        Assignment(
+            contribution_id=target.id,
+            verifier_id=v1.id,
+            mode=AssignmentMode.PROFICIENT_VERIFIER,
+        )
+    )
+    db_session.flush()
+
+    rows = build_invitations(db_session, current_user_id=v1.id)
+    ids = [r.contribution_id for r in rows]
+    assert len(ids) == len(set(ids)), "a claimed clip must not appear twice"
+    claimed = next(r for r in rows if r.contribution_id == target.id)
+    assert claimed.assignment_id is not None, "a claimed clip reports its assignment"
+
+
+def test_an_answered_clip_stops_inviting_the_verifier_who_answered(db_session):
+    """Answered work must leave your list, or the alert nags forever.
+
+    Uses the NEWEST clip deliberately. A merged list sorted by created_at
+    would rank it LAST and the convergence assertion below would fail --
+    which is the point: invitations must preserve the queue's
+    answers-first order, not re-sort it back into the bug.
+    """
+    _, v1, v2, clips = _queue_fixture(db_session)
+    target = clips[-1]
+
+    db_session.add(
+        Assignment(
+            contribution_id=target.id,
+            verifier_id=v1.id,
+            mode=AssignmentMode.PROFICIENT_VERIFIER,
+            answer_text="ingubo",
+            answer_normalised="ingubo",
+            matched=True,
+            answered_at=NOW,
+        )
+    )
+    db_session.flush()
+
+    assert target.id not in {
+        r.contribution_id for r in build_invitations(db_session, current_user_id=v1.id)
+    }
+    # ...but verifier two still needs to answer it, and it now outranks
+    # the untouched clips because it is one answer from resolving.
+    v2_rows = build_invitations(db_session, current_user_id=v2.id)
+    assert v2_rows[0].contribution_id == target.id

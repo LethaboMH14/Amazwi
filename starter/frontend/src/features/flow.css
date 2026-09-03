@@ -403,3 +403,109 @@
   margin: -1px; padding: 0; overflow: hidden;
   clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+
+/* ---------------------------------------------------------------------
+   Verification tally -- the two-answer trust model, drawn.
+
+   Replaces a static "thank you" paragraph. A verifier could previously
+   not tell whether the second listener had answered, so the resolver
+   firing (and paying the speaker) was completely invisible from the
+   screen that caused it.
+   --------------------------------------------------------------------- */
+.tally {
+  list-style: none;
+  margin: 2px 0 14px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.tally-dot {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--surface-sunken, rgba(0, 0, 0, 0.035));
+  border: 1.5px solid transparent;
+  transition: background 220ms ease, border-color 220ms ease;
+}
+
+.tally-dot b { font-size: 14.5px; font-weight: 700; }
+.tally-dot > span:last-child { font-size: 13px; opacity: 0.72; }
+
+.tally-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface, #fff);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9),
+              inset 0 -1px 2px rgba(0, 0, 0, 0.09);
+  color: var(--ink-soft, #6b6f76);
+}
+
+.tally-dot.on {
+  background: color-mix(in srgb, var(--go, #12805c) 11%, transparent);
+  border-color: color-mix(in srgb, var(--go, #12805c) 34%, transparent);
+}
+.tally-dot.on .tally-mark {
+  background: var(--go, #12805c);
+  color: #fff;
+  animation: tally-pop 380ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes tally-pop {
+  0%   { transform: scale(0.55); }
+  62%  { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+
+/* The waiting lamp breathes, so an unanswered slot reads as "still
+   happening" rather than "nothing is happening". */
+.tally-pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  animation: tally-breathe 1500ms ease-in-out infinite;
+}
+
+@keyframes tally-breathe {
+  0%, 100% { opacity: 0.28; transform: scale(0.82); }
+  50%      { opacity: 0.85; transform: scale(1.18); }
+}
+
+.tally-count {
+  margin: 0 0 12px;
+  font-size: 14px;
+  opacity: 0.85;
+}
+.tally-count strong { font-size: 15.5px; }
+
+.verdict-band {
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin: 2px 0 4px;
+}
+.verdict-band.good {
+  background: color-mix(in srgb, var(--go, #12805c) 12%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--go, #12805c) 36%, transparent);
+}
+/* Deliberately NOT an error colour. Two people honestly disagreeing is a
+   normal, useful outcome -- painting it red would tell the verifier they
+   did something wrong when they did not. */
+.verdict-band.mixed {
+  background: var(--surface-sunken, rgba(0, 0, 0, 0.045));
+  border: 1.5px solid rgba(0, 0, 0, 0.12);
+}
+.verdict-title { margin: 0 0 5px; font-size: 16px; font-weight: 750; }
+.verdict-body { margin: 0; font-size: 13.5px; line-height: 1.5; opacity: 0.85; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tally-dot.on .tally-mark { animation: none; }
+  .tally-pulse { animation: none; opacity: 0.55; }
+}

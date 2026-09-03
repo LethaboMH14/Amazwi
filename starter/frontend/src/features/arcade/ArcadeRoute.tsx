@@ -29,7 +29,6 @@ import { usePolling } from "../../usePolling";
 import type { ArcadeDashboard, LeaderboardRow, QuestRow } from "../../api/contracts";
 import { Mascot } from "./Mascot";
 import { TabBar } from "./TabBar";
-import { LiveAlert } from "./LiveAlert";
 import { ThemeControl } from "../../theme";
 import { ModeLabel } from "../../ModeLabel";
 import { ConnectionBadge } from "../../ConnectionBadge";
@@ -323,7 +322,6 @@ export function ArcadeRoute() {
     <div className="desk">
       {/* Cross-device: this laptop learns that someone across the room
           just spoke, without anyone touching it. */}
-      <LiveAlert invitations={data?.invitations ?? []} />
       {data && <BubbleField count={verifiedTotal} />}
       <a className="skip-link" href="#desk-main">
         Skip to dashboard
@@ -591,7 +589,7 @@ export function ArcadeRoute() {
             ) : (
               <ul className="invite-list">
                 {data.invitations.map((invite) => (
-                  <li key={invite.assignment_id} className="invite">
+                  <li key={invite.contribution_id} className="invite">
                     <div className="avatar" aria-hidden="true">
                       {initials(invite.speaker_name)}
                     </div>

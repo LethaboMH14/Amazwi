@@ -181,7 +181,9 @@ class PeerRowResponse(BaseModel):
 
 
 class InvitationRowResponse(BaseModel):
-    assignment_id: str
+    # None when the clip is waiting for this verifier but nobody has
+    # claimed it yet -- the case a fresh recording is always in.
+    assignment_id: str | None = None
     contribution_id: str
     language: str
     speaker_name: str
@@ -288,3 +290,20 @@ class QueueRowResponse(BaseModel):
 
 class VerificationQueueResponse(BaseModel):
     items: list[QueueRowResponse]
+
+
+class AssignmentProgressResponse(BaseModel):
+    """What happened to a clip AFTER this verifier answered it.
+
+    Deliberately reveals nothing that would compromise independence: it
+    carries counts and the final decision, never the other verifier's
+    typed answer, and it is only reachable by someone who has already
+    submitted their own.
+    """
+
+    contribution_id: str
+    answers_so_far: int = Field(ge=0, le=2)
+    answers_required: int = 2
+    resolved: bool
+    understood: bool | None = None
+    my_answer_matched: bool | None = None

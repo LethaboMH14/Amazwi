@@ -69,7 +69,9 @@ export interface PeerRow {
 }
 /** A pending peer-verification request -- a real assignment, not a synthetic invite. */
 export interface InvitationRow {
-  assignment_id: string; contribution_id: string;
+  // null when the clip is waiting for you but nobody has claimed it yet --
+  // which is the state every brand-new recording starts in.
+  assignment_id: string | null; contribution_id: string;
   language: string; speaker_name: string; created_at: string;
 }
 export interface DeckSummary {
@@ -146,3 +148,17 @@ export interface QueueRow {
   answers_so_far: number;
 }
 export interface VerificationQueue { items: QueueRow[] }
+
+// --- assignment progress --------------------------------------------------
+// What happened to a clip AFTER this verifier answered. Carries counts and
+// the final decision, never the other verifier's typed answer -- and the
+// backend only serves it once your own answer is locked, so it cannot be
+// used to peek before answering.
+export interface AssignmentProgress {
+  contribution_id: string;
+  answers_so_far: number;
+  answers_required: number;
+  resolved: boolean;
+  understood?: boolean | null;
+  my_answer_matched?: boolean | null;
+}

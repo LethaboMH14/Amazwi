@@ -389,9 +389,17 @@ class InvitationRow:
     speaker is waiting for this user to listen and answer. Accepting is
     answering the assignment; there is no separate invitation record and
     none is invented here.
+
+    `assignment_id` is None when the clip is waiting for this verifier but
+    has not been claimed yet. That case is the common one -- and missing
+    it was a bug: invitations used to require an existing Assignment row,
+    which only appears once a verifier actively claims a clip. A speaker
+    recording therefore produced NO invitation on anyone's device, so the
+    "someone just recorded" alert could never fire for a new recording.
+    The one thing it existed to announce was the one thing it could not.
     """
 
-    assignment_id: uuid.UUID
+    assignment_id: uuid.UUID | None
     contribution_id: uuid.UUID
     language: str
     speaker_name: str
@@ -419,7 +427,7 @@ def build_invitations(
         .order_by(Contribution.created_at.asc(), Assignment.id.asc())
         .limit(limit)
     ).all()
-    return [
+    invitations = [
         InvitationRow(
             assignment_id=assignment_id,
             contribution_id=contribution_id,
@@ -429,6 +437,38 @@ def build_invitations(
         )
         for assignment_id, contribution_id, language, display_name, created_at in rows
     ]
+
+    # Unclaimed work counts as an invitation too. Without this the list
+    # only ever showed clips this verifier had ALREADY opened, so a fresh
+    # recording was invisible until someone navigated to the verify screen
+    # and claimed it by hand -- which is precisely the reload the live
+    # alert is supposed to remove.
+    claimed = {row.contribution_id for row in invitations}
+    for queued in build_verification_queue(
+        session, verifier_id=current_user_id, limit=limit
+    ):
+        if queued.contribution_id in claimed:
+            continue
+        invitations.append(
+            InvitationRow(
+                assignment_id=None,
+                contribution_id=queued.contribution_id,
+                language=queued.language,
+                speaker_name=queued.speaker_name,
+                created_at=queued.created_at,
+            )
+        )
+
+    # Order is concatenation, NOT a re-sort. Sorting the merged list by
+    # created_at would silently undo the queue's answers-first ordering
+    # and put the convergence bug straight back: an untouched older clip
+    # would outrank one that needs a single further answer to resolve.
+    #
+    # So: work you already opened comes first (finish what you started),
+    # then queued work in queue order. Both sources are individually
+    # totally ordered and deterministic, so the concatenation is too
+    # (doctrine rule 5).
+    return invitations[:limit]
 
 
 @dataclass(frozen=True)
@@ -584,7 +624,7 @@ class QueueRow:
 def build_verification_queue(
     session: Session, *, verifier_id: uuid.UUID, limit: int = 10
 ) -> list[QueueRow]:
-    """Contributions awaiting THIS verifier, oldest first.
+    """Contributions awaiting THIS verifier, closest-to-resolving first.
 
     Exists because the two-device walk was impossible without it: the
     verifier route needed a contribution id in the URL, and nothing gave
@@ -592,8 +632,10 @@ def build_verification_queue(
     phone and typing it into a laptop; in the real product it meant the
     queue did not exist at all.
 
-    Oldest first is deliberate -- a speaker waiting longest is served
-    first, rather than the newest clip burying older ones.
+    Ordered by answers already collected (descending), then oldest
+    first. See the comment on the order_by for why that ordering is the
+    difference between a working two-device walk and a queue where no
+    clip ever reaches the two answers the resolver needs.
 
     Filters mirror `cohorts.select_next_verifier` so a row that appears
     here can actually be claimed:
@@ -649,7 +691,27 @@ def build_verification_queue(
             Contribution.audio_key.is_not(None),
             func.coalesce(answered.c.n, 0) < 2,
         )
-        .order_by(Contribution.created_at.asc(), Contribution.id.asc())
+        # ORDERING IS LOAD-BEARING, and getting it wrong broke the whole
+        # two-verifier walk. Pure oldest-first let two verifiers work on
+        # DIFFERENT clips forever: verifier 1's head was a clip verifier 2
+        # could not see (already answered by 2), so no clip ever collected
+        # the two answers the resolver requires. Measured on the live
+        # server: V1's queue head was 38465f76 while V2's was d903cf4b.
+        #
+        # Answers-first fixes it by making the rule CONVERGENT -- the moment
+        # anyone answers a clip, every other eligible verifier is steered to
+        # that same clip, because it now sorts above every untouched one.
+        # A clip needing one more answer is also the most valuable work
+        # available: it is one answer away from paying its speaker.
+        #
+        # Oldest-first is preserved as the tie-break, so the original
+        # fairness property (longest wait served first) still holds among
+        # clips at the same stage. Both keys are total and deterministic.
+        .order_by(
+            func.coalesce(answered.c.n, 0).desc(),
+            Contribution.created_at.asc(),
+            Contribution.id.asc(),
+        )
         .limit(limit)
     ).all()
 

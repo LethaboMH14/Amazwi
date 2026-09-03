@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ScrollToTop } from "./ScrollToTop";
+import { LiveWatch } from "./features/arcade/LiveWatch";
 import { HomeRoute } from "./HomeRoute";
 import { ConsentRoute } from "./features/consent/ConsentRoute";
 import { RecordingRoute } from "./features/recording/RecordingRoute";
@@ -15,6 +16,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      {/* App-wide, so a verifier waiting on any screen is told a
+          recording arrived without reloading the page. */}
+      <LiveWatch />
       <Routes>
         {/* The desk is the product; the old marketing home is not what a
             device should land on. Every demo device opens a bare origin

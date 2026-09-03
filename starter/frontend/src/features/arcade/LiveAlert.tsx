@@ -7,9 +7,13 @@ import "./livealert.css";
  * "Someone just recorded" — the live cross-device moment.
  *
  * Every device polls the dashboard. This watches the invitation list for
- * an id it has NOT seen before and announces it. Watching ids rather than
+ * a clip it has NOT seen before and announces it. Watching ids rather than
  * a count matters: a count can stay the same while the work changes (one
  * answered, one arrived) and a count-based check would miss it silently.
+ *
+ * Keyed on contribution_id, NOT assignment_id: an unclaimed clip has no
+ * assignment yet, and keying on a null id would collapse every new
+ * recording into one indistinguishable entry.
  *
  * The very first poll is treated as a baseline, never as news. Otherwise
  * every laptop shouts about a queue that was already there when it
@@ -25,12 +29,12 @@ export function LiveAlert({ invitations }: { invitations: InvitationRow[] }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const ids = new Set(invitations.map((i) => i.assignment_id));
+    const ids = new Set(invitations.map((i) => i.contribution_id));
     if (seen.current === null) {
       seen.current = ids;   // first poll is the baseline, not news
       return;
     }
-    const arrived = invitations.find((i) => !seen.current!.has(i.assignment_id));
+    const arrived = invitations.find((i) => !seen.current!.has(i.contribution_id));
     seen.current = ids;
     if (arrived) setFresh(arrived);
   }, [invitations]);

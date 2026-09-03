@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePolling } from "../../usePolling";
 import { api, userMessage } from "../../api/client";
-import type { Assignment } from "../../api/contracts";
+import type { Assignment, AssignmentProgress } from "../../api/contracts";
 import { StatusAnnouncer } from "../../components/SignalPrimitives";
 import { Mascot } from "../arcade/Mascot";
 import { ConnectionBadge } from "../../ConnectionBadge";
@@ -18,6 +18,11 @@ export function VerificationRoute() {
   const [status, setStatus] = useState("Finding someone who needs you…");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [progress, setProgress] = useState<AssignmentProgress>();
+  // The assignment id survives the assignment being cleared, so progress
+  // can keep being polled while the next clip is already loading.
+  const answeredId = useRef<string>("");
+  const [queueDepth, setQueueDepth] = useState(0);
   const [playing, setPlaying] = useState(false);
   const audio = useRef<HTMLAudioElement>(null);
   const navigate = useNavigate();
@@ -41,6 +46,7 @@ export function VerificationRoute() {
       let claimLanguage = language || "zu";
       if (!target) {
         const queue = await api.getVerificationQueue();
+        setQueueDepth(queue.items.length);
         if (queue.items.length === 0) {
           // NOT an error. This is the normal resting state of a verifier
           // device between recordings -- showing it in red made a working
@@ -76,7 +82,34 @@ export function VerificationRoute() {
   // laptop fetched once on mount and never again -- a speaker could record
   // on the phone and both verifier laptops would sit on "nobody is waiting"
   // indefinitely, which reads as the product being broken.
-  usePolling(() => load({ quiet: true }), 4000, !assignment && !submitted);
+  usePolling(() => load({ quiet: true }), 2500, !assignment && !submitted);
+
+  // Watch the clip you just answered until the second listener answers too.
+  // Without this the screen went permanently static after "thank you": you
+  // could not tell whether one answer had landed or both, and the resolver
+  // firing was invisible even though the backend had already paid out.
+  const watch = useCallback(async () => {
+    if (!answeredId.current) return;
+    try {
+      setProgress(await api.getAssignmentProgress(answeredId.current));
+    } catch {
+      /* transient -- the next tick retries */
+    }
+  }, []);
+  usePolling(watch, 2000, submitted && !progress?.resolved);
+
+  // Once it resolves, hand this device its next piece of work rather than
+  // stranding it on a completed card.
+  function nextClip() {
+    answeredId.current = "";
+    setProgress(undefined);
+    setSubmitted(false);
+    setAssignment(undefined);
+    setAnswer("");
+    setSpeakerName("");
+    setStatus("Finding someone who needs you…");
+    void load();
+  }
 
   function togglePlay() {
     const el = audio.current;
@@ -93,9 +126,11 @@ export function VerificationRoute() {
     setStatus("Submitting your answer…");
     try {
       await api.submitAnswer(assignment.id, answer);
+      answeredId.current = assignment.id;
       setSubmitted(true);
-      setStatus("Thanks — your independent answer was recorded.");
+      setStatus("Answer locked. Waiting for the second listener…");
       setError("");
+      void watch();
     } catch (err) {
       setError(userMessage(err));
       setStatus("");
@@ -129,8 +164,9 @@ export function VerificationRoute() {
           <Mascot size={116} mood="listening" />
           <p className="waiting-title">Listening for new voices</p>
           <p className="answer-note" style={{ textAlign: "center", margin: 0 }}>
-            Nobody has recorded yet. Leave this open &mdash; the moment someone
-            does, their card appears here automatically.
+            {queueDepth > 0
+              ? `${queueDepth} recording${queueDepth === 1 ? "" : "s"} waiting — loading the next one for you.`
+              : "Nobody has recorded yet. Leave this open — the moment someone does, their card appears here automatically."}
           </p>
           <span className="waiting-live" aria-hidden="true">
             <i /><i /><i />
@@ -220,16 +256,70 @@ export function VerificationRoute() {
       )}
 
       {submitted && (
-        <section className="flow-card" aria-label="Answer recorded">
-          <p className="eyebrow">Recorded</p>
-          <p style={{ fontSize: 17, fontWeight: 700, margin: "6px 0 8px" }}>
-            Thank you — your answer is in.
+        <section className="flow-card verdict" aria-label="Answer recorded">
+          {/* Two answers, drawn as two lamps. This is the entire trust model
+              of the product made visible: one answer proves nothing, two
+              independent answers agreeing is what makes a clip corpus
+              grade. It used to be a static paragraph, so a verifier could
+              not tell whether the second listener had answered -- and the
+              resolver paying out was completely invisible. */}
+          <ol className="tally" aria-label="Independent answers collected">
+            {[0, 1].map((i) => {
+              const done = (progress?.answers_so_far ?? 1) > i;
+              return (
+                <li key={i} className={done ? "tally-dot on" : "tally-dot"}>
+                  <span className="tally-mark" aria-hidden="true">
+                    {done ? (
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 12.5l5.5 5.5L20 6.5" />
+                      </svg>
+                    ) : (
+                      <i className="tally-pulse" />
+                    )}
+                  </span>
+                  <b>{i === 0 ? "You" : "Second listener"}</b>
+                  <span>{done ? "answered" : "still listening"}</span>
+                </li>
+              );
+            })}
+          </ol>
+
+          <p className="tally-count" aria-live="polite">
+            <strong>{progress?.answers_so_far ?? 1} of 2</strong> independent
+            answers in.
           </p>
-          <p className="answer-note" style={{ margin: 0 }}>
-            It stays sealed until the second listener has answered too. Neither
-            of you can see the other&rsquo;s word, which is what makes the
-            agreement worth anything.
-          </p>
+
+          {!progress?.resolved && (
+            <p className="answer-note" style={{ margin: 0 }}>
+              Your word stays sealed until the second listener has answered.
+              Neither of you can see the other&rsquo;s, which is what makes the
+              agreement worth anything. This updates on its own &mdash; no need
+              to refresh.
+            </p>
+          )}
+
+          {progress?.resolved && (
+            <div className={progress.understood ? "verdict-band good" : "verdict-band mixed"}>
+              <p className="verdict-title">
+                {progress.understood
+                  ? "Both of you understood it."
+                  : "You did not agree."}
+              </p>
+              <p className="verdict-body">
+                {progress.understood
+                  ? "The clip is corpus grade and the speaker has been paid."
+                  : "No agreement, so the clip is not corpus grade — and nobody is penalised for it. Disagreement is data too."}
+                {progress.my_answer_matched === false &&
+                  " Your own word did not match the card."}
+              </p>
+            </div>
+          )}
+
+          <div className="flow-actions" style={{ marginTop: 4 }}>
+            <button type="button" className="flow-btn flow-btn-go" onClick={nextClip}>
+              {progress?.resolved ? "Next recording" : "Skip ahead to the next one"}
+            </button>
+          </div>
         </section>
       )}
 
