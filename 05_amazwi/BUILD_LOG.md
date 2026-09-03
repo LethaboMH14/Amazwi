@@ -5,6 +5,24 @@
 
 ---
 
+### [03 Sep] — Sbu (Claude, direct) · sourced the Mupita quote precisely, refined the problem with Google's own WAXAL brief, expanded the MTN-benefit argument
+
+**DID**
+- Sbu asked for the exact source of the Mupita quote already in use, so it could be quoted directly. Web-searched and fetched the actual article rather than trusting the earlier citation: Joyce Onyeagoro, "Ralph Mupita on MTN's New Frontier: Connectivity, Content, and African AI," TechAfrica News, 9 Apr 2026. Confirmed the "next frontier... develop the digital services ourselves" line is verbatim; found the "2,000+ languages... cannot afford to be left out of the AI era" line is the journalist's paraphrase of Mupita's position, not something he said word for word. Recorded both, correctly distinguished, in `07_TRUTH.md` with byline, date and URL.
+- Sbu supplied Google Research's own WAXAL challenge description (a Zindi/Kaggle brief targeting Lingala, Shona and Luganda ASR) and asked it be used to refine the problem statement. Rewrote the problem beat to lead with WAXAL's real scale (27 languages, 100m+ speakers, thousands of hours, genuine Google Research/African-academic collaboration) rather than wait for a judge to raise it, then note that none of WAXAL's current challenge languages are South African — using Google's own current materials to make the gap undeniable rather than relying on the disputed "11,000 hours" figure `07_TRUTH.md` already flags as unverified.
+- Expanded the "how does this benefit MTN" backup answer into three layers, all sourced: NLP/AI products (voice-operable MoMo, quoting Mupita verbatim), AI data centres (MTN's disclosed 150MW investment), and the AI race (foundation labs' well-documented African-language data scarcity, the same scarcity WAXAL itself exists to address). Kept it explicitly strategic rather than a revenue projection, per the standing rule against margin/savings claims.
+- Consolidated a now-superseded duplicate "gap" section into a pointer, so the script has one current version of this answer, not two competing drafts.
+
+**WHY**
+- A quote used on stage without a traceable source is a liability if a judge asks where it's from; verifying and recording the exact byline/date/URL closes that risk. The WAXAL reframing turns a potential "but Google already did this" objection into supporting evidence instead.
+
+**NEXT**
+- Rehearse the expanded Q&A answer; it's long, so drill delivering just the first paragraph under time pressure.
+
+**BLOCKED-PING:** none.
+
+---
+
 ### [03 Sep] — Sbu (Claude, direct) · found and closed a real gap: the deck never named how better data helps MTN
 
 **DID**

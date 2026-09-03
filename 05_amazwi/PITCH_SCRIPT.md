@@ -16,6 +16,7 @@ Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility &
 5. Product-explanation sentence de-jargoned; technical detail now follows, not leads.
 6. The claim "the receipt explains why, in the speaker's own language" was checked against `starter/backend/app/resolver.py` (lines 193-218): the resolver's reason strings are hardcoded English (e.g. `"understood by both verifiers, audio quality passed, consent active"`). There is no localization. The claim was false and is now removed from the script.
 7. Closing restructured around the commercial ask MTN actually needs to hear: what to measure, not just what was built.
+8. **Latest:** the Mupita quote was traced to its exact source (byline, date, URL) and split from a verbatim quote vs. a journalist's paraphrase, recorded in `07_TRUTH.md`; the problem statement was refined against Google Research's own WAXAL challenge description (supplied by the user) to lead with WAXAL's real scale rather than wait for a judge to raise it; and the "how does this benefit MTN" answer was expanded into a full NLP / AI data centres / AI race argument for why MTN specifically should invest, still without a revenue number.
 
 **Feature work stays frozen.** Fixed shape, six beats:
 
@@ -38,19 +39,25 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 
 ## 1 - Problem: market gap (0:18) - SBU
 
+**Refined against Google Research's own WAXAL challenge description (Zindi/Kaggle brief for the ASR challenge targeting Lingala, Shona and Luganda), which the user supplied directly.** WAXAL is real, large, and a genuine multi-year Google Research collaboration: 27 African languages, 100 million+ speakers, thousands of hours of natural speech. That is the strongest possible version of "Google is investing here" a judge could bring up, so lead with it rather than waiting for it to be raised. The point AMAZWI makes is sharper for including it: even WAXAL's named target languages for this exact challenge, Lingala (DRC/Congo), Shona (Zimbabwe), Luganda (Uganda), are not South African languages. Google's own flagship African-speech effort, by its own current challenge brief, still does not reach isiZulu, Setswana, isiXhosa or Sesotho. This is Google's own framing being used to make the gap undeniable, not an accusation.
+
 **Card 2 text, paste this into the Gamma editor, replacing the current card 2:**
 
 > **African languages are structurally missing from speech AI. This is a data gap, not a demand gap.**
 >
-> Foundation ASR models exceed 100% word-error-rate zero-shot on Southern Bantu languages. For a real person, that means South African languages are effectively unusable with today's voice AI.
+> Google Research's WAXAL programme is real and substantial: 27 African languages, over 100 million speakers, thousands of hours of natural speech, built with African academic and community partners. It is exactly the kind of investment this problem needs.
+>
+> Its current challenge targets Lingala, Shona and Luganda. None of South Africa's official languages are among them. Foundation ASR models separately exceed 100% word-error-rate zero-shot on Southern Bantu languages: for a real person, that means these languages are effectively unusable with today's voice AI.
 >
 > MTN already has the daily-use surface this data needs to come from: MoMo. A funded, verified mini-app mission gives MTN a governed, consented source of local-language voice-intent data tailored to MoMo use cases.
 
 **Spoken (0:18):**
 
-> "Foundation speech models exceed 100% word-error-rate on South Africa's Bantu languages, zero-shot. In practice, that means these languages don't work with today's voice AI. MTN already owns the daily-use surface this data needs to come from: MoMo."
+> "Google's own WAXAL programme is real: 27 African languages, thousands of hours, a genuine investment. Its current challenge targets Lingala, Shona and Luganda. Not one South African language is among them. MTN already owns the daily-use surface that data needs to come from: MoMo."
 
 **If a judge asks "which model, which dataset, which languages" - the backup answer:** "Whisper large-v3-turbo, zero-shot, scores 146.30% WER across the tested Southern Bantu set and 223% on Setswana, in a named published benchmark (arXiv 2606.31642). Separately, foundation ASR models broadly exceed 100% WER zero-shot across all six Southern Bantu languages per Marivate et al. (arXiv). These are specific, named benchmarks, not a claim that every ASR system fails this way." Do not put this level of detail on the slide; have it ready verbatim for Q&A only.
+
+**If a judge asks "isn't WAXAL solving this already" - the exact answer:** "WAXAL is a real, substantial contribution, and we'd rather build alongside it than pretend it doesn't exist. But its own current challenge brief names Lingala, Shona and Luganda, not a single South African language. That's not a criticism of Google, it's the specific gap this pilot fills." Never say "Google skipped us" or any accusatory framing; the gap speaks for itself from Google's own materials.
 
 ---
 
@@ -88,7 +95,21 @@ Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slo
 
 **If a judge asks "how does MTN make money" - the exact answer:** "We are not claiming revenue before measuring it. The pilot tests whether funded mini-app missions increase repeat MoMo use and produce useful, consented voice-intent data, at a cost MTN can support." Never answer this question with a margin, savings percentage, or revenue projection.
 
-**If a judge asks "what specifically does better African-language data let MTN do" - this was a real gap Sbu caught: the deck gestures at "useful for MTN's voice products" but never names the mechanism. The exact backup answer:** "Two concrete things. First, voice-operable MoMo: balance checks, sending money, agent and merchant transactions by voice, not just text menus or USSD. That matters specifically because a large share of South Africans don't reliably read for meaning in any language, per PIRLS 2021, so voice access reaches users a text interface excludes. Second, MTN has already publicly disclosed a 150MW AI data centre investment, with South Africa and Nigeria named as priority markets, in its H1 2026 results. Governed, consented South African speech data is a direct input to that stated infrastructure plan, not a hypothetical use case we're inventing to sound relevant." Keep this for Q&A only; it's too long for the timed beats.
+**If a judge asks "what specifically does better African-language data let MTN do, and how could this make MTN money if they invest" - the full backup answer, expanded to cover NLP, AI/data science, AI data centres and the AI race directly. This is Q&A-depth material, not a slide; deliver the first paragraph if time is short, add the rest only if pressed:**
+
+> "Three layers, all pointing at the same asset.
+>
+> **NLP and AI products.** Voice-operable MoMo needs South African-language NLP: balance checks, sending money, agent and merchant transactions by voice, not just text menus or USSD. Governed, consented speech data is the raw input every one of those products needs before it can exist. That's not hypothetical. MTN's own Group President, Ralph Mupita, told TechAfrica News in April 2026: 'I think the next frontier is how do we develop the digital services ourselves that we can have our customers consume.' This is exactly that: a digital service built on data MTN doesn't currently hold.
+>
+> **AI data centres.** MTN has already disclosed a 150MW AI data centre investment, with South Africa and Nigeria named as priority markets, in its H1 2026 results. Capacity without African-language data to run on it is compute looking for a job. Governed South African speech data gives that infrastructure a concrete, local workload; it's a direct input to a plan MTN has already committed capital to, not a use case we're inventing to sound relevant.
+>
+> **The AI race.** Every major foundation model lab is short African-language data right now; that's exactly why Google Research built WAXAL. Owning a governed, consent-clean, provenance-traceable South African corpus is a genuine strategic asset in that race: it's something MTN could license, build on internally, or use to negotiate from a position of owning the input rather than buying the output. We are not putting a number on that asset today, because it hasn't been measured. But the strategic logic; own the scarce input in a market everyone is racing to enter; is the same logic behind MTN's own AI infrastructure bet. This pilot is the cheapest way to test whether that logic holds before committing further capital."
+
+Never turn this into a specific revenue, margin, or savings figure. The argument is strategic and evidence-based (Mupita's own words, MTN's own disclosed data centre plan, the AI industry's well-known data scarcity problem), not a financial projection we haven't earned the right to make.
+
+**Optional card-9 addition (manual paste, since Gamma credits are at 0):**
+
+> A direct input to MTN's own disclosed AI infrastructure investment: the 150MW AI data centre programme named in MTN's H1 2026 results, with South Africa and Nigeria as priority markets. As MTN's own Group President has said, "the next frontier is how do we develop the digital services ourselves that we can have our customers consume."
 
 ---
 
@@ -131,17 +152,9 @@ The deck was fully regenerated with every fix from both Codex review rounds bake
 
 ---
 
-## One real gap found after the deck was finalised: the deck never names how better data helps MTN
+## Gap history: "how does better data help MTN" was under-answered, now fixed
 
-Sbu caught this directly: card 2 and card 9 both gesture at the dataset being "useful" or "tailored to MoMo use cases," but nowhere does the deck say what that actually means in practice. A judge could reasonably ask "useful for what?" and get a vague answer. Two fixes, both optional manual pastes (deck credits are at 0, so this can't be regenerated):
-
-**Recommended: add one bullet to card 9's "What MTN gets" list.** Paste this as a fourth bullet in that list:
-
-> A direct input to MTN's own disclosed AI infrastructure investment: the 150MW AI data centre programme named in MTN's H1 2026 results, with South Africa and Nigeria as priority markets.
-
-**Full Q&A backup answer (spoken only, do not put on a slide):** see the new backup answer added to beat 4 above ("what specifically does better African-language data let MTN do"). It names two concrete mechanisms: voice-operable MoMo for users the PIRLS 2021 literacy data shows text interfaces exclude, and a direct input to MTN's already-disclosed AI data centre investment. Both claims are sourced from `07_TRUTH.md`'s verified claims register, not invented for this answer.
-
-If there's no time to paste the card 9 bullet before presenting, the Q&A backup alone is enough to survive the question if it's asked. It just means the deck itself stays slightly under-expressed on this point, which is a smaller risk than leaving the question unanswerable.
+The deck originally gestured at the dataset being "useful" or "tailored to MoMo use cases" without naming a mechanism. This was fixed in two stages: first with a two-point answer (voice-operable MoMo + the disclosed data centre investment), then expanded on Sbu's direct request into the full three-layer NLP / AI data centre / AI race answer now under beat 4 above, including the verbatim, directly-quotable Mupita line sourced and byline-checked in `07_TRUTH.md`. That expanded answer is the current version, deliver from there. The optional card-9 bullet is also now under beat 4, above.
 
 ---
 
