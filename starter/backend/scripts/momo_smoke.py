@@ -20,15 +20,28 @@ from app.momo import MomoApiError, MomoClient, MomoConfig, MomoConfigurationErro
 
 
 def load_local_env() -> None:
-    path = Path(__file__).resolve().parents[1] / ".env"
-    if not path.exists():
+    """Load the first env file found, backend then repo root.
+
+    It only looked in starter/backend/.env, while the real credentials
+    live in the REPO ROOT .env -- so this reported "MOMO_BASE_URL is
+    required" with a fully populated env file two directories up, which
+    reads as missing configuration rather than the wrong search path.
+    """
+    for candidate in (
+        Path(__file__).resolve().parents[1] / ".env",
+        Path(__file__).resolve().parents[3] / ".env",
+    ):
+        if candidate.exists():
+            path = candidate
+            break
+    else:
         return
     for line in path.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip())
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
 def main() -> int:
