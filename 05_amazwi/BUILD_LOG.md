@@ -5,6 +5,25 @@
 
 ---
 
+### [03 Sep] — Sbu (Claude, direct) · wrote a full v2 Gamma prompt for a different account (this one is out of credits)
+
+**DID**
+- Sbu asked for four new deck sections (a clearer tech architecture diagram, how AMAZWI addresses unemployment/the skills gap, an estimated MoMo build/maintenance cost breakdown, and a scaling narrative) plus a refined "real hooking" problem statement, while keeping everything already fixed. This account's Gamma credits are at 0, so wrote a complete, self-contained, paste-ready generation prompt in `05_amazwi/GAMMA_PROMPT_V2.md` for a different Gamma account to run.
+- Architecture card is grounded in the actual built system (FastAPI, PostgreSQL, the resolver, the outbox pattern, the MoMo Collections sandbox integration, the AI Council's advisory-only role), not invented.
+- Unemployment/skills card is deliberately scoped: does not claim to solve unemployment, cites `07_TRUTH.md`'s existing sourced material on exploitative data-labelling platforms (Remotasks Kenya shutdown, Sama/OpenAI Kenya pay ratio) and South Africa's real BPO sector figures to argue AMAZWI is a fair, honest on-ramp, not a jobs program.
+- Cost breakdown is explicitly labelled "illustrative planning estimate, not vendor-quoted or audited" on the card itself, built from the project's own existing R2.00 illustrative reward rate and generic small-scale cloud hosting costs, not fabricated precision. Flagged MoMo transaction fees as unknown, to be confirmed with MTN.
+- New deck will be ~13 cards; noted explicitly in both files that the timed six-beat script only speaks through 9 of them, the four new cards are reference/Q&A/Round-2 depth, not part of the 2:30 timed run.
+
+**WHY**
+- Better to hand over a complete, internally-consistent generation prompt with sourcing notes than a fragmented set of card edits, given this account can no longer generate anything itself.
+
+**NEXT**
+- Run `GAMMA_PROMPT_V2.md` on an account with credits, then reconcile `PITCH_SCRIPT.md`'s deck link once the new deck exists.
+
+**BLOCKED-PING:** none — this task is fully handed off in file form.
+
+---
+
 ### [03 Sep] — Sbu (Claude, direct) · sourced the Mupita quote precisely, refined the problem with Google's own WAXAL brief, expanded the MTN-benefit argument
 
 **DID**

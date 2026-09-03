@@ -3,7 +3,7 @@
 Deck: https://gamma.app/docs/35l5lmuw841k199
 This is the final regeneration with every fix from both Codex review rounds baked directly into the generated card text (no manual paste needed). Stale links, do not present any of them: `i1kl0ftsc184hbx`, `1dhqhqj19mgd758`, `p6yb4zccmjy3sbi`, `ws921eo2ozpw8bp`.
 
-**Gamma credits are now at 0.** This deck cannot be regenerated again from this environment. Any further changes need a manual pass in the Gamma editor.
+**Gamma credits are now at 0.** This deck cannot be regenerated again from this environment. Any further changes need a manual pass in the Gamma editor, **or use [`GAMMA_PROMPT_V2.md`](GAMMA_PROMPT_V2.md) on an account that still has credits**: a full, self-contained paste-ready prompt for a v2 deck that keeps everything below and adds a tech architecture diagram, an unemployment/skills-gap card, an illustrative cost breakdown, and a scaling card.
 Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility & Scalability 20% · Technical Execution 20% · Presentation & Pitch 15%
 
 **Revised again against Codex's external review (provisional score 84/100, ceiling ~88-90 if these land and rehearsal is real).** Codex reviewed the repo, the handover notes and this file, but could not open the live Gamma pixels from its environment - the fixes below are applied to the script text and to the paste-ready card text; the actual Gamma cards still need the same manual pass described further down.
