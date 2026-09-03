@@ -659,3 +659,59 @@ Full detail in the README. In short:
 > *"We have not improved anyone's word error rate today. You can't do that in twenty-six hours, and anyone who tells you otherwise is showing you a slide, not a training run."*
 
 Every judge in that room has been oversold to eleven times before we walk on. **Precision is the differentiator.** If you find something in these documents that overclaims, cut it — even if it sounds good. Especially if it sounds good.
+
+## 3 Sep — peer verification convergence (please review; backend lane)
+
+**One manual step is outstanding and it blocks the demo.** The running
+uvicorn (`pid 436`) was started without `--reload`, so it still serves the
+old code. In the PowerShell window where you started it:
+
+```powershell
+# Ctrl+C to stop, then (that window still has AMAZWI_DATABASE_URL set):
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+`--reload` so this stops recurring. I could not restart it myself:
+`AMAZWI_DATABASE_URL` exists only in that shell, reading it out of the
+process was correctly refused as a sensitive action, and guessing at
+Postgres credentials was not an acceptable way around that.
+
+While you are in that window, clear the synthetic backlog:
+
+```powershell
+$env:AMAZWI_ALLOW_DEMO_RESET="true"; python scripts/clear_demo_queue.py --synthetic-only
+```
+
+Those are 2-second pcm WAVs from scripted testing with no real speaker
+behind them. `--synthetic-only` leaves every real phone recording and all
+resolved history untouched; run it with `--dry-run` first if you want to
+see the list before anything is deleted.
+
+**What changed in your lane, and why I did not wait.** Three bugs stopped
+any clip from ever collecting two answers, so no Lethabo-lane screen could
+be made to work at all:
+
+1. `build_verification_queue` ordered oldest-first only, so two verifiers
+   took the head of different lists and never met on the same clip.
+   Measured live: V1 head `38465f76`, V2 head `d903cf4b`. Now ordered by
+   answers collected (desc) then oldest — convergent, with oldest-first
+   preserved as the tie-break.
+2. `build_invitations` read only existing `Assignment` rows, which appear
+   only when a verifier claims a clip — so a new recording produced no
+   invitation and the "someone just recorded" alert could never fire for
+   the one event it exists to announce. It now includes unclaimed queued
+   work, with `assignment_id` null until claimed (`InvitationRowResponse`
+   changed accordingly).
+3. New `GET /assignments/{id}/progress`. It returns counts and the final
+   decision only — never the other verifier's typed answer — and 409s
+   until the caller's own answer is locked, so peer independence is
+   intact. Please sanity-check that reasoning; it is the one place I
+   added a new read over assignment data.
+
+The resolver itself was **not** at fault and is unchanged. Proven over
+HTTP against the live server: one answer → `PENDING`, two → `RESOLVED /
+CORPUS_ELIGIBLE / 200` minor units.
+
+Backend 287 passed (was 281). Both regression tests were confirmed to
+fail against the old code before being kept. No money, legal or
+deployment-safety decision was made here.

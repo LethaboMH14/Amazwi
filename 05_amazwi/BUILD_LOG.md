@@ -5,6 +5,70 @@
 
 ---
 
+### [03 Sep] — Lethabo · peer verification never converged (cross-lane, pending Sbu's review)
+
+- **DID:** Root-caused and fixed why a recording "lands after a while", why no
+  notification ever fired, and why one verified answer never became two.
+  Three separate bugs; the resolver was not one of them.
+- **HOW:** Drove the real speaker → two-verifier path over HTTP against the
+  running server before changing anything. The resolver is correct: after one
+  answer the contribution reports `PENDING`, after the second `RESOLVED /
+  CORPUS_ELIGIBLE / 200` minor units (R2.00). The failure was upstream.
+  1. **The queue never converged two verifiers onto the same clip.**
+     `build_verification_queue` ordered purely oldest-first, so each verifier
+     took the head of a *different* list — measured live, V1's head was
+     `38465f76` while V2's was `d903cf4b`. No clip ever collected the two
+     answers the resolver requires, so contributions sat at "1 of 2" forever
+     and no speaker was paid. Now ordered by answers collected (desc), then
+     oldest first — convergent, because the moment anyone answers a clip it
+     outranks every untouched one. Oldest-first survives as the tie-break, so
+     the original fairness property still holds among clips at the same stage.
+  2. **A fresh recording could never fire the "someone just recorded" alert.**
+     `build_invitations` read only existing `Assignment` rows, and an
+     assignment is created only when a verifier actively *claims* a clip. So a
+     speaker recording produced no invitation on any device: the one event the
+     alert exists to announce was the one it could not see. Invitations now
+     include unclaimed queued work, `assignment_id` null until claimed.
+  3. **The alert was mounted inside the dashboard only**, so a verifier waiting
+     on `/verify` was never told anything. New `LiveWatch` runs in the app
+     shell, muted on `/record` and `/verify`.
+- **ALSO:** Verifier feedback after answering was a dead end — a static "thank
+  you" that never changed, so you could not tell whether the second listener
+  had answered, and the resolver paying the speaker was invisible from the very
+  screen that caused it. New `GET /assignments/{id}/progress` reports counts and
+  the final decision — never the other verifier's typed answer, and only once
+  your own is locked, so independence is preserved. Drawn as two lamps, then it
+  advances to the next clip.
+- **ALSO:** Both links to `/verify` (live alert, dashboard Listen) carried only a
+  contribution id, so the screen fell back to `language || "zu"` and a Setswana
+  clip was claimed in the wrong language and refused. Same failure that made
+  Setswana unreachable before the queue existed, through a different door.
+  Verified live: the Setswana request now opens as `…&language=tn` and renders
+  "Setswana".
+- **VERIFIED:** Both regressions were confirmed to **fail** against the old code
+  before the tests were kept. Backend 287 passed (was 281), frontend 123 passed,
+  `tsc --noEmit` clean.
+- **CHANGED:** `app/arcade.py`, `app/api_types.py`, `app/routes/arcade.py`,
+  `app/routes/assignments.py`, `tests/test_arcade.py`;
+  `src/App.tsx`, `src/api/client.ts`, `src/api/contracts.ts`,
+  `src/features/arcade/{LiveWatch.tsx,LiveAlert.tsx,ArcadeRoute.tsx}`,
+  `src/features/verification/VerificationRoute.tsx`, `src/features/flow.css`.
+- **CROSS-LANE:** `app/arcade.py`, `app/api_types.py` and the two backend routes
+  are Sbu's lane. Taken because Lethabo's-lane screens could not be made to work
+  at all while the queue never converged. Tested to the same bar; **pending
+  Sbu's review**. No money, legal or deployment-safety decision was made.
+- **BLOCKED-PING:** The running uvicorn (`pid 436`, started without `--reload`)
+  still serves the old code, so the fixes are not live in the demo until it is
+  restarted. `AMAZWI_DATABASE_URL` exists only in the shell that launched it —
+  reading it from the process was correctly refused as a sensitive action, and I
+  did not guess at Postgres credentials. **Restart is a one-line manual step in
+  that same window** (see `HANDOVER_SBU.md`). The stale synthetic clips should be
+  cleared in the same pass: they are 2-second pcm WAVs with no real speaker, and
+  `scripts/clear_demo_queue.py --synthetic-only` removes exactly those while
+  leaving every real phone recording and all resolved history untouched.
+- **NEXT:** After restart, re-run the two-device walk and confirm the tally
+  advances 1 → 2 live, then Vercel blocker #2 (one identity per build).
+
 ### [03 Sep] — Sbu (Claude, direct) · wrote a full v2 Gamma prompt for a different account (this one is out of credits)
 
 **DID**
