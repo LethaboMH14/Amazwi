@@ -1,7 +1,7 @@
 # AMAZWI - Round 1 Pitch Script (six-beat structure, target ~2:15-2:30 at real speaking pace)
 
-Deck: https://gamma.app/docs/35l5lmuw841k199
-This is the final regeneration with every fix from both Codex review rounds baked directly into the generated card text (no manual paste needed). Stale links, do not present any of them: `i1kl0ftsc184hbx`, `1dhqhqj19mgd758`, `p6yb4zccmjy3sbi`, `ws921eo2ozpw8bp`.
+Deck: https://gamma.app/docs/AMAZWI-sn28skr7k2plcyd?mode=doc
+This is the current Gamma pitch supplied by the team. Align the spoken claims below to this deck before presenting. Stale links, do not present any of them: `35l5lmuw841k199`, `i1kl0ftsc184hbx`, `1dhqhqj19mgd758`, `p6yb4zccmjy3sbi`, `ws921eo2ozpw8bp`.
 
 **Gamma credits are now at 0.** This deck cannot be regenerated again from this environment. Any further changes need a manual pass in the Gamma editor, **or use [`GAMMA_PROMPT_V2.md`](GAMMA_PROMPT_V2.md) on an account that still has credits**: a full, self-contained paste-ready prompt for a v2 deck that keeps everything below and adds a tech architecture diagram, an unemployment/skills-gap card, an illustrative cost breakdown, and a scaling card.
 Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility & Scalability 20% · Technical Execution 20% · Presentation & Pitch 15%
@@ -31,7 +31,7 @@ Rubric: Innovation & Creativity 25% · Relevance to Fintech 20% · Feasibility &
 
 Target total ≈ 2:15-2:30 at real pace, leaving headroom inside a 2:30-3:00 slot for handoff, clicks, and judge reaction. If time is tight, cut adjectives from beat 5 first; never cut the MoMo evidence line, the Proven/Pilot/Not Built structure, or the final ask.
 
-**Deck status:** the current deck (`35l5lmuw841k199`) is fully regenerated and verified; no manual edits are outstanding from the earlier review rounds. The one addition below (the "why does better data matter to MTN specifically" answer) still needs a manual paste, since Gamma credits are at 0 and this tool cannot patch a single card.
+**Deck status:** the current deck is `AMAZWI-sn28skr7k2plcyd?mode=doc`. Treat it as canonical and confirm its visible wording against this script before presenting. The previous generated deck and its verification record are historical; do not assume those checks automatically apply to this updated Gamma pitch.
 
 **Scope calibration, do not undo:** the live MoMo Collections call funds a **mission**; it does not disburse to a speaker's own wallet. Speaker payout is a separate, not-yet-built settlement step. Say "the AMAZWI ledger is credited," never "your MoMo wallet is credited." Also never say: "cash-out is live," "money crossed MoMo twice," "k-anonymised" (not in this build), or "the dataset nobody else has built."
 
@@ -137,16 +137,16 @@ Never turn this into a specific revenue, margin, or savings figure. The argument
 
 ---
 
-## Deck status: regenerated and verified (3 Sep)
+## Deck status: current Gamma pitch (visual confirmation required)
 
-The deck was fully regenerated with every fix from both Codex review rounds baked directly into the generated card text (no manual paste needed this time). I then read the actual generated content back via the Gamma API and checked it card by card against the checklist below, rather than assuming the generation instructions were honoured. All items pass:
+The team has supplied an updated Gamma pitch. Use the checklist below to verify the live deck manually before presenting; the new link has not been independently read back in this environment.
 
-1. **Cover slide:** logo band reads as an empty placeholder ("LOGO ZONE: Paste the official MTN and MTN MoMo logos in this band before presenting"), no fabricated logo. Still needs real logo files pasted in before presenting.
-2. **Card 2 wording:** confirmed present verbatim, "gives MTN a governed, consented source... tailored to MoMo use cases," not the earlier "MTN doesn't have today" phrasing.
-3. **Em dashes:** confirmed none anywhere in the generated card text.
-4. **MoMo evidence card:** confirmed labelled "SANDBOX ONLY" with an explicit warning callout, "No speaker was paid. Speaker cash-out is a separate, not-yet-built settlement leg," directly on the card, not only in the spoken line.
-5. **Banned-phrase sweep:** confirmed none of the banned phrases appear anywhere in the generated text.
-6. **Pilot-outcomes card:** confirmed present as its own card with all six items (repeat MoMo opens, funded mission participation, cost per eligible contribution, verifier liquidity, settlement feasibility, usefulness of intent-labelled speech) visible, plus the "none of these numbers exist yet" line.
+1. **Cover slide:** official MTN/MoMo logo placement is intentional, with no fabricated logo.
+2. **Card 2 wording:** uses the corrected WAXAL and market-gap wording, without claiming MTN lacks existing language data.
+3. **Em dashes:** none remain in generated card text.
+4. **MoMo evidence card:** visibly says "SANDBOX ONLY", identifies a Collections funding request and states that no speaker was paid.
+5. **Banned-phrase sweep:** no wallet-payout, live-cash-out, k-anonymity, unsupported-superlative or guaranteed-revenue claims appear anywhere.
+6. **Pilot-outcomes card:** all six measures are visible: repeat MoMo opens, funded mission participation, cost per eligible contribution, verifier liquidity, settlement feasibility and usefulness of intent-labelled speech.
 
 **Gamma credits are now at 0** after this regeneration. If anything needs to change from here, it has to be a manual edit in the Gamma editor, not another regeneration from this environment.
 
@@ -160,11 +160,11 @@ The deck originally gestured at the dataset being "useful" or "tailored to MoMo 
 
 ## Final go/no-go - confirm all seven before presenting
 
-1. The team uses `https://gamma.app/docs/35l5lmuw841k199`, not any of the four stale links listed at the top of this file.
-2. Card 2 uses the corrected market-gap wording. Confirmed present in the current deck.
-3. The MoMo card says "Sandbox Collections funding request" with a SANDBOX ONLY label. Confirmed present.
-4. Pilot metrics are visible on a slide, not only spoken. Confirmed present.
-5. No banned claims remain anywhere in the deck. Confirmed via full-text read-back.
+1. The team uses `https://gamma.app/docs/AMAZWI-sn28skr7k2plcyd?mode=doc`, not any stale link listed at the top of this file.
+2. Card 2 uses the corrected market-gap wording and avoids claiming MTN lacks existing language data.
+3. The MoMo card says "Sandbox Collections funding request" with a SANDBOX ONLY label.
+4. Pilot metrics are visible on a slide, not only spoken.
+5. No banned claims remain anywhere in the deck.
 6. Lethabo rehearses the agreement and refusal paths as one continuous demo, not two separate pieces. **Not yet done, human rehearsal only.**
 7. Both teammates say "AMAZWI ledger credit," never "MoMo wallet payout," in every beat and in Q&A. **Not yet done, human rehearsal only.**
 
@@ -176,4 +176,5 @@ Four earlier decks are superseded, do not present any of them:
 - `.../docs/ws921eo2ozpw8bp`: original 10-card rubric-mapped version, pre-timing-freeze.
 - `.../docs/i1kl0ftsc184hbx`: six-beat version, calibration correct but missing the Proven/Pilot/Not Built slide, the disagreement-path demo, and unscoped pilot-outcome metrics.
 - `.../docs/1dhqhqj19mgd758`: correct structure and calibration, but had the pre-second-review card 2 wording, em dashes, and no SANDBOX ONLY label.
-Current deck (`35l5lmuw841k199`) supersedes all four and has been read back and verified against the checklist above. Only the real MTN/MoMo logos and human rehearsal (go/no-go items 6 and 7) remain.
+- `.../docs/35l5lmuw841k199`: previous regenerated deck, now superseded by the team's updated Gamma pitch.
+Current deck (`AMAZWI-sn28skr7k2plcyd?mode=doc`) supersedes all five. Confirm the visible checklist and complete human rehearsal (go/no-go items 6 and 7) before presenting.
