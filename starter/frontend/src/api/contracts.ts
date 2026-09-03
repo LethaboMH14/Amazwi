@@ -131,3 +131,18 @@ export interface AssistantResponse {
   provider: string;
   advisory: boolean;
 }
+
+// --- verification queue ---------------------------------------------------
+// What a verifier can pick up right now. Without this the verifier device
+// had no way to DISCOVER a contribution -- the route required an id in the
+// URL and nothing supplied it, so a two-device walk meant copying a UUID
+// off a phone by hand.
+export interface QueueRow {
+  contribution_id: string;
+  language: string;
+  speaker_name: string;
+  created_at: string;
+  /** 0 or 1. At 2 the clip is resolved and leaves the queue. */
+  answers_so_far: number;
+}
+export interface VerificationQueue { items: QueueRow[] }

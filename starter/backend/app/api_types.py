@@ -276,3 +276,15 @@ class RedemptionResponse(BaseModel):
     state: str
     is_real_settlement: bool = False
     """False under any non-live provider. Never hide this."""
+
+
+class QueueRowResponse(BaseModel):
+    contribution_id: str
+    language: str
+    speaker_name: str
+    created_at: datetime
+    answers_so_far: int = Field(ge=0, le=1)
+
+
+class VerificationQueueResponse(BaseModel):
+    items: list[QueueRowResponse]

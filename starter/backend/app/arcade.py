@@ -565,3 +565,101 @@ def build_quests(
             reward_xp=QUEST_VERIFY_XP,
         ),
     ]
+
+
+# --- verification queue ------------------------------------------------
+
+
+@dataclass(frozen=True)
+class QueueRow:
+    """A contribution this verifier could pick up right now."""
+
+    contribution_id: uuid.UUID
+    language: str
+    speaker_name: str
+    created_at: datetime
+    answers_so_far: int
+
+
+def build_verification_queue(
+    session: Session, *, verifier_id: uuid.UUID, limit: int = 10
+) -> list[QueueRow]:
+    """Contributions awaiting THIS verifier, oldest first.
+
+    Exists because the two-device walk was impossible without it: the
+    verifier route needed a contribution id in the URL, and nothing gave
+    the verifier laptop that id. In a demo it meant reading a UUID off a
+    phone and typing it into a laptop; in the real product it meant the
+    queue did not exist at all.
+
+    Oldest first is deliberate -- a speaker waiting longest is served
+    first, rather than the newest clip burying older ones.
+
+    Filters mirror `cohorts.select_next_verifier` so a row that appears
+    here can actually be claimed:
+      * the verifier is qualified and not revoked in that language
+      * they are not the speaker
+      * they do not already hold an assignment for it
+      * the clip still needs answers (fewer than two)
+    """
+    my_languages = [
+        row[0]
+        for row in session.execute(
+            select(VerifierQualification.language)
+            .where(
+                VerifierQualification.user_id == verifier_id,
+                VerifierQualification.revoked_at.is_(None),
+            )
+            .distinct()
+        ).all()
+    ]
+    if not my_languages:
+        return []
+
+    mine = (
+        select(Assignment.contribution_id)
+        .where(Assignment.verifier_id == verifier_id)
+        .scalar_subquery()
+    )
+    answered = (
+        select(
+            Assignment.contribution_id.label("cid"),
+            func.count().label("n"),
+        )
+        .where(Assignment.answered_at.is_not(None))
+        .group_by(Assignment.contribution_id)
+        .subquery()
+    )
+
+    speaker = User.__table__.alias("speaker")
+    rows = session.execute(
+        select(
+            Contribution.id,
+            Contribution.declared_language,
+            speaker.c.display_name,
+            Contribution.created_at,
+            func.coalesce(answered.c.n, 0),
+        )
+        .join(speaker, speaker.c.id == Contribution.speaker_id)
+        .outerjoin(answered, answered.c.cid == Contribution.id)
+        .where(
+            Contribution.declared_language.in_(sorted(my_languages)),
+            Contribution.speaker_id != verifier_id,
+            Contribution.id.not_in(mine),
+            Contribution.audio_key.is_not(None),
+            func.coalesce(answered.c.n, 0) < 2,
+        )
+        .order_by(Contribution.created_at.asc(), Contribution.id.asc())
+        .limit(limit)
+    ).all()
+
+    return [
+        QueueRow(
+            contribution_id=cid,
+            language=language,
+            speaker_name=name or "Anonymous contributor",
+            created_at=created,
+            answers_so_far=int(n),
+        )
+        for cid, language, name, created, n in rows
+    ]

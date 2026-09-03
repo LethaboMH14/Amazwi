@@ -23,6 +23,8 @@ from app.api_types import (
     CatalogueRowResponse,
     RedemptionResponse,
     RewardsResponse,
+    QueueRowResponse,
+    VerificationQueueResponse,
     DeckSummaryResponse,
     InvitationRowResponse,
     LeaderboardRowResponse,
@@ -33,6 +35,7 @@ from app.api_types import (
 )
 from app.arcade import (
     build_decks,
+    build_verification_queue,
     build_invitations,
     build_leaderboard,
     build_peer_list,
@@ -249,4 +252,35 @@ def redeem_reward(
         provider_reference=attempt.provider_reference,
         state=attempt.state.value if hasattr(attempt.state, "value") else str(attempt.state),
         is_real_settlement=is_live_provider(attempt.provider_mode),
+    )
+
+
+@router.get("/assignments/queue", response_model=VerificationQueueResponse)
+@router.get(
+    "/api/assignments/queue",
+    response_model=VerificationQueueResponse,
+    include_in_schema=False,
+)
+def verification_queue(
+    session: Session = Depends(get_session),
+    identity: AuthenticatedIdentity = Depends(get_current_identity),
+) -> VerificationQueueResponse:
+    """What this verifier can pick up, oldest first.
+
+    Without this the verifier device had no way to discover a
+    contribution -- the route required an id in the URL and nothing
+    supplied it, so a two-device walk meant copying a UUID by hand.
+    """
+    user = require_identity_user(session, identity)
+    return VerificationQueueResponse(
+        items=[
+            QueueRowResponse(
+                contribution_id=str(row.contribution_id),
+                language=row.language,
+                speaker_name=row.speaker_name,
+                created_at=row.created_at,
+                answers_so_far=row.answers_so_far,
+            )
+            for row in build_verification_queue(session, verifier_id=user.id)
+        ]
     )
