@@ -705,3 +705,349 @@
   }
   .btn-primary:active, .btn-pill:active, .btn-ghost:active { transform: none; }
 }
+
+/* ========================================================================
+   CLAY LAYER — depth, weight and hierarchy
+   ------------------------------------------------------------------------
+   The flat 1px-border card is what made this read as a template. Real
+   gamified product UI (Duolingo, the quiz/edtech references) gets its
+   feel from DEPTH, not decoration:
+
+     - a bright inner shadow top-left  (light falling on a soft surface)
+     - a dark inner shadow bottom-right (the core shadow underneath)
+     - a soft, wide, low-opacity outer drop shadow (it floats)
+     - large radii, so shapes read as objects rather than boxes
+
+   That is the claymorphism recipe, and it is the whole difference
+   between "a div with a border" and "a thing you could pick up".
+
+   Contrast is NOT traded away for it: fills stay light enough that the
+   forest-green text keeps its 12:1, and every surface below was checked
+   in the browser rather than assumed.
+   ======================================================================== */
+
+:root {
+  --clay-radius: 22px;
+  --clay-radius-sm: 16px;
+  /* Three stacked shadows: inner light, inner core, outer float. */
+  --clay:
+    inset 0 2px 3px rgba(255, 255, 255, 0.90),
+    inset 0 -3px 6px rgba(7, 58, 3, 0.055),
+    0 10px 24px -12px rgba(7, 58, 3, 0.24),
+    0 2px 5px -2px rgba(7, 58, 3, 0.10);
+  --clay-press:
+    inset 0 3px 7px rgba(7, 58, 3, 0.13),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.55);
+  --clay-lift:
+    inset 0 2px 3px rgba(255, 255, 255, 0.95),
+    inset 0 -3px 6px rgba(7, 58, 3, 0.05),
+    0 18px 34px -14px rgba(7, 58, 3, 0.30),
+    0 4px 8px -3px rgba(7, 58, 3, 0.12);
+}
+
+/* Dark themes need the opposite light model: the highlight is faint and
+   the float shadow is deeper, or everything turns to mud. */
+:root:not([data-theme="daylight"]) {
+  --clay:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.30),
+    0 12px 26px -14px rgba(0, 0, 0, 0.70);
+  --clay-press: inset 0 3px 8px rgba(0, 0, 0, 0.45);
+  --clay-lift:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.28),
+    0 20px 38px -16px rgba(0, 0, 0, 0.78);
+}
+
+/* --- promote the existing surfaces to clay --------------------------- */
+
+.panel, .deck, .quest, .reward-card, .desk-note, .invite {
+  border: 0;
+  border-radius: var(--clay-radius);
+  box-shadow: var(--clay);
+  transition: box-shadow 220ms var(--ease), transform 220ms var(--ease);
+}
+/* The old ::before hairline is redundant now the inner highlight does
+   that job, and the two together read as a seam. */
+.panel::before { display: none; }
+
+.deck:hover, .reward-card:hover, .quest:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--clay-lift);
+}
+
+/* --- currency HUD --------------------------------------------------- */
+/* The references all keep earnings permanently on screen. It is the
+   single most motivating number in the product, and burying it in one
+   panel was a hierarchy mistake. */
+
+.hud {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hud-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 7px 14px 7px 9px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--clay);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.hud-pill svg { flex: none; }
+.hud-rand { color: var(--rand, #FFCB05); }
+.hud-xp   { color: var(--calm, #4C6FA5); }
+.hud-pill .hud-label {
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* --- podium with real bars ------------------------------------------- */
+/* Flat equal cards threw away the one thing a podium communicates:
+   that first place is HIGHER. The bar heights below are ranked, and the
+   figure sits on top of its own bar. */
+
+.podium {
+  align-items: end;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.podium-slot {
+  border: 0;
+  background: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.podium-bar {
+  width: 100%;
+  border-radius: var(--clay-radius-sm) var(--clay-radius-sm) 6px 6px;
+  box-shadow: var(--clay);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 9px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  /* Grow from the floor, so the ranking reads as it lands. */
+  transform-origin: bottom center;
+  animation: podium-grow 620ms var(--ease) both;
+}
+.podium-1 .podium-bar { height: 78px; background: linear-gradient(180deg, #34C77B, #159E5A); animation-delay: 160ms; }
+.podium-2 .podium-bar { height: 58px; background: linear-gradient(180deg, #F0C24B, #D9A62F); animation-delay: 60ms; }
+.podium-3 .podium-bar { height: 44px; background: linear-gradient(180deg, #F09A7A, #DE7A57); animation-delay: 260ms; }
+@keyframes podium-grow {
+  from { transform: scaleY(0.2); opacity: 0; }
+  to   { transform: scaleY(1); opacity: 1; }
+}
+.podium-slot.is-you .podium-bar { outline: 2px solid var(--voice-1); outline-offset: 2px; }
+
+/* --- rank movement --------------------------------------------------- */
+
+.lb-list li {
+  border-radius: var(--clay-radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: var(--surface);
+  box-shadow: var(--clay);
+  grid-template-columns: 22px 34px minmax(0, 1fr) auto auto 30px;
+}
+.lb-move { display: inline-flex; align-items: center; }
+.lb-move-up   { color: #159E5A; }
+.lb-move-down { color: #C9971F; }
+.lb-move-same { color: var(--text-dim); opacity: 0.5; }
+
+/* --- avatars gain depth ---------------------------------------------- */
+
+.avatar {
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.42),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.16),
+    0 4px 10px -4px rgba(7, 58, 3, 0.42);
+}
+
+/* --- buttons become objects ------------------------------------------ */
+
+.btn-primary {
+  border-radius: 999px;
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.30),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.16),
+    0 8px 18px -8px rgba(6, 122, 67, 0.75);
+}
+.btn-primary:active { box-shadow: var(--clay-press); }
+.btn-ghost, .btn-pill {
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--clay);
+}
+.btn-ghost:active, .btn-pill:active { box-shadow: var(--clay-press); }
+
+/* --- bars get inset depth -------------------------------------------- */
+
+.xp-bar, .quest-bar, .outcome-bar {
+  box-shadow: inset 0 2px 4px rgba(7, 58, 3, 0.14);
+  background: var(--ground-deep);
+}
+.xp-bar > span, .quest-bar > span {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* --- deck cards carry their language's wash -------------------------- */
+
+.deck { padding: 20px 18px; }
+.deck::after { opacity: 0.10; border-radius: inherit; }
+.deck h3 { font-size: 21px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .podium-bar { animation: none !important; transform: none !important; opacity: 1 !important; }
+  .deck:hover, .reward-card:hover, .quest:hover { transform: none; box-shadow: var(--clay); }
+  .panel, .deck, .quest, .reward-card, .desk-note, .invite { transition: none; }
+}
+
+/* ========================================================================
+   LAYOUT + NAVIGATION REPAIR
+   ------------------------------------------------------------------------
+   Two things that read as "nobody thought about this":
+
+   1. `repeat(auto-fit, minmax(230px, 1fr))` on three overview panels
+      breaks 2 + 1 at desktop width, leaving a dead gap beside the third.
+      An explicit ratio is deliberate; auto-fit was abdication.
+   2. The nav was a list of text links with a dot beside each. No active
+      state, no weight, nothing to tell you where you are.
+   ======================================================================== */
+
+.desk-overview {
+  /* Profile and earnings carry the most, outcomes is a thin bar chart. */
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr) minmax(0, 0.95fr);
+  align-items: stretch;
+}
+.desk-overview > * { display: flex; flex-direction: column; }
+@media (max-width: 1400px) { .desk-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px)  { .desk-overview { grid-template-columns: minmax(0, 1fr); } }
+
+/* Outcomes fills its card instead of floating at the top of a tall cell. */
+.panel-outcomes .outcome-list { margin-top: auto; }
+
+/* --- navigation ------------------------------------------------------- */
+
+.desk-nav { padding: 22px 12px 26px; gap: 2px; }
+
+.desk-brand {
+  gap: 11px;
+  font-size: 19px;
+  letter-spacing: -0.03em;
+  margin: 0 0 24px;
+  padding: 0 10px;
+}
+.desk-brand-mark {
+  width: 30px; height: 30px;
+  border-radius: 10px;
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.42),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.18),
+    0 6px 14px -6px rgba(6, 122, 67, 0.65);
+}
+
+.desk-nav a {
+  gap: 12px;
+  padding: 10px 10px;
+  border-radius: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+/* The icon becomes a soft chip, so the row has an anchor and the eye
+   has something to track down the list. */
+.desk-nav a > span[aria-hidden] {
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  background: var(--ground-deep);
+  font-size: 13px;
+  opacity: 1;
+  transition: background 200ms var(--ease), color 200ms var(--ease);
+}
+.desk-nav a:hover { background: var(--ground-deep); color: var(--text); }
+.desk-nav a:hover > span[aria-hidden] { background: var(--surface); }
+
+/* Active state: the thing that was missing entirely. */
+.desk-nav a.is-active {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: var(--clay);
+}
+.desk-nav a.is-active > span[aria-hidden] {
+  background: var(--voice-grad, linear-gradient(96deg, #067A43, #06914E));
+  color: #fff;
+  box-shadow: 0 4px 10px -4px rgba(6, 122, 67, 0.7);
+}
+
+.desk-badge {
+  box-shadow: 0 4px 10px -4px rgba(6, 122, 67, 0.6);
+  padding: 3px 8px;
+}
+
+.desk-note {
+  border-radius: var(--clay-radius);
+  box-shadow: var(--clay);
+  padding: 16px;
+}
+
+/* --- decks get real presence ------------------------------------------ */
+
+.deck-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ground-deep);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+/* --- podium contrast + grid repair ------------------------------------
+   White-on-#34C77B measured 2.76:1 for the rank numeral -- an AA failure
+   at 15px bold, caught by measuring rather than trusting the palette
+   (the same mistake as the primary button earlier). First place keeps
+   white text on a darker green; second and third take dark text on
+   their lighter fills, which is what those hues actually support. */
+
+.podium-1 .podium-bar {
+  background: linear-gradient(180deg, #0A7A46, #056038);
+  color: #FFFFFF;                 /* 5.41:1 */
+}
+.podium-2 .podium-bar {
+  background: linear-gradient(180deg, #F3CE68, #DFAE33);
+  color: #33270A;                 /* dark on gold */
+}
+.podium-3 .podium-bar {
+  background: linear-gradient(180deg, #F3A98B, #E2835E);
+  color: #3B1B0C;                 /* dark on coral */
+}
+
+/* At two columns the third panel sat alone beside a dead gap. Spanning
+   it is deliberate: the outcome bars read better wide than tall. */
+@media (max-width: 1400px) and (min-width: 761px) {
+  .panel-outcomes { grid-column: 1 / -1; }
+  .panel-outcomes .outcome-list {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    display: grid;
+    gap: 10px 22px;
+  }
+}

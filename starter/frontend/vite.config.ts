@@ -23,6 +23,11 @@ const identityHeaders = {
 // answer -- neither needs a secure context -- so forcing a self-signed cert on
 // them just adds a "connection is not private" click to every verifier laptop
 // mid-demo for no benefit. Set AMAZWI_NO_HTTPS=true on those instances.
+// AMAZWI_NO_HTTPS=true forces plain HTTP even when certs exist (flag
+// already present below). The phone needs HTTPS for getUserMedia, but
+// a self-signed cert is a click-through wall for anything that cannot
+// accept it. Run the phone instance with certs and a second desktop
+// instance with AMAZWI_NO_HTTPS=true, rather than choosing one.
 const certDir = path.resolve(__dirname, ".certs");
 const httpsConfig =
   process.env.AMAZWI_NO_HTTPS === "true"

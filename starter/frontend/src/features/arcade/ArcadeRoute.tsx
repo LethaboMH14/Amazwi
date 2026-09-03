@@ -23,7 +23,7 @@
  * separate, reviewed step.
  */
 import { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api, userMessage } from "../../api/client";
 import type { ArcadeDashboard, LeaderboardRow, QuestRow } from "../../api/contracts";
 import "./arcade.css";
@@ -186,12 +186,78 @@ export function Burst() {
   );
 }
 
+
+/** Persistent currency HUD.
+ *
+ * Every reference dashboard keeps the player's currency on screen at all
+ * times. Burying earnings inside one panel was a hierarchy mistake: it
+ * is the most motivating number in the product and it should never
+ * scroll away. Both values are real -- rand from the reward ledger, XP
+ * derived from verified clips. */
+export function CurrencyHud({
+  earnedCents,
+  xp,
+}: {
+  earnedCents: number;
+  xp: number;
+}) {
+  return (
+    <div className="hud">
+      <span className="hud-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" className="hud-rand" fill="currentColor">
+          <circle cx="12" cy="12" r="9" opacity="0.28" />
+          <path d="M12 5.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zm-2 3h2.6a2.2 2.2 0 0 1 0 4.4H11v2.6H10V8.5zm1 1v2.4h1.6a1.2 1.2 0 0 0 0-2.4H11z" />
+        </svg>
+        {formatRand(earnedCents)}
+        <span className="hud-label">credited</span>
+      </span>
+      <span className="hud-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" className="hud-xp" fill="currentColor">
+          <path d="M12 2.6l2.6 6.2 6.7.55-5.1 4.4 1.55 6.55L12 16.8l-5.75 3.5L7.8 13.75 2.7 9.35l6.7-.55z" opacity="0.85" />
+        </svg>
+        {xp.toLocaleString()}
+        <span className="hud-label">XP</span>
+      </span>
+    </div>
+  );
+}
+
+/** Rank movement. Only rendered when we actually know it.
+ *
+ * The references show up/down arrows on every row. We do not store rank
+ * history, so inventing an arrow would be inventing data -- `delta` is
+ * optional and a row with no known movement renders a neutral dash. */
+export function RankMove({ delta }: { delta?: number }) {
+  if (delta === undefined || delta === 0) {
+    return (
+      <span className="lb-move lb-move-same" role="img" aria-label="no change">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="5" y="11" width="14" height="2.4" rx="1.2" />
+        </svg>
+      </span>
+    );
+  }
+  const up = delta > 0;
+  return (
+    <span
+      className={`lb-move ${up ? "lb-move-up" : "lb-move-down"}`}
+      role="img"
+      aria-label={`${up ? "up" : "down"} ${Math.abs(delta)}`}
+    >
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d={up ? "M12 5l7 9H5z" : "M12 19l-7-9h14z"} />
+      </svg>
+    </span>
+  );
+}
+
 export function ArcadeRoute() {
   const [data, setData] = useState<ArcadeDashboard>();
   const [error, setError] = useState("");
   const [status, setStatus] = useState("Loading your desk…");
   const [peerFilter, setPeerFilter] = useState("");
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const load = useCallback(async () => {
     try {
@@ -239,7 +305,11 @@ export function ArcadeRoute() {
         <ul aria-labelledby="nav-desk">
           {NAV_PRIMARY.map((item) => (
             <li key={item.to}>
-              <Link to={item.to}>
+              <Link
+                to={item.to}
+                className={pathname === item.to ? "is-active" : undefined}
+                aria-current={pathname === item.to ? "page" : undefined}
+              >
                 <span aria-hidden="true">{item.icon}</span>
                 {item.label}
               </Link>
@@ -252,13 +322,17 @@ export function ArcadeRoute() {
         </p>
         <ul aria-labelledby="nav-play">
           <li>
-            <Link to="/consent">
+            <Link
+              to="/consent"
+              className={pathname === "/consent" ? "is-active" : undefined}
+              aria-current={pathname === "/consent" ? "page" : undefined}
+            >
               <span aria-hidden="true">●</span>
               Record a card
             </Link>
           </li>
           <li>
-            <Link to="/verify" className="desk-nav-badged">
+            <Link to="/verify" className={`desk-nav-badged${pathname === "/verify" ? " is-active" : ""}`} aria-current={pathname === "/verify" ? "page" : undefined}>
               <span aria-hidden="true">◐</span>
               Peer requests
               {pendingCount > 0 && (
@@ -304,6 +378,10 @@ export function ArcadeRoute() {
                 <p className="serif">
                   Describe the word without saying it. Two peers decide.
                 </p>
+                <CurrencyHud
+                  earnedCents={data.earned_cents}
+                  xp={data.progression.xp}
+                />
                 <div className="desk-hero-actions">
                   <button
                     type="button"
@@ -601,6 +679,9 @@ export function Leaderboard({ rows }: { rows: LeaderboardRow[] }) {
               <p className="podium-name">{row.display_name}</p>
               <p className="podium-score">{row.verified_contributions} verified</p>
               {row.is_current_user && <p className="podium-you">You</p>}
+              {/* The bar IS the ranking -- equal flat cards threw away
+                  the one thing a podium is for. */}
+              <div className="podium-bar">{row.rank}</div>
             </li>
           ))}
         </ol>
@@ -618,6 +699,7 @@ export function Leaderboard({ rows }: { rows: LeaderboardRow[] }) {
                 {row.is_current_user && <span className="lb-you"> (you)</span>}
               </span>
               <span className="lb-tier"><TierStars tier={row.tier} /></span>
+              <RankMove />
               <span className="lb-score">{row.verified_contributions}</span>
             </li>
           ))}

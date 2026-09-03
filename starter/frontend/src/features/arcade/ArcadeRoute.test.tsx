@@ -148,7 +148,8 @@ describe("ArcadeRoute", () => {
     // The name appears twice by design -- profile panel and the
     // leaderboard row for the current user -- so assert on both.
     expect((await screen.findAllByText("Demo Speaker (zu)")).length).toBe(2);
-    expect(screen.getByText("R4.00")).toBeTruthy();
+    // Appears twice by design: persistent HUD pill + earnings panel.
+    expect(screen.getAllByText("R4.00").length).toBe(2);
     expect(screen.getByText(/Level 1 · Amateur/)).toBeTruthy();
     expect(screen.getByText("Nomsa K.")).toBeTruthy();
     // Scoped by role: "isiZulu" is also the leaderboard's language tag,
@@ -160,7 +161,7 @@ describe("ArcadeRoute", () => {
   it("describes money as credited, never as a balance or as paid", async () => {
     vi.spyOn(api, "getArcade").mockResolvedValue(dto());
     const { container } = renderRoute();
-    await screen.findByText("R4.00");
+    await screen.findAllByText("R4.00");
 
     const text = container.textContent ?? "";
     expect(text).toMatch(/Credited in the reward ledger/i);
@@ -172,7 +173,7 @@ describe("ArcadeRoute", () => {
   it("renders no fabricated engagement metric", async () => {
     vi.spyOn(api, "getArcade").mockResolvedValue(dto());
     const { container } = renderRoute();
-    await screen.findByText("R4.00");
+    await screen.findAllByText("R4.00");
 
     const text = (container.textContent ?? "").toLowerCase();
     // The reference dashboard shows a five-axis skill radar and a live
@@ -193,7 +194,7 @@ describe("ArcadeRoute", () => {
   it("shows the real outcome split instead of a skill chart", async () => {
     vi.spyOn(api, "getArcade").mockResolvedValue(dto());
     renderRoute();
-    await screen.findByText("R4.00");
+    await screen.findAllByText("R4.00");
 
     expect(screen.getByText("Understood")).toBeTruthy();
     expect(screen.getByText("Not understood")).toBeTruthy();
@@ -238,7 +239,7 @@ describe("ArcadeRoute", () => {
     );
     renderRoute();
 
-    expect(await screen.findByText("R0.00")).toBeTruthy();
+    expect((await screen.findAllByText("R0.00")).length).toBeGreaterThan(0);
     expect(
       screen.getByText(/No clips yet\. Your first recording appears here\./),
     ).toBeTruthy();
@@ -294,7 +295,7 @@ describe("ArcadeRoute", () => {
   it("exposes progress bars with real accessible values", async () => {
     vi.spyOn(api, "getArcade").mockResolvedValue(dto());
     renderRoute();
-    await screen.findByText("R4.00");
+    await screen.findAllByText("R4.00");
 
     const bars = screen.getAllByRole("progressbar");
     const xp = bars.find(
